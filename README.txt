@@ -13,7 +13,8 @@ I.    BUILDING JAVAGIT
 
       1. Download Maven 2 from http://maven.apache.org and set it up.
 
-      2. Navigate on the command line to the project's root directory and type:
+      2. Navigate on the command line to the project's javagit directory and 
+         type:
 
            $ mvn package
 
