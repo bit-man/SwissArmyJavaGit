@@ -5,6 +5,14 @@ package edu.nyu.cs.javagit.client;
  */
 public interface IGitCommit {
 
-	// TODO: Create method signatures for this interface.
+	/**
+	 * Commit everything that is in the index.
+	 * 
+	 * @param repoPath
+	 *            The path to the repository.
+	 * @param message
+	 *            The message to attach to the commit.
+	 */
+	public void commit(String repoPath, String message);
 
 }
