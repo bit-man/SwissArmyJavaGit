@@ -33,7 +33,7 @@ public class ProcessUtilities {
 	 * @param p
 	 *            The process from which to read the output.
 	 */
-	public static void getProcessOutput(Process p) {
+	public static void getProcessOutput(Process p, IParser parser) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(p
 				.getInputStream()));
 		while (true) {
@@ -42,7 +42,7 @@ public class ProcessUtilities {
 				if (null == str) {
 					break;
 				}
-				System.out.println(str);
+				parser.parseLine(str);
 			} catch (IOException e) {
 				System.out
 						.println("Error reading a line of input from the process.");
