@@ -2,6 +2,8 @@ package edu.nyu.cs.javagit.client;
 
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
+
 /**
  * An interface to represent the git-commit command.
  */
@@ -30,6 +32,6 @@ public interface IGitCommit {
 	 *                <li>a command is not found on the PATH</li>
 	 *                </ul>
 	 */
-	public void commit(String repoPath, String message) throws IOException;
+	public GitCommitResponse commit(String repoPath, String message) throws IOException;
 
 }
