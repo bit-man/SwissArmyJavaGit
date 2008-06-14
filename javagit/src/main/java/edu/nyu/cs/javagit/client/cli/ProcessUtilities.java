@@ -15,15 +15,17 @@ public class ProcessUtilities {
 	 * @param pb
 	 *            The <code>ProcessBuilder</code> to use to start the process.
 	 * @return The started process.
+	 * @exception IOException
+	 *                An <code>IOException</code> is thrown if there is
+	 *                trouble starting the sub-process.
 	 */
-	public static Process startProcess(ProcessBuilder pb) {
+	public static Process startProcess(ProcessBuilder pb) throws IOException {
 		try {
 			return pb.start();
 		} catch (IOException e) {
-			System.out.println("Error starting process.");
-			e.printStackTrace();
-			System.exit(1);
-			return null;
+			IOException toThrow = new IOException("Unable to start sub-process");
+			toThrow.initCause(e);
+			throw toThrow;
 		}
 	}
 
@@ -32,8 +34,12 @@ public class ProcessUtilities {
 	 * 
 	 * @param p
 	 *            The process from which to read the output.
+	 * @exception IOException
+	 *                An <code>IOException</code> is thrown if there is
+	 *                trouble reading input from the sub-process.
 	 */
-	public static void getProcessOutput(Process p, IParser parser) {
+	public static void getProcessOutput(Process p, IParser parser)
+			throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(p
 				.getInputStream()));
 		while (true) {
@@ -44,10 +50,12 @@ public class ProcessUtilities {
 				}
 				parser.parseLine(str);
 			} catch (IOException e) {
-				System.out
-						.println("Error reading a line of input from the process.");
-				e.printStackTrace();
-				System.exit(1);
+				// TODO: add logging of any information already read from the
+				// InputStream. -- jhl388 06.14.2008
+				IOException toThrow = new IOException(
+						"Error reading input from the sub-process");
+				toThrow.initCause(e);
+				throw toThrow;
 			}
 		}
 		System.out.println();
@@ -58,16 +66,21 @@ public class ProcessUtilities {
 	 * 
 	 * @param p
 	 *            The process to wait for and destroy.
+	 * @return The exit value of the process. By convention, 0 indicates normal
+	 *         termination.
 	 */
-	public static void waitForAndDestroyProcess(Process p) {
+	public static int waitForAndDestroyProcess(Process p) {
+		// I'm not sure this is the best way to handle waiting for a process
+		// to complete. -- jhl388 06.14.2008
 		while (true) {
 			try {
 				int i = p.waitFor();
-				break;
+				p.destroy();
+				return i;
 			} catch (InterruptedException e) {
+				continue;
 			}
 		}
-	
-		p.destroy();
 	}
+
 }
