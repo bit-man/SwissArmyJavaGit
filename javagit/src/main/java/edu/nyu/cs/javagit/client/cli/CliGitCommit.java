@@ -39,6 +39,9 @@ public class CliGitCommit implements IGitCommit {
 		private GitCommitResponse response;
 
 		public void parseLine(String line) {
+
+			// TODO (jhl388): handle error messages! (git-commit responses)
+
 			switch (numLinesParsed) {
 			case 0:
 				parseLineOne(line);
@@ -59,7 +62,6 @@ public class CliGitCommit implements IGitCommit {
 		 *            The line of text to process.
 		 */
 		private void parseLineOne(String line) {
-			// TODO (jhl388): handle error messages!
 			int locColon = line.indexOf(':');
 			int locShortHash = line.lastIndexOf(' ', locColon);
 			String shortHash = line.substring(locShortHash + 1, locColon);
@@ -89,18 +91,129 @@ public class CliGitCommit implements IGitCommit {
 					spaceOffset));
 		}
 
+		/**
+		 * Parses the rest of the lines in the response from a successful
+		 * commit.
+		 * 
+		 * @param line
+		 *            The line to parse.
+		 */
 		private void parseAllOtherLines(String line) {
-			// TODO (jhl388): Code parsing of the "Other" lines
 			if (line.startsWith(" create")) {
-
-			} else if (line.startsWith(" rename")) {
-
+				parseAddDeleteLine(line, true);
 			} else if (line.startsWith(" copy")) {
-
+				parseCopyRenameLine(line, true);
 			} else if (line.startsWith(" delete")) {
-
+				parseAddDeleteLine(line, false);
+			} else if (line.startsWith(" rename")) {
+				parseCopyRenameLine(line, false);
 			}
 
+		}
+
+		/**
+		 * Parses an add or delete line. The formats of the lines it parses are
+		 * (without quotes):
+		 * <ul>
+		 * <li>
+		 * 
+		 * <pre>
+		 * &quot; create mode 100644 a/file/name.txt&quot;
+		 * </pre>
+		 * 
+		 * </li>
+		 * <li>
+		 * 
+		 * <pre>
+		 * &quot; delete mode 100644 a/file/name.txt&quot;
+		 * </pre>
+		 * 
+		 * </li>
+		 * </ul>
+		 * 
+		 * @param line
+		 *            The line of text to parse.
+		 * @param isAdd
+		 *            True if parsing an add (create) line, false if parsing a
+		 *            delete line.
+		 */
+		private void parseAddDeleteLine(String line, boolean isAdd) {
+			final int modeOffset = 13;
+			final int endModeOffset = 19;
+			final int startPathOffset = 20;
+			String mode = line.substring(modeOffset, endModeOffset);
+			String path = line.substring(startPathOffset);
+			if (isAdd) {
+				response.addAddedFile(path, mode);
+			} else {
+				response.addDeletedFile(path, mode);
+			}
+		}
+
+		/**
+		 * Parses a copy or rename line. The formats of the lines it parses are
+		 * (without quotes):
+		 * <ul>
+		 * <li>
+		 * 
+		 * <pre>
+		 * &quot; copy path/to/{file.txt =&gt; newName.txt} (100%)&quot;
+		 * </pre>
+		 * 
+		 * </li>
+		 * <li>
+		 * 
+		 * <pre>
+		 * &quot; copy path/to/file.txt =&gt; different/path/newName.txt (5%)&quot;
+		 * </pre>
+		 * 
+		 * </li>
+		 * </ul>
+		 * 
+		 * @param line
+		 *            The line of text to parse.
+		 * @param isCopy
+		 *            True if parsing a copy line, false if parsing a rename
+		 *            line.
+		 */
+		private void parseCopyRenameLine(String line, boolean isCopy) {
+
+			final int PATH_START = 6;
+			int curlyOffset = line.indexOf('{', PATH_START);
+			int openParenOffset = line.lastIndexOf('(');
+
+			String fromPath = null;
+			String toPath = null;
+
+			if (-1 == curlyOffset) {
+				int arrowOffset = line.indexOf("=>");
+				fromPath = line.substring(PATH_START, arrowOffset - 1);
+				toPath = line.substring(arrowOffset + 3, openParenOffset - 1);
+			} else {
+				String base = line.substring(PATH_START, openParenOffset);
+				int arrowOffset = line.indexOf("=>", openParenOffset + 1);
+				fromPath = base
+						+ line.substring(openParenOffset + 1, arrowOffset - 1);
+				int closeParenOffset = line.indexOf('}', arrowOffset + 3);
+				toPath = base
+						+ line.substring(arrowOffset + 3, closeParenOffset);
+			}
+
+			int percentOffset = line.lastIndexOf('%');
+			int percentage = 0;
+			try {
+				percentage = Integer.parseInt(line.substring(
+						openParenOffset + 1, percentOffset));
+			} catch (NumberFormatException e) {
+				// TODO (jhl388): log this error somehow! Or, at least, deal
+				// with it in a better manner.
+			}
+
+			if (isCopy) {
+				response.addCopiedFile(fromPath, toPath, percentage);
+			} else {
+				response.addRenamedFile(fromPath, toPath, percentage);
+			}
 		}
 
 		/**
