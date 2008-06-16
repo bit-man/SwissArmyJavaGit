@@ -1,5 +1,8 @@
 package edu.nyu.cs.javagit.utilities;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * This class provides utilities to check parameters for validity.
  */
@@ -27,4 +30,18 @@ public class CheckUtilities {
 		}
 	}
 
+	/**
+	 * This assumes that the above check for string validity has already
+	 * been run and the path/filename is neither null or of size 0.
+	 * 
+	 * @param filename
+	 *              file or directory path
+	 */
+	public static void checkFileValidity(String filename) throws IOException
+	{
+		File file = new File(filename);
+		if ( ! file.exists() ) {
+			throw new IOException("file or path with name " + filename + " does not exist");
+		}
+	}
 }
