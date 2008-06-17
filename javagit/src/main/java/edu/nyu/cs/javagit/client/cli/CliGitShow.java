@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitShow;
  */
 public class CliGitShow implements IGitShow {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

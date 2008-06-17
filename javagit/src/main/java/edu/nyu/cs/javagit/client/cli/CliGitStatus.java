@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitStatus;
  */
 public class CliGitStatus implements IGitStatus {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

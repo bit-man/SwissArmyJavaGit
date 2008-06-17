@@ -6,11 +6,11 @@ package edu.nyu.cs.javagit.client.cli;
  */
 public interface IParser {
 
-	/**
-	 * Parses a line of output from a git command line output stream.
-	 * 
-	 * @param line
-	 *            The line to parse.
-	 */
-	public void parseLine(String line);
+  /**
+   * Parses a line of output from a git command line output stream.
+   * 
+   * @param line
+   *            The line to parse.
+   */
+  public void parseLine(String line);
 }

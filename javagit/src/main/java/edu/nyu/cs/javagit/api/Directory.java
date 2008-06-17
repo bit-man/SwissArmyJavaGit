@@ -9,31 +9,31 @@ import java.util.List;
  */
 public class Directory implements IGitTreeObject {
 
-	/**
-	 * Gets the children of this directory.
-	 * 
-	 * @return The children of this directory.
-	 */
-	public List<IGitTreeObject> getChildren() {
-		return null;
-	}
+  /**
+   * Gets the children of this directory.
+   * 
+   * @return The children of this directory.
+   */
+  public List<IGitTreeObject> getChildren() {
+    return null;
+  }
 
-	public void add() {
-	}
+  public void add() {
+  }
 
-	public void commit() {
-	}
+  public void commit() {
+  }
 
-	public Branch getBranch() {
-		return null;
-	}
+  public Branch getBranch() {
+    return null;
+  }
 
-	public String getGitHash() {
-		return null;
-	}
+  public String getGitHash() {
+    return null;
+  }
 
-	public IGitTreeObject getParent() {
-		return null;
-	}
+  public IGitTreeObject getParent() {
+    return null;
+  }
 
 }

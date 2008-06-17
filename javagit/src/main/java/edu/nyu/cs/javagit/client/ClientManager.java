@@ -13,81 +13,81 @@ import edu.nyu.cs.javagit.client.cli.CliClient;
  */
 public class ClientManager {
 
-	// An enumeration of the available client types.
-	public static enum ClientType {
-		CLI
-	};
+  // An enumeration of the available client types.
+  public static enum ClientType {
+    CLI
+  };
 
-	// The singleton instance of the class <code>ClientManager</code>.
-	private static ClientManager INSTANCE = new ClientManager();
+  // The singleton instance of the class <code>ClientManager</code>.
+  private static ClientManager INSTANCE = new ClientManager();
 
-	/**
-	 * Gets the singleton instance.
-	 * 
-	 * @return The singleton instance.
-	 */
-	public static ClientManager getInstance() {
-		return INSTANCE;
-	}
+  /**
+   * Gets the singleton instance.
+   * 
+   * @return The singleton instance.
+   */
+  public static ClientManager getInstance() {
+    return INSTANCE;
+  }
 
-	// The preferred client type.
-	private ClientType preferredClientType = ClientType.CLI;
+  // The preferred client type.
+  private ClientType preferredClientType = ClientType.CLI;
 
-	/**
-	 * A <code>Map</code> to hold <code>IClient</code> instances for the
-	 * ClientTypes by <code>ClientType</code>.
-	 */
-	private Map<ClientType, IClient> clientImpls = new HashMap<ClientType, IClient>();
+  /**
+   * A <code>Map</code> to hold <code>IClient</code> instances for the
+   * ClientTypes by <code>ClientType</code>.
+   */
+  private Map<ClientType, IClient> clientImpls = new HashMap<ClientType, IClient>();
 
-	/**
-	 * Private to make this class a singleton.
-	 */
-	private ClientManager() {
-	}
+  /**
+   * Private to make this class a singleton.
+   */
+  private ClientManager() {
+  }
 
-	/**
-	 * Gets an instance of the specified client type.
-	 * 
-	 * @param clientType
-	 *            The type of client to get.
-	 * @return An instance of the specified client type.
-	 */
-	public IClient getClientInstance(ClientType clientType) {
-		IClient clientInstance = clientImpls.get(clientType);
-		if (null == clientInstance) {
-			if (ClientType.CLI == clientType) {
-				clientInstance = new CliClient();
-			}
-			if (null != clientInstance) {
-				clientImpls.put(clientType, clientInstance);
-			}
-		}
-		return clientInstance;
-	}
+  /**
+   * Gets an instance of the specified client type.
+   * 
+   * @param clientType
+   *            The type of client to get.
+   * @return An instance of the specified client type.
+   */
+  public IClient getClientInstance(ClientType clientType) {
+    IClient clientInstance = clientImpls.get(clientType);
+    if (null == clientInstance) {
+      if (ClientType.CLI == clientType) {
+        clientInstance = new CliClient();
+      }
+      if (null != clientInstance) {
+        clientImpls.put(clientType, clientInstance);
+      }
+    }
+    return clientInstance;
+  }
 
-	/**
-	 * Gets an instance of the preferred client type as set via the
-	 * <code>setPreferredClientType()</code> method.
-	 * 
-	 * @return An IClient instance for the preferred client type.
-	 */
-	public IClient getPreferredClient() {
-		return getClientInstance(preferredClientType);
-	}
+  /**
+   * Gets an instance of the preferred client type as set via the
+   * <code>setPreferredClientType()</code> method.
+   * 
+   * @return An IClient instance for the preferred client type.
+   */
+  public IClient getPreferredClient() {
+    return getClientInstance(preferredClientType);
+  }
 
-	/**
-	 * Sets the preferred client type.
-	 * 
-	 * @param preferredClientType
-	 *            The type to set as the preferred client type. If the value is
-	 *            null, then the preferred client type is set to
-	 *            <code>ClientType.CLI</code>.
-	 */
-	public void setPreferredClientType(ClientType preferredClientType) {
-		if (null == preferredClientType) {
-			this.preferredClientType = ClientType.CLI;
-		} else {
-			this.preferredClientType = preferredClientType;
-		}
-	}
+  /**
+   * Sets the preferred client type.
+   * 
+   * @param preferredClientType
+   *            The type to set as the preferred client type. If the value is
+   *            null, then the preferred client type is set to
+   *            <code>ClientType.CLI</code>.
+   */
+  public void setPreferredClientType(ClientType preferredClientType) {
+    if (null == preferredClientType) {
+      this.preferredClientType = ClientType.CLI;
+    } else {
+      this.preferredClientType = preferredClientType;
+    }
+  }
 }

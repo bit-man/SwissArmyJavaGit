@@ -5,6 +5,6 @@ package edu.nyu.cs.javagit.client;
  */
 public interface IGitGrep {
 
-	// TODO: Create method signatures for this interface.
+  // TODO: Create method signatures for this interface.
 
 }

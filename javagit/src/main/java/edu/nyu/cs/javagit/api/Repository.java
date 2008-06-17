@@ -9,35 +9,35 @@ import java.util.List;
  */
 public class Repository {
 
-	private String repositoryPath;
+  private String repositoryPath;
 
-	/**
-	 * The constructor.
-	 * 
-	 * @param repositoryPath
-	 *            The path to the repository represented by the instance being
-	 *            created.
-	 */
-	public Repository(String repositoryPath) {
-		this.repositoryPath = repositoryPath;
-	}
+  /**
+   * The constructor.
+   * 
+   * @param repositoryPath
+   *            The path to the repository represented by the instance being
+   *            created.
+   */
+  public Repository(String repositoryPath) {
+    this.repositoryPath = repositoryPath;
+  }
 
-	/**
-	 * Gets a list of the branches in the repository.
-	 * 
-	 * @return The branches in the repository.
-	 */
-	public List<Branch> getBranches() {
-		return null;
-	}
+  /**
+   * Gets a list of the branches in the repository.
+   * 
+   * @return The branches in the repository.
+   */
+  public List<Branch> getBranches() {
+    return null;
+  }
 
-	/**
-	 * Gets the repository path represented by this repository object.
-	 * 
-	 * @return
-	 */
-	public String getRepositoryPath() {
-		return repositoryPath;
-	}
+  /**
+   * Gets the repository path represented by this repository object.
+   * 
+   * @return
+   */
+  public String getRepositoryPath() {
+    return repositoryPath;
+  }
 
 }

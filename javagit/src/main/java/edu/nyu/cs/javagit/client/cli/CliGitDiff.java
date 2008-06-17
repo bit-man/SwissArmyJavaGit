@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitDiff;
  */
 public class CliGitDiff implements IGitDiff {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

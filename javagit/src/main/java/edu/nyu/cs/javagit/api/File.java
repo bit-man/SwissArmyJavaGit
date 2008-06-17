@@ -7,22 +7,22 @@ package edu.nyu.cs.javagit.api;
  */
 public class File implements IGitTreeObject {
 
-	public void add() {
-	}
+  public void add() {
+  }
 
-	public void commit() {
-	}
+  public void commit() {
+  }
 
-	public Branch getBranch() {
-		return null;
-	}
+  public Branch getBranch() {
+    return null;
+  }
 
-	public String getGitHash() {
-		return null;
-	}
+  public String getGitHash() {
+    return null;
+  }
 
-	public IGitTreeObject getParent() {
-		return null;
-	}
+  public IGitTreeObject getParent() {
+    return null;
+  }
 
 }

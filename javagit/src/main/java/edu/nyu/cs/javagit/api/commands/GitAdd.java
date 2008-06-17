@@ -5,9 +5,9 @@ package edu.nyu.cs.javagit.api.commands;
  * directory tree into git repository
  */
 public class GitAdd {
-	
-	public GitAddResponse add( String repositoryPath, String fileName ) {
-		return null;
-	}
+  
+  public GitAddResponse add( String repositoryPath, String fileName ) {
+    return null;
+  }
 
 }

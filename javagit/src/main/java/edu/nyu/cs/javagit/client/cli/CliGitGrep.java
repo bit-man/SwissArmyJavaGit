@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitGrep;
  */
 public class CliGitGrep implements IGitGrep {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

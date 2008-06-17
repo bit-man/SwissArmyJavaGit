@@ -8,16 +8,16 @@ import java.io.IOException;
  */
 public interface IGitAdd {
 
-	/**
-	 * 
-	 * @param repositoryPath
-	 * @param args
-	 * @return
-	 * @throws IOException can be thrown because
-	 * 	- The path to filename does not exist
-	 *  - or the file does not exist
-	 *  - repository path does not exist
-	 */
-	public GitAddResponse add( String directory, String[] args ) throws IOException;
+  /**
+   * 
+   * @param repositoryPath
+   * @param args
+   * @return
+   * @throws IOException can be thrown because
+   *   - The path to filename does not exist
+   *  - or the file does not exist
+   *  - repository path does not exist
+   */
+  public GitAddResponse add( String directory, String[] args ) throws IOException;
 
 }

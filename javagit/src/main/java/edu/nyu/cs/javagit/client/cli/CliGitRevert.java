@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitRevert;
  */
 public class CliGitRevert implements IGitRevert {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

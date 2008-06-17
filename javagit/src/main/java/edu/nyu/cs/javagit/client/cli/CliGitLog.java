@@ -7,6 +7,6 @@ import edu.nyu.cs.javagit.client.IGitLog;
  */
 public class CliGitLog implements IGitLog {
 
-	// TODO: Implement the required methods
+  // TODO: Implement the required methods
 
 }

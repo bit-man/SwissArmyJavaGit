@@ -8,29 +8,29 @@ package edu.nyu.cs.javagit.api;
  */
 public interface IGitTreeObject {
 
-	/**
-	 * Gets the branch this object is on.
-	 * 
-	 * @return The branch this object is on.
-	 */
-	public Branch getBranch();
+  /**
+   * Gets the branch this object is on.
+   * 
+   * @return The branch this object is on.
+   */
+  public Branch getBranch();
 
-	/**
-	 * The git SHA1 hash code of this object.
-	 * 
-	 * @return The git SHA1 hash code of this object.
-	 */
-	public String getGitHash();
+  /**
+   * The git SHA1 hash code of this object.
+   * 
+   * @return The git SHA1 hash code of this object.
+   */
+  public String getGitHash();
 
-	public void add();
+  public void add();
 
-	public void commit();
+  public void commit();
 
-	/**
-	 * Gets the parent object of this object.
-	 * 
-	 * @return The parent object of this object.
-	 */
-	public IGitTreeObject getParent();
+  /**
+   * Gets the parent object of this object.
+   * 
+   * @return The parent object of this object.
+   */
+  public IGitTreeObject getParent();
 
 }
