@@ -13,12 +13,12 @@ import edu.nyu.cs.javagit.client.cli.CliClient;
  */
 public class ClientManager {
 
-	/** An enumeration of the available client types. */
+	// An enumeration of the available client types.
 	public static enum ClientType {
 		CLI
 	};
 
-	/** The singleton instance of the class <code>ClientManager</code>. */
+	// The singleton instance of the class <code>ClientManager</code>.
 	private static ClientManager INSTANCE = new ClientManager();
 
 	/**
@@ -30,7 +30,7 @@ public class ClientManager {
 		return INSTANCE;
 	}
 
-	/** The preferred client type. */
+	// The preferred client type.
 	private ClientType preferredClientType = ClientType.CLI;
 
 	/**

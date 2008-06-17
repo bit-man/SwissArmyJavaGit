@@ -32,10 +32,10 @@ public class CliGitCommit implements IGitCommit {
 
 	public class GitCommitParser implements IParser {
 
-		/** Track the number of lines parsed. */
+		// Track the number of lines parsed.
 		private int numLinesParsed = 0;
 
-		/** The response object for a commit. */
+		// The response object for a commit.
 		private GitCommitResponse response;
 
 		public void parseLine(String line) {

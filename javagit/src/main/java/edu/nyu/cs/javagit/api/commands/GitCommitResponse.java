@@ -11,19 +11,19 @@ public class GitCommitResponse {
 	// TODO (jhl388): Add methods to retrieve added, copied, deleted and renamed
 	// file information.
 
-	/** The short hash name for the commit. */
+	// The short hash name for the commit.
 	private String commitShortHashName = "";
 
-	/** The short comment for the commit. */
+	// The short comment for the commit.
 	private String commitShortComment = "";
 
-	/** Indicates how many files have changed in a commit. */
+	// Indicates how many files have changed in a commit.
 	private int filesChanged = 0;
 
-	/** Indicates how many lines were inserted in a commit. */
+	// Indicates how many lines were inserted in a commit.
 	private int linesInserted = 0;
 
-	/** Indicates how many lines were deleted in a commit. */
+	// Indicates how many lines were deleted in a commit.
 	private int linesDeleted = 0;
 
 	/**
@@ -298,10 +298,10 @@ public class GitCommitResponse {
 		// TODO (jhl388): Add a method to get a javagit File instance for this
 		// file.
 
-		/** The path to the file. */
+		// The path to the file.
 		private String pathTofile;
 
-		/** The mode the file was added/deleted with. */
+		// The mode the file was added/deleted with.
 		private String mode;
 
 		/**
@@ -346,13 +346,13 @@ public class GitCommitResponse {
 		// TODO (jhl388): Add methods to get a javagit File instance for these
 		// files.
 
-		/** The path to the file that is the source of the copied/moved file. */
+		// The path to the file that is the source of the copied/moved file.
 		private String sourceFilePath;
 
-		/** The path to the new file/location. */
+		// The path to the new file/location.
 		private String destinationFilePath;
 
-		/** The percentage. (not sure how to read this yet, -- jhl388 2008.06.15) */
+		// The percentage. (not sure how to read this yet, -- jhl388 2008.06.15)
 		private int percentage;
 
 		/**

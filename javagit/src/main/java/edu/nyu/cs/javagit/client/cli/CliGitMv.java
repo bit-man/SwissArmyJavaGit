@@ -32,7 +32,7 @@ public class CliGitMv implements IGitMv {
 	
 	public class GitMvParser implements IParser {
 
-		/** The response object for an mv operation. */
+		// The response object for an mv operation.
 		private GitMvResponse response;
 		
 		public void parseLine(String line) {

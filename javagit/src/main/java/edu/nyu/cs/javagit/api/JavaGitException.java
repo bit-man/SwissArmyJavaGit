@@ -5,7 +5,7 @@ package edu.nyu.cs.javagit.api;
  */
 public class JavaGitException extends Exception {
 
-	/** The code for an exception instance. */
+	// The code for an exception instance.
 	private int code;
 
 	/**
