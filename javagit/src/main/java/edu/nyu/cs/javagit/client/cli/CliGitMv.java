@@ -12,7 +12,8 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  */
 public class CliGitMv implements IGitMv {
 
-	public GitMvResponse mv(String repoPath, String option, String source, String destination) throws IOException {
+	public GitMvResponse mv(String repoPath, String option, String source, 
+                          String destination) throws IOException {
 		CheckUtilities.checkStringArgument(option, "option");
 		CheckUtilities.checkStringArgument(source, "source");
 		CheckUtilities.checkStringArgument(destination, "destination");

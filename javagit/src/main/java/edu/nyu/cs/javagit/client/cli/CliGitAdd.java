@@ -79,7 +79,8 @@ public class CliGitAdd implements IGitAdd {
 	 * 					IOException thrown if the path or filename is not valid.
 	 * 
 	 */
-	private void doValidityChecks(String directory, String[] args) throws IOException, IllegalArgumentException {
+	private void doValidityChecks(String directory, String[] args) 
+                   throws IOException, IllegalArgumentException {
 		
 		// Throw exception if git command has no arguments
 		if ( args.length == 0 ) {
