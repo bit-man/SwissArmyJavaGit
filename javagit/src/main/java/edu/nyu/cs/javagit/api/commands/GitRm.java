@@ -1,10 +1,10 @@
 package edu.nyu.cs.javagit.api.commands;
 
 import java.io.IOException;
+import java.util.List;
 
 import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
-import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.client.IGitRm;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
@@ -35,14 +35,14 @@ public class GitRm {
    *                <li>a command is not found on the PATH</li>
    *                </ul>
    */
-  public GitRmResponse rm(String repositoryPath, String[] files)
+  public GitRmResponse rm(String repositoryPath, List<String> files)
       throws IOException {
 
     // TODO (jhl388): Change this method to take the JavaGitConfig object,
     // or whatever it ends up being called, once Ross and Max create it.
 
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
-    CheckUtilities.checkStringArrayArgument(files, "file list");
+    CheckUtilities.checkStringListArgument(files, "file list");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitRm GitRm = client.getGitRmInstance();

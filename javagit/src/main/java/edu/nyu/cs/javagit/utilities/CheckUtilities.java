@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.utilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * This class provides utilities to check parameters for validity.
@@ -21,13 +22,13 @@ public class CheckUtilities {
    * @param variableName
    *            The name of the variable to use in throwing exceptions.
    */
-  public static void checkStringArrayArgument(String[] str, String variableName) {
+  public static void checkStringListArgument(List<String> str, String variableName) {
     if (null == str) {
       throw new NullPointerException("No " + variableName
           + " specified. A " + variableName + " is required.");
     }
-    for(int i = 0; i < str.length; i++) {
-      checkStringArgument(str[i],variableName);
+    for(int i = 0; i < str.size(); i++) {
+      checkStringArgument(str.get(i),variableName);
     }
   }
 
