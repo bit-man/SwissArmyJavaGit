@@ -46,7 +46,6 @@ public class CliGitRm implements IGitRm {
       success = true;
     }
 
-    @Override
     public void parseLine(String line) {
       // handle failures
       if(line.indexOf("index file corrupt") == 0 ||
