@@ -13,11 +13,11 @@ public class ProcessUtilities {
    * Start a process.
    * 
    * @param pb
-   *            The <code>ProcessBuilder</code> to use to start the process.
+   *          The <code>ProcessBuilder</code> to use to start the process.
    * @return The started process.
    * @exception IOException
-   *                An <code>IOException</code> is thrown if there is
-   *                trouble starting the sub-process.
+   *              An <code>IOException</code> is thrown if there is trouble starting the
+   *              sub-process.
    */
   public static Process startProcess(ProcessBuilder pb) throws IOException {
     try {
@@ -33,15 +33,13 @@ public class ProcessUtilities {
    * Reads the output from the process and prints it to stdout.
    * 
    * @param p
-   *            The process from which to read the output.
+   *          The process from which to read the output.
    * @exception IOException
-   *                An <code>IOException</code> is thrown if there is
-   *                trouble reading input from the sub-process.
+   *              An <code>IOException</code> is thrown if there is trouble reading input from the
+   *              sub-process.
    */
-  public static void getProcessOutput(Process p, IParser parser)
-      throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(p
-        .getInputStream()));
+  public static void getProcessOutput(Process p, IParser parser) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
     while (true) {
       try {
         String str = br.readLine();
@@ -50,10 +48,11 @@ public class ProcessUtilities {
         }
         parser.parseLine(str);
       } catch (IOException e) {
-        // TODO: add logging of any information already read from the
-        // InputStream. -- jhl388 06.14.2008
-        IOException toThrow = new IOException(
-            "Error reading input from the sub-process");
+        /*
+         * TODO: add logging of any information already read from the InputStream. -- jhl388
+         * 06.14.2008
+         */
+        IOException toThrow = new IOException("Error reading input from the sub-process");
         toThrow.initCause(e);
         throw toThrow;
       }
@@ -65,13 +64,14 @@ public class ProcessUtilities {
    * Waits for a process to terminate and then destroys it.
    * 
    * @param p
-   *            The process to wait for and destroy.
-   * @return The exit value of the process. By convention, 0 indicates normal
-   *         termination.
+   *          The process to wait for and destroy.
+   * @return The exit value of the process. By convention, 0 indicates normal termination.
    */
   public static int waitForAndDestroyProcess(Process p) {
-    // I'm not sure this is the best way to handle waiting for a process
-    // to complete. -- jhl388 06.14.2008
+    /*
+     * I'm not sure this is the best way to handle waiting for a process to complete. -- jhl388
+     * 06.14.2008
+     */
     while (true) {
       try {
         int i = p.waitFor();

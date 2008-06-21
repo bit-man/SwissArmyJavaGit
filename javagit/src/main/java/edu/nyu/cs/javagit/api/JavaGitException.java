@@ -12,7 +12,7 @@ public class JavaGitException extends Exception {
    * Create an exception with a code.
    * 
    * @param code
-   *            The code for this exception.
+   *          The code for this exception.
    */
   public JavaGitException(int code) {
     this.code = code;
@@ -22,9 +22,9 @@ public class JavaGitException extends Exception {
    * Create an exception with a code and a message.
    * 
    * @param code
-   *            The code for this exception.
+   *          The code for this exception.
    * @param message
-   *            The message for this exception.
+   *          The message for this exception.
    */
   public JavaGitException(int code, String message) {
     super(message);
@@ -32,15 +32,14 @@ public class JavaGitException extends Exception {
   }
 
   /**
-   * Create an exception with a code, a message and a causal
-   * <code>Throwable</code>.
+   * Create an exception with a code, a message and a causal <code>Throwable</code>.
    * 
    * @param code
-   *            The code for this exception.
+   *          The code for this exception.
    * @param message
-   *            The message for this exception.
+   *          The message for this exception.
    * @param cause
-   *            A <code>Throwable</code> that caused this exception.
+   *          A <code>Throwable</code> that caused this exception.
    */
   public JavaGitException(int code, String message, Throwable cause) {
     super(message, cause);
@@ -50,9 +49,9 @@ public class JavaGitException extends Exception {
    * Create an exception with a code and a causal <code>Throwable</code>.
    * 
    * @param code
-   *            The code for this exception.
+   *          The code for this exception.
    * @param cause
-   *            A <code>Throwable</code> that caused this exception.
+   *          A <code>Throwable</code> that caused this exception.
    */
   public JavaGitException(int code, Throwable cause) {
     super(cause);
