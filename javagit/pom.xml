@@ -14,6 +14,12 @@
   <dependencies>
   </dependencies>
 
+  <scm>
+    <connection>scm:svn:https://subversive.cims.nyu.edu/osp/javagit/trunk/javagit</connection>
+    <developerConnection>scm:svn:https://subversive.cims.nyu.edu/osp/javagit/trunk/javagit</developerConnection>
+    <url>https://subversive.cims.nyu.edu/osp</url>
+  </scm>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -24,6 +30,16 @@
           <configuration>
             <source>1.5</source>
             <target>1.5</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>1.0</version>
+          <configuration>
+            <connectionType>connection</connectionType>
+            <username>USERNAME</username>
+            <password>PASSWORD</password>
           </configuration>
         </plugin>
       </plugins>
