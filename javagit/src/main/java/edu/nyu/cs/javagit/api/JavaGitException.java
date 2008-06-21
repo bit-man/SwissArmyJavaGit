@@ -9,16 +9,6 @@ public class JavaGitException extends Exception {
   private int code;
 
   /**
-   * Create an exception with a code.
-   * 
-   * @param code
-   *          The code for this exception.
-   */
-  public JavaGitException(int code) {
-    this.code = code;
-  }
-
-  /**
    * Create an exception with a code and a message.
    * 
    * @param code
@@ -43,18 +33,6 @@ public class JavaGitException extends Exception {
    */
   public JavaGitException(int code, String message, Throwable cause) {
     super(message, cause);
-  }
-
-  /**
-   * Create an exception with a code and a causal <code>Throwable</code>.
-   * 
-   * @param code
-   *          The code for this exception.
-   * @param cause
-   *          A <code>Throwable</code> that caused this exception.
-   */
-  public JavaGitException(int code, Throwable cause) {
-    super(cause);
   }
 
   /**
