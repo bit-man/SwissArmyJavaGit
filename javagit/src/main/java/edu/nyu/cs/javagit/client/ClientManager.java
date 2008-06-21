@@ -1,6 +1,6 @@
 package edu.nyu.cs.javagit.client;
 
-import foo;
+import foobar;
 import java.util.HashMap;
 import java.util.Map;
 
