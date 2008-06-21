@@ -23,8 +23,8 @@ public class CheckUtilities {
    */
   public static void checkStringListArgument(List<String> str, String variableName) {
     if (null == str) {
-      throw new NullPointerException("No " + variableName + " specified. A " + variableName
-          + " is required.");
+      throw new NullPointerException(ExceptionMessageMap.getMessage("000002")
+          + "  { variableName=[" + variableName + "] }");
     }
     for (int i = 0; i < str.size(); i++) {
       checkStringArgument(str.get(i), variableName);
@@ -44,26 +44,28 @@ public class CheckUtilities {
    */
   public static void checkStringArgument(String str, String variableName) {
     if (null == str) {
-      throw new NullPointerException("No " + variableName + " specified. A " + variableName
-          + " is required.");
+      throw new NullPointerException(ExceptionMessageMap.getMessage("000001")
+          + "  { variableName=[" + variableName + "] }");
     }
     if (str.length() == 0) {
-      throw new IllegalArgumentException("No " + variableName + " specified. A " + variableName
-          + " is required.");
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000001")
+          + "  { variableName=[" + variableName + "] }");
     }
   }
 
   /**
-   * This assumes that the above check for string validity has already been run and the
-   * path/filename is neither null or of size 0.
+   * Checks that the specified filename exists. This assumes that the above check for string
+   * validity has already been run and the path/filename is neither null or of size 0.
    * 
    * @param filename
-   *          file or directory path
+   *          File or directory path
    */
   public static void checkFileValidity(String filename) throws IOException {
     File file = new File(filename);
     if (!file.exists()) {
-      throw new IOException("file or path with name " + filename + " does not exist");
+      throw new IOException(ExceptionMessageMap.getMessage("010001") + "  { filename=[" + filename
+          + "] }");
     }
   }
+
 }
