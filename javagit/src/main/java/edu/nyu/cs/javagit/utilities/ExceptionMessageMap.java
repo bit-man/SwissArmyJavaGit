@@ -52,7 +52,7 @@ public class ExceptionMessageMap {
 
   private static Map<String, String> MESSAGE_MAP;
 
-  {
+  static {
     MESSAGE_MAP = new HashMap<String, String>();
 
     MESSAGE_MAP.put("000001", "000001: A String variable was not specified but is required.");
