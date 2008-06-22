@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitCommit;
@@ -33,8 +34,11 @@ public class GitCommit {
    *              <li>access to a file is denied</li>
    *              <li>a command is not found on the PATH</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commit(String repositoryPath, String message) throws IOException {
+  public GitCommitResponse commit(String repositoryPath, String message) throws IOException,
+      JavaGitException {
 
     /*
      * TODO (jhl388): Change this method to take the JavaGitConfig object, or whatever it ends up

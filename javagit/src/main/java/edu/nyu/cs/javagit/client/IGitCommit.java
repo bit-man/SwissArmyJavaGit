@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.client;
 
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 
 /**
@@ -28,7 +29,10 @@ public interface IGitCommit {
    *              <li>access to a file is denied</li>
    *              <li>a command is not found on the PATH</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commit(String repoPath, String message) throws IOException;
+  public GitCommitResponse commit(String repoPath, String message) throws IOException,
+      JavaGitException;
 
 }

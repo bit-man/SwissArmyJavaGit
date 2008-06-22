@@ -3,16 +3,19 @@ package edu.nyu.cs.javagit.client.cli;
 import java.io.File;
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Command-line implementation of the <code>IGitCommit</code> interface.
  */
 public class CliGitCommit implements IGitCommit {
 
-  public GitCommitResponse commit(String repoPath, String message) throws IOException {
+  public GitCommitResponse commit(String repoPath, String message) throws IOException,
+      JavaGitException {
     CheckUtilities.checkStringArgument(repoPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
 
@@ -31,6 +34,9 @@ public class CliGitCommit implements IGitCommit {
 
   public class GitCommitParser implements IParser {
 
+    // Holding onto the error message to make part of an exception
+    private StringBuffer errorMsg = null;
+
     // Track the number of lines parsed.
     private int numLinesParsed = 0;
 
@@ -39,7 +45,13 @@ public class CliGitCommit implements IGitCommit {
 
     public void parseLine(String line) {
 
-      // TODO (jhl388): handle error messages! (git-commit responses)
+      // TODO (jhl388): handle error messages in a better manner.
+
+      if (null != errorMsg) {
+        ++numLinesParsed;
+        errorMsg.append(", line" + numLinesParsed + "=[" + line + "]");
+        return;
+      }
 
       switch (numLinesParsed) {
       case 0:
@@ -61,12 +73,16 @@ public class CliGitCommit implements IGitCommit {
      *          The line of text to process.
      */
     private void parseLineOne(String line) {
-      int locColon = line.indexOf(':');
-      int locShortHash = line.lastIndexOf(' ', locColon);
-      String shortHash = line.substring(locShortHash + 1, locColon);
-      String shortComment = line.substring(locColon + 2);
-
-      response = new GitCommitResponse(shortHash, shortComment);
+      if (line.startsWith("Created initial commit ")) {
+        int locColon = line.indexOf(':');
+        int locShortHash = line.lastIndexOf(' ', locColon);
+        String shortHash = line.substring(locShortHash + 1, locColon);
+        String shortComment = line.substring(locColon + 2);
+        response = new GitCommitResponse(shortHash, shortComment);
+      } else {
+        errorMsg = new StringBuffer();
+        errorMsg.append("line1=[" + line + "]");
+      }
     }
 
     /**
@@ -104,7 +120,6 @@ public class CliGitCommit implements IGitCommit {
       } else if (line.startsWith(" rename")) {
         parseCopyRenameLine(line, false);
       }
-
     }
 
     /**
@@ -169,7 +184,6 @@ public class CliGitCommit implements IGitCommit {
      *          True if parsing a copy line, false if parsing a rename line.
      */
     private void parseCopyRenameLine(String line, boolean isCopy) {
-
       final int PATH_START = 6;
       int curlyOffset = line.indexOf('{', PATH_START);
       int openParenOffset = line.lastIndexOf('(');
@@ -211,7 +225,11 @@ public class CliGitCommit implements IGitCommit {
      * @return The <code>GitCommitResponse</code> object containing the commit's response
      *         information.
      */
-    public GitCommitResponse getResponse() {
+    public GitCommitResponse getResponse() throws JavaGitException {
+      if (null != errorMsg) {
+        throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001")
+            + "  The git-commit error message:  { " + errorMsg.toString() + " }");
+      }
       return response;
     }
 

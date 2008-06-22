@@ -24,7 +24,7 @@ import java.util.Map;
  * <ul>
  * <li>00 - Standard Java exceptions caused by malformed or invalid method parameters</li>
  * <li>01 - All other standard Java exceptions</li>
- * <li></li>
+ * <li>10 - General JavaGit exceptions</li>
  * </ul>
  * 
  * How to use the codes and messages:
@@ -62,6 +62,8 @@ public class ExceptionMessageMap {
 
     MESSAGE_MAP.put("010100", "010100: Unable to start sub-process.");
     MESSAGE_MAP.put("010101", "010101: Error reading input from the sub-process.");
+
+    MESSAGE_MAP.put("100001", "100001: Error calling git-commit.");
   }
 
   /**
