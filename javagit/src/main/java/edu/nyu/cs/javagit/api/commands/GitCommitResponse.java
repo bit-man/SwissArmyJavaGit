@@ -1,6 +1,7 @@
 package edu.nyu.cs.javagit.api.commands;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
@@ -146,46 +147,55 @@ public class GitCommitResponse {
     if (!(o instanceof GitCommitResponse)) {
       return false;
     }
-  
+
     GitCommitResponse g = (GitCommitResponse) o;
-  
+
     if (!CheckUtilities.checkObjectsEqual(getCommitShortHashName(), g.getCommitShortHashName())) {
       return false;
     }
-  
+
     if (!CheckUtilities.checkObjectsEqual(getCommitShortComment(), g.getCommitShortComment())) {
       return false;
     }
-  
+
     if (getFilesChanged() != g.getFilesChanged()) {
       return false;
     }
-  
+
     if (getLinesInserted() != g.getLinesInserted()) {
       return false;
     }
-  
+
     if (getLinesDeleted() != g.getLinesDeleted()) {
       return false;
     }
-  
+
     if (!CheckUtilities.checkUnorderedListsEqual(addedFiles, g.addedFiles)) {
       return false;
     }
-  
+
     if (!CheckUtilities.checkUnorderedListsEqual(copiedFiles, g.copiedFiles)) {
       return false;
     }
-  
+
     if (!CheckUtilities.checkUnorderedListsEqual(deletedFiles, g.deletedFiles)) {
       return false;
     }
-  
+
     if (!CheckUtilities.checkUnorderedListsEqual(renamedFiles, g.renamedFiles)) {
       return false;
     }
-  
+
     return true;
+  }
+
+  /**
+   * Get an <code>Iterator</code> with which to iterate over the added files.
+   * 
+   * @return An <code>Iterator</code> with which to iterate over the added files.
+   */
+  public Iterator<AddedOrDeletedFile> getAddedFilesIterator() {
+    return addedFiles.iterator();
   }
 
   /**
@@ -206,6 +216,24 @@ public class GitCommitResponse {
    */
   public String getCommitShortHashName() {
     return commitShortHashName;
+  }
+
+  /**
+   * Get an <code>Iterator</code> with which to iterate over the copied files.
+   * 
+   * @return An <code>Iterator</code> with which to iterate over the copied files.
+   */
+  public Iterator<CopiedOrMovedFile> getCopiedFilesIterator() {
+    return copiedFiles.iterator();
+  }
+
+  /**
+   * Get an <code>Iterator</code> with which to iterate over the deleted files.
+   * 
+   * @return An <code>Iterator</code> with which to iterate over the deleted files.
+   */
+  public Iterator<AddedOrDeletedFile> getDeletedFilesIterator() {
+    return deletedFiles.iterator();
   }
 
   /**
@@ -233,6 +261,15 @@ public class GitCommitResponse {
    */
   public int getLinesDeleted() {
     return linesDeleted;
+  }
+
+  /**
+   * Get an <code>Iterator</code> with which to iterate over the renamed files.
+   * 
+   * @return An <code>Iterator</code> with which to iterate over the renamed files.
+   */
+  public Iterator<CopiedOrMovedFile> getRenamedFilesIterator() {
+    return renamedFiles.iterator();
   }
 
   public int hashCode() {
@@ -358,17 +395,17 @@ public class GitCommitResponse {
       if (!(o instanceof AddedOrDeletedFile)) {
         return false;
       }
-    
+
       AddedOrDeletedFile a = (AddedOrDeletedFile) o;
-    
+
       if (!CheckUtilities.checkObjectsEqual(getPathTofile(), a.getPathTofile())) {
         return false;
       }
-    
+
       if (!CheckUtilities.checkObjectsEqual(getMode(), a.getMode())) {
         return false;
       }
-    
+
       return true;
     }
 
@@ -432,21 +469,21 @@ public class GitCommitResponse {
       if (!(o instanceof CopiedOrMovedFile)) {
         return false;
       }
-    
+
       CopiedOrMovedFile c = (CopiedOrMovedFile) o;
-    
+
       if (!CheckUtilities.checkObjectsEqual(getSourceFilePath(), c.getSourceFilePath())) {
         return false;
       }
-    
+
       if (!CheckUtilities.checkObjectsEqual(getDestinationFilePath(), c.getDestinationFilePath())) {
         return false;
       }
-    
+
       if (getPercentage() != c.getPercentage()) {
         return false;
       }
-    
+
       return true;
     }
 
