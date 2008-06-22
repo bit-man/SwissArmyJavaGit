@@ -69,137 +69,6 @@ public class GitCommitResponse {
   }
 
   /**
-   * Gets the short comment (description) for the commit. It is the first line of the commit
-   * message.
-   * 
-   * @return The short comment for the commit.
-   */
-  public String getCommitShortComment() {
-    return commitShortComment;
-  }
-
-  /**
-   * Gets the short hash name for the commit. This is the first seven characters of the SHA1 hash
-   * that represents the commit.
-   * 
-   * @return The short hash name for the commit.
-   */
-  public String getCommitShortHashName() {
-    return commitShortHashName;
-  }
-
-  /**
-   * Gets the number of files changed in the commit.
-   * 
-   * @return The number of files changed in the commit.
-   */
-  public int getFilesChanged() {
-    return filesChanged;
-  }
-
-  /**
-   * Sets the number of files changed in the commit.
-   * 
-   * @param filesChanged
-   *          The number of files changed in the commit.
-   */
-  public void setFilesChanged(int filesChanged) {
-    this.filesChanged = filesChanged;
-  }
-
-  /**
-   * Sets the number of files changed during a commit.
-   * 
-   * @param filesChangedStr
-   *          The number of files changed in <code>String</code> format.
-   * @return True if the <code>filesChangedStr</code> parameter is a <code>String</code>
-   *         representing a number. False if the <code>String</code> does not contain a parsable
-   *         integer.
-   */
-  public boolean setFilesChanged(String filesChangedStr) {
-    try {
-      this.filesChanged = Integer.parseInt(filesChangedStr);
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
-   * Gets the number of lines inserted in the commit.
-   * 
-   * @return The number of lines inserted in the commit.
-   */
-  public int getLinesInserted() {
-    return linesInserted;
-  }
-
-  /**
-   * Sets the number of lines inserted in the commit.
-   * 
-   * @param linesInserted
-   *          The number of lines inserted in the commit.
-   */
-  public void setLinesInserted(int linesInserted) {
-    this.linesInserted = linesInserted;
-  }
-
-  /**
-   * Sets the number of lines inserted in a commit.
-   * 
-   * @param linesInsertedStr
-   *          The number of lines inserted in <code>String</code> format.
-   * @return True if the <code>linesInsertedStr</code> parameter is a <code>String</code>
-   *         representing a number. False if the <code>String</code> does not contain a parsable
-   *         integer.
-   */
-  public boolean setLinesInserted(String linesInsertedStr) {
-    try {
-      this.linesInserted = Integer.parseInt(linesInsertedStr);
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
-   * Gets the number of lines deleted in the commit.
-   * 
-   * @return The number of lines deleted in the commit.
-   */
-  public int getLinesDeleted() {
-    return linesDeleted;
-  }
-
-  /**
-   * Sets the number of lines deleted in the commit.
-   * 
-   * @param linesDeleted
-   *          The number of lines deleted in the commit.
-   */
-  public void setLinesDeleted(int linesDeleted) {
-    this.linesDeleted = linesDeleted;
-  }
-
-  /**
-   * Sets the number of lines deleted in a commit.
-   * 
-   * @param linesDeletedStr
-   *          The number of lines deleted in <code>String</code> format.
-   * @return True if the <code>linesDeletedStr</code> parameter is a <code>String</code>
-   *         representing a number. False if the <code>String</code> does not contain a parsable
-   *         integer.
-   */
-  public boolean setLinesDeleted(String linesDeletedStr) {
-    try {
-      this.linesDeleted = Integer.parseInt(linesDeletedStr);
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
-
-  /**
    * Add the information about a newly added file in the repository for a given commit.
    * 
    * @param pathToFile
@@ -214,6 +83,26 @@ public class GitCommitResponse {
     }
 
     return addedFiles.add(new AddedOrDeletedFile(pathToFile, mode));
+  }
+
+  /**
+   * Add the information about a newly copied file in the repository for a given commit.
+   * 
+   * @param sourceFilePath
+   *          The path to the source file.
+   * @param destinationFilePath
+   *          The path to the destination file.
+   * @param percentage
+   *          The percentage.
+   * @return False if <code>sourceFilePath</code> or <code>destinationFilePath</code> is null or
+   *         length zero. True otherwise.
+   */
+  public boolean addCopiedFile(String sourceFilePath, String destinationFilePath, int percentage) {
+    if (null == sourceFilePath || sourceFilePath.length() == 0 || null == destinationFilePath
+        || destinationFilePath.length() == 0) {
+      return false;
+    }
+    return copiedFiles.add(new CopiedOrMovedFile(sourceFilePath, destinationFilePath, percentage));
   }
 
   /**
@@ -253,24 +142,97 @@ public class GitCommitResponse {
     return renamedFiles.add(new CopiedOrMovedFile(sourceFilePath, destinationFilePath, percentage));
   }
 
-  /**
-   * Add the information about a newly copied file in the repository for a given commit.
-   * 
-   * @param sourceFilePath
-   *          The path to the source file.
-   * @param destinationFilePath
-   *          The path to the destination file.
-   * @param percentage
-   *          The percentage.
-   * @return False if <code>sourceFilePath</code> or <code>destinationFilePath</code> is null or
-   *         length zero. True otherwise.
-   */
-  public boolean addCopiedFile(String sourceFilePath, String destinationFilePath, int percentage) {
-    if (null == sourceFilePath || sourceFilePath.length() == 0 || null == destinationFilePath
-        || destinationFilePath.length() == 0) {
+  public boolean equals(Object o) {
+    if (!(o instanceof GitCommitResponse)) {
       return false;
     }
-    return copiedFiles.add(new CopiedOrMovedFile(sourceFilePath, destinationFilePath, percentage));
+  
+    GitCommitResponse g = (GitCommitResponse) o;
+  
+    if (!CheckUtilities.checkObjectsEqual(getCommitShortHashName(), g.getCommitShortHashName())) {
+      return false;
+    }
+  
+    if (!CheckUtilities.checkObjectsEqual(getCommitShortComment(), g.getCommitShortComment())) {
+      return false;
+    }
+  
+    if (getFilesChanged() != g.getFilesChanged()) {
+      return false;
+    }
+  
+    if (getLinesInserted() != g.getLinesInserted()) {
+      return false;
+    }
+  
+    if (getLinesDeleted() != g.getLinesDeleted()) {
+      return false;
+    }
+  
+    if (!CheckUtilities.checkUnorderedListsEqual(addedFiles, g.addedFiles)) {
+      return false;
+    }
+  
+    if (!CheckUtilities.checkUnorderedListsEqual(copiedFiles, g.copiedFiles)) {
+      return false;
+    }
+  
+    if (!CheckUtilities.checkUnorderedListsEqual(deletedFiles, g.deletedFiles)) {
+      return false;
+    }
+  
+    if (!CheckUtilities.checkUnorderedListsEqual(renamedFiles, g.renamedFiles)) {
+      return false;
+    }
+  
+    return true;
+  }
+
+  /**
+   * Gets the short comment (description) for the commit. It is the first line of the commit
+   * message.
+   * 
+   * @return The short comment for the commit.
+   */
+  public String getCommitShortComment() {
+    return commitShortComment;
+  }
+
+  /**
+   * Gets the short hash name for the commit. This is the first seven characters of the SHA1 hash
+   * that represents the commit.
+   * 
+   * @return The short hash name for the commit.
+   */
+  public String getCommitShortHashName() {
+    return commitShortHashName;
+  }
+
+  /**
+   * Gets the number of files changed in the commit.
+   * 
+   * @return The number of files changed in the commit.
+   */
+  public int getFilesChanged() {
+    return filesChanged;
+  }
+
+  /**
+   * Gets the number of lines inserted in the commit.
+   * 
+   * @return The number of lines inserted in the commit.
+   */
+  public int getLinesInserted() {
+    return linesInserted;
+  }
+
+  /**
+   * Gets the number of lines deleted in the commit.
+   * 
+   * @return The number of lines deleted in the commit.
+   */
+  public int getLinesDeleted() {
+    return linesDeleted;
   }
 
   public int hashCode() {
@@ -282,50 +244,88 @@ public class GitCommitResponse {
     return commitShortHashName.hashCode();
   }
 
-  public boolean equals(Object o) {
-    if (!(o instanceof GitCommitResponse)) {
+  /**
+   * Sets the number of files changed in the commit.
+   * 
+   * @param filesChanged
+   *          The number of files changed in the commit.
+   */
+  public void setFilesChanged(int filesChanged) {
+    this.filesChanged = filesChanged;
+  }
+
+  /**
+   * Sets the number of files changed during a commit.
+   * 
+   * @param filesChangedStr
+   *          The number of files changed in <code>String</code> format.
+   * @return True if the <code>filesChangedStr</code> parameter is a <code>String</code>
+   *         representing a number. False if the <code>String</code> does not contain a parsable
+   *         integer.
+   */
+  public boolean setFilesChanged(String filesChangedStr) {
+    try {
+      this.filesChanged = Integer.parseInt(filesChangedStr);
+      return true;
+    } catch (NumberFormatException e) {
       return false;
     }
+  }
 
-    GitCommitResponse g = (GitCommitResponse) o;
+  /**
+   * Sets the number of lines deleted in the commit.
+   * 
+   * @param linesDeleted
+   *          The number of lines deleted in the commit.
+   */
+  public void setLinesDeleted(int linesDeleted) {
+    this.linesDeleted = linesDeleted;
+  }
 
-    if (!CheckUtilities.checkObjectsEqual(getCommitShortHashName(), g.getCommitShortHashName())) {
+  /**
+   * Sets the number of lines deleted in a commit.
+   * 
+   * @param linesDeletedStr
+   *          The number of lines deleted in <code>String</code> format.
+   * @return True if the <code>linesDeletedStr</code> parameter is a <code>String</code>
+   *         representing a number. False if the <code>String</code> does not contain a parsable
+   *         integer.
+   */
+  public boolean setLinesDeleted(String linesDeletedStr) {
+    try {
+      this.linesDeleted = Integer.parseInt(linesDeletedStr);
+      return true;
+    } catch (NumberFormatException e) {
       return false;
     }
+  }
 
-    if (!CheckUtilities.checkObjectsEqual(getCommitShortComment(), g.getCommitShortComment())) {
+  /**
+   * Sets the number of lines inserted in the commit.
+   * 
+   * @param linesInserted
+   *          The number of lines inserted in the commit.
+   */
+  public void setLinesInserted(int linesInserted) {
+    this.linesInserted = linesInserted;
+  }
+
+  /**
+   * Sets the number of lines inserted in a commit.
+   * 
+   * @param linesInsertedStr
+   *          The number of lines inserted in <code>String</code> format.
+   * @return True if the <code>linesInsertedStr</code> parameter is a <code>String</code>
+   *         representing a number. False if the <code>String</code> does not contain a parsable
+   *         integer.
+   */
+  public boolean setLinesInserted(String linesInsertedStr) {
+    try {
+      this.linesInserted = Integer.parseInt(linesInsertedStr);
+      return true;
+    } catch (NumberFormatException e) {
       return false;
     }
-
-    if (getFilesChanged() != g.getFilesChanged()) {
-      return false;
-    }
-
-    if (getLinesInserted() != g.getLinesInserted()) {
-      return false;
-    }
-
-    if (getLinesDeleted() != g.getLinesDeleted()) {
-      return false;
-    }
-
-    if (!CheckUtilities.checkUnorderedListsEqual(addedFiles, g.addedFiles)) {
-      return false;
-    }
-
-    if (!CheckUtilities.checkUnorderedListsEqual(copiedFiles, g.copiedFiles)) {
-      return false;
-    }
-
-    if (!CheckUtilities.checkUnorderedListsEqual(deletedFiles, g.deletedFiles)) {
-      return false;
-    }
-
-    if (!CheckUtilities.checkUnorderedListsEqual(renamedFiles, g.renamedFiles)) {
-      return false;
-    }
-
-    return true;
   }
 
   /**
@@ -354,13 +354,22 @@ public class GitCommitResponse {
       this.mode = mode;
     }
 
-    /**
-     * Gets the path to the file.
-     * 
-     * @return The path to the file.
-     */
-    public String getPathTofile() {
-      return pathTofile;
+    public boolean equals(Object o) {
+      if (!(o instanceof AddedOrDeletedFile)) {
+        return false;
+      }
+    
+      AddedOrDeletedFile a = (AddedOrDeletedFile) o;
+    
+      if (!CheckUtilities.checkObjectsEqual(getPathTofile(), a.getPathTofile())) {
+        return false;
+      }
+    
+      if (!CheckUtilities.checkObjectsEqual(getMode(), a.getMode())) {
+        return false;
+      }
+    
+      return true;
     }
 
     /**
@@ -372,26 +381,17 @@ public class GitCommitResponse {
       return mode;
     }
 
-    public int hashCode() {
-      return pathTofile.hashCode() + mode.hashCode();
+    /**
+     * Gets the path to the file.
+     * 
+     * @return The path to the file.
+     */
+    public String getPathTofile() {
+      return pathTofile;
     }
 
-    public boolean equals(Object o) {
-      if (!(o instanceof AddedOrDeletedFile)) {
-        return false;
-      }
-
-      AddedOrDeletedFile a = (AddedOrDeletedFile) o;
-
-      if (!CheckUtilities.checkObjectsEqual(getPathTofile(), a.getPathTofile())) {
-        return false;
-      }
-
-      if (!CheckUtilities.checkObjectsEqual(getMode(), a.getMode())) {
-        return false;
-      }
-
-      return true;
+    public int hashCode() {
+      return pathTofile.hashCode() + mode.hashCode();
     }
   }
 
@@ -428,13 +428,26 @@ public class GitCommitResponse {
       this.percentage = percentage;
     }
 
-    /**
-     * Gets the path to the source file.
-     * 
-     * @return The path to the source file.
-     */
-    public String getSourceFilePath() {
-      return sourceFilePath;
+    public boolean equals(Object o) {
+      if (!(o instanceof CopiedOrMovedFile)) {
+        return false;
+      }
+    
+      CopiedOrMovedFile c = (CopiedOrMovedFile) o;
+    
+      if (!CheckUtilities.checkObjectsEqual(getSourceFilePath(), c.getSourceFilePath())) {
+        return false;
+      }
+    
+      if (!CheckUtilities.checkObjectsEqual(getDestinationFilePath(), c.getDestinationFilePath())) {
+        return false;
+      }
+    
+      if (getPercentage() != c.getPercentage()) {
+        return false;
+      }
+    
+      return true;
     }
 
     /**
@@ -455,30 +468,17 @@ public class GitCommitResponse {
       return percentage;
     }
 
-    public int hashCode() {
-      return sourceFilePath.hashCode() + destinationFilePath.hashCode() + percentage;
+    /**
+     * Gets the path to the source file.
+     * 
+     * @return The path to the source file.
+     */
+    public String getSourceFilePath() {
+      return sourceFilePath;
     }
 
-    public boolean equals(Object o) {
-      if (!(o instanceof CopiedOrMovedFile)) {
-        return false;
-      }
-
-      CopiedOrMovedFile c = (CopiedOrMovedFile) o;
-
-      if (!CheckUtilities.checkObjectsEqual(getSourceFilePath(), c.getSourceFilePath())) {
-        return false;
-      }
-
-      if (!CheckUtilities.checkObjectsEqual(getDestinationFilePath(), c.getDestinationFilePath())) {
-        return false;
-      }
-
-      if (getPercentage() != c.getPercentage()) {
-        return false;
-      }
-
-      return true;
+    public int hashCode() {
+      return sourceFilePath.hashCode() + destinationFilePath.hashCode() + percentage;
     }
   }
 
