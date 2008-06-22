@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
 /**
  * <code>ProcessUtilities</code> contains methods to help managing processes.
  */
@@ -23,7 +25,7 @@ public class ProcessUtilities {
     try {
       return pb.start();
     } catch (IOException e) {
-      IOException toThrow = new IOException("Unable to start sub-process");
+      IOException toThrow = new IOException(ExceptionMessageMap.getMessage("010100"));
       toThrow.initCause(e);
       throw toThrow;
     }
@@ -52,7 +54,7 @@ public class ProcessUtilities {
          * TODO: add logging of any information already read from the InputStream. -- jhl388
          * 06.14.2008
          */
-        IOException toThrow = new IOException("Error reading input from the sub-process");
+        IOException toThrow = new IOException(ExceptionMessageMap.getMessage("010101"));
         toThrow.initCause(e);
         throw toThrow;
       }
@@ -78,6 +80,7 @@ public class ProcessUtilities {
         p.destroy();
         return i;
       } catch (InterruptedException e) {
+        // TODO: deal with this interrupted exception in a better manner. -- jhl388 06.14.2008
         continue;
       }
     }

@@ -59,6 +59,9 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000002", "000002: A List<String> variable was not specified but is required.");
 
     MESSAGE_MAP.put("010001", "010001: File or path does not exist.");
+
+    MESSAGE_MAP.put("010100", "010100: Unable to start sub-process.");
+    MESSAGE_MAP.put("010101", "010101: Error reading input from the sub-process.");
   }
 
   /**
