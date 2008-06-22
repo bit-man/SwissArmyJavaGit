@@ -5,9 +5,74 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This class provides utilities to check parameters for validity.
+ * This class provides utilities methods that perform various checks for validity.
  */
 public class CheckUtilities {
+
+  /**
+   * Checks to see if two objects are equal. The Object.equal() method is used to check for
+   * equality.
+   * 
+   * @param o1
+   *          The first object to check.
+   * @param o2
+   *          The second object to check.
+   * @return True if the two objects are equal. False if the objects are not equal.
+   */
+  public static boolean checkObjectsEqual(Object o1, Object o2) {
+    if (null != o1 && !o1.equals(o2)) {
+      return false;
+    }
+
+    if (null == o1 && null != o2) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks if two unordered lists are equal.
+   * 
+   * @param l1
+   *          The first list to test.
+   * @param l2
+   *          The second list to test.
+   * @return True if:
+   *         <ul>
+   *         <li>both lists are null or</li>
+   *         <li>both lists are the same length, there exists an equivalent object in l2 for all
+   *         objects in l1, and there exists an equivalent object in l1 for all objects in l2</li>
+   *         </ul>
+   *         False otherwise.
+   */
+  public static boolean checkUnorderedListsEqual(List l1, List l2) {
+    if (null == l1 && null != l2) {
+      return false;
+    }
+
+    if (null != l1 && null == l2) {
+      return false;
+    }
+
+    if (l1.size() != l2.size()) {
+      return false;
+    }
+
+    for (Object o : l1) {
+      if (!l2.contains(o)) {
+        return false;
+      }
+    }
+
+    for (Object o : l2) {
+      if (!l1.contains(o)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   /**
    * Checks a <code>List&lt;String&gt;</code> argument to make sure it is not null, none of its
