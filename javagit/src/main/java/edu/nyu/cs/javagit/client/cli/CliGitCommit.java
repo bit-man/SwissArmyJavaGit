@@ -73,7 +73,7 @@ public class CliGitCommit implements IGitCommit {
      *          The line of text to process.
      */
     private void parseLineOne(String line) {
-      if (line.startsWith("Created initial commit ")) {
+      if (line.startsWith("Created initial commit ") || line.startsWith("Created commit ")) {
         int locColon = line.indexOf(':');
         int locShortHash = line.lastIndexOf(' ', locColon);
         String shortHash = line.substring(locShortHash + 1, locColon);
@@ -92,8 +92,8 @@ public class CliGitCommit implements IGitCommit {
      *          The line of text to process.
      */
     private void parseLineTwo(String line) {
-      int spaceOffset = line.indexOf(' ');
-      response.setFilesChanged(line.substring(0, spaceOffset));
+      int spaceOffset = line.indexOf(' ', 1);
+      response.setFilesChanged(line.substring(1, spaceOffset));
 
       int commaOffset = line.indexOf(',', spaceOffset);
       spaceOffset = line.indexOf(' ', commaOffset + 2);
@@ -184,23 +184,25 @@ public class CliGitCommit implements IGitCommit {
      *          True if parsing a copy line, false if parsing a rename line.
      */
     private void parseCopyRenameLine(String line, boolean isCopy) {
-      final int PATH_START = 6;
-      int curlyOffset = line.indexOf('{', PATH_START);
+      final int PATH_START_COPY = 6;
+      final int PATH_START_RENAME = 8;
+      int pathStart = (isCopy ? PATH_START_COPY : PATH_START_RENAME);
+      int openCurlyOffset = line.indexOf('{', pathStart);
       int openParenOffset = line.lastIndexOf('(');
 
       String fromPath = null;
       String toPath = null;
 
-      if (-1 == curlyOffset) {
+      if (-1 == openCurlyOffset) {
         int arrowOffset = line.indexOf("=>");
-        fromPath = line.substring(PATH_START, arrowOffset - 1);
+        fromPath = line.substring(pathStart, arrowOffset - 1);
         toPath = line.substring(arrowOffset + 3, openParenOffset - 1);
       } else {
-        String base = line.substring(PATH_START, openParenOffset);
-        int arrowOffset = line.indexOf("=>", openParenOffset + 1);
-        fromPath = base + line.substring(openParenOffset + 1, arrowOffset - 1);
-        int closeParenOffset = line.indexOf('}', arrowOffset + 3);
-        toPath = base + line.substring(arrowOffset + 3, closeParenOffset);
+        String base = line.substring(pathStart, openCurlyOffset);
+        int arrowOffset = line.indexOf("=>", openCurlyOffset);
+        fromPath = base + line.substring(openCurlyOffset + 1, arrowOffset - 1);
+        int closeCurlyOffset = line.indexOf('}', arrowOffset + 3);
+        toPath = base + line.substring(arrowOffset + 3, closeCurlyOffset);
       }
 
       int percentOffset = line.lastIndexOf('%');
