@@ -15,8 +15,7 @@ import edu.nyu.cs.javagit.client.cli.CliGitCommit;
 public class TestCliGitCommit extends TestCase {
 
   @Before
-  protected void setup() {
-
+  protected void setUp() {
   }
 
   @Test

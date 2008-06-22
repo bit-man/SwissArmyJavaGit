@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 public class TestExcpetionMessageMap extends TestCase {
 
   @Before
-  protected void setup() {
+  protected void setUp() {
   }
 
   @Test

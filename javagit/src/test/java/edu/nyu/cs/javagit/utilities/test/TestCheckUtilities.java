@@ -18,8 +18,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 public class TestCheckUtilities extends TestCase {
 
   @Before
-  protected void setup() {
-
+  protected void setUp() {
   }
 
   @Test
