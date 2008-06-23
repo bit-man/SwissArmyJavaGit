@@ -34,7 +34,7 @@ II.   DEVELOPING WITH ECLIPSE
          The necessary .project and .classfile files will be generated for all
          sub-projects of that project.
 
-      2. Open the realtimeguarantee directory as your Eclipse workspace.
+      2. Open the javagit sandbox directory as your Eclipse workspace.
 
       3. Open the workspace's Preferences and:
 
@@ -52,7 +52,7 @@ II.   DEVELOPING WITH ECLIPSE
          b. Press "Next >"
          c. Make sure the "Select root directory:" radio button is selected and
             click "Browse..."
-         d. Choose the realtimeguarantee directory and press "Choose"
+         d. Choose the javagit directory and press "Choose"
          e. Select the projects you want to import and press "Finish"
 
       5. Start developing.
