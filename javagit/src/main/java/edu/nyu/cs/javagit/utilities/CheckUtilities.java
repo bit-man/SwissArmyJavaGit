@@ -75,6 +75,25 @@ public class CheckUtilities {
   }
 
   /**
+   * Performs a null check on the specified object. If the object is null, a
+   * <code>NullPointerException</code> is thrown.
+   * 
+   * @param obj
+   *          The object to check.
+   * @param variableName
+   *          The name of the variable to use in the exception message.
+   */
+  public static void checkNullArgument(Object obj, String variableName) {
+
+    // TODO (jhl388): Add a unit test for this method (checkNullArgument()).
+
+    if (null == obj) {
+      throw new NullPointerException(ExceptionMessageMap.getMessage("000003")
+          + "  { variableName=[" + variableName + "] }");
+    }
+  }
+
+  /**
    * Checks a <code>List&lt;String&gt;</code> argument to make sure it is not null, none of its
    * elements are null, and all its elements contain one or more characters. If the
    * <code>List&lt;String&gt;</code> or any <code>String</code> is null, a
@@ -128,7 +147,7 @@ public class CheckUtilities {
   public static void checkFileValidity(String filename) throws IOException {
     File file = new File(filename);
     if (!file.exists()) {
-      throw new IOException(ExceptionMessageMap.getMessage("010001") + "  { filename=[" + filename
+      throw new IOException(ExceptionMessageMap.getMessage("020001") + "  { filename=[" + filename
           + "] }");
     }
   }

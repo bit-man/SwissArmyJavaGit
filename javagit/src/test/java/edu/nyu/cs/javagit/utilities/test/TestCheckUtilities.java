@@ -76,13 +76,13 @@ public class TestCheckUtilities extends TestCase {
   public void testCheckStringListArgument() {
     // Test for exceptions being thrown
     assertCheckStringListArgumentThrowsNPE(null, "aVariableName",
-        "000002: A List<String> variable was not specified but is required.  "
+        "000002: A List<String> argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     List<String> l = new ArrayList<String>();
     l.add(null);
     assertCheckStringListArgumentThrowsNPE(l, "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     l.clear();
@@ -90,13 +90,13 @@ public class TestCheckUtilities extends TestCase {
     l.add(null);
     l.add("str3");
     assertCheckStringListArgumentThrowsNPE(l, "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     l.clear();
     l.add("");
     assertCheckStringListArgumentThrowsIllegalArgException(l, "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     l.clear();
@@ -104,7 +104,7 @@ public class TestCheckUtilities extends TestCase {
     l.add("");
     l.add("str3");
     assertCheckStringListArgumentThrowsIllegalArgException(l, "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     // Test for valid arguments
@@ -150,11 +150,11 @@ public class TestCheckUtilities extends TestCase {
   @Test
   public void testCheckStringArgument() {
     assertCheckStringArgumentThrowsNPE(null, "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     assertCheckStringArgumentThrowsIllegalArgException("", "aVariableName",
-        "000001: A String variable was not specified but is required.  "
+        "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
     assertCheckStringArgumentIsValid("str", "SomeVarName");
@@ -217,7 +217,7 @@ public class TestCheckUtilities extends TestCase {
 
     // Check for invalid case
     assertCheckFileValidityIOException(fullFilePath,
-        "010001: File or path does not exist.  { filename=[" + fullFilePath + "] }");
+        "020001: File or path does not exist.  { filename=[" + fullFilePath + "] }");
 
     // Check for valid case
     try {
@@ -230,6 +230,7 @@ public class TestCheckUtilities extends TestCase {
     assertCheckFileValidityIsValid(fullFilePath);
 
     // Cleanup
+    // TODO (jhl388): If the test fails before this point, the file won't be removed! Fix it.
     if (!file.delete()) {
       assertTrue("Unable to delete temporary file after testing checkFileValidity", false);
     }

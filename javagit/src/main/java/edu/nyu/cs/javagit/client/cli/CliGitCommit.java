@@ -2,8 +2,11 @@ package edu.nyu.cs.javagit.client.cli;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
@@ -14,13 +17,71 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class CliGitCommit implements IGitCommit {
 
-  public GitCommitResponse commit(String repoPath, String message) throws IOException,
+  public GitCommitResponse commitAll(String repositoryPath, String message) throws IOException,
       JavaGitException {
-    CheckUtilities.checkStringArgument(repoPath, "repository path");
+    GitCommitOptions options = new GitCommitOptions();
+    options.setOptAll(true);
+    return commitProcessor(repositoryPath, options, message, null);
+  }
+
+  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message)
+      throws IOException, JavaGitException {
+    return commitProcessor(repositoryPath, options, message, null);
+  }
+
+  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message,
+      List<String> paths) throws IOException, JavaGitException {
+    return commitProcessor(repositoryPath, options, message, paths);
+  }
+
+  public GitCommitResponse commit(String repositoryPath, String message) throws IOException,
+      JavaGitException {
+    return commitProcessor(repositoryPath, null, message, null);
+  }
+
+  public GitCommitResponse commitOnly(String repositoryPath, String message, List<String> paths)
+      throws IOException, JavaGitException {
+    GitCommitOptions options = new GitCommitOptions();
+    options.setOptOnly(true);
+    return commitProcessor(repositoryPath, options, message, paths);
+  }
+
+  /**
+   * Processes the commit.
+   * 
+   * @param repositoryPath
+   *          The path to the repository to commit against. A non-zero length argument is required
+   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param options
+   *          The options to commit with.
+   * @param message
+   *          The message to attach to the commit. A non-zero length argument is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param paths
+   *          A list paths to folders or files to commit. A non-null and non-empty list is required
+   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @return The results from the commit.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  protected GitCommitResponse commitProcessor(String repositoryPath, GitCommitOptions options,
+      String message, List<String> paths) throws IOException, JavaGitException {
+    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
 
-    ProcessBuilder pb = new ProcessBuilder("git-commit", "-m", message);
-    pb.directory(new File(repoPath));
+    ProcessBuilder pb = new ProcessBuilder(buildCommand(null, message, paths));
+    pb.directory(new File(repositoryPath));
     pb.redirectErrorStream(true);
 
     GitCommitParser parser = new GitCommitParser();
@@ -30,6 +91,56 @@ public class CliGitCommit implements IGitCommit {
     ProcessUtilities.waitForAndDestroyProcess(p);
 
     return parser.getResponse();
+  }
+
+  /**
+   * Builds a list of command arguments to pass to <code>ProcessBuilder</code>.
+   * 
+   * @param options
+   *          The options to include on the command line.
+   * @param message
+   *          The message for the commit.
+   * @return A list of the individual arguments to pass to <code>ProcessBuilder</code>.
+   */
+  protected List<String> buildCommand(GitCommitOptions options, String message, List<String> paths) {
+
+    // TODO (jhl388): Add a unit test for this method (CliGitCommit.buildCommand()).
+
+    List<String> cmd = new ArrayList<String>();
+    cmd.add("git-commit");
+
+    if (null != options) {
+      if (options.isOptAll()) {
+        cmd.add("-a");
+      }
+      if (options.isOptInclude()) {
+        cmd.add("-i");
+      }
+      if (options.isOptNoVerify()) {
+        cmd.add("--no-verify");
+      }
+      if (options.isOptOnly()) {
+        cmd.add("-o");
+      }
+      if (options.isOptSignoff()) {
+        cmd.add("-s");
+      }
+      String author = options.getAuthor();
+      if (null != author && author.length() > 0) {
+        cmd.add("--author");
+        cmd.add(options.getAuthor());
+      }
+    }
+
+    cmd.add("-m");
+    cmd.add(message);
+
+    if (null != paths) {
+      cmd.add("--");
+      cmd.addAll(paths);
+    }
+
+    return cmd;
   }
 
   public class GitCommitParser implements IParser {

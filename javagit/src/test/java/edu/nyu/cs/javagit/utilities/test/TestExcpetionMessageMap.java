@@ -21,7 +21,7 @@ public class TestExcpetionMessageMap extends TestCase {
     assertGetMessageValid(null, "NO MESSAGE FOR ERROR CODE. { code=[null] }");
     assertGetMessageValid("", "NO MESSAGE FOR ERROR CODE. { code=[] }");
     assertGetMessageValid("0", "NO MESSAGE FOR ERROR CODE. { code=[0] }");
-    assertGetMessageValid("000001", "000001: A String variable was not specified but is required.");
+    assertGetMessageValid("000001", "000001: A String argument was not specified but is required.");
   }
 
   private void assertGetMessageValid(String code, String expectedMessage) {

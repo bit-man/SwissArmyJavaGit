@@ -23,7 +23,7 @@ import java.util.Map;
  * 
  * <ul>
  * <li>00 - Standard Java exceptions caused by malformed or invalid method parameters</li>
- * <li>01 - All other standard Java exceptions</li>
+ * <li>02 - All other standard Java exceptions</li>
  * <li>10 - General JavaGit exceptions</li>
  * </ul>
  * 
@@ -55,13 +55,16 @@ public class ExceptionMessageMap {
   static {
     MESSAGE_MAP = new HashMap<String, String>();
 
-    MESSAGE_MAP.put("000001", "000001: A String variable was not specified but is required.");
-    MESSAGE_MAP.put("000002", "000002: A List<String> variable was not specified but is required.");
+    MESSAGE_MAP.put("000001", "000001: A String argument was not specified but is required.");
+    MESSAGE_MAP.put("000002", "000002: A List<String> argument was not specified but is required.");
+    MESSAGE_MAP.put("000003", "000003: An Object argument was not specified but is required.");
 
-    MESSAGE_MAP.put("010001", "010001: File or path does not exist.");
+    MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
 
-    MESSAGE_MAP.put("010100", "010100: Unable to start sub-process.");
-    MESSAGE_MAP.put("010101", "010101: Error reading input from the sub-process.");
+    MESSAGE_MAP.put("020001", "020001: File or path does not exist.");
+
+    MESSAGE_MAP.put("020100", "020100: Unable to start sub-process.");
+    MESSAGE_MAP.put("020101", "020101: Error reading input from the sub-process.");
 
     MESSAGE_MAP.put("100001", "100001: Error calling git-commit.");
   }

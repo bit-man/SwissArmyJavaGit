@@ -25,7 +25,7 @@ public class ProcessUtilities {
     try {
       return pb.start();
     } catch (IOException e) {
-      IOException toThrow = new IOException(ExceptionMessageMap.getMessage("010100"));
+      IOException toThrow = new IOException(ExceptionMessageMap.getMessage("020100"));
       toThrow.initCause(e);
       throw toThrow;
     }
@@ -54,7 +54,7 @@ public class ProcessUtilities {
          * TODO: add logging of any information already read from the InputStream. -- jhl388
          * 06.14.2008
          */
-        IOException toThrow = new IOException(ExceptionMessageMap.getMessage("010101"));
+        IOException toThrow = new IOException(ExceptionMessageMap.getMessage("020101"));
         toThrow.initCause(e);
         throw toThrow;
       }
