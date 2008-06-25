@@ -43,8 +43,8 @@ public class TestCheckUtilities extends TestCase {
   @Test
   public void testCheckUnorderedListsEqual() {
     // Test for false results
-    List l1 = new ArrayList<String>();
-    List l2 = null;
+    List<String> l1 = new ArrayList<String>();
+    List<String> l2 = null;
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
 
     l1 = null;

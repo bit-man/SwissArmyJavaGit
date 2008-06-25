@@ -2,6 +2,8 @@ package edu.nyu.cs.javagit.client;
 
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.GitMvOptions;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
 
 /**
@@ -9,7 +11,8 @@ import edu.nyu.cs.javagit.api.commands.GitMvResponse;
  */
 public interface IGitMv {
 
-  // TODO: Create method signatures for this interface.
-  public GitMvResponse mv(String repositoryPath, String option, 
-             String source, String destination) throws IOException;
+  public GitMvResponse mv(String repositoryPath, GitMvOptions options, String source, 
+      String destination) throws IOException, JavaGitException;
+  public GitMvResponse mv(String repositoryPath, String source, String destination)
+      throws IOException, JavaGitException;
 }
