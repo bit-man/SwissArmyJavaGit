@@ -17,6 +17,14 @@ public class CliGitMv implements IGitMv {
   //Variable, which if set the fatal messages are not considered for throwing exceptions.
   private boolean dryRun;
 
+  public GitMvResponse mv(String repoPath, GitMvOptions options, String source, String destination)
+  throws IOException, JavaGitException {
+    return mvProcess(repoPath, options, source, destination);
+  }
+  public GitMvResponse mv(String repoPath, String source, String destination) throws IOException, 
+      JavaGitException {
+    return mvProcess(repoPath, null, source, destination);
+  }
   /**
    * Exec of git-mv command
    * 
@@ -48,15 +56,14 @@ public class CliGitMv implements IGitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mv(String repoPath, GitMvOptions options, String source, String destination)
-    throws IOException, JavaGitException {
-
+  public GitMvResponse mvProcess(String repoPath, GitMvOptions options, String source, 
+      String destination) throws IOException, JavaGitException {
+    
     CheckUtilities.checkStringArgument(repoPath, "repository path");
     CheckUtilities.checkStringArgument(source, "source");
     CheckUtilities.checkStringArgument(destination, "destination");
     
     ProcessBuilder pb = null;
-    
     StringBuffer optionList = new StringBuffer("-");
     if (options.isOptF()) {
       optionList.append("f");
@@ -68,68 +75,20 @@ public class CliGitMv implements IGitMv {
       optionList.append("n");
       setDryRun(true);
     }
-    CheckUtilities.checkStringArgument(optionList.substring(1), "options");
-   
-    pb = new ProcessBuilder("git-mv", optionList.toString(), source, destination);
-
+    if (null == options) {
+      pb = new ProcessBuilder("git-mv", source, destination);
+    }
+    else {
+      CheckUtilities.checkStringArgument(optionList.substring(1), "options");
+      pb = new ProcessBuilder("git-mv", optionList.toString(), source, destination);
+    }
     pb.directory(new File(repoPath));
     pb.redirectErrorStream(true);
 
     GitMvParser parser = new GitMvParser();
-
     Process p = ProcessUtilities.startProcess(pb);
     ProcessUtilities.getProcessOutput(p, parser);
     ProcessUtilities.waitForAndDestroyProcess(p);
-
-    return parser.getResponse();
-  }
-  /**
-   * Exec of git-mv command
-   * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A 
-   *          non-zero length argument is required for this parameter, otherwise a 
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> 
-   *          will be thrown.
-   * @param source
-   *          The source file/folder/symlink which is to be renamed or moved to a different 
-   *          location. A non-zero length argument is required for this parameter, otherwise a 
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> 
-   *          will be thrown.
-   * @param destination
-   *          The destination file/folder/symlink which the source is renamed or moved to. 
-   *          A non-zero length argument is required for this parameter, otherwise a 
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> 
-   *          will be thrown.
-   * @return The results from the git-mv.
-   * @exception IOException
-   *              There are many reasons for which an <code>IOException</code> may be thrown.
-   *              Examples include:
-   *              <ul>
-   *              <li>access to a file is denied</li>
-   *              <li>a command is not found on the PATH</li>
-   *              </ul>
-   * @exception JavaGitException
-   *              Thrown when there is an error excecuting git-mv.
-   */
-  public GitMvResponse mv(String repoPath, String source, String destination)
-    throws IOException, JavaGitException {
-
-    CheckUtilities.checkStringArgument(repoPath, "repository path");
-    CheckUtilities.checkStringArgument(source, "source");
-    CheckUtilities.checkStringArgument(destination, "destination");
-    
-    ProcessBuilder pb = null;
-    pb = new ProcessBuilder("git-mv", source, destination);
-    pb.directory(new File(repoPath));
-    pb.redirectErrorStream(true);
-    
-    GitMvParser parser = new GitMvParser();
-
-    Process p = ProcessUtilities.startProcess(pb);
-    ProcessUtilities.getProcessOutput(p, parser);
-    ProcessUtilities.waitForAndDestroyProcess(p);
-
     return parser.getResponse();
   }
   
