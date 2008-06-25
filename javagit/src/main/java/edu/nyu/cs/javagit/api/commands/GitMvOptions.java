@@ -1,8 +1,11 @@
 package edu.nyu.cs.javagit.api.commands;
 
 public class GitMvOptions {
+  //boolean variable to set or reset -f option.
   private boolean optF = false;
+  //boolean variable to set or reset -n option.
   private boolean optN = false;
+  //boolean variable to set or reset -k option.
   private boolean optK = false;
   /**
    * @return the optF
