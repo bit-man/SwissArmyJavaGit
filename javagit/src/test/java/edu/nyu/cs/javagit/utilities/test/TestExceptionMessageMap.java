@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 /**
  * Test class for edu.nyu.cs.javagit.utiltites.ExceptionMessageMap.
  */
-public class TestExcpetionMessageMap extends TestCase {
+public class TestExceptionMessageMap extends TestCase {
 
   @Before
   protected void setUp() {

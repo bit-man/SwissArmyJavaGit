@@ -22,9 +22,34 @@ import java.util.Map;
  * The error types are:
  * 
  * <ul>
- * <li>00 - Standard Java exceptions caused by malformed or invalid method parameters</li>
- * <li>02 - All other standard Java exceptions</li>
- * <li>10 - General JavaGit exceptions</li>
+ * <li>00 -- Standard Java exceptions caused by malformed or invalid method parameters</li>
+ * <li>02 -- All other standard Java exceptions</li>
+ * <li>10 -- General JavaGit exceptions</li>
+ * <li>40-60 -- Command Specific JavaGit exceptions
+ * <ul>
+ * <li>400-401 -- git-add specific JavaGit exceptions</li>
+ * <li>402-403 -- git-bisect specific JavaGit exceptions</li>
+ * <li>404-405 -- git-branch specific JavaGit exceptions</li>
+ * <li>406-407 -- git-checkout specific JavaGit exceptions</li>
+ * <li>408-409 -- git-clone specific JavaGit exceptions</li>
+ * <li>410-411 -- git-commit specific JavaGit exceptions</li>
+ * <li>412-413 -- git-diff specific JavaGit exceptions</li>
+ * <li>414-415 -- git-fetch specific JavaGit exceptions</li>
+ * <li>416-417 -- git-grep specific JavaGit exceptions</li>
+ * <li>418-419 -- git-init specific JavaGit exceptions</li>
+ * <li>420-421 -- git-log specific JavaGit exceptions</li>
+ * <li>422-423 -- git-merge specific JavaGit exceptions</li>
+ * <li>424-425 -- git-mv specific JavaGit exceptions</li>
+ * <li>426-427 -- git-pull specific JavaGit exceptions</li>
+ * <li>428-429 -- git-push specific JavaGit exceptions</li>
+ * <li>430-431 -- git-rebase specific JavaGit exceptions</li>
+ * <li>432-433 -- git-reset specific JavaGit exceptions</li>
+ * <li>434-435 -- git-rm specific JavaGit exceptions</li>
+ * <li>436-437 -- git-show specific JavaGit exceptions</li>
+ * <li>438-439 -- git-status specific JavaGit exceptions</li>
+ * <li>440-441 -- git-tag specific JavaGit exceptions</li>
+ * </ul>
+ * </li>
  * </ul>
  * 
  * How to use the codes and messages:

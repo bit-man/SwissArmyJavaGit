@@ -43,4 +43,5 @@ public class JavaGitException extends Exception {
   public int getCode() {
     return code;
   }
+
 }

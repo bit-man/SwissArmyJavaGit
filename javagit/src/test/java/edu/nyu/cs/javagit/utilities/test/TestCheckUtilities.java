@@ -165,6 +165,8 @@ public class TestCheckUtilities extends TestCase {
       CheckUtilities.checkStringArgument(str, variableName);
     } catch (NullPointerException e) {
       assertTrue("NPE exception thrown when one was not expected!", false);
+    } catch (IllegalArgumentException e) {
+      assertTrue("IllegalArgumentException exception thrown when one was not expected!", false);
     }
   }
 
