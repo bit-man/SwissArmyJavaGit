@@ -154,24 +154,10 @@ public class CliGitMv implements IGitMv {
      */
     public void parseLineForSuccess(String line) {
       String comment;
-      String source;
-      String destination;
       if (line.contains("Warning:") || line.contains("fatal")) {
         int colonIndex = line.indexOf(':'); 
         comment = line.substring(colonIndex+2);
         response.addComment(comment);
-      }
-      else if (line.contains("Checking rename of")) {
-        response.addComment(line + "\n");
-	      int beginIndex = line.indexOf('\'')+1;
-	      int endIndex = line.indexOf('\'', beginIndex);
-	      source = line.substring(beginIndex, endIndex);
-	      response.setSource(source);
-		
-	      beginIndex = line.indexOf('\'', endIndex)+1;
-	      endIndex = line.indexOf('\'', beginIndex);
-	      destination = line.substring(beginIndex, endIndex);
-	      response.setDestination(destination);
       }
       else {
         response.addComment(line + "\n");
