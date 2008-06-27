@@ -46,7 +46,7 @@ public class CheckUtilities {
    *         </ul>
    *         False otherwise.
    */
-  public static boolean checkUnorderedListsEqual(List l1, List l2) {
+  public static boolean checkUnorderedListsEqual(List<?> l1, List<?> l2) {
     if (null == l1 && null != l2) {
       return false;
     }
