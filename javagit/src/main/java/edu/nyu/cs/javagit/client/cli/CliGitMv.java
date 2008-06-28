@@ -64,21 +64,21 @@ public class CliGitMv implements IGitMv {
     CheckUtilities.checkStringArgument(destination, "destination");
     
     ProcessBuilder pb = null;
-    StringBuffer optionList = new StringBuffer("-");
-    if (options.isOptF()) {
-      optionList.append("f");
-    }
-    if (options.isOptK()) {
-      optionList.append("k");
-    }
-    if (options.isOptN()) {
-      optionList.append("n");
-      setDryRun(true);
-    }
     if (null == options) {
       pb = new ProcessBuilder("git-mv", source, destination);
     }
     else {
+      StringBuffer optionList = new StringBuffer("-");
+      if (options.isOptF()) {
+        optionList.append("f");
+      }
+      if (options.isOptK()) {
+        optionList.append("k");
+      }
+      if (options.isOptN()) {
+        optionList.append("n");
+        setDryRun(true);
+      }    
       CheckUtilities.checkStringArgument(optionList.substring(1), "options");
       pb = new ProcessBuilder("git-mv", optionList.toString(), source, destination);
     }
@@ -97,14 +97,15 @@ public class CliGitMv implements IGitMv {
    */
   public class GitMvParser implements IParser {
 
+  //Varible showing the status of the git-mv command.
+    private boolean status = true;
+    
     // The response object for an mv operation.
-    private GitMvResponse response;
+    private GitMvResponse response = new GitMvResponse(status);
     
     // While handling the error cases this buffer will have the error messages.
     private StringBuffer errorMessage = null;
     
-    //Varible showing the status of the git-mv command.
-    private boolean status;
     
     /**
      * Parses the line from the git-mv response text.
@@ -116,6 +117,7 @@ public class CliGitMv implements IGitMv {
     public void parseLine(String line) {
       if(line.startsWith("error")) {
         status = false;
+        response.setStatus(status);
         int colonIndex = line.indexOf(':');
         errorMessage.append(line.substring(colonIndex+2));
       }
@@ -125,8 +127,8 @@ public class CliGitMv implements IGitMv {
       }
       else {
         status = true;
-        response = new GitMvResponse(status);
-	      //This is to parse the output when -n or -f options were given
+        response.setStatus(status);
+        //This is to parse the output when -n or -f options were given
 	      if (null != line) {
 	        parseLineForSuccess(line);
 	      }
@@ -140,9 +142,9 @@ public class CliGitMv implements IGitMv {
      *          The line of text to process.
      */
     public void handleErrorCase(String line) {
+      response.setStatus(status);
       errorMessage = new StringBuffer();
       int colonIndex = line.indexOf(':');
-      response = new GitMvResponse(status); 
       errorMessage.append(line.substring(colonIndex+2));
     }
     
@@ -155,11 +157,13 @@ public class CliGitMv implements IGitMv {
     public void parseLineForSuccess(String line) {
       String comment;
       if (line.contains("Warning:") || line.contains("fatal")) {
+        System.out.println(line);
         int colonIndex = line.indexOf(':'); 
         comment = line.substring(colonIndex+2);
-        response.addComment(comment);
+        response.addComment(comment + "\n");
       }
       else {
+        System.out.println(line);
         response.addComment(line + "\n");
       }
     }
@@ -174,9 +178,10 @@ public class CliGitMv implements IGitMv {
      */
     public GitMvResponse getResponse() throws JavaGitException {
       if (null != errorMessage) {
-        throw new JavaGitException(425001, ExceptionMessageMap.getMessage("425001")
-            + "  The git-mv error message:  { " + errorMessage.toString() + " }");
+        throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001")
+            + errorMessage.toString());
       }
+      System.out.println(response.getComment());
       return response;
     }
   }

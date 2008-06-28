@@ -17,8 +17,8 @@ public class GitMvResponse {
   private StringBuffer message = new StringBuffer();
 
   /**
-   * Sets the status as true if command executed successfully else false, in the GitMvResponse 
-   * object.
+   * Constructor. Sets the status as true if command executed successfully else false, in the
+   * GitMvResponse object.
    * 
    * @param status
    */
@@ -35,17 +35,14 @@ public class GitMvResponse {
 	  return status;
   }
 
-  /*
-  public String getErrorMessage() {
-    return errorMessage;
+  /**
+   * Sets the status message as true or false.
+   * 
+   * @param status
+   */
+  public void setStatus(boolean status) {
+    this.status = status;
   }
-
-  public void setErrorMessage(String errorMessage) {
-    this.errorMessage = errorMessage;
-  }
-  */
-
-  
   /**
    * Adds comments from each line of the message received upon successful execution
    * of the git-mv command, to the message buffer.
