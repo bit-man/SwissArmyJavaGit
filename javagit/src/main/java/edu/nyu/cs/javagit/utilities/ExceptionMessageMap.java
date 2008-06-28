@@ -92,6 +92,7 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("020101", "020101: Error reading input from the sub-process.");
 
     MESSAGE_MAP.put("100001", "100001: Error calling git-commit.");
+    MESSAGE_MAP.put("424001", "424001: Error calling git-mv. ");
   }
 
   /**
