@@ -85,6 +85,8 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000003", "000003: An Object argument was not specified but is required.");
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
+    MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");
+    MESSAGE_MAP.put("000120", "000120: Invalid option combination for git-checkout command.");
 
     MESSAGE_MAP.put("020001", "020001: File or path does not exist.");
 
