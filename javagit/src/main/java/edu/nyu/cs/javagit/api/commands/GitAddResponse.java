@@ -17,7 +17,7 @@ import java.util.List;
  * empty-list.
  * 
  */
-public class GitAddResponse {
+public class GitAddResponse implements CommandResponse {
 
   public enum Action {
     ADD,

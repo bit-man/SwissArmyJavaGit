@@ -1,15 +1,21 @@
 package edu.nyu.cs.javagit.client.cli;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * <code>ProcessUtilities</code> contains methods to help managing processes.
  */
 public class ProcessUtilities {
+
+  // TODO (jhl): add unit tests for this class.
 
   /**
    * Start a process.
@@ -84,6 +90,35 @@ public class ProcessUtilities {
         continue;
       }
     }
+  }
+
+  // TODO (jhl): Add a unit test for this method.
+  /**
+   * Runs the command specified in the command line with the specified working directory. The
+   * IParser is used to parse the response given by the command line.
+   * 
+   * @param workingDirectory
+   *          The working directory in with which to start the process.
+   * @param commandLine
+   *          The command line to run.
+   * @param parser
+   *          The parser to use to parse the command line's response.
+   * @return The command response from the <code>IParser</code>.
+   * @throws IOException
+   *           Thrown if there are problems with the subprocess.
+   * @throws JavaGitException
+   */
+  public static CommandResponse runCommand(String workingDirectory, List<String> commandLine,
+      IParser parser) throws IOException, JavaGitException {
+    ProcessBuilder pb = new ProcessBuilder(commandLine);
+    pb.directory(new File(workingDirectory));
+    pb.redirectErrorStream(true);
+
+    Process p = startProcess(pb);
+    getProcessOutput(p, parser);
+    waitForAndDestroyProcess(p);
+
+    return parser.getResponse();
   }
 
 }

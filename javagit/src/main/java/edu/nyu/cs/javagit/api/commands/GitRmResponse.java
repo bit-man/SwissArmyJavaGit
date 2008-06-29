@@ -1,14 +1,13 @@
 package edu.nyu.cs.javagit.api.commands;
 
-public class GitRmResponse {
-  
+public class GitRmResponse implements CommandResponse {
+
   private boolean success;
-  
+
   /*
-   * @param b  indicates whether the command was successful.
-   * @TODO  This needs to be made richer.
+   * @param b indicates whether the command was successful. @TODO This needs to be made richer.
    */
-  
+
   public GitRmResponse(boolean b) {
   }
 

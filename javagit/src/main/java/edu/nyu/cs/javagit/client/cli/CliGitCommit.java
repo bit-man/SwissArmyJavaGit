@@ -1,6 +1,5 @@
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,17 +79,10 @@ public class CliGitCommit implements IGitCommit {
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
 
-    ProcessBuilder pb = new ProcessBuilder(buildCommand(null, message, paths));
-    pb.directory(new File(repositoryPath));
-    pb.redirectErrorStream(true);
-
+    List<String> commandLine = buildCommand(null, message, paths);
     GitCommitParser parser = new GitCommitParser();
 
-    Process p = ProcessUtilities.startProcess(pb);
-    ProcessUtilities.getProcessOutput(p, parser);
-    ProcessUtilities.waitForAndDestroyProcess(p);
-
-    return parser.getResponse();
+    return (GitCommitResponse) ProcessUtilities.runCommand(repositoryPath, commandLine, parser);
   }
 
   /**

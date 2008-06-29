@@ -9,7 +9,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 /**
  * A response data object for the git-commit command.
  */
-public class GitCommitResponse {
+public class GitCommitResponse implements CommandResponse {
 
   // TODO (jhl388): Add methods to retrieve added, copied, deleted and renamed file information.
 

@@ -1,19 +1,19 @@
 package edu.nyu.cs.javagit.api.commands;
 
-public class GitMvResponse {
+public class GitMvResponse implements CommandResponse {
 
-  //Variable to store the status of execution.
+  // Variable to store the status of execution.
   private boolean status;
- 
-  //private String errorMessage;
-  
-  //Variable to store the source file/folder/symlink of the response.
+
+  // private String errorMessage;
+
+  // Variable to store the source file/folder/symlink of the response.
   private String source;
-  
-  //Variable to store the destination file/folder/symlink of the response.
+
+  // Variable to store the destination file/folder/symlink of the response.
   private String destination;
-  
-  //String Buffer to store the comment message after execution of git-mv.
+
+  // String Buffer to store the comment message after execution of git-mv.
   private StringBuffer message = new StringBuffer();
 
   /**
@@ -23,16 +23,16 @@ public class GitMvResponse {
    * @param status
    */
   public GitMvResponse(boolean status) {
-	  this.status = status;
+    this.status = status;
   }
-  
+
   /**
    * Gets the status of the command (true or false) from GitMvResponse object.
    * 
    * @return status
    */
   public boolean IsSuccess() {
-	  return status;
+    return status;
   }
 
   /**
@@ -43,9 +43,10 @@ public class GitMvResponse {
   public void setStatus(boolean status) {
     this.status = status;
   }
+
   /**
-   * Adds comments from each line of the message received upon successful execution
-   * of the git-mv command, to the message buffer.
+   * Adds comments from each line of the message received upon successful execution of the git-mv
+   * command, to the message buffer.
    * 
    * @param comment
    */
@@ -54,8 +55,8 @@ public class GitMvResponse {
   }
 
   /**
-   * Gets the comments received upon successful execution of the git-mv command, from 
-   * the message buffer.
+   * Gets the comments received upon successful execution of the git-mv command, from the message
+   * buffer.
    * 
    * @return message
    */
@@ -75,7 +76,8 @@ public class GitMvResponse {
   /**
    * Sets the destination file/folder/symlink in response to the destination
    * 
-   * @param destination the destination to set
+   * @param destination
+   *          the destination to set
    */
   public void setDestination(String destination) {
     this.destination = destination;
@@ -93,7 +95,8 @@ public class GitMvResponse {
   /**
    * Sets the source file/folder/symlink in response object to the source string.
    * 
-   * @param source the source to set
+   * @param source
+   *          the source to set
    */
   public void setSource(String source) {
     this.source = source;

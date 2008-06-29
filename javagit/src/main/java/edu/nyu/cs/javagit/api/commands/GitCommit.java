@@ -40,15 +40,15 @@ public class GitCommit {
    */
   public GitCommitResponse commitAll(String repositoryPath, String message) throws IOException,
       JavaGitException {
-  
+
     /*
      * TODO (jhl388): Change this method to take the JavaGitConfig object, or whatever it ends up
      * being called, once Ross and Max create it.
      */
-  
+
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
-  
+
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitCommit gitCommit = client.getGitCommitInstance();
     return gitCommit.commitAll(repositoryPath, message);
@@ -171,15 +171,15 @@ public class GitCommit {
    */
   public GitCommitResponse commit(String repositoryPath, String message) throws IOException,
       JavaGitException {
-  
+
     /*
      * TODO (jhl388): Change this method to take the JavaGitConfig object, or whatever it ends up
      * being called, once Ross and Max create it.
      */
-  
+
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
-  
+
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitCommit gitCommit = client.getGitCommitInstance();
     return gitCommit.commit(repositoryPath, message);
@@ -215,16 +215,16 @@ public class GitCommit {
    */
   public GitCommitResponse commitOnly(String repositoryPath, String message, List<String> paths)
       throws IOException, JavaGitException {
-  
+
     /*
      * TODO (jhl388): Change this method to take the JavaGitConfig object, or whatever it ends up
      * being called, once Ross and Max create it.
      */
-  
+
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
     CheckUtilities.checkStringListArgument(paths, "paths");
-  
+
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitCommit gitCommit = client.getGitCommitInstance();
     return gitCommit.commitOnly(repositoryPath, message, paths);
