@@ -9,6 +9,7 @@ public class GitCommitOptions {
 
   // TODO (jhl388): change the author string below to be an object.
   // TODO (jhl388): Add a unit test for this class (GitCommitOptions).
+  // TODO (jhl388): Add a reset() method that resets all values to their default state.
 
   /*
    * TODO (jhl388): check if the include and only options are mutually exclusive. If so, fix the

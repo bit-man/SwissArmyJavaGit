@@ -46,7 +46,7 @@ public class GitCommit {
      * being called, once Ross and Max create it.
      */
 
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath, "repositoryPath");
     CheckUtilities.checkStringArgument(message, "message");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
@@ -88,7 +88,7 @@ public class GitCommit {
      * being called, once Ross and Max create it.
      */
 
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath, "repositoryPath");
     CheckUtilities.checkStringArgument(message, "message");
     CheckUtilities.checkNullArgument(options, "options");
 
@@ -135,7 +135,7 @@ public class GitCommit {
      * being called, once Ross and Max create it.
      */
 
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath, "repositoryPath");
     CheckUtilities.checkStringArgument(message, "message");
     CheckUtilities.checkNullArgument(options, "options");
     CheckUtilities.checkStringListArgument(paths, "paths");
@@ -177,7 +177,7 @@ public class GitCommit {
      * being called, once Ross and Max create it.
      */
 
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath, "repositoryPath");
     CheckUtilities.checkStringArgument(message, "message");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
@@ -221,7 +221,7 @@ public class GitCommit {
      * being called, once Ross and Max create it.
      */
 
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath, "repositoryPath");
     CheckUtilities.checkStringArgument(message, "message");
     CheckUtilities.checkStringListArgument(paths, "paths");
 
