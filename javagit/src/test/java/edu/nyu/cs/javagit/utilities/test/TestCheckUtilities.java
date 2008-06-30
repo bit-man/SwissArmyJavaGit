@@ -27,14 +27,14 @@ public class TestCheckUtilities extends TestCase {
     final String windowsFileDir = "c:\\";
     final String filename1 = "bababa.3223.5asdbbw3gni.gagwe";
     final String filename2 = "baasdfbj65adaba.sdh3hs2s5y23.5asdbbw3gni.gagwe";
-  
+
     String dirBase = null;
     if (System.getProperty("os.name").contains("indows")) {
       dirBase = windowsFileDir;
     } else {
       dirBase = unixFileDir;
     }
-  
+
     // Find a test filename that doesnot exist.
     String fullFilePath = dirBase + filename1;
     File file = new File(fullFilePath);
@@ -47,11 +47,11 @@ public class TestCheckUtilities extends TestCase {
             false);
       }
     }
-  
+
     // Check for invalid case
     assertCheckFileValidityIOException(fullFilePath,
         "020001: File or path does not exist.  { filename=[" + fullFilePath + "] }");
-  
+
     // Check for valid case
     try {
       if (!file.createNewFile()) {
@@ -61,7 +61,7 @@ public class TestCheckUtilities extends TestCase {
       assertTrue("Unable to create temporary file to test checkFileValidity", false);
     }
     assertCheckFileValidityIsValid(fullFilePath);
-  
+
     // Cleanup
     // TODO (jhl388): If the test fails before this point, the file won't be removed! Fix it.
     if (!file.delete()) {
@@ -84,6 +84,25 @@ public class TestCheckUtilities extends TestCase {
     } catch (IOException e) {
       assertEquals("IllegalArgumentException message not what was expected.", message, e
           .getMessage());
+    }
+  }
+
+  @Test
+  public void testCheckNullArgument() {
+    try {
+      CheckUtilities.checkNullArgument(null, "Test variable name");
+      assertTrue("No NPE thrown when one was expected.  Error!", false);
+    } catch (NullPointerException e) {
+      assertEquals("NPE didn't contain expected message.  Error!",
+          "000003: An Object argument was not specified but is required.  "
+              + "{ variableName=[Test variable name] }", e.getMessage());
+    }
+
+    try {
+      CheckUtilities.checkNullArgument("There is an object here.", "Test variable name");
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      assertTrue("Caught NPE when none was expected.  Error!", false);
     }
   }
 
@@ -111,11 +130,11 @@ public class TestCheckUtilities extends TestCase {
     assertCheckStringArgumentThrowsNPE(null, "aVariableName",
         "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
-  
+
     assertCheckStringArgumentThrowsIllegalArgException("", "aVariableName",
         "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
-  
+
     assertCheckStringArgumentIsValid("str", "SomeVarName");
   }
 
@@ -230,25 +249,25 @@ public class TestCheckUtilities extends TestCase {
     List<String> l1 = new ArrayList<String>();
     List<String> l2 = null;
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
-  
+
     l1 = null;
     l2 = new ArrayList<String>();
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
-  
+
     l1 = new ArrayList<String>();
     l1.add("str");
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
-  
+
     String s = "st";
     s += "r";
     l2.add(s);
     l2.add("Bing Bop");
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
-  
+
     s = "Bing";
     l1.add(s);
     assertTrue(!CheckUtilities.checkUnorderedListsEqual(l1, l2));
-  
+
     // Test for true results
     l1.remove(1);
     s += " Bop";

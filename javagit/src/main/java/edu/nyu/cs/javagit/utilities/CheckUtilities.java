@@ -34,9 +34,6 @@ public class CheckUtilities {
    *          The name of the variable to use in the exception message.
    */
   public static void checkNullArgument(Object obj, String variableName) {
-
-    // TODO (jhl388): Add a unit test for this method (checkNullArgument()).
-
     if (null == obj) {
       throw new NullPointerException(ExceptionMessageMap.getMessage("000003")
           + "  { variableName=[" + variableName + "] }");
@@ -57,11 +54,11 @@ public class CheckUtilities {
     if (null != o1 && !o1.equals(o2)) {
       return false;
     }
-  
+
     if (null == o1 && null != o2) {
       return false;
     }
-  
+
     return true;
   }
 
@@ -128,27 +125,27 @@ public class CheckUtilities {
     if (null == l1 && null != l2) {
       return false;
     }
-  
+
     if (null != l1 && null == l2) {
       return false;
     }
-  
+
     if (l1.size() != l2.size()) {
       return false;
     }
-  
+
     for (Object o : l1) {
       if (!l2.contains(o)) {
         return false;
       }
     }
-  
+
     for (Object o : l2) {
       if (!l1.contains(o)) {
         return false;
       }
     }
-  
+
     return true;
   }
 
