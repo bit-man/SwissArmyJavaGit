@@ -44,8 +44,6 @@
           <version>1.0</version>
           <configuration>
             <connectionType>connection</connectionType>
-            <username>${svn.user}</username>
-            <password>${svn.password}</password>
           </configuration>
         </plugin>
       </plugins>
