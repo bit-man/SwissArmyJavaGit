@@ -205,7 +205,9 @@ public class TestCheckUtilities extends TestCase {
 
     // Test for valid arguments
     l.clear();
-    assertCheckStringListArgumentIsValid(l, "aVariableName");
+    assertCheckStringListArgumentThrowsIllegalArgException(l, "aVariableName",
+        "000002: A List<String> argument was not specified but is required.  "
+            + "{ variableName=[aVariableName] }");
 
     l.add("str1");
     l.add("str2");

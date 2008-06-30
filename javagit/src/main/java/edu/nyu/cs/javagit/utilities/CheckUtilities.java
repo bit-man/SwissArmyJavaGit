@@ -101,6 +101,10 @@ public class CheckUtilities {
       throw new NullPointerException(ExceptionMessageMap.getMessage("000002")
           + "  { variableName=[" + variableName + "] }");
     }
+    if (str.size() == 0) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000002")
+          + "  { variableName=[" + variableName + "] }");
+    }
     for (int i = 0; i < str.size(); i++) {
       checkStringArgument(str.get(i), variableName);
     }
