@@ -16,7 +16,6 @@ public class TestGitAddResponse extends TestCase {
   private String nullRepositoryPath;
   private List<String> optionsList;
 
-
   @Before
   protected void setUp() {
     response1 = new GitAddResponse();
@@ -27,7 +26,7 @@ public class TestGitAddResponse extends TestCase {
     response1.add("/test/path/2");
     response1.add("/test/path/3");
     response1.add("/test/path/4");
-    
+
     response2 = new GitAddResponse();
     optionsList = new ArrayList<String>();
     optionsList.add("-v");
@@ -35,25 +34,25 @@ public class TestGitAddResponse extends TestCase {
     response2.setOptions(optionsList);
     response2.setAction(Action.ADD);
   }
-  
-  
+
   public void testGitAddOptions() {
     assertEquals("Options not equal", "-n", response1.getOption(0));
-    
+
     List<String> optionsList = response2.getOptions();
     assertEquals("Options not equal", "-v", optionsList.get(0));
     assertEquals("Options not equal", "-f", optionsList.get(1));
   }
-  
+
   public void testGitAddRepositoryPath() {
-    assertEquals("RepositoryPath does not match", response1.getRepositoryPath(), "/home/gsd216/nyu/osp");
+    assertEquals("RepositoryPath does not match", response1.getRepositoryPath(),
+        "/home/gsd216/nyu/osp");
   }
-  
+
   public void testGitAddAction() {
     assertEquals("Git Add Action does not match", response1.getAction(), Action.DRY_RUN_ADD);
     assertEquals("Git Add Action does not match", response2.getAction(), Action.ADD);
   }
-  
+
   /**
    * Test for checking the filepaths added to response and the no. of filePaths added
    */

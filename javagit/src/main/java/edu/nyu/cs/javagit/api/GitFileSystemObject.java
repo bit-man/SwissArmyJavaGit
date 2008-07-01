@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * <code>GitFileSystemObject</code> provides some implementation shared by
- * files and directories
+ * <code>GitFileSystemObject</code> provides some implementation shared by files and directories
  * 
  * TODO: Build out the class
  */
@@ -18,18 +17,18 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
   protected String name;
   protected IGitTreeObject.Status status;
 
-   /**
+  /**
    * The constructor.
    * 
    * @param path
-   *            The full (relative to repository) path
+   *          The full (relative to repository) path
    */
   public GitFileSystemObject(String path, String repositoryPath, IGitTreeObject.Status status) {
     this.path = path;
     this.status = status;
   }
 
-   /**
+  /**
    * Gets the name of the file system object
    * 
    * @return The name
@@ -55,11 +54,11 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
   public GitAddResponse add() throws IOException, JavaGitException {
     GitAdd gitAdd = new GitAdd();
 
-    //create a list of filenames and add yourself to it
+    // create a list of filenames and add yourself to it
     List<String> list = new Vector<String>();
     list.add(path);
 
-    //run git-add command
+    // run git-add command
     return gitAdd.add(repositoryPath, null, list);
   }
 
@@ -67,8 +66,8 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * Commits the file system object
    * 
    * @param comment
-   *      Developer's comment
-   *      
+   *          Developer's comment
+   * 
    * @return response from git commit
    */
   public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
@@ -82,7 +81,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * Moves or renames the object
    * 
    * @param dest
-   *      destination
+   *          destination
    * 
    * @return response from git mv
    */
@@ -98,66 +97,66 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * Removes the file system object from the working tree and the index
    * 
    * @return response from git rm
-   */ 
+   */
   public GitRmResponse rm() throws IOException {
     GitRm gitRm = new GitRm();
-    
-    //create a list of filenames and add yourself to it
+
+    // create a list of filenames and add yourself to it
     List<String> list = new Vector<String>();
     list.add(path);
 
-    //run git rm command
+    // run git rm command
     return gitRm.rm(repositoryPath, list);
   }
 
   /**
-   *  Checks out some earlier version of the object
-   *  
+   * Checks out some earlier version of the object
+   * 
    * @param sha1
-   *      Commit id
+   *          Commit id
    */
   public void checkout(String sha1) {
     System.out.println("getting earlier version " + sha1);
-     //GitCheckout.checkout(path, sha1);
+    // GitCheckout.checkout(path, sha1);
   }
 
-   /**
-   *  Show differences between current file system object and index version of it
+  /**
+   * Show differences between current file system object and index version of it
    * 
    * @return diff between working directory and git index
    */
   public Diff diff() {
-    //GitLog.log(path);
+    // GitLog.log(path);
     return null;
   }
 
   /**
-   *  Show differences between current file system object and some commit
+   * Show differences between current file system object and some commit
    * 
    * @param commit
-   *      Git commit to compare with
-   *      
+   *          Git commit to compare with
+   * 
    * @return diff between working directory and a given git commit
    */
   public Diff diff(Commit commit) {
-    //GitLog.log(path);
+    // GitLog.log(path);
     return null;
   }
 
   /**
-   *  Show commit logs
+   * Show commit logs
    * 
    * @return List of commits for the object
    */
   public List<Commit> log() {
-    //GitLog.log(path);
+    // GitLog.log(path);
     return null;
   }
 
-   /**
-   *  Show object's status in the working directory
+  /**
+   * Show object's status in the working directory
    * 
-   * @return status (untracked, changed but not updated, etc 
+   * @return status (untracked, changed but not updated, etc
    */
   public IGitTreeObject.Status status() {
     return status;

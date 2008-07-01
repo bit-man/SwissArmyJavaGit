@@ -17,9 +17,9 @@ public class MergeOptions {
    * The constructor.
    * 
    * @param m
-   *            Message for the commit
+   *          Message for the commit
    * @param s
-   *            Merge strategy; see enum list
+   *          Merge strategy; see enum list
    */
   public MergeOptions(String m, Strategy s) {
     this.message = m;
@@ -27,7 +27,7 @@ public class MergeOptions {
   }
 
   /**
-   *  Gets the commit message
+   * Gets the commit message
    * 
    * @return The commit message
    */
@@ -36,7 +36,7 @@ public class MergeOptions {
   }
 
   /**
-   *  Gets the merge strategy
+   * Gets the merge strategy
    * 
    * @return The strategy for the merge (resolve, recursive, etc)
    */

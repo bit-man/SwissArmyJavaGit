@@ -29,14 +29,13 @@ public class CliGitAdd implements IGitAdd {
     doValidityChecks(directory, args);
     return executeProcess(directory, args);
   }
-  
+
   /**
-   * add command with command options and filenames separated out. Here we don't have
-   * the git-add or "git add" command given to the method but options and the filenames
-   * are.
+   * add command with command options and filenames separated out. Here we don't have the git-add or
+   * "git add" command given to the method but options and the filenames are.
    */
-  public GitAddResponse add( String repositoryPath, List<String> options, List<String> fileNames)
-    throws IOException {
+  public GitAddResponse add(String repositoryPath, List<String> options, List<String> fileNames)
+      throws IOException {
     String[] args;
     int start = 0;
     CheckUtilities.checkStringArgument(repositoryPath, "RepositoryPath");
@@ -45,15 +44,15 @@ public class CliGitAdd implements IGitAdd {
     args = getArgsArray(options, fileNames);
     addGitCommand(args, start, GIT_ADD);
     start++;
-    if ( options != null && options.size() > 0 ) {
+    if (options != null && options.size() > 0) {
       addGitCommand(args, 1, options);
       start += options.size();
     }
     addGitCommand(args, start, fileNames);
-    return add( repositoryPath, args);
+    return add(repositoryPath, args);
   }
 
-  private GitAddResponse executeProcess(String directory, String[] args ) throws IOException {
+  private GitAddResponse executeProcess(String directory, String[] args) throws IOException {
     ProcessBuilder pb = new ProcessBuilder(args);
     pb.directory(new File(directory));
     pb.redirectErrorStream(true);
@@ -65,36 +64,39 @@ public class CliGitAdd implements IGitAdd {
     ProcessUtilities.getProcessOutput(p, parser);
     ProcessUtilities.waitForAndDestroyProcess(p);
 
-    return parser.getResponse();   
+    return parser.getResponse();
   }
-  
+
   /**
-   * getArgsArray gets the options and filenames passeed as method parameters and 
-   * build a git-add command into an array of Strings. This array of String
-   * can be passed directly to the process builder for executing it.
-   * @param options git-add command options
-   * @param fileNames filenames or pattern
+   * getArgsArray gets the options and filenames passeed as method parameters and build a git-add
+   * command into an array of Strings. This array of String can be passed directly to the process
+   * builder for executing it.
+   * 
+   * @param options
+   *          git-add command options
+   * @param fileNames
+   *          filenames or pattern
    * @return git-command with options & files in array format
    */
-  private String[] getArgsArray( List<String> options, List<String> fileNames ) {
-    if ( options != null && options.size() > 0 ) {
+  private String[] getArgsArray(List<String> options, List<String> fileNames) {
+    if (options != null && options.size() > 0) {
       return new String[1 + options.size() + fileNames.size()];
-    } 
+    }
     return new String[1 + fileNames.size()];
   }
 
-  private void addGitCommand(String[] args, int start, String str ) {
-    args[ start ] = str;
+  private void addGitCommand(String[] args, int start, String str) {
+    args[start] = str;
   }
-  
-  private void addGitCommand(String[] args, int start, List<String> strList ) {
+
+  private void addGitCommand(String[] args, int start, List<String> strList) {
     int index = start;
-    for(int i=0; i < strList.size(); i++ ){
+    for (int i = 0; i < strList.size(); i++) {
       args[index] = strList.get(i);
       index++;
     }
   }
-  
+
   /**
    * returns the command "git-add" or "git" after separating out the complete path e.g.
    * /usr/local/bin/git-add or /usr/local/bin/git in-case absolute path is used. Assumes that the
@@ -217,7 +219,7 @@ public class CliGitAdd implements IGitAdd {
     private void processLine(String line) {
       if (line.trim().startsWith("fatal") || line.trim().startsWith("error")) {
         // throw new JavaGitException(0, line);
-        //response.add(line);
+        // response.add(line);
         response.setError(line);
         return;
       }
@@ -249,8 +251,7 @@ public class CliGitAdd implements IGitAdd {
     }
 
     /**
-     * git-add -v generates output with multiple file-paths on the 
-     * same line delimited by spaces.
+     * git-add -v generates output with multiple file-paths on the same line delimited by spaces.
      * 
      * @param line
      */

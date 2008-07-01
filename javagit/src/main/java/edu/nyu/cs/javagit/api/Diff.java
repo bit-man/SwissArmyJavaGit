@@ -12,7 +12,7 @@ public class Diff {
    * The constructor.
    * 
    * @param name
-   *            The name of the git object Diff refers to
+   *          The name of the git object Diff refers to
    */
   public Diff(String name) {
     this.name = name;

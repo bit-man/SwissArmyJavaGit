@@ -8,7 +8,7 @@ import java.io.File;
  * TODO: Build out the class
  */
 public class GitFile extends GitFileSystemObject {
-  //parent directory
+  // parent directory
   private GitDirectory parent = null;
   private File file = null;
 
@@ -16,11 +16,11 @@ public class GitFile extends GitFileSystemObject {
    * The constructor.
    * 
    * @param file
-   *            The underlying java.io.File object
+   *          The underlying java.io.File object
    * @param parent
-   *            The parent directory
+   *          The parent directory
    * @param repositoryPath
-   *            The path to the repository
+   *          The path to the repository
    */
   public GitFile(File file, GitDirectory parent, String repositoryPath) {
     super(file.getPath(), repositoryPath, IGitTreeObject.Status.UNTRACKED);
@@ -28,25 +28,22 @@ public class GitFile extends GitFileSystemObject {
     this.file = file;
   }
 
-
-   /**
+  /**
    * The constructor.
    * 
    * @param file
-   *            The underlying java.io.File object
+   *          The underlying java.io.File object
    * @param parent
-   *            The parent directory
+   *          The parent directory
    * @param repositoryPath
-   *            The path to the repository
+   *          The path to the repository
    * @param status
-   *            git status
+   *          git status
    */
-  public GitFile(File file, GitDirectory parent, String repositoryPath, 
-      IGitTreeObject.Status status) {
+  public GitFile(File file, GitDirectory parent, String repositoryPath, IGitTreeObject.Status status) {
     super(file.getPath(), repositoryPath, status);
     this.parent = parent;
   }
-
 
   /**
    * Gets the type of the git object (FILE)
@@ -55,9 +52,8 @@ public class GitFile extends GitFileSystemObject {
     return IGitTreeObject.Type.FILE;
   }
 
-
   /**
-   *  Gets parent directory of this File object
+   * Gets parent directory of this File object
    * 
    * @return parent directory
    */
@@ -66,7 +62,7 @@ public class GitFile extends GitFileSystemObject {
   }
 
   /**
-   *  Gets the underlying java.io.File object
+   * Gets the underlying java.io.File object
    * 
    * @return java.io.File object
    */

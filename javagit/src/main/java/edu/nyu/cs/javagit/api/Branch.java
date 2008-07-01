@@ -7,17 +7,16 @@ package edu.nyu.cs.javagit.api;
  */
 public class Branch {
   private String branchName;
-  
+
   /**
    * The constructor.
    * 
    * @param name
-   *            The name of the branch
+   *          The name of the branch
    */
   public Branch(String name) {
     this.branchName = name;
   }
-
 
   /**
    * Gets the name of the branch.
@@ -37,13 +36,13 @@ public class Branch {
     return null;
   }
 
-   /**
+  /**
    * Moves the branch
    * 
    * @param newName
-   *            The name of the new branch
+   *          The name of the new branch
    */
   public void mv(String newName) {
-    //GitBranch.branch(-m);
+    // GitBranch.branch(-m);
   }
 }

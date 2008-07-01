@@ -11,8 +11,9 @@ import edu.nyu.cs.javagit.api.commands.GitMvResponse;
  */
 public interface IGitMv {
 
-  public GitMvResponse mv(String repositoryPath, GitMvOptions options, String source, 
+  public GitMvResponse mv(String repositoryPath, GitMvOptions options, String source,
       String destination) throws IOException, JavaGitException;
+
   public GitMvResponse mv(String repositoryPath, String source, String destination)
       throws IOException, JavaGitException;
 }

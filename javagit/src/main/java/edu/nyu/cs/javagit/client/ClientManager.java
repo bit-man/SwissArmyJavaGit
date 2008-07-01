@@ -6,10 +6,9 @@ import java.util.Map;
 import edu.nyu.cs.javagit.client.cli.CliClient;
 
 /**
- * This class manages the <code>IClient</code> instances of the various
- * <code>ClientType</code>s. It contains factory type functionality (the
- * <code>getClientType()</code> method) but manages much more than just
- * creating <code>IClient</code> instances.
+ * This class manages the <code>IClient</code> instances of the various <code>ClientType</code>s.
+ * It contains factory type functionality (the <code>getClientType()</code> method) but manages
+ * much more than just creating <code>IClient</code> instances.
  */
 public class ClientManager {
 
@@ -34,8 +33,8 @@ public class ClientManager {
   private ClientType preferredClientType = ClientType.CLI;
 
   /**
-   * A <code>Map</code> to hold <code>IClient</code> instances for the
-   * ClientTypes by <code>ClientType</code>.
+   * A <code>Map</code> to hold <code>IClient</code> instances for the ClientTypes by
+   * <code>ClientType</code>.
    */
   private Map<ClientType, IClient> clientImpls = new HashMap<ClientType, IClient>();
 
@@ -49,7 +48,7 @@ public class ClientManager {
    * Gets an instance of the specified client type.
    * 
    * @param clientType
-   *            The type of client to get.
+   *          The type of client to get.
    * @return An instance of the specified client type.
    */
   public IClient getClientInstance(ClientType clientType) {
@@ -79,9 +78,8 @@ public class ClientManager {
    * Sets the preferred client type.
    * 
    * @param preferredClientType
-   *            The type to set as the preferred client type. If the value is
-   *            null, then the preferred client type is set to
-   *            <code>ClientType.CLI</code>.
+   *          The type to set as the preferred client type. If the value is null, then the preferred
+   *          client type is set to <code>ClientType.CLI</code>.
    */
   public void setPreferredClientType(ClientType preferredClientType) {
     if (null == preferredClientType) {

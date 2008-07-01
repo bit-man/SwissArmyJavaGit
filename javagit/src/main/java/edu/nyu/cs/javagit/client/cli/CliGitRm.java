@@ -23,7 +23,6 @@ public class CliGitRm implements IGitRm {
     pbin.add("rm");
     pbin.addAll(filePaths);
 
-
     ProcessBuilder pb = new ProcessBuilder(pbin);
     pb.directory(new File(repoPath));
     pb.redirectErrorStream(true);
@@ -48,15 +47,15 @@ public class CliGitRm implements IGitRm {
 
     public void parseLine(String line) {
       // handle failures
-      if(line.indexOf("index file corrupt") == 0 ||
-          line.matches("pathspec .* did not match any files") ||
-          line.matches("not removing. * recursively without -r") ||
-          line.indexOf("git-rm: ") == 0 ||
-          line.indexOf("Unable to write new index file") == 0) {
+      if (line.indexOf("index file corrupt") == 0
+          || line.matches("pathspec .* did not match any files")
+          || line.matches("not removing. * recursively without -r")
+          || line.indexOf("git-rm: ") == 0 || line.indexOf("Unable to write new index file") == 0) {
         success = false;
       }
 
     }
+
     // TODO Auto-generated method stub
 
     public GitRmResponse getResponse() {

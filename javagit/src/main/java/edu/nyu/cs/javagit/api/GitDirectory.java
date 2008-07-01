@@ -9,37 +9,37 @@ import java.io.File;
  * TODO: Build out the class
  */
 public class GitDirectory extends GitFileSystemObject {
-  //parent directory
+  // parent directory
   private GitDirectory parent = null;
 
   /**
    * The constructor.
    * 
    * @param name
-   *            The name of the directory
+   *          The name of the directory
    * @param parent
-   *            The parent directory
+   *          The parent directory
    * @param repositoryPath
-   *            The path to the repository
+   *          The path to the repository
    */
   public GitDirectory(String path, GitDirectory parent, String repositoryPath) {
     super(path, repositoryPath, IGitTreeObject.Status.UNTRACKED);
     this.parent = parent;
   }
 
-   /**
+  /**
    * The constructor.
    * 
    * @param name
-   *            The name of the directory
+   *          The name of the directory
    * @param parent
-   *            The parent directory
+   *          The parent directory
    * @param repositoryPath
-   *            The path to the repository            
+   *          The path to the repository
    * @param status
-   *            current status of the directory
+   *          current status of the directory
    */
-  public GitDirectory(String path, GitDirectory parent, String repositoryPath, 
+  public GitDirectory(String path, GitDirectory parent, String repositoryPath,
       IGitTreeObject.Status status) {
     super(path, repositoryPath, status);
     this.parent = parent;
@@ -54,12 +54,12 @@ public class GitDirectory extends GitFileSystemObject {
     return null;
   }
 
-   /**
+  /**
    * Adds a GitFile to the working directory.
    * 
    * @param file
-   *            The underlying java,io.File object
-   *
+   *          The underlying java,io.File object
+   * 
    * @return The GitFile object
    */
   public GitFile addFile(File file) {
@@ -72,9 +72,9 @@ public class GitDirectory extends GitFileSystemObject {
   public IGitTreeObject.Type getType() {
     return IGitTreeObject.Type.DIRECTORY;
   }
-  
+
   /**
-   *  Gets parent directory of this File object
+   * Gets parent directory of this File object
    * 
    * @return parent directory
    */
