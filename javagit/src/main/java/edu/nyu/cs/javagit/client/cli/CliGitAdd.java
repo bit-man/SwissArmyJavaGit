@@ -168,7 +168,7 @@ public class CliGitAdd implements IGitAdd {
     }
 
     public void parseLine(String line) {
-      if (line == null && line.length() == 0) {
+      if (line == null || line.length() == 0) {
         return;
       }
       lineNum++;
