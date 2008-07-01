@@ -19,9 +19,11 @@ public class GitFile extends GitFileSystemObject {
    *            The underlying java.io.File object
    * @param parent
    *            The parent directory
+   * @param repositoryPath
+   *            The path to the repository
    */
-  public GitFile(File file, GitDirectory parent) {
-    super(file.getPath(), IGitTreeObject.Status.UNTRACKED);
+  public GitFile(File file, GitDirectory parent, String repositoryPath) {
+    super(file.getPath(), repositoryPath, IGitTreeObject.Status.UNTRACKED);
     this.parent = parent;
     this.file = file;
   }
@@ -34,11 +36,14 @@ public class GitFile extends GitFileSystemObject {
    *            The underlying java.io.File object
    * @param parent
    *            The parent directory
+   * @param repositoryPath
+   *            The path to the repository
    * @param status
    *            git status
    */
-  public GitFile(File file, GitDirectory parent, IGitTreeObject.Status status) {
-    super(file.getPath(), status);
+  public GitFile(File file, GitDirectory parent, String repositoryPath, 
+      IGitTreeObject.Status status) {
+    super(file.getPath(), repositoryPath, status);
     this.parent = parent;
   }
 

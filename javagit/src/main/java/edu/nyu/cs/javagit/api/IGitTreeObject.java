@@ -1,5 +1,9 @@
 package edu.nyu.cs.javagit.api;
 
+import edu.nyu.cs.javagit.api.commands.*;
+
+import java.io.IOException;
+
 /**
  * <code>IGitTreeObject</code> is the base interface for the hierarchy of
  * objects in a git sandbox and repository tree.
@@ -10,29 +14,37 @@ public interface IGitTreeObject {
 
   /**
    * Adds the git object to the git index
+   * 
+   * @return response from git add
    */
-  public void add();
+  public GitAddResponse add() throws IOException, JavaGitException;
 
    /**
    * Commits the git object
    * 
    * @param comment
    *      Developer's comment
+   *
+   * @return response from git commit
    */
-  public void commit(String comment);
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException;
 
    /**
    * Moves or renames the git object
    * 
    * @param dest
    *      destination
+   * 
+   * @return response from git mv
    */
-  public void mv(String dest);
+  public GitMvResponse mv(String dest) throws IOException, JavaGitException;
 
   /**
    * Removes the git object from the working tree and the index
+   * 
+   * @return response from git rm
    */ 
-  public void rm();
+  public GitRmResponse rm() throws IOException;
 
   /**
    *  Checks out some earlier version of the git object

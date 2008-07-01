@@ -1,6 +1,9 @@
 package edu.nyu.cs.javagit.api;
 
+import edu.nyu.cs.javagit.api.commands.*;
+import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * <code>GitFileSystemObject</code> provides some implementation shared by
@@ -11,6 +14,7 @@ import java.util.List;
 public abstract class GitFileSystemObject implements IGitTreeObject {
 
   protected String path;
+  protected String repositoryPath;
   protected String name;
   protected IGitTreeObject.Status status;
 
@@ -20,7 +24,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * @param path
    *            The full (relative to repository) path
    */
-  public GitFileSystemObject(String path, IGitTreeObject.Status status) {
+  public GitFileSystemObject(String path, String repositoryPath, IGitTreeObject.Status status) {
     this.path = path;
     this.status = status;
   }
@@ -45,10 +49,18 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
 
   /**
    * Adds the object to the git index
+   * 
+   * @return response from git add
    */
-  public void add() {
-    System.out.println("Adding " + path);
-    //GitAdd.add(path);
+  public GitAddResponse add() throws IOException, JavaGitException {
+    GitAdd gitAdd = new GitAdd();
+
+    //create a list of filenames and add yourself to it
+    List<String> list = new Vector<String>();
+    list.add(path);
+
+    //run git-add command
+    return gitAdd.add(repositoryPath, null, list);
   }
 
   /**
@@ -56,11 +68,14 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @param comment
    *      Developer's comment
+   *      
+   * @return response from git commit
    */
-  public void commit(String comment) {
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
     add();
-    System.out.println("Commiting " + path);
-    //GitCommit.commit(this.path, comment);
+
+    GitCommit gitCommit = new GitCommit();
+    return gitCommit.commit(this.path, comment);
   }
 
   /**
@@ -68,19 +83,31 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @param dest
    *      destination
+   * 
+   * @return response from git mv
    */
-  public void mv(String dest) {
-    System.out.println(path + " -> " + dest);
+  public GitMvResponse mv(String dest) throws IOException, JavaGitException {
+    String source = path;
     path = dest;
-    //GitMv.mv(path, dest);
+
+    GitMv gitMv = new GitMv();
+    return gitMv.mv(repositoryPath, source, dest);
   }
 
   /**
    * Removes the file system object from the working tree and the index
+   * 
+   * @return response from git rm
    */ 
-  public void rm() {
-    System.out.println("Removing " + path);
-    //GitRm.rm(path);
+  public GitRmResponse rm() throws IOException {
+    GitRm gitRm = new GitRm();
+    
+    //create a list of filenames and add yourself to it
+    List<String> list = new Vector<String>();
+    list.add(path);
+
+    //run git rm command
+    return gitRm.rm(repositoryPath, list);
   }
 
   /**

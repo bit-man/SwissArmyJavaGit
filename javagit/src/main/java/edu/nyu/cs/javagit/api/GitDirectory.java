@@ -19,9 +19,11 @@ public class GitDirectory extends GitFileSystemObject {
    *            The name of the directory
    * @param parent
    *            The parent directory
+   * @param repositoryPath
+   *            The path to the repository
    */
-  public GitDirectory(String path, GitDirectory parent) {
-    super(path, IGitTreeObject.Status.UNTRACKED);
+  public GitDirectory(String path, GitDirectory parent, String repositoryPath) {
+    super(path, repositoryPath, IGitTreeObject.Status.UNTRACKED);
     this.parent = parent;
   }
 
@@ -32,11 +34,14 @@ public class GitDirectory extends GitFileSystemObject {
    *            The name of the directory
    * @param parent
    *            The parent directory
+   * @param repositoryPath
+   *            The path to the repository            
    * @param status
    *            current status of the directory
    */
-  public GitDirectory(String path, GitDirectory parent, IGitTreeObject.Status status) {
-    super(path, status);
+  public GitDirectory(String path, GitDirectory parent, String repositoryPath, 
+      IGitTreeObject.Status status) {
+    super(path, repositoryPath, status);
     this.parent = parent;
   }
 
@@ -58,7 +63,7 @@ public class GitDirectory extends GitFileSystemObject {
    * @return The GitFile object
    */
   public GitFile addFile(File file) {
-    return new GitFile(file, null);
+    return new GitFile(file, this, repositoryPath);
   }
 
   /**

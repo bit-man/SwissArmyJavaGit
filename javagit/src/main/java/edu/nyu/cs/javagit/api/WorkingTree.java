@@ -1,6 +1,8 @@
 package edu.nyu.cs.javagit.api;
 
+import edu.nyu.cs.javagit.api.commands.*;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * The <code>WorkingTree</code> represents the working copy of the files in the current 
@@ -24,15 +26,19 @@ public class WorkingTree {
    */
   public WorkingTree(String path) {
     this.path = path;
-    rootDir = new GitDirectory(path, null);
+    rootDir = new GitDirectory(path, null, path);
   }
 
   
   /**
    * Adds all known and modified files in the working directory to the index.
+   * 
+   * @return response from git add
    */
-  public void add() {
-    //GitAdd.add(path);
+  public GitAddResponse add() throws IOException, JavaGitException {
+    GitAdd gitAdd = new GitAdd();
+    String args[] = {"git-add"};
+    return gitAdd.add(path, args);
   }
 
   
@@ -40,9 +46,12 @@ public class WorkingTree {
    * Commits the objects specified in the index to the repository.
    * @param comment
    *            Developer's comment about the change
+   *
+   * @return response from git commit
    */
-  public void commit(String comment) {
-    //GitCommit.commit(path, comment);
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
+    GitCommit gitCommit = new GitCommit();
+    return gitCommit.commit(path, comment);
   }
 
   
@@ -52,10 +61,13 @@ public class WorkingTree {
    * 
    * @param comment
    *            Developer's comment about the change
+   * 
+   * @return response from git commit
    */
-  public void commitAll(String comment) {
+  public GitCommitResponse commitAll(String comment) throws IOException, JavaGitException {
+    //first add everything
     add();
-    commit(comment);
+    return commit(comment);
   }
 
    /**
@@ -146,11 +158,14 @@ public class WorkingTree {
   /**
    * Adds a directory to the working directory (but not to the repository!)
    * 
+   * @param dir
+   *            name of the directory
+   *
    * @return The new Directory object
    */
   public GitDirectory addDirectory(String dir) {
     //createDir(dir);
-    return new GitDirectory(dir, null);
+    return new GitDirectory(dir, rootDir, path);
   }
 
   
