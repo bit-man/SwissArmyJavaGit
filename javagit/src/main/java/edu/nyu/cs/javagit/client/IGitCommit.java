@@ -34,7 +34,7 @@ public interface IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commitAll(String repoPath, String message) throws IOException,
+  public GitCommitResponseImpl commitAll(String repoPath, String message) throws IOException,
       JavaGitException;
 
   /**
@@ -62,7 +62,7 @@ public interface IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commit(String repoPath, GitCommitOptions options, String message)
+  public GitCommitResponseImpl commit(String repoPath, GitCommitOptions options, String message)
       throws IOException, JavaGitException;
 
   /**
@@ -95,7 +95,7 @@ public interface IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message,
+  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message,
       List<String> paths) throws IOException, JavaGitException;
 
   /**
@@ -120,7 +120,7 @@ public interface IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commit(String repoPath, String message) throws IOException,
+  public GitCommitResponseImpl commit(String repoPath, String message) throws IOException,
       JavaGitException;
 
   /**
@@ -151,7 +151,7 @@ public interface IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponse commitOnly(String repositoryPath, String message, List<String> paths)
+  public GitCommitResponseImpl commitOnly(String repositoryPath, String message, List<String> paths)
       throws IOException, JavaGitException;
 
 }

@@ -1,7 +1,7 @@
 package edu.nyu.cs.javagit.api;
 
 import edu.nyu.cs.javagit.api.commands.*;
-import edu.nyu.cs.javagit.client.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public interface IGitTreeObject {
    * 
    * @return response from git commit
    */
-  public GitCommitResponse commit(String comment) throws IOException, JavaGitException;
+  public GitCommitResponseImpl commit(String comment) throws IOException, JavaGitException;
 
   /**
    * Moves or renames the git object

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.client.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 import edu.nyu.cs.javagit.client.cli.CliGitCommit;
 
 /**
@@ -29,7 +29,7 @@ public class TestCliGitCommit extends TestCase {
     parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
     assertEquals(2, parser.getNumLinesParsed());
 
-    GitCommitResponse response = new GitCommitResponse("c18c00f", "a change to test committing");
+    GitCommitResponseImpl response = new GitCommitResponseImpl("c18c00f", "a change to test committing");
     response.setFilesChanged("1");
     response.setLinesInserted("6");
     response.setLinesDeleted("1");
@@ -51,7 +51,7 @@ public class TestCliGitCommit extends TestCase {
         .parseLine(" create mode 100644 svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java");
     assertEquals(6, parser.getNumLinesParsed());
 
-    response = new GitCommitResponse("21efdb4", "initial commit");
+    response = new GitCommitResponseImpl("21efdb4", "initial commit");
     response.setFilesChanged("133");
     response.setLinesInserted("23679");
     response.setLinesDeleted("0");
@@ -81,7 +81,7 @@ public class TestCliGitCommit extends TestCase {
     parser.parseLine(" rename svnClientAdapter/{changelog.txt => CHlog.txt} (100%)");
     assertEquals(7, parser.getNumLinesParsed());
 
-    response = new GitCommitResponse("ab238dd", "renaming and copying files for commit tests.");
+    response = new GitCommitResponseImpl("ab238dd", "renaming and copying files for commit tests.");
     response.setFilesChanged("5");
     response.setLinesInserted("1");
     response.setLinesDeleted("1");
@@ -94,7 +94,7 @@ public class TestCliGitCommit extends TestCase {
 
   }
 
-  private void assertResponsesEqual(CliGitCommit.GitCommitParser parser, GitCommitResponse response) {
+  private void assertResponsesEqual(CliGitCommit.GitCommitParser parser, GitCommitResponseImpl response) {
     try {
       assertTrue("Expected GitCommitResponse not equal to actual GitCommitResponse.", response
           .equals(parser.getResponse()));

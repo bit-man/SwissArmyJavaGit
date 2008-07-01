@@ -6,7 +6,7 @@ import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
-import edu.nyu.cs.javagit.client.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
@@ -16,29 +16,29 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class CliGitCommit implements IGitCommit {
 
-  public GitCommitResponse commitAll(String repositoryPath, String message) throws IOException,
+  public GitCommitResponseImpl commitAll(String repositoryPath, String message) throws IOException,
       JavaGitException {
     GitCommitOptions options = new GitCommitOptions();
     options.setOptAll(true);
     return commitProcessor(repositoryPath, options, message, null);
   }
 
-  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message)
+  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message)
       throws IOException, JavaGitException {
     return commitProcessor(repositoryPath, options, message, null);
   }
 
-  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message,
+  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message,
       List<String> paths) throws IOException, JavaGitException {
     return commitProcessor(repositoryPath, options, message, paths);
   }
 
-  public GitCommitResponse commit(String repositoryPath, String message) throws IOException,
+  public GitCommitResponseImpl commit(String repositoryPath, String message) throws IOException,
       JavaGitException {
     return commitProcessor(repositoryPath, null, message, null);
   }
 
-  public GitCommitResponse commitOnly(String repositoryPath, String message, List<String> paths)
+  public GitCommitResponseImpl commitOnly(String repositoryPath, String message, List<String> paths)
       throws IOException, JavaGitException {
     GitCommitOptions options = new GitCommitOptions();
     options.setOptOnly(true);
@@ -74,7 +74,7 @@ public class CliGitCommit implements IGitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  protected GitCommitResponse commitProcessor(String repositoryPath, GitCommitOptions options,
+  protected GitCommitResponseImpl commitProcessor(String repositoryPath, GitCommitOptions options,
       String message, List<String> paths) throws IOException, JavaGitException {
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
@@ -82,7 +82,7 @@ public class CliGitCommit implements IGitCommit {
     List<String> commandLine = buildCommand(null, message, paths);
     GitCommitParser parser = new GitCommitParser();
 
-    return (GitCommitResponse) ProcessUtilities.runCommand(repositoryPath, commandLine, parser);
+    return (GitCommitResponseImpl) ProcessUtilities.runCommand(repositoryPath, commandLine, parser);
   }
 
   /**
@@ -144,7 +144,7 @@ public class CliGitCommit implements IGitCommit {
     private int numLinesParsed = 0;
 
     // The response object for a commit.
-    private GitCommitResponse response;
+    private GitCommitResponseImpl response;
 
     public void parseLine(String line) {
 
@@ -181,7 +181,7 @@ public class CliGitCommit implements IGitCommit {
         int locShortHash = line.lastIndexOf(' ', locColon);
         String shortHash = line.substring(locShortHash + 1, locColon);
         String shortComment = line.substring(locColon + 2);
-        response = new GitCommitResponse(shortHash, shortComment);
+        response = new GitCommitResponseImpl(shortHash, shortComment);
       } else {
         errorMsg = new StringBuffer();
         errorMsg.append("line1=[" + line + "]");
@@ -330,7 +330,7 @@ public class CliGitCommit implements IGitCommit {
      * @return The <code>GitCommitResponse</code> object containing the commit's response
      *         information.
      */
-    public GitCommitResponse getResponse() throws JavaGitException {
+    public GitCommitResponseImpl getResponse() throws JavaGitException {
       if (null != errorMsg) {
         throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001")
             + "  The git-commit error message:  { " + errorMsg.toString() + " }");

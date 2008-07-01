@@ -10,7 +10,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 /**
  * A response data object for the git-commit command.
  */
-public class GitCommitResponse implements CommandResponse {
+public class GitCommitResponseImpl implements CommandResponse {
 
   // TODO (jhl388): Add methods to retrieve added, copied, deleted and renamed file information.
 
@@ -60,7 +60,7 @@ public class GitCommitResponse implements CommandResponse {
    *          The short hash name
    * @param shortComment
    */
-  public GitCommitResponse(String shortHashName, String shortComment) {
+  public GitCommitResponseImpl(String shortHashName, String shortComment) {
     this.commitShortHashName = shortHashName;
     this.commitShortComment = shortComment;
 
@@ -145,11 +145,11 @@ public class GitCommitResponse implements CommandResponse {
   }
 
   public boolean equals(Object o) {
-    if (!(o instanceof GitCommitResponse)) {
+    if (!(o instanceof GitCommitResponseImpl)) {
       return false;
     }
 
-    GitCommitResponse g = (GitCommitResponse) o;
+    GitCommitResponseImpl g = (GitCommitResponseImpl) o;
 
     if (!CheckUtilities.checkObjectsEqual(getCommitShortHashName(), g.getCommitShortHashName())) {
       return false;

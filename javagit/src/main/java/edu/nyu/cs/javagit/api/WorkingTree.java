@@ -1,7 +1,7 @@
 package edu.nyu.cs.javagit.api;
 
 import edu.nyu.cs.javagit.api.commands.*;
-import edu.nyu.cs.javagit.client.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 
 import java.util.List;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class WorkingTree {
    * 
    * @return response from git commit
    */
-  public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
+  public GitCommitResponseImpl commit(String comment) throws IOException, JavaGitException {
     GitCommit gitCommit = new GitCommit();
     return gitCommit.commit(path, comment);
   }
@@ -62,7 +62,7 @@ public class WorkingTree {
    * 
    * @return response from git commit
    */
-  public GitCommitResponse commitAll(String comment) throws IOException, JavaGitException {
+  public GitCommitResponseImpl commitAll(String comment) throws IOException, JavaGitException {
     // first add everything
     add();
     return commit(comment);
