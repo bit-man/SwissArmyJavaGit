@@ -5,7 +5,6 @@ import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
-import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 
 /**
  * An interface to represent the git-commit command.

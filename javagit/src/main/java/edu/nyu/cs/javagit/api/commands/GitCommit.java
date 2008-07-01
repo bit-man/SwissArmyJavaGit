@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.ClientManager;
+import edu.nyu.cs.javagit.client.GitCommitResponse;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;

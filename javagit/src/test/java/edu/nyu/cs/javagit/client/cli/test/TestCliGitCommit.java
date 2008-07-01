@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponse;
 import edu.nyu.cs.javagit.client.cli.CliGitCommit;
 
 /**

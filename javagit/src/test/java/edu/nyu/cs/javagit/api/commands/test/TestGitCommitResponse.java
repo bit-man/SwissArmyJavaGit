@@ -5,9 +5,9 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
-import edu.nyu.cs.javagit.api.commands.GitCommitResponse.AddedOrDeletedFile;
-import edu.nyu.cs.javagit.api.commands.GitCommitResponse.CopiedOrMovedFile;
+import edu.nyu.cs.javagit.client.GitCommitResponse;
+import edu.nyu.cs.javagit.client.GitCommitResponse.AddedOrDeletedFile;
+import edu.nyu.cs.javagit.client.GitCommitResponse.CopiedOrMovedFile;
 
 import junit.framework.TestCase;
 

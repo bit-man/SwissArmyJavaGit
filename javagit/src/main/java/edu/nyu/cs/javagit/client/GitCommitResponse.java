@@ -1,9 +1,10 @@
-package edu.nyu.cs.javagit.api.commands;
+package edu.nyu.cs.javagit.client;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**

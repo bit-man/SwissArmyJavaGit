@@ -1,12 +1,13 @@
 package edu.nyu.cs.javagit.api;
 
 import edu.nyu.cs.javagit.api.commands.*;
+import edu.nyu.cs.javagit.client.GitCommitResponse;
 
 import java.io.IOException;
 
 /**
- * <code>IGitTreeObject</code> is the base interface for the hierarchy of
- * objects in a git sandbox and repository tree.
+ * <code>IGitTreeObject</code> is the base interface for the hierarchy of objects in a git sandbox
+ * and repository tree.
  * 
  * TODO: Build out the class
  */
@@ -19,21 +20,21 @@ public interface IGitTreeObject {
    */
   public GitAddResponse add() throws IOException, JavaGitException;
 
-   /**
+  /**
    * Commits the git object
    * 
    * @param comment
-   *      Developer's comment
-   *
+   *          Developer's comment
+   * 
    * @return response from git commit
    */
   public GitCommitResponse commit(String comment) throws IOException, JavaGitException;
 
-   /**
+  /**
    * Moves or renames the git object
    * 
    * @param dest
-   *      destination
+   *          destination
    * 
    * @return response from git mv
    */
@@ -43,30 +44,30 @@ public interface IGitTreeObject {
    * Removes the git object from the working tree and the index
    * 
    * @return response from git rm
-   */ 
+   */
   public GitRmResponse rm() throws IOException;
 
   /**
-   *  Checks out some earlier version of the git object
-   *  
+   * Checks out some earlier version of the git object
+   * 
    * @param sha1
-   *      Commit id
+   *          Commit id
    */
   public void checkout(String sha1);
 
   /**
-   *  Show differences between current git object and index version of it
+   * Show differences between current git object and index version of it
    * 
    * @return diff between working directory and git index
    */
   public Diff diff();
-  
+
   /**
-   *  Show differences between current git object and some commit
+   * Show differences between current git object and some commit
    * 
    * @param commit
-   *      Git commit to compare with
-   *      
+   *          Git commit to compare with
+   * 
    * @return diff between working directory and a given git commit
    */
   public Diff diff(Commit commit);
@@ -77,12 +78,12 @@ public interface IGitTreeObject {
   public Type getType();
 
   /**
-   *  Show git object's status in the working directory
+   * Show git object's status in the working directory
    * 
-   * @return status (untracked, changed but not updated, etc 
+   * @return status (untracked, changed but not updated, etc
    */
   public Status status();
-  
+
   /**
    * Gets the parent object of this object.
    * 
@@ -90,19 +91,19 @@ public interface IGitTreeObject {
    */
   public IGitTreeObject getParent();
 
-  //potentially others. SymLink, blob?
+  // potentially others. SymLink, blob?
   public static enum Type {
     FILE, DIRECTORY
   }
-  
+
   public static enum Status {
-    //untracked
+    // untracked
     UNTRACKED,
-    //changed, but not updated
+    // changed, but not updated
     MODIFIED,
-    //changed and added to the index
+    // changed and added to the index
     CHANGED_IN_INDEX,
-    //in repository
+    // in repository
     IN_REPOSITORY
   }
 

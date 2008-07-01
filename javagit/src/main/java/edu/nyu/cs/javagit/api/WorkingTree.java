@@ -1,6 +1,8 @@
 package edu.nyu.cs.javagit.api;
 
 import edu.nyu.cs.javagit.api.commands.*;
+import edu.nyu.cs.javagit.client.GitCommitResponse;
+
 import java.util.List;
 import java.io.IOException;
 
