@@ -81,7 +81,7 @@ public class GitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message)
+  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message)
       throws IOException, JavaGitException {
 
     /*
@@ -128,7 +128,7 @@ public class GitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message,
+  public GitCommitResponse commit(String repositoryPath, GitCommitOptions options, String message,
       List<String> paths) throws IOException, JavaGitException {
 
     /*
@@ -170,7 +170,7 @@ public class GitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponseImpl commit(String repositoryPath, String message) throws IOException,
+  public GitCommitResponse commit(String repositoryPath, String message) throws IOException,
       JavaGitException {
 
     /*
@@ -214,7 +214,7 @@ public class GitCommit {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitCommitResponseImpl commitOnly(String repositoryPath, String message, List<String> paths)
+  public GitCommitResponse commitOnly(String repositoryPath, String message, List<String> paths)
       throws IOException, JavaGitException {
 
     /*

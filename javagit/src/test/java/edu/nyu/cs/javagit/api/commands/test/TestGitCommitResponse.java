@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
-import edu.nyu.cs.javagit.client.GitCommitResponseImpl.AddedOrDeletedFile;
-import edu.nyu.cs.javagit.client.GitCommitResponseImpl.CopiedOrMovedFile;
+import edu.nyu.cs.javagit.api.commands.GitCommitResponse.AddedOrDeletedFile;
+import edu.nyu.cs.javagit.api.commands.GitCommitResponse.CopiedOrMovedFile;
 
 import junit.framework.TestCase;
 

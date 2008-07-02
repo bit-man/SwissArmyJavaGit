@@ -48,7 +48,7 @@ public class WorkingTree {
    * 
    * @return response from git commit
    */
-  public GitCommitResponseImpl commit(String comment) throws IOException, JavaGitException {
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
     GitCommit gitCommit = new GitCommit();
     return gitCommit.commit(path, comment);
   }
@@ -62,7 +62,7 @@ public class WorkingTree {
    * 
    * @return response from git commit
    */
-  public GitCommitResponseImpl commitAll(String comment) throws IOException, JavaGitException {
+  public GitCommitResponse commitAll(String comment) throws IOException, JavaGitException {
     // first add everything
     add();
     return commit(comment);

@@ -72,7 +72,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @return response from git commit
    */
-  public GitCommitResponseImpl commit(String comment) throws IOException, JavaGitException {
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
     add();
 
     GitCommit gitCommit = new GitCommit();

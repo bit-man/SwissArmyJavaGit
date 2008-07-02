@@ -28,7 +28,7 @@ public interface IGitTreeObject {
    * 
    * @return response from git commit
    */
-  public GitCommitResponseImpl commit(String comment) throws IOException, JavaGitException;
+  public GitCommitResponse commit(String comment) throws IOException, JavaGitException;
 
   /**
    * Moves or renames the git object
