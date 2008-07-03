@@ -155,13 +155,26 @@ public class CliGitMv implements IGitMv {
     public void parseLineForSuccess(String line) {
       String comment;
       if (line.contains("Warning:") || line.contains("fatal")) {
-        System.out.println(line);
         int colonIndex = line.indexOf(':');
         comment = line.substring(colonIndex + 2);
         response.addComment(comment + "\n");
       } else {
-        System.out.println(line);
         response.addComment(line + "\n");
+      }
+      if (line.contains("source=")) {
+        int equalIndex = line.indexOf('=');
+        int commaIndex = line.indexOf(',', equalIndex);
+        response.setSource(line.substring(equalIndex+1, commaIndex));
+      }
+      if(line.contains("destination=")) {
+        int destinationIndex = line.indexOf("destination");
+        response.setDestination(line.substring(destinationIndex + 12));
+      }
+      if(line.contains("Adding")) {
+        response.setDestination(line.substring(11));
+      }
+      if(line.contains("Deleting")) {
+        response.setSource(line.substring(11));
       }
     }
 
@@ -177,7 +190,6 @@ public class CliGitMv implements IGitMv {
         throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001")
             + errorMessage.toString());
       }
-      System.out.println(response.getComment());
       return response;
     }
   }
