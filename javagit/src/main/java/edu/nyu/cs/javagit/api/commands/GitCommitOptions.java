@@ -3,7 +3,7 @@ package edu.nyu.cs.javagit.api.commands;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
- * A class to manage passing commit arguments to the commit command.
+ * A class to manage passing commit arguments to the <code>GitCommit</code> command.
  */
 public class GitCommitOptions {
 
