@@ -40,21 +40,31 @@ public class TestCommitName extends TestCase {
     // Testing valid input
     CommitName cn = CommitName.createHeadCommitName(0);
     assertEquals(cn, CommitName.HEAD);
+    assertTrue(CommitName.HEAD == cn);
+    assertEquals(cn.toString(), "HEAD");
+    assertEquals(cn.hashCode(), 1043272);
 
     cn = CommitName.createHeadCommitName(1);
     assertEquals(cn, CommitName.HEAD_1);
+    assertTrue(CommitName.HEAD_1 == cn);
+    assertEquals(cn.toString(), "HEAD^1");
+    assertEquals(cn.hashCode(), 1043273);
 
     cn = CommitName.createHeadCommitName(2);
     assertEquals("Expected CommitNameType of HEAD.", cn.getCommitNameType(),
         CommitName.CommitNameType.HEAD);
     assertEquals(cn.getHeadOffset(), 2);
     assertEquals(cn.getSha1Name(), null);
+    assertEquals(cn.toString(), "HEAD~2");
+    assertEquals(cn.hashCode(), 1043274);
 
     cn = CommitName.createHeadCommitName(50);
     assertEquals("Expected CommitNameType of HEAD.", cn.getCommitNameType(),
         CommitName.CommitNameType.HEAD);
     assertEquals(cn.getHeadOffset(), 50);
     assertEquals(cn.getSha1Name(), null);
+    assertEquals(cn.toString(), "HEAD~50");
+    assertEquals(cn.hashCode(), 1043322);
   }
 
   private void assertIllegalCreateHeadCommitNameArgument(int headOffset, String expectedMessage) {
@@ -77,16 +87,26 @@ public class TestCommitName extends TestCase {
 
     // Testing valid input
     CommitName cn = CommitName.createSha1CommitName("a");
+    CommitName cn2 = CommitName.createSha1CommitName("a");
     assertEquals("Expected CommitNameType of SHA1.", cn.getCommitNameType(),
         CommitName.CommitNameType.SHA1);
     assertEquals(cn.getHeadOffset(), -1);
     assertEquals(cn.getSha1Name(), "a");
+    assertEquals(cn.toString(), "a");
+    assertEquals(cn.hashCode(), 7896522);
+    assertEquals(cn, cn2);
 
     cn = CommitName.createSha1CommitName("ab238dd4c9fa4d8eabe03715c3e8b212f9532013");
+    assertTrue(!cn.equals(cn2));
+
+    cn2 = CommitName.createSha1CommitName("ab238dd4c9fa4d8eabe03715c3e8b212f9532013");
     assertEquals("Expected CommitNameType of SHA1.", cn.getCommitNameType(),
         CommitName.CommitNameType.SHA1);
     assertEquals(cn.getHeadOffset(), -1);
     assertEquals(cn.getSha1Name(), "ab238dd4c9fa4d8eabe03715c3e8b212f9532013");
+    assertEquals(cn.toString(), "ab238dd4c9fa4d8eabe03715c3e8b212f9532013");
+    assertEquals(cn.hashCode(), -1268057138);
+    assertEquals(cn, cn2);
   }
 
   private void assertCreateSha1CommitNameThrowsNPE(String sha1Name, String message) {

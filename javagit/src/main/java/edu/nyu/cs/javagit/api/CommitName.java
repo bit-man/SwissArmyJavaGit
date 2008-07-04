@@ -31,8 +31,6 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * <li> the full SHA1</li>
  * <li> a SHA1 truncated to the first n characters</li>
  * </ul>
- * 
- * TODO (jhl388): Write test cases for this class.
  */
 public class CommitName {
 
@@ -138,6 +136,47 @@ public class CommitName {
    */
   public String getSha1Name() {
     return sha1Name;
+  }
+
+  public String toString() {
+    if (CommitNameType.HEAD == commitNameType) {
+      if (0 == headOffset) {
+        return "HEAD";
+      } else if (1 == headOffset) {
+        return "HEAD^1";
+      } else {
+        return "HEAD~" + Integer.toString(headOffset);
+      }
+    } else if (CommitNameType.SHA1 == commitNameType) {
+      return sha1Name;
+    } else {
+      return "";
+    }
+  }
+
+  public boolean equals(Object o) {
+    if (!(o instanceof CommitName)) {
+      return false;
+    }
+
+    CommitName cn = (CommitName) o;
+
+    if (!CheckUtilities.checkObjectsEqual(commitNameType, cn.getCommitNameType())) {
+      return false;
+    }
+    if (!CheckUtilities.checkObjectsEqual(sha1Name, cn.getSha1Name())) {
+      return false;
+    }
+    if (cn.getHeadOffset() != headOffset) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode() {
+    int ret = commitNameType.hashCode() + headOffset;
+    return (null == sha1Name) ? ret : ret + sha1Name.hashCode();
   }
 
 }
