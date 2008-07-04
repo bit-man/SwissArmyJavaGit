@@ -3,33 +3,82 @@ package edu.nyu.cs.javagit.api;
 import java.util.List;
 
 /**
- * <code>Commit</code> represents information about a commit to a git repository
+ * <code>Commit</code> represents information about a commit to a git repository.
  * 
  * TODO: Build out the class
  */
-public class Commit {
-  // commit "id"
-  private String sha1;
+public final class Commit {
+
+  // The name of the commit.
+  private CommitName commitName;
+
   // commit comment
   private String comment;
 
   /**
-   * The constructor.
+   * Get a <code>Commit</code> instance for the specified HEAD commit offset.
    * 
-   * @param sha1
-   *          The full SHA1 object name (commit id).
+   * @param commitOffset
+   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          <code>commitOffset</code>.
+   * @return The <code>Commit</code>.
    */
-  public Commit(String sha1) {
-    this.sha1 = sha1;
+  public static Commit getHeadCommit() {
+    return new Commit(CommitName.createHeadCommitName(0));
   }
 
   /**
-   * Gets the full SHA1 object name
+   * Get a <code>Commit</code> instance for the specified HEAD commit offset.
    * 
-   * @return The full SHA1 object name.
+   * @param commitOffset
+   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          <code>commitOffset</code>.
+   * @return The <code>Commit</code>.
    */
-  public String getSha1() {
-    return sha1;
+  public static Commit getHeadCommit(int commitOffset) {
+    return new Commit(CommitName.createHeadCommitName(commitOffset));
+  }
+
+  /**
+   * Get a <code>Commit</code> instance for the specified SHA1 name.
+   * 
+   * @param sha1Name
+   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          <code>sha1Name</code>.
+   * @return The <code>Commit</code>.
+   */
+  public static Commit getSha1Commit(String sha1Name) {
+    return new Commit(CommitName.createSha1CommitName(sha1Name));
+  }
+
+  /**
+   * Get a <code>Commit</code> instance for the specified commit name.
+   * 
+   * @param commitName
+   *          The <code>CommitName</code> for this <code>Commit</code>.
+   * @return The <code>Commit</code>.
+   */
+  public static Commit getCommit(CommitName commitName) {
+    return new Commit(commitName);
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param commitName
+   *          The name of this commit.
+   */
+  private Commit(CommitName commitName) {
+    this.commitName = commitName;
+  }
+
+  /**
+   * Gets the name of this commit.
+   * 
+   * @return The name of this commit.
+   */
+  public CommitName getCommitName() {
+    return commitName;
   }
 
   /**
@@ -64,4 +113,5 @@ public class Commit {
     // GitDiff.diff();
     return null;
   }
+
 }

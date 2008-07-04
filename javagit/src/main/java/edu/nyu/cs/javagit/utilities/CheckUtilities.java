@@ -25,13 +25,32 @@ public class CheckUtilities {
   }
 
   /**
+   * Checks that the int to check is greater than <code>lowerBound</code>. If the int to check is
+   * not greater than <code>lowerBound</code>, an <code>IllegalArgumentException</code> is
+   * thrown.
+   * 
+   * @param toCheck
+   *          The int to check.
+   * @param lowerBound
+   *          The lower bound to check against.
+   * @param variableName
+   *          The name of the variable being checked; for use in exception messages.
+   */
+  public static void checkIntArgumentGreaterThan(int toCheck, int lowerBound, String variableName) {
+    if (lowerBound >= toCheck) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000004") + "  { toCheck=["
+          + toCheck + "], lowerBound=[" + lowerBound + "], variableName=[" + variableName + "] }");
+    }
+  }
+
+  /**
    * Performs a null check on the specified object. If the object is null, a
    * <code>NullPointerException</code> is thrown.
    * 
    * @param obj
    *          The object to check.
    * @param variableName
-   *          The name of the variable to use in the exception message.
+   *          The name of the variable being checked; for use in exception messages.
    */
   public static void checkNullArgument(Object obj, String variableName) {
     if (null == obj) {
@@ -71,7 +90,7 @@ public class CheckUtilities {
    * @param str
    *          The string to check.
    * @param variableName
-   *          The name of the variable to use in throwing exceptions.
+   *          The name of the variable being checked; for use in exception messages.
    */
   public static void checkStringArgument(String str, String variableName) {
     if (null == str) {
@@ -94,7 +113,7 @@ public class CheckUtilities {
    * @param str
    *          The <code>List&lt;String&gt;</code> to check.
    * @param variableName
-   *          The name of the variable to use in throwing exceptions.
+   *          The name of the variable being checked; for use in exception messages.
    */
   public static void checkStringListArgument(List<String> str, String variableName) {
     if (null == str) {

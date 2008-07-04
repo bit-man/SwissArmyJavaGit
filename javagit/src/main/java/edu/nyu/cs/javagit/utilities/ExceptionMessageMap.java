@@ -83,6 +83,8 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000001", "000001: A String argument was not specified but is required.");
     MESSAGE_MAP.put("000002", "000002: A List<String> argument was not specified but is required.");
     MESSAGE_MAP.put("000003", "000003: An Object argument was not specified but is required.");
+    MESSAGE_MAP.put("000004",
+        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).");
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");

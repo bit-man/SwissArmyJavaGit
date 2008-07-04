@@ -88,7 +88,38 @@ public class TestCheckUtilities extends TestCase {
   }
 
   @Test
+  public void testCheckIntArgumentGreaterThan() {
+    // Test invalid values.
+    assertCheckIntArgumentGreaterThanThrowsException(5, 5, "Test variable name",
+        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+            + "{ toCheck=[5], lowerBound=[5], variableName=[Test variable name] }");
+    assertCheckIntArgumentGreaterThanThrowsException(5, 6, "Test variable name",
+        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+            + "{ toCheck=[5], lowerBound=[6], variableName=[Test variable name] }");
+
+    // Test valid values.
+    try {
+      CheckUtilities.checkIntArgumentGreaterThan(5, 4, "Test variable name");
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+      assertTrue("Caught IllegalArgumentException when none was expected.  Error!", false);
+    }
+  }
+
+  private void assertCheckIntArgumentGreaterThanThrowsException(int toCheck, int lowerBound,
+      String variableName, String expectedMessage) {
+    try {
+      CheckUtilities.checkIntArgumentGreaterThan(toCheck, lowerBound, variableName);
+      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+    } catch (IllegalArgumentException e) {
+      assertEquals("IllegalArgumentException didn't contain expected message.  Error!",
+          expectedMessage, e.getMessage());
+    }
+  }
+
+  @Test
   public void testCheckNullArgument() {
+    // Test invalid values.
     try {
       CheckUtilities.checkNullArgument(null, "Test variable name");
       assertTrue("No NPE thrown when one was expected.  Error!", false);
@@ -98,6 +129,7 @@ public class TestCheckUtilities extends TestCase {
               + "{ variableName=[Test variable name] }", e.getMessage());
     }
 
+    // Test valid values.
     try {
       CheckUtilities.checkNullArgument("There is an object here.", "Test variable name");
     } catch (NullPointerException e) {
@@ -127,6 +159,7 @@ public class TestCheckUtilities extends TestCase {
 
   @Test
   public void testCheckStringArgument() {
+    // Test invalid values
     assertCheckStringArgumentThrowsNPE(null, "aVariableName",
         "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
@@ -135,6 +168,7 @@ public class TestCheckUtilities extends TestCase {
         "000001: A String argument was not specified but is required.  "
             + "{ variableName=[aVariableName] }");
 
+    // Test valid values
     assertCheckStringArgumentIsValid("str", "SomeVarName");
   }
 
