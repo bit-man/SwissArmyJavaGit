@@ -3,7 +3,8 @@ package edu.nyu.cs.javagit.client;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 
 /**
- * A response data object for the git-commit command.
+ * Implementation of a <code>GitCommitResponse</code>. This class adds functionality to set
+ * values in a <code>GitCommitResponse</code>.
  */
 public class GitCommitResponseImpl extends GitCommitResponse {
 
