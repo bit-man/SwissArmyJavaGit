@@ -12,8 +12,6 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  */
 abstract public class GitCommitResponse implements CommandResponse {
 
-  // TODO (jhl388): Add methods to retrieve added, copied, deleted and renamed file information.
-
   // The short hash name for the commit.
   protected String commitShortHashName = "";
 
@@ -211,7 +209,7 @@ abstract public class GitCommitResponse implements CommandResponse {
   /**
    * Represents a file added to or deleted from the repository for a given commit.
    */
-  public class AddedOrDeletedFile {
+  public static class AddedOrDeletedFile {
 
     // TODO (jhl388): Add a method to get a javagit File instance for this file.
 
@@ -279,7 +277,7 @@ abstract public class GitCommitResponse implements CommandResponse {
    * Represents a file that was copied from an existing file already tracked in the repository or a
    * tracked file that was moved from one name/place to another.
    */
-  public class CopiedOrMovedFile {
+  public static class CopiedOrMovedFile {
 
     // TODO (jhl388): Add methods to get a javagit File instance for these files.
 

@@ -149,13 +149,13 @@ public class TestGitCommitResponse extends TestCase {
 
   @Test
   public void testAddedOrDeletedFile() {
-    GitCommitResponseImpl.AddedOrDeletedFile addDel = resp.new AddedOrDeletedFile(
+    GitCommitResponseImpl.AddedOrDeletedFile addDel = new AddedOrDeletedFile(
         "/a/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelSame = resp.new AddedOrDeletedFile(
+    GitCommitResponseImpl.AddedOrDeletedFile addDelSame = new AddedOrDeletedFile(
         "/a/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff1 = resp.new AddedOrDeletedFile(
+    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff1 = new AddedOrDeletedFile(
         "/another/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff2 = resp.new AddedOrDeletedFile(
+    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff2 = new AddedOrDeletedFile(
         "/a/path/to/add/del/file.txt", "100777");
 
     assertEquals("AddedOrDeletedFile instances not equal when they should be equal", addDel,
@@ -172,15 +172,15 @@ public class TestGitCommitResponse extends TestCase {
 
   @Test
   public void testCopiedOrMovedFile() {
-    GitCommitResponseImpl.CopiedOrMovedFile copyMove = resp.new CopiedOrMovedFile(
+    GitCommitResponseImpl.CopiedOrMovedFile copyMove = new CopiedOrMovedFile(
         "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveSame = resp.new CopiedOrMovedFile(
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveSame = new CopiedOrMovedFile(
         "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff1 = resp.new CopiedOrMovedFile(
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff1 = new CopiedOrMovedFile(
         "c:\\path\\1\\notSame.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff2 = resp.new CopiedOrMovedFile(
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff2 = new CopiedOrMovedFile(
         "c:\\path\\1\\txt.txt", "c:\\path\\1\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff3 = resp.new CopiedOrMovedFile(
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff3 = new CopiedOrMovedFile(
         "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 83);
 
     assertEquals("CopiedOrMovedFile instances not equal when they should be equal", copyMove,
