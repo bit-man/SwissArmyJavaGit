@@ -5,12 +5,13 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.CommitName;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * Test case for the <code>CommitName</code> data object.
  */
 public class TestCommitName extends TestCase {
+
+  // TODO (jhl388): add exhaustive tests of the CommitName.equals() method
 
   @Test
   public void testStaticVariables() {
