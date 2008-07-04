@@ -11,7 +11,7 @@ import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
- * <code>GitCommit</code> provides an interface to commit changes to a git repository.
+ * <code>GitCommit</code> provides an API to commit changes to a git repository.
  */
 public class GitCommit {
 
