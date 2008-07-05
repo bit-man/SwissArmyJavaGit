@@ -65,7 +65,6 @@ public class ProcessUtilities {
         throw toThrow;
       }
     }
-    System.out.println();
   }
 
   /**
