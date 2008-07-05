@@ -1,6 +1,7 @@
 package edu.nyu.cs.javagit.test.utilities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -93,5 +94,15 @@ public class FileUtilities {
       throw new JavaGitException(-1, "-1:  Unable to delete file/directory.  { path=["
           + dirOrFile.getAbsolutePath() + "] }");
     }
+  }
+  
+  public static void modifyFileContents(File toModifyFile, String appendText) 
+    throws FileNotFoundException, IOException {
+    if ( ! toModifyFile.exists()) {
+      throw new FileNotFoundException("File does not exist");
+    }
+    FileWriter fw = new FileWriter(toModifyFile);
+    fw.append(appendText);
+    fw.close();
   }
 }
