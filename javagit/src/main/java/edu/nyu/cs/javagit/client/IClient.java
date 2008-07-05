@@ -48,6 +48,13 @@ public interface IClient {
   public IGitMv getGitMvInstance();
 
   /**
+   * Gets an instance if <code>IGitReset</code>.
+   * 
+   * @return An instance of <code>IGitReset</code>
+   */
+  public IGitReset getGitResetInstance();
+
+  /**
    * Gets an instance of <code>IGitRevert</code>.
    * 
    * @return An instance of <code>IGitRevert</code>.

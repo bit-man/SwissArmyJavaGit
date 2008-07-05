@@ -23,13 +23,13 @@ public class CliGitCommit implements IGitCommit {
     return commitProcessor(repositoryPath, options, message, null);
   }
 
-  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message)
-      throws IOException, JavaGitException {
+  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options,
+      String message) throws IOException, JavaGitException {
     return commitProcessor(repositoryPath, options, message, null);
   }
 
-  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options, String message,
-      List<String> paths) throws IOException, JavaGitException {
+  public GitCommitResponseImpl commit(String repositoryPath, GitCommitOptions options,
+      String message, List<String> paths) throws IOException, JavaGitException {
     return commitProcessor(repositoryPath, options, message, paths);
   }
 
@@ -79,7 +79,7 @@ public class CliGitCommit implements IGitCommit {
     CheckUtilities.checkStringArgument(repositoryPath, "repository path");
     CheckUtilities.checkStringArgument(message, "message");
 
-    List<String> commandLine = buildCommand(null, message, paths);
+    List<String> commandLine = buildCommand(options, message, paths);
     GitCommitParser parser = new GitCommitParser();
 
     return (GitCommitResponseImpl) ProcessUtilities.runCommand(repositoryPath, commandLine, parser);
@@ -332,7 +332,7 @@ public class CliGitCommit implements IGitCommit {
      */
     public GitCommitResponseImpl getResponse() throws JavaGitException {
       if (null != errorMsg) {
-        throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001")
+        throw new JavaGitException(410000, ExceptionMessageMap.getMessage("410000")
             + "  The git-commit error message:  { " + errorMsg.toString() + " }");
       }
       return response;

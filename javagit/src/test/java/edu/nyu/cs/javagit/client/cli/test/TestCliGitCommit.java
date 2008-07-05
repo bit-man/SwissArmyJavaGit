@@ -29,7 +29,8 @@ public class TestCliGitCommit extends TestCase {
     parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
     assertEquals(2, parser.getNumLinesParsed());
 
-    GitCommitResponseImpl response = new GitCommitResponseImpl("c18c00f", "a change to test committing");
+    GitCommitResponseImpl response = new GitCommitResponseImpl("c18c00f",
+        "a change to test committing");
     response.setFilesChanged("1");
     response.setLinesInserted("6");
     response.setLinesDeleted("1");
@@ -94,7 +95,8 @@ public class TestCliGitCommit extends TestCase {
 
   }
 
-  private void assertResponsesEqual(CliGitCommit.GitCommitParser parser, GitCommitResponseImpl response) {
+  private void assertResponsesEqual(CliGitCommit.GitCommitParser parser,
+      GitCommitResponseImpl response) {
     try {
       assertTrue("Expected GitCommitResponse not equal to actual GitCommitResponse.", response
           .equals(parser.getResponse()));
@@ -116,9 +118,9 @@ public class TestCliGitCommit extends TestCase {
     assertEquals(2, parser.getNumLinesParsed());
 
     assertExceptionThrownOnResponseRetrieval(parser,
-        "100001: Error calling git-commit.  The git-commit error message:  { "
+        "410000: Error calling git-commit.  The git-commit error message:  { "
             + "line1=[Created commi c18c00f: a change to test committing], "
-            + "line2=[ 1 files changed, 6 insertions(+), 1 deletions(-)] }", 100001);
+            + "line2=[ 1 files changed, 6 insertions(+), 1 deletions(-)] }", 410000);
 
     // Test a spelling mistake
     parser = gitcommit.new GitCommitParser();
@@ -126,8 +128,8 @@ public class TestCliGitCommit extends TestCase {
     assertEquals(1, parser.getNumLinesParsed());
 
     assertExceptionThrownOnResponseRetrieval(parser,
-        "100001: Error calling git-commit.  The git-commit error message:  { "
-            + "line1=[Error Committing:  some random error] }", 100001);
+        "410000: Error calling git-commit.  The git-commit error message:  { "
+            + "line1=[Error Committing:  some random error] }", 410000);
   }
 
   private void assertExceptionThrownOnResponseRetrieval(CliGitCommit.GitCommitParser parser,

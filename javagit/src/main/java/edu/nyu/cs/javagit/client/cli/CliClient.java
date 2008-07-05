@@ -7,6 +7,7 @@ import edu.nyu.cs.javagit.client.IGitDiff;
 import edu.nyu.cs.javagit.client.IGitGrep;
 import edu.nyu.cs.javagit.client.IGitLog;
 import edu.nyu.cs.javagit.client.IGitMv;
+import edu.nyu.cs.javagit.client.IGitReset;
 import edu.nyu.cs.javagit.client.IGitRevert;
 import edu.nyu.cs.javagit.client.IGitRm;
 import edu.nyu.cs.javagit.client.IGitShow;
@@ -39,6 +40,10 @@ public class CliClient implements IClient {
 
   public IGitMv getGitMvInstance() {
     return new CliGitMv();
+  }
+
+  public IGitReset getGitResetInstance() {
+    return new CliGitReset();
   }
 
   public IGitRevert getGitRevertInstance() {
