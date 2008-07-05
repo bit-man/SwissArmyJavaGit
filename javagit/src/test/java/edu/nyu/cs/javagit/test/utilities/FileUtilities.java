@@ -96,13 +96,21 @@ public class FileUtilities {
     }
   }
   
-  public static void modifyFileContents(File toModifyFile, String appendText) 
+  /**
+   * Append some text to an existing file.
+   * @param file File that will be modified
+   * @param appendText The text that will be appended to the file
+   * @throws FileNotFoundException Exception thrown if the file does not exist.
+   * @throws IOException thrown if the IO operation fails.
+   */
+  public static void modifyFileContents(File file, String appendText) 
     throws FileNotFoundException, IOException {
-    if ( ! toModifyFile.exists()) {
+    if ( ! file.exists()) {
       throw new FileNotFoundException("File does not exist");
     }
-    FileWriter fw = new FileWriter(toModifyFile);
+    FileWriter fw = new FileWriter(file);
     fw.append(appendText);
     fw.close();
   }
+  
 }
