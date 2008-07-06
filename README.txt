@@ -4,6 +4,7 @@
 
    I. BUILDING JAVAGIT
   II. DEVELOPING WITH ECLIPSE
+ III. ADDING SOURCES FOR DEPENDENCIES
 
 
 I.    BUILDING JAVAGIT
@@ -57,5 +58,28 @@ II.   DEVELOPING WITH ECLIPSE
 
       5. Start developing.
 
+
+III.  ADDING SOURCES FOR DEPENDENCIES
+
+      When developing in Eclipse, it is often desireable to see the sources for
+      the library dependencies of the project being worked on.  To download the
+      sources for the dependencies, run the following command:
+
+          $ mvn dependency:sources
+
+      Once the sources are downloaded, 
+
+      1. Go to Eclipse and "Ctrl-Left Click" (windows/linux) or "Cmd-Click" 
+         (os x) a type from the dependency for which you want to view the 
+         source.
+      2. Click "Attach Source"
+      3. Find the variable (M2_REPO) and the extension for the source zip/jar.
+      4. Press OK.
+
+      The source for the dependency should now be loaded.
+
+      Note:  For JDK source, there is a src.zip file installed in the JAVA_HOME
+             directory of all Sun JDK installations.  Attach this zip file for
+             browsing JDK source.
 
 
