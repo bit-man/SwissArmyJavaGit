@@ -97,6 +97,8 @@ public class ExceptionMessageMap {
 
     MESSAGE_MAP.put("410000", "410000: Error calling git-commit.");
     
+    MESSAGE_MAP.put("404001", "404000: Error calling git-branch. ");
+    
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv. ");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-commit.");

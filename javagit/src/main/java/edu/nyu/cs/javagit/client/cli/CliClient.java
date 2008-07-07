@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.client.cli;
 
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitAdd;
+import edu.nyu.cs.javagit.client.IGitBranch;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.client.IGitDiff;
 import edu.nyu.cs.javagit.client.IGitGrep;
@@ -60,6 +61,10 @@ public class CliClient implements IClient {
 
   public IGitStatus getGitStatusInstance() {
     return new CliGitStatus();
+  }
+  
+  public IGitBranch getGitBranchInstance() {
+    return new CliGitBranch();
   }
 
 }
