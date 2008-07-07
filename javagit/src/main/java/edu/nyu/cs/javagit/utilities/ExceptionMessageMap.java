@@ -88,7 +88,6 @@ public class ExceptionMessageMap {
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");
-    MESSAGE_MAP.put("000120", "000120: Invalid option combination for git-checkout command.");
 
     MESSAGE_MAP.put("020001", "020001: File or path does not exist.");
 
@@ -102,6 +101,11 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv. ");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-commit.");
+    
+    MESSAGE_MAP.put("406000", "406000: Error calling git-checkout");
+    
+    MESSAGE_MAP.put("438000", "438000: Error calling git-status");
+    
   }
 
   /**
