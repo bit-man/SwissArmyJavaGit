@@ -5,7 +5,9 @@ package edu.nyu.cs.javagit.api;
  */
 public class JavaGitException extends Exception {
 
-  // The code for an exception instance.
+  // as per the Java spec, this is a required field for <code>Serializable</code>
+	private static final long serialVersionUID = 1402053559415331074L;
+	// The code for an exception instance.
   private int code;
 
   /**
