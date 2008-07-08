@@ -225,27 +225,27 @@ public class CliGitStatus implements IGitStatus {
     }
     
     public boolean matchDeletedFilePattern(String line) {
-      //String pattern = "^#\\s+deleted:\\s+\\w+";
-      String pattern = "#\tdeleted: ";
-      if ( line.startsWith(pattern) ) {
+      String pattern = "^#\\s+deleted:\\s+\\w+";
+      //String pattern = "#\tdeleted: ";
+      if ( line.matches(pattern) ) {
         return true;
       }
       return false;
     }
     
     public boolean matchModifiedFilePattern(String line) {
-      //String pattern = "^#\\s+modified:\\s+\\w+";
-      String pattern = "#\tmodified: ";
-      if ( line.startsWith(pattern) ) {
+      String pattern = "^#\\s+modified:\\s+\\w+";
+      //String pattern = "#\tmodified: ";
+      if ( line.matches(pattern) ) {
         return true;
       }
       return false;
     }
     
     public boolean matchNewFilePattern(String line) {
-      //String pattern = "^#\\s+new file:\\s+\\w+";
-      String pattern = "#\tnew file: ";
-      if ( line.startsWith(pattern) ) {
+      String pattern = "^#\\s+new file:\\s+\\w+";
+      //String pattern = "#\tnew file: ";
+      if ( line.matches(pattern) ) {
         return true;
       }
       return false;
