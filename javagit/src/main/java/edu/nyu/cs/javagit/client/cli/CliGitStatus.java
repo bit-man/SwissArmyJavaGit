@@ -226,8 +226,8 @@ public class CliGitStatus implements IGitStatus {
     
     public boolean matchDeletedFilePattern(String line) {
       String pattern = "^#\\s+deleted:\\s+\\w+";
-      //String pattern = "#\tdeleted: ";
-      if ( line.matches(pattern) ) {
+      String pattern2 = "#\tdeleted: ";
+      if ( line.matches(pattern) || line.startsWith(pattern2) ) {
         return true;
       }
       return false;
@@ -235,8 +235,8 @@ public class CliGitStatus implements IGitStatus {
     
     public boolean matchModifiedFilePattern(String line) {
       String pattern = "^#\\s+modified:\\s+\\w+";
-      //String pattern = "#\tmodified: ";
-      if ( line.matches(pattern) ) {
+      String pattern2 = "#\tmodified: ";
+      if ( line.matches(pattern) || line.startsWith(pattern2) ) {
         return true;
       }
       return false;
@@ -244,8 +244,8 @@ public class CliGitStatus implements IGitStatus {
     
     public boolean matchNewFilePattern(String line) {
       String pattern = "^#\\s+new file:\\s+\\w+";
-      //String pattern = "#\tnew file: ";
-      if ( line.matches(pattern) ) {
+      String pattern2 = "#\tnew file: ";
+      if ( line.matches(pattern) || line.startsWith(pattern2) ) {
         return true;
       }
       return false;

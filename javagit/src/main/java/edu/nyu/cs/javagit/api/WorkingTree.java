@@ -113,7 +113,7 @@ public class WorkingTree {
    * 
    * @return The list of objects at the root directory
    */
-  public List<GitFileSystemObject> getTree() {
+  public List<GitFileSystemObject> getTree() throws IOException {
     return rootDir.getChildren();
   }
 
