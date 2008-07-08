@@ -4,30 +4,44 @@ import edu.nyu.cs.javagit.api.commands.*;
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
 /**
  * <code>GitFileSystemObject</code> provides some implementation shared by files and directories
- * 
- * TODO: Build out the class
  */
-public abstract class GitFileSystemObject implements IGitTreeObject {
+public abstract class GitFileSystemObject {
 
-  protected String path;
-  protected String repositoryPath;
-  protected String name;
-  protected IGitTreeObject.Status status;
-
+  public static enum Status {
+    // untracked
+    UNTRACKED,
+    //new, waiting to commit
+    NEW_TO_COMMIT,
+    //deleted, waiting to commit
+    DELETED_TO_COMMIT,
+    // changed, but not updated
+    MODIFIED,
+    // changed and added to the index
+    MODIFIED_TO_COMMIT,
+    // in repository
+    IN_REPOSITORY
+  }
+  
+  protected DotGit dotGit;
+  protected File file;
+  
   /**
    * The constructor.
    * 
-   * @param path
-   *          The full (relative to repository) path
+   * @param file
+   *          underlying java.io.File object
+   * @param dotGit
+   *          The object representing .git directory of the repository
    */
-  public GitFileSystemObject(String path, String repositoryPath, IGitTreeObject.Status status) {
-    this.path = path;
-    this.status = status;
+  public GitFileSystemObject(File file, DotGit dotGit) {
+    this.dotGit = dotGit;
+    this.file = file;
   }
 
   /**
@@ -36,18 +50,19 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * @return The name
    */
   public String getName() {
-    return name;
+    return file.getName();
   }
 
   /**
-   * Gets the path
+   * Gets the underlying java.io.File object
    * 
-   * @return The path
+   * @return java.io.File object
    */
-  public String getPath() {
-    return path;
+  public File getFile() {
+    return file;
   }
 
+  
   /**
    * Adds the object to the git index
    * 
@@ -58,10 +73,10 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
 
     // create a list of filenames and add yourself to it
     List<String> list = new Vector<String>();
-    list.add(path);
+    list.add(file.getPath());
 
     // run git-add command
-    return gitAdd.add(repositoryPath, null, list);
+    return gitAdd.add(dotGit.getPath(), null, list);
   }
 
   /**
@@ -73,26 +88,38 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * @return response from git commit
    */
   public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
+    // first add the file
     add();
 
+    // create a list of filenames and add yourself to it
+    List<String> list = new Vector<String>();
+    list.add(file.getPath());
+
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commit(this.path, comment);
+    return gitCommit.commitOnly(dotGit.getPath(), comment, list);
   }
 
   /**
    * Moves or renames the object
    * 
    * @param dest
-   *          destination
+   *          destination path (relative to the Git Repository)
    * 
    * @return response from git mv
    */
-  public GitMvResponse mv(String dest) throws IOException, JavaGitException {
-    String source = path;
-    path = dest;
-
+  public GitMvResponse mv(File dest) throws IOException, JavaGitException {
+    // source; current location
+    String source = file.getPath();
+    String destination = dest.getPath();
+    
+    // perform git-mv
     GitMv gitMv = new GitMv();
-    return gitMv.mv(repositoryPath, source, dest);
+    GitMvResponse response = gitMv.mv(dotGit.getPath(), source, destination);
+    
+    // file has changed; update
+    file = dest;
+
+    return response;
   }
 
   /**
@@ -100,15 +127,15 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @return response from git rm
    */
-  public GitRmResponse rm() throws IOException {
+  public GitRmResponse rm() throws IOException, JavaGitException {
     GitRm gitRm = new GitRm();
 
     // create a list of filenames and add yourself to it
     List<String> list = new Vector<String>();
-    list.add(path);
+    list.add(file.getPath());
 
     // run git rm command
-    return gitRm.rm(repositoryPath, list);
+    return gitRm.rm(dotGit.getPath(), list);
   }
 
   /**
@@ -117,7 +144,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * @param sha1
    *          Commit id
    */
-  public void checkout(String sha1) {
+  public void checkout(String sha1) throws JavaGitException {
     System.out.println("getting earlier version " + sha1);
     // GitCheckout.checkout(path, sha1);
   }
@@ -127,7 +154,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @return diff between working directory and git index
    */
-  public Diff diff() {
+  public Diff diff() throws JavaGitException {
     // GitLog.log(path);
     return null;
   }
@@ -140,7 +167,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @return diff between working directory and a given git commit
    */
-  public Diff diff(Commit commit) {
+  public Diff diff(Commit commit) throws JavaGitException {
     // GitLog.log(path);
     return null;
   }
@@ -150,7 +177,7 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
    * 
    * @return List of commits for the object
    */
-  public List<Commit> log() {
+  public List<Commit> getLog() throws JavaGitException {
     // GitLog.log(path);
     return null;
   }
@@ -158,10 +185,63 @@ public abstract class GitFileSystemObject implements IGitTreeObject {
   /**
    * Show object's status in the working directory
    * 
-   * @return status (untracked, changed but not updated, etc
+   * @return status (untracked, changed but not updated, etc)
    */
-  public IGitTreeObject.Status status() {
-    return status;
+  public Status getStatus() throws IOException, JavaGitException {
+    GitStatus gitStatus = new GitStatus();
+    // run git-status command
+    GitStatusResponse response = gitStatus.status(dotGit.getPath(), null, file.getPath());
+
+    String relativePath = getRelativePath();
+
+    if(response.getDeletedFilesToCommitSize() > 0) {
+      if(relativePath.equals(response.getFileFromDeletedFilesToCommit(0))) {
+        return Status.DELETED_TO_COMMIT;
+      }
+    }
+    
+    if(response.getModifiedFilesNotUpdatedSize() > 0) {
+      if(relativePath.equals(response.getFileFromModifiedFilesNotUpdated(0))) {
+        return Status.MODIFIED;
+      }
+    }
+    
+    if(response.getModifiedFilesToCommitSize() > 0) {
+      if(relativePath.equals(response.getFileFromModifiedFilesToCommit(0))) {
+        return Status.MODIFIED_TO_COMMIT;
+      }
+    }
+
+    if(response.getNewFilesToCommitSize() > 0) {
+      if(relativePath.equals(response.getFileFromNewFilesToCommit(0))) {
+        return Status.NEW_TO_COMMIT;
+      }
+    }
+    
+    if(response.getUntrackedFilesSize() > 0) {
+      if(relativePath.equals(response.getFileFromUntrackedFiles(0))) {
+        return Status.UNTRACKED;
+      }
+    }
+    
+
+    return Status.IN_REPOSITORY;
+  }
+
+
+  /**
+   * Gets the relative path; for git-status use only
+   * 
+   * @return relative path
+   */
+  private String getRelativePath() {
+    String path = file.getPath();
+    String gitPath = dotGit.getPath() + File.separator;
+    if(!path.startsWith(gitPath)) {
+      return null;
+    }
+
+    return path.substring(gitPath.length());
   }
 
 }

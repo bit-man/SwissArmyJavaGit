@@ -20,7 +20,7 @@ public class DotGit {
    */
   public DotGit(String path) {
     this.path = path;
-    workingTree = new WorkingTree(path);
+    workingTree = new WorkingTree(path, this);
   }
 
   /**

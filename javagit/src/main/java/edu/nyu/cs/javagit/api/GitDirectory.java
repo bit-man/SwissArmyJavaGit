@@ -15,62 +15,52 @@ public class GitDirectory extends GitFileSystemObject {
   /**
    * The constructor.
    * 
-   * @param name
-   *          The name of the directory
+   * @param dir
+   *          underlying java.io.File object
+   * @param dotGit
+   *          The object representing .git directory of the repository
    * @param parent
    *          The parent directory
-   * @param repositoryPath
-   *          The path to the repository
    */
-  public GitDirectory(String path, GitDirectory parent, String repositoryPath) {
-    super(path, repositoryPath, IGitTreeObject.Status.UNTRACKED);
+  public GitDirectory(File dir, DotGit dotGit, GitDirectory parent) {
+    super(dir, dotGit);
     this.parent = parent;
   }
 
-  /**
-   * The constructor.
-   * 
-   * @param name
-   *          The name of the directory
-   * @param parent
-   *          The parent directory
-   * @param repositoryPath
-   *          The path to the repository
-   * @param status
-   *          current status of the directory
-   */
-  public GitDirectory(String path, GitDirectory parent, String repositoryPath,
-      IGitTreeObject.Status status) {
-    super(path, repositoryPath, status);
-    this.parent = parent;
-  }
 
   /**
    * Gets the children of this directory.
    * 
    * @return The children of this directory.
    */
-  public List<IGitTreeObject> getChildren() {
+  public List<GitFileSystemObject> getChildren() {
     return null;
   }
 
   /**
    * Adds a GitFile to the working directory.
    * 
-   * @param file
-   *          The underlying java,io.File object
+   * @param name
+   *          The name of the file
    * 
    * @return The GitFile object
    */
-  public GitFile addFile(File file) {
-    return new GitFile(file, this, repositoryPath);
+  public GitFile addFile(String name) {
+    String filePath = file.getPath() + File.separator + name;
+    return new GitFile(new File(filePath), dotGit, this);
   }
 
   /**
-   * Gets the type of the git object (DIRECTORY)
+   * Adds a GitFile to the working directory.
+   * 
+   * @param name
+   *          The name of the file
+   * 
+   * @return The GitFile object
    */
-  public IGitTreeObject.Type getType() {
-    return IGitTreeObject.Type.DIRECTORY;
+  public GitDirectory addDirectory(String name) {
+    String dirPath = file.getPath() + File.separator + name;
+    return new GitDirectory(new File(dirPath), dotGit, this);
   }
 
   /**
@@ -78,7 +68,7 @@ public class GitDirectory extends GitFileSystemObject {
    * 
    * @return parent directory
    */
-  public IGitTreeObject getParent() {
+  public GitDirectory getParent() {
     return parent;
   }
 

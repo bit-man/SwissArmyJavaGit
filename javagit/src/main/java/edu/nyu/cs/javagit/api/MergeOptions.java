@@ -6,7 +6,7 @@ package edu.nyu.cs.javagit.api;
  * TODO: Build out the class
  */
 public class MergeOptions {
-  private String message;
+  private final String message;
   private Strategy strategy;
 
   public static enum Strategy {
@@ -21,11 +21,25 @@ public class MergeOptions {
    * @param s
    *          Merge strategy; see enum list
    */
-  public MergeOptions(String m, Strategy s) {
-    this.message = m;
+  public MergeOptions(Strategy s) {
     this.strategy = s;
+    //no message
+    this.message = null;
   }
 
+  /**
+   * The constructor.
+   * 
+   * @param m
+   *          Message for the commit
+   * @param s
+   *          Merge strategy; see enum list
+   */
+  public MergeOptions(Strategy s, String m) {
+    this.strategy = s;
+    this.message = m;
+  }
+  
   /**
    * Gets the commit message
    * 

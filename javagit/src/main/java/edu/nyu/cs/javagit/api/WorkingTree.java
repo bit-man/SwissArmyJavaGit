@@ -4,6 +4,7 @@ import edu.nyu.cs.javagit.api.commands.*;
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 
 import java.util.List;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -24,9 +25,9 @@ public class WorkingTree {
    * @param repo
    *          The repository
    */
-  public WorkingTree(String path) {
+  public WorkingTree(String path, DotGit dotGit) {
     this.path = path;
-    rootDir = new GitDirectory(path, null, path);
+    rootDir = new GitDirectory(new File(path), dotGit, null);
   }
 
   /**
@@ -63,9 +64,8 @@ public class WorkingTree {
    * @return response from git commit
    */
   public GitCommitResponse commitAll(String comment) throws IOException, JavaGitException {
-    // first add everything
-    add();
-    return commit(comment);
+    GitCommit gitCommit = new GitCommit();
+    return gitCommit.commitAll(path, comment);
   }
 
   /**
@@ -73,7 +73,7 @@ public class WorkingTree {
    * 
    * @return List of commits for the working directory
    */
-  public List<Commit> log() {
+  public List<Commit> getLog() {
     // GitLog.log(path);
     return null;
   }
@@ -113,7 +113,7 @@ public class WorkingTree {
    * 
    * @return The list of objects at the root directory
    */
-  public List<IGitTreeObject> getTree() {
+  public List<GitFileSystemObject> getTree() {
     return rootDir.getChildren();
   }
 
@@ -135,7 +135,6 @@ public class WorkingTree {
    */
   public void setBranch(Branch branch) {
     // GitCheckout.checkout(branch.getBranchName());
-    this.path = branch.getBranchRoot().getPath();
   }
 
   /**
@@ -150,14 +149,13 @@ public class WorkingTree {
   /**
    * Adds a directory to the working directory (but not to the repository!)
    * 
-   * @param dir
+   * @param name
    *          name of the directory
    * 
    * @return The new Directory object
    */
-  public GitDirectory addDirectory(String dir) {
-    // createDir(dir);
-    return new GitDirectory(dir, rootDir, path);
+  public GitDirectory addDirectory(String name) {
+    return rootDir.addDirectory(name);
   }
 
 }
