@@ -32,7 +32,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * <li> a SHA1 truncated to the first n characters</li>
  * </ul>
  */
-public class CommitName {
+public class Ref {
 
   /**
    * An enumeration of the types of commit names.
@@ -42,23 +42,23 @@ public class CommitName {
   }
 
   /** The HEAD commit. */
-  public static final CommitName HEAD;
+  public static final Ref HEAD;
 
   /** The prior HEAD commit. */
-  public static final CommitName HEAD_1;
+  public static final Ref HEAD_1;
 
   static {
-    HEAD = new CommitName();
+    HEAD = new Ref();
     HEAD.commitNameType = CommitNameType.HEAD;
     HEAD.headOffset = 0;
 
-    HEAD_1 = new CommitName();
+    HEAD_1 = new Ref();
     HEAD_1.commitNameType = CommitNameType.HEAD;
     HEAD_1.headOffset = 1;
   }
 
   // The type of this commit name.
-  private CommitName.CommitNameType commitNameType;
+  private Ref.CommitNameType commitNameType;
 
   // If the commit type is HEAD, this is the number of commits back from the head of the commit.
   private int headOffset = -1;
@@ -74,7 +74,7 @@ public class CommitName {
    *          <code>IllegalArgumentException</code> is thrown.
    * @return A <code>CommitName</code> instance of type <code>HEAD</code>.
    */
-  public static CommitName createHeadCommitName(int headOffset) {
+  public static Ref createHeadCommitName(int headOffset) {
     CheckUtilities.checkIntArgumentGreaterThan(headOffset, -1, "headOffset");
 
     if (0 == headOffset) {
@@ -83,7 +83,7 @@ public class CommitName {
       return HEAD_1;
     }
 
-    CommitName cn = new CommitName();
+    Ref cn = new Ref();
     cn.commitNameType = CommitNameType.HEAD;
     cn.headOffset = headOffset;
     return cn;
@@ -98,10 +98,10 @@ public class CommitName {
    *          length zero, an <code>IllegalArgumentException</code> is thrown.
    * @return A <code>CommitName</code> instance of type <code>SHA1</code>.
    */
-  public static CommitName createSha1CommitName(String sha1Name) {
+  public static Ref createSha1CommitName(String sha1Name) {
     CheckUtilities.checkStringArgument(sha1Name, "sha1Name");
 
-    CommitName cn = new CommitName();
+    Ref cn = new Ref();
     cn.commitNameType = CommitNameType.SHA1;
     cn.sha1Name = sha1Name;
     return cn;
@@ -112,7 +112,7 @@ public class CommitName {
    * 
    * @return The type of the <code>CommitName<code> instance.
    */
-  public CommitName.CommitNameType getCommitNameType() {
+  public Ref.CommitNameType getCommitNameType() {
     return commitNameType;
   }
 
@@ -155,11 +155,11 @@ public class CommitName {
   }
 
   public boolean equals(Object o) {
-    if (!(o instanceof CommitName)) {
+    if (!(o instanceof Ref)) {
       return false;
     }
 
-    CommitName cn = (CommitName) o;
+    Ref cn = (Ref) o;
 
     if (!CheckUtilities.checkObjectsEqual(commitNameType, cn.getCommitNameType())) {
       return false;

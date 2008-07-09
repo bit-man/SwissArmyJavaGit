@@ -1,6 +1,6 @@
 package edu.nyu.cs.javagit.api.commands;
 
-import edu.nyu.cs.javagit.api.CommitName;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
@@ -44,7 +44,7 @@ public class GitResetOptions {
   }
 
   // The name of the commit to reset to.
-  private CommitName commitName;
+  private Ref commitName;
 
   // The type of reset to perform.
   private ResetType resetType;
@@ -56,7 +56,7 @@ public class GitResetOptions {
    * Construct a <code>GitResetOptions</code> instance with the default values.
    */
   public GitResetOptions() {
-    setup(ResetType.MIXED, CommitName.HEAD);
+    setup(ResetType.MIXED, Ref.HEAD);
   }
 
   /**
@@ -65,7 +65,7 @@ public class GitResetOptions {
    * @param commitName
    *          The name of the commit to reset to.
    */
-  public GitResetOptions(CommitName commitName) {
+  public GitResetOptions(Ref commitName) {
     setup(ResetType.MIXED, commitName);
   }
 
@@ -76,7 +76,7 @@ public class GitResetOptions {
    *          The type of reset to perform.
    */
   public GitResetOptions(ResetType resetType) {
-    setup(resetType, CommitName.HEAD);
+    setup(resetType, Ref.HEAD);
   }
 
   /**
@@ -88,7 +88,7 @@ public class GitResetOptions {
    * @param commitName
    *          The name of the commit to reset to.
    */
-  public GitResetOptions(ResetType resetType, CommitName commitName) {
+  public GitResetOptions(ResetType resetType, Ref commitName) {
     setup(resetType, commitName);
   }
 
@@ -100,7 +100,7 @@ public class GitResetOptions {
    * @param commitName
    *          The name of the commit to reset to.
    */
-  private void setup(ResetType resetType, CommitName commitName) {
+  private void setup(ResetType resetType, Ref commitName) {
     CheckUtilities.checkNullArgument(resetType, "resetType");
     CheckUtilities.checkNullArgument(commitName, "commitName");
 
@@ -113,7 +113,7 @@ public class GitResetOptions {
    * 
    * @return The name of the commit this instance says to reset to.
    */
-  public CommitName getCommitName() {
+  public Ref getCommitName() {
     return commitName;
   }
 
@@ -141,7 +141,7 @@ public class GitResetOptions {
    * @param commitName
    *          The name of the commit to reset to.
    */
-  public void setCommitName(CommitName commitName) {
+  public void setCommitName(Ref commitName) {
     this.commitName = commitName;
   }
 

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.nyu.cs.javagit.api.CommitName;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions;
 import edu.nyu.cs.javagit.api.commands.GitResetResponse;
@@ -28,7 +28,7 @@ public class CliGitReset implements IGitReset {
     return resetProcessor(repositoryPath, new GitResetOptions(), null);
   }
 
-  public GitResetResponse gitReset(String repositoryPath, CommitName commitName, List<String> paths)
+  public GitResetResponse gitReset(String repositoryPath, Ref commitName, List<String> paths)
       throws IOException, JavaGitException {
     return resetProcessor(repositoryPath, new GitResetOptions(commitName), paths);
   }
@@ -38,12 +38,12 @@ public class CliGitReset implements IGitReset {
     return resetProcessor(repositoryPath, new GitResetOptions(), paths);
   }
 
-  public GitResetResponse gitResetHard(String repositoryPath, CommitName commitName)
+  public GitResetResponse gitResetHard(String repositoryPath, Ref commitName)
       throws IOException, JavaGitException {
     return resetProcessor(repositoryPath, new GitResetOptions(ResetType.HARD, commitName), null);
   }
 
-  public GitResetResponse gitResetSoft(String repositoryPath, CommitName commitName)
+  public GitResetResponse gitResetSoft(String repositoryPath, Ref commitName)
       throws IOException, JavaGitException {
     return resetProcessor(repositoryPath, new GitResetOptions(ResetType.SOFT, commitName), null);
   }

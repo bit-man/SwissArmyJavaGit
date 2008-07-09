@@ -3,7 +3,7 @@ package edu.nyu.cs.javagit.api.commands;
 import java.io.IOException;
 import java.util.List;
 
-import edu.nyu.cs.javagit.api.CommitName;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
@@ -115,7 +115,7 @@ public class GitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitReset(String repositoryPath, CommitName commitName, List<String> paths)
+  public GitResetResponse gitReset(String repositoryPath, Ref commitName, List<String> paths)
       throws IOException, JavaGitException {
 
     /*
@@ -193,7 +193,7 @@ public class GitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public static GitResetResponse gitResetHard(String repositoryPath, CommitName commitName)
+  public static GitResetResponse gitResetHard(String repositoryPath, Ref commitName)
       throws IOException, JavaGitException {
 
     /*
@@ -231,7 +231,7 @@ public class GitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public static GitResetResponse gitResetSoft(String repositoryPath, CommitName commitName)
+  public static GitResetResponse gitResetSoft(String repositoryPath, Ref commitName)
       throws IOException, JavaGitException {
 
     /*

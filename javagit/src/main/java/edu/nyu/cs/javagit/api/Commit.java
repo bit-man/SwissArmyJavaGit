@@ -10,7 +10,7 @@ import java.util.List;
 public final class Commit {
 
   // The name of the commit.
-  private CommitName commitName;
+  private Ref commitName;
 
   // commit comment
   private String comment;
@@ -19,36 +19,36 @@ public final class Commit {
    * Get a <code>Commit</code> instance for the specified HEAD commit offset.
    * 
    * @param commitOffset
-   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          See {@link edu.nyu.cs.javagit.api.Ref} for information on acceptable values of
    *          <code>commitOffset</code>.
    * @return The <code>Commit</code>.
    */
   public static Commit getHeadCommit() {
-    return new Commit(CommitName.createHeadCommitName(0));
+    return new Commit(Ref.createHeadCommitName(0));
   }
 
   /**
    * Get a <code>Commit</code> instance for the specified HEAD commit offset.
    * 
    * @param commitOffset
-   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          See {@link edu.nyu.cs.javagit.api.Ref} for information on acceptable values of
    *          <code>commitOffset</code>.
    * @return The <code>Commit</code>.
    */
   public static Commit getHeadCommit(int commitOffset) {
-    return new Commit(CommitName.createHeadCommitName(commitOffset));
+    return new Commit(Ref.createHeadCommitName(commitOffset));
   }
 
   /**
    * Get a <code>Commit</code> instance for the specified SHA1 name.
    * 
    * @param sha1Name
-   *          See {@link edu.nyu.cs.javagit.api.CommitName} for information on acceptable values of
+   *          See {@link edu.nyu.cs.javagit.api.Ref} for information on acceptable values of
    *          <code>sha1Name</code>.
    * @return The <code>Commit</code>.
    */
   public static Commit getSha1Commit(String sha1Name) {
-    return new Commit(CommitName.createSha1CommitName(sha1Name));
+    return new Commit(Ref.createSha1CommitName(sha1Name));
   }
 
   /**
@@ -58,7 +58,7 @@ public final class Commit {
    *          The <code>CommitName</code> for this <code>Commit</code>.
    * @return The <code>Commit</code>.
    */
-  public static Commit getCommit(CommitName commitName) {
+  public static Commit getCommit(Ref commitName) {
     return new Commit(commitName);
   }
 
@@ -68,7 +68,7 @@ public final class Commit {
    * @param commitName
    *          The name of this commit.
    */
-  private Commit(CommitName commitName) {
+  private Commit(Ref commitName) {
     this.commitName = commitName;
   }
 
@@ -77,7 +77,7 @@ public final class Commit {
    * 
    * @return The name of this commit.
    */
-  public CommitName getCommitName() {
+  public Ref getCommitName() {
     return commitName;
   }
 
