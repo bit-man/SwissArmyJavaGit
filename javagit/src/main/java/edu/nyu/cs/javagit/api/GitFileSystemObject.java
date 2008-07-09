@@ -1,8 +1,7 @@
 package edu.nyu.cs.javagit.api;
 
+// TODO (rs2705): change this to only import the commands we need
 import edu.nyu.cs.javagit.api.commands.*;
-import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
-
 import java.io.IOException;
 import java.io.File;
 import java.util.List;
@@ -13,12 +12,18 @@ import java.util.Vector;
  */
 public abstract class GitFileSystemObject {
 
+  /*
+   * TODO (rs2705): Get rid of the ugly .getPath().getPath() calls in the git command calls here.
+   * We're doing this because, as of right now, they take Strings. But we want them to take GitFile
+   * (or File) objects instead.
+   */
+
   public static enum Status {
     // untracked
     UNTRACKED,
-    //new, waiting to commit
+    // new, waiting to commit
     NEW_TO_COMMIT,
-    //deleted, waiting to commit
+    // deleted, waiting to commit
     DELETED_TO_COMMIT,
     // changed, but not updated
     MODIFIED,
@@ -27,10 +32,10 @@ public abstract class GitFileSystemObject {
     // in repository
     IN_REPOSITORY
   }
-  
+
   protected DotGit dotGit;
   protected File file;
-  
+
   /**
    * The constructor.
    * 
@@ -62,7 +67,6 @@ public abstract class GitFileSystemObject {
     return file;
   }
 
-  
   /**
    * Adds the object to the git index
    * 
@@ -76,7 +80,7 @@ public abstract class GitFileSystemObject {
     list.add(file.getPath());
 
     // run git-add command
-    return gitAdd.add(dotGit.getPath(), null, list);
+    return gitAdd.add(dotGit.getPath().getPath(), null, list);
   }
 
   /**
@@ -96,7 +100,7 @@ public abstract class GitFileSystemObject {
     list.add(file.getPath());
 
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commitOnly(dotGit.getPath(), comment, list);
+    return gitCommit.commitOnly(dotGit.getPath().getPath(), comment, list);
   }
 
   /**
@@ -111,11 +115,11 @@ public abstract class GitFileSystemObject {
     // source; current location
     String source = file.getPath();
     String destination = dest.getPath();
-    
+
     // perform git-mv
     GitMv gitMv = new GitMv();
-    GitMvResponse response = gitMv.mv(dotGit.getPath(), source, destination);
-    
+    GitMvResponse response = gitMv.mv(dotGit.getPath().getPath(), source, destination);
+
     // file has changed; update
     file = dest;
 
@@ -135,7 +139,7 @@ public abstract class GitFileSystemObject {
     list.add(file.getPath());
 
     // run git rm command
-    return gitRm.rm(dotGit.getPath(), list);
+    return gitRm.rm(dotGit.getPath().getPath(), list);
   }
 
   /**
@@ -190,44 +194,42 @@ public abstract class GitFileSystemObject {
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();
     // run git-status command
-    GitStatusResponse response = gitStatus.status(dotGit.getPath(), null, file.getPath());
+    GitStatusResponse response = gitStatus.status(dotGit.getPath().getPath(), null, file.getPath());
 
     String relativePath = getRelativePath();
 
-    if(response.getDeletedFilesToCommitSize() > 0) {
-      if(relativePath.equals(response.getFileFromDeletedFilesToCommit(0))) {
+    if (response.getDeletedFilesToCommitSize() > 0) {
+      if (relativePath.equals(response.getFileFromDeletedFilesToCommit(0))) {
         return Status.DELETED_TO_COMMIT;
       }
     }
-    
-    if(response.getModifiedFilesNotUpdatedSize() > 0) {
-      if(relativePath.equals(response.getFileFromModifiedFilesNotUpdated(0))) {
+
+    if (response.getModifiedFilesNotUpdatedSize() > 0) {
+      if (relativePath.equals(response.getFileFromModifiedFilesNotUpdated(0))) {
         return Status.MODIFIED;
       }
     }
-    
-    if(response.getModifiedFilesToCommitSize() > 0) {
-      if(relativePath.equals(response.getFileFromModifiedFilesToCommit(0))) {
+
+    if (response.getModifiedFilesToCommitSize() > 0) {
+      if (relativePath.equals(response.getFileFromModifiedFilesToCommit(0))) {
         return Status.MODIFIED_TO_COMMIT;
       }
     }
 
-    if(response.getNewFilesToCommitSize() > 0) {
-      if(relativePath.equals(response.getFileFromNewFilesToCommit(0))) {
+    if (response.getNewFilesToCommitSize() > 0) {
+      if (relativePath.equals(response.getFileFromNewFilesToCommit(0))) {
         return Status.NEW_TO_COMMIT;
       }
     }
-    
-    if(response.getUntrackedFilesSize() > 0) {
-      if(relativePath.equals(response.getFileFromUntrackedFiles(0))) {
+
+    if (response.getUntrackedFilesSize() > 0) {
+      if (relativePath.equals(response.getFileFromUntrackedFiles(0))) {
         return Status.UNTRACKED;
       }
     }
-    
 
     return Status.IN_REPOSITORY;
   }
-
 
   /**
    * Gets the relative path; for git-status use only
@@ -237,7 +239,7 @@ public abstract class GitFileSystemObject {
   private String getRelativePath() {
     String path = file.getPath();
     String gitPath = dotGit.getPath() + File.separator;
-    if(!path.startsWith(gitPath)) {
+    if (!path.startsWith(gitPath)) {
       return null;
     }
 

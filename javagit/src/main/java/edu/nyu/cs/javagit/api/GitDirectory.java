@@ -28,10 +28,10 @@ public class GitDirectory extends GitFileSystemObject {
    *          The parent directory
    */
   public GitDirectory(File dir, DotGit dotGit, GitDirectory parent) {
+    // TODO (rs2705): Fix this constructor. It's overkill to pass in this much stuff.
     super(dir, dotGit);
     this.parent = parent;
   }
-
 
   /**
    * Gets the children of this directory.
