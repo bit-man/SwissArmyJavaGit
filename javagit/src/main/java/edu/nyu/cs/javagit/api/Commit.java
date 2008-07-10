@@ -24,7 +24,7 @@ public final class Commit {
    * @return The <code>Commit</code>.
    */
   public static Commit getHeadCommit() {
-    return new Commit(Ref.createHeadCommitName(0));
+    return new Commit(Ref.createHeadRef(0));
   }
 
   /**
@@ -36,7 +36,7 @@ public final class Commit {
    * @return The <code>Commit</code>.
    */
   public static Commit getHeadCommit(int commitOffset) {
-    return new Commit(Ref.createHeadCommitName(commitOffset));
+    return new Commit(Ref.createHeadRef(commitOffset));
   }
 
   /**
@@ -48,7 +48,7 @@ public final class Commit {
    * @return The <code>Commit</code>.
    */
   public static Commit getSha1Commit(String sha1Name) {
-    return new Commit(Ref.createSha1CommitName(sha1Name));
+    return new Commit(Ref.createSha1Ref(sha1Name));
   }
 
   /**

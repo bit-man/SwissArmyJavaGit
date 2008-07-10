@@ -3,18 +3,31 @@ package edu.nyu.cs.javagit.api;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
- * This class represents the name of a commit. The types of <code>CommitName</code>s, specified
- * in the <code>CommitNameType</code> enumeration, are:
+ * This class represents the name of a ref. The types of <code>Ref</code>s, specified in the
+ * <code>RefType</code> enumeration, are:
  * 
  * <ul>
- * <li>HEAD</li>
- * <li>SHA1</li>
+ * <li> <code>BRANCH</code> </li>
+ * <li> <code>HEAD</code> </li>
+ * <li> <code>REMOTE</code> </li>
+ * <li> <code>SHA1</code> </li>
+ * <li> <code>TAG</code> </li>
  * </ul>
  * 
- * If the <code>CommitNameType</code> of a <code>CommitName</code> instance is HEAD, then a
- * commit offset value is maintained. This commit offset indicates the commit back from the current
- * HEAD commit that the instance represents. Values greater than or equal to zero are acceptable and
- * correspond to:
+ * If the <code>RefType</code> of a <code>Ref</code> instance is <code>BRANCH</code>, then
+ * the branch name is maintained by the instance. The branch name is simply a <code>String</code>
+ * representing the name of the branch. Examples:
+ * 
+ * <ul>
+ * <li> master </li>
+ * <li> testing </li>
+ * <li> crazyidea </li>
+ * </ul>
+ * 
+ * If the <code>RefType</code> of a <code>Ref</code> instance is <code>HEAD</code>, then a
+ * commit offset value is maintained as an <code>int</code>. This commit offset indicates the
+ * commit back from the HEAD commit on the branch checked out in the working tree. Values greater
+ * than or equal to zero are acceptable and correspond to:
  * 
  * <ul>
  * <li> 0 - The current HEAD commit</li>
@@ -23,22 +36,52 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * <li> etc...</li>
  * </ul>
  * 
- * If the <code>CommitNameType</code> of a <code>CommitName</code> instance is SHA1, then the
- * SHA1 value of the commit is represented by a <code>String</code> value. This string value can
- * be
+ * If the <code>RefType</code> of a <code>Ref</code> instance is <code>REMOTE</code>, then
+ * the remote repository name and remote branch name are maintained as a <code>String</code>s by
+ * the instance.<br>
+ * <br>
+ * 
+ * Note: It is possible for the remote repository name to be non-existent. In such cases, the
+ * repository value is <code>null</code>. <br>
+ * <br>
+ * 
+ * Examples:
  * 
  * <ul>
- * <li> the full SHA1</li>
- * <li> a SHA1 truncated to the first n characters</li>
+ * <li> remote repository name: origin, remote branch name: master </li>
+ * <li> remote repository name: davidsrepo, remote branch name: testing </li>
+ * <li> remote repository name: <no_repo_name>, remote branch name: crazyidea </li>
+ * </ul>
+ * 
+ * If the <code>RefType</code> of a <code>Ref</code> instance is <code>SHA1</code>, then the
+ * SHA1 value is maintained as a <code>String</code> value. This string value can be:
+ * 
+ * <ul>
+ * <li> the full SHA1 </li>
+ * <li> a SHA1 truncated to the first n characters </li>
+ * </ul>
+ * 
+ * If the <code>RefType</code> of a <code>Ref</code> instance is <code>TAG</code>, then the
+ * name of the tag is maintained as a <code>String</code> value. Examples:
+ * 
+ * <ul>
+ * <li> Release1.0.8 </li>
+ * <li> 6.3-RC1 </li>
  * </ul>
  */
 public class Ref {
 
-  /**
-   * An enumeration of the types of commit names.
+  /*
+   * TODO (jhl388): add the field "isCurrentBranch" to indicate if the ref is the current working
+   * branch. Refs of the current working branch and all HEAD refs should have the value "true". All
+   * other refs should have the value "false".
    */
-  public static enum CommitNameType {
-    HEAD, SHA1
+
+  /**
+   * An enumeration of the types of refs.
+   */
+  public static enum RefType {
+    BRANCH, HEAD, REMOTE, SHA1, TAG
   }
 
   /** The HEAD commit. */
@@ -49,32 +92,59 @@ public class Ref {
 
   static {
     HEAD = new Ref();
-    HEAD.commitNameType = CommitNameType.HEAD;
+    HEAD.refType = RefType.HEAD;
     HEAD.headOffset = 0;
 
     HEAD_1 = new Ref();
-    HEAD_1.commitNameType = CommitNameType.HEAD;
+    HEAD_1.refType = RefType.HEAD;
     HEAD_1.headOffset = 1;
   }
 
-  // The type of this commit name.
-  private Ref.CommitNameType commitNameType;
+  // The type of this ref.
+  private Ref.RefType refType;
 
-  // If the commit type is HEAD, this is the number of commits back from the head of the commit.
+  /*
+   * If the ref's type is HEAD, this is the number of commits back from the head of the current
+   * working branch.
+   */
   private int headOffset = -1;
 
-  // If the commit type is SHA1, this is the name of the commit.
-  private String sha1Name = null;
+  // If the ref's type is BRANCH, REMOTE, SHA1, or TAG, this is the name of the ref.
+  private String name = null;
+
+  /*
+   * If the ref's type is REMOTE, this is the name of the remote repository iff a repository name is
+   * associated with the remote name.
+   */
+  private String repositoryName = null;
 
   /**
-   * Creates a <code>CommitName</code> of type <code>HEAD</code>.
+   * Creates a <code>Ref</code> of type <code>BRANCH</code>.
+   * 
+   * @param name
+   *          The branch name of this ref. If the value is null, a <code>NullPointerException</code>
+   *          is thrown. If the value has length zero, an <code>IllegalArgumentException</code> is
+   *          thrown.
+   * @return A <code>Ref</code> instance of type <code>BRANCH</code>.
+   */
+  public static Ref createBranchRef(String name) {
+    CheckUtilities.checkStringArgument(name, "name");
+
+    Ref cn = new Ref();
+    cn.refType = RefType.BRANCH;
+    cn.name = name;
+    return cn;
+  }
+
+  /**
+   * Creates a <code>Ref</code> of type <code>HEAD</code>.
    * 
    * @param headOffset
-   *          The offset of the commit back from the HEAD commit. If the value is less than zero, an
-   *          <code>IllegalArgumentException</code> is thrown.
-   * @return A <code>CommitName</code> instance of type <code>HEAD</code>.
+   *          The offset of the commit back from the HEAD commit on the current working branch. If
+   *          the value is less than zero, an <code>IllegalArgumentException</code> is thrown.
+   * @return A <code>Ref</code> instance of type <code>HEAD</code>.
    */
-  public static Ref createHeadCommitName(int headOffset) {
+  public static Ref createHeadRef(int headOffset) {
     CheckUtilities.checkIntArgumentGreaterThan(headOffset, -1, "headOffset");
 
     if (0 == headOffset) {
@@ -84,62 +154,120 @@ public class Ref {
     }
 
     Ref cn = new Ref();
-    cn.commitNameType = CommitNameType.HEAD;
+    cn.refType = RefType.HEAD;
     cn.headOffset = headOffset;
     return cn;
   }
 
   /**
-   * Creates a <code>CommitName</code> of type <code>SHA1</code>.
+   * Creates a <code>Ref</code> of type <code>REMOTE</code>.
    * 
-   * @param sha1Name
-   *          The SHA1 name of this commit. The value can be a short name or the full SHA1 value. If
-   *          the value is null, a <code>NullPointerException</code> is thrown. If the value has
-   *          length zero, an <code>IllegalArgumentException</code> is thrown.
-   * @return A <code>CommitName</code> instance of type <code>SHA1</code>.
+   * @param repositoryName
+   *          The remote repository name of this ref. If the value is blank or null, the value will
+   *          be maintained as null.
+   * @param name
+   *          The remote branch name of this ref. If the value is null, a
+   *          <code>NullPointerException</code> is thrown. If the value has length zero, an
+   *          <code>IllegalArgumentException</code> is thrown.
+   * @return A <code>Ref</code> instance of type <code>REMOTE</code>.
    */
-  public static Ref createSha1CommitName(String sha1Name) {
-    CheckUtilities.checkStringArgument(sha1Name, "sha1Name");
+  public static Ref createRemoteRef(String repositoryName, String name) {
+    CheckUtilities.checkStringArgument(name, "name");
 
     Ref cn = new Ref();
-    cn.commitNameType = CommitNameType.SHA1;
-    cn.sha1Name = sha1Name;
+    cn.refType = RefType.REMOTE;
+    cn.name = name;
+
+    if (null != repositoryName && repositoryName.length() > 0) {
+      cn.repositoryName = repositoryName;
+    }
+
     return cn;
   }
 
   /**
-   * Gets the type of the <code>CommitName</code> instance.
+   * Creates a <code>Ref</code> of type <code>SHA1</code>.
    * 
-   * @return The type of the <code>CommitName<code> instance.
+   * @param name
+   *          The SHA1 name of this ref. The value can be a short name or the full SHA1 value. If
+   *          the value is null, a <code>NullPointerException</code> is thrown. If the value has
+   *          length zero, an <code>IllegalArgumentException</code> is thrown.
+   * @return A <code>Ref</code> instance of type <code>SHA1</code>.
    */
-  public Ref.CommitNameType getCommitNameType() {
-    return commitNameType;
+  public static Ref createSha1Ref(String name) {
+    CheckUtilities.checkStringArgument(name, "name");
+
+    Ref cn = new Ref();
+    cn.refType = RefType.SHA1;
+    cn.name = name;
+    return cn;
   }
 
   /**
-   * Gets the offset of the commit back from the HEAD commit for this <code>CommitName</code>
-   * instance.
+   * Creates a <code>Ref</code> of type <code>TAG</code>.
    * 
-   * @return If the type of this <code>CommitName</code> is not <code>HEAD</code>, then -1 is
-   *         returned. Otherwise, the offset of the commit back from the current HEAD commit is
-   *         returned.
+   * @param name
+   *          The tag name of this ref. If the value is null, a <code>NullPointerException</code>
+   *          is thrown. If the value has length zero, an <code>IllegalArgumentException</code> is
+   *          thrown.
+   * @return A <code>Ref</code> instance of type <code>TAG</code>.
+   */
+  public static Ref createTagRef(String name) {
+    CheckUtilities.checkStringArgument(name, "name");
+
+    Ref cn = new Ref();
+    cn.refType = RefType.TAG;
+    cn.name = name;
+    return cn;
+  }
+
+  /**
+   * Gets the type of the <code>Ref</code> instance.
+   * 
+   * @return The type of the <code>Ref<code> instance.
+   */
+  public Ref.RefType getRefType() {
+    return refType;
+  }
+
+  /**
+   * Gets the offset of the commit back from the HEAD commit on the current working branch for this
+   * <code>Ref</code> instance.
+   * 
+   * @return If the type of this <code>Ref</code> is not <code>HEAD</code>, then -1 is
+   *         returned. Otherwise, the offset of the commit back from the HEAD commit on the current
+   *         working branch is returned.
    */
   public int getHeadOffset() {
     return headOffset;
   }
 
   /**
-   * Gets the SHA1 name of this commit.
+   * Gets the name of this ref.
    * 
-   * @return If the type of this <code>CommitName</code> is not <code>SHA1</code>, then null is
-   *         returned. Otherwise, the name of this commit is returned.
+   * @return If the type of this <code>Ref</code> is not <code>BRANCH</code>,
+   *         <code>REMOTE</code>, <code>SHA1</code> or <code>TAG</code>, then null is
+   *         returned. Otherwise, the name of this ref is returned.
    */
-  public String getSha1Name() {
-    return sha1Name;
+  public String getName() {
+    return name;
   }
 
+  /**
+   * Gets the repository name of this ref.
+   * 
+   * @return If the type of this <code>Ref</code> is not <code>REMOTE</code>, then null is
+   *         returned. If the type of this <code>Ref</code> is <code>REMOTE</code> and there is
+   *         no associated repository name, then null is returned. Otherwise, the repository name of
+   *         this ref is returned.
+   */
+  public String getRepositoryName() {
+    return repositoryName;
+  }
+
+  @Override
   public String toString() {
-    if (CommitNameType.HEAD == commitNameType) {
+    if (RefType.HEAD == refType) {
       if (0 == headOffset) {
         return "HEAD";
       } else if (1 == headOffset) {
@@ -147,13 +275,20 @@ public class Ref {
       } else {
         return "HEAD~" + Integer.toString(headOffset);
       }
-    } else if (CommitNameType.SHA1 == commitNameType) {
-      return sha1Name;
+    } else if (RefType.BRANCH == refType || RefType.SHA1 == refType || RefType.TAG == refType) {
+      return name;
+    } else if (RefType.REMOTE == refType) {
+      if (null != repositoryName) {
+        return repositoryName + "/" + name;
+      } else {
+        return name;
+      }
     } else {
       return "";
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof Ref)) {
       return false;
@@ -161,10 +296,13 @@ public class Ref {
 
     Ref cn = (Ref) o;
 
-    if (!CheckUtilities.checkObjectsEqual(commitNameType, cn.getCommitNameType())) {
+    if (!CheckUtilities.checkObjectsEqual(refType, cn.getRefType())) {
       return false;
     }
-    if (!CheckUtilities.checkObjectsEqual(sha1Name, cn.getSha1Name())) {
+    if (!CheckUtilities.checkObjectsEqual(name, cn.getName())) {
+      return false;
+    }
+    if (!CheckUtilities.checkObjectsEqual(repositoryName, cn.getRepositoryName())) {
       return false;
     }
     if (cn.getHeadOffset() != headOffset) {
@@ -174,9 +312,12 @@ public class Ref {
     return true;
   }
 
+  @Override
   public int hashCode() {
-    int ret = commitNameType.hashCode() + headOffset;
-    return (null == sha1Name) ? ret : ret + sha1Name.hashCode();
+    int ret = refType.hashCode() + headOffset;
+    ret += (null == name) ? 0 : name.hashCode();
+    ret += (null == repositoryName) ? 0 : repositoryName.hashCode();
+    return ret;
   }
 
 }
