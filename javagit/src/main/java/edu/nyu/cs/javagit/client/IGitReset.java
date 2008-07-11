@@ -1,10 +1,11 @@
 package edu.nyu.cs.javagit.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions;
 import edu.nyu.cs.javagit.api.commands.GitResetResponse;
 
@@ -17,10 +18,9 @@ public interface IGitReset {
    * Perform a reset on the repository. The results of this method are what one would get by running
    * &quote;git-reset&quote; against the repository.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -33,15 +33,14 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitReset(String repositoryPath) throws IOException, JavaGitException;
+  public GitResetResponse gitReset(File repository) throws IOException, JavaGitException;
 
   /**
    * Perform a reset on the repository.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options for a git-reset command. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -57,22 +56,21 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitReset(String repositoryPath, GitResetOptions options)
-      throws IOException, JavaGitException;
+  public GitResetResponse gitReset(File repository, GitResetOptions options) throws IOException,
+      JavaGitException;
 
   /**
    * Perform a reset on the repository.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list paths to folders or files to reset. A non-null and non-empty list is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of paths to folders or files to reset. A non-null and non-empty list is
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
@@ -86,19 +84,18 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitReset(String repositoryPath, Ref commitName, List<String> paths)
+  public GitResetResponse gitReset(File repository, Ref commitName, List<File> paths)
       throws IOException, JavaGitException;
 
   /**
    * Perform a reset on the repository.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list paths to folders or files to reset. A non-null and non-empty list is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of paths to folders or files to reset. A non-null and non-empty list is
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
@@ -112,16 +109,15 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitReset(String repositoryPath, List<String> paths) throws IOException,
+  public GitResetResponse gitReset(File repository, List<File> paths) throws IOException,
       JavaGitException;
 
   /**
    * Perform a hard reset on the repository to the specified <code>CommitName</code>.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -137,16 +133,15 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitResetHard(String repositoryPath, Ref commitName)
-      throws IOException, JavaGitException;
+  public GitResetResponse gitResetHard(File repository, Ref commitName) throws IOException,
+      JavaGitException;
 
   /**
    * Perform a soft reset on the repository to the specified <code>CommitName</code>.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to commit against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -162,7 +157,7 @@ public interface IGitReset {
    * @exception JavaGitException
    *              Thrown when there is an error making the commit.
    */
-  public GitResetResponse gitResetSoft(String repositoryPath, Ref commitName)
-      throws IOException, JavaGitException;
+  public GitResetResponse gitResetSoft(File repository, Ref commitName) throws IOException,
+      JavaGitException;
 
 }

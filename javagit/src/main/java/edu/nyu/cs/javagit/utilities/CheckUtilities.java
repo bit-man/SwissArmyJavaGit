@@ -60,6 +60,32 @@ public class CheckUtilities {
   }
 
   /**
+   * Checks a <code>List&lt;?&gt;</code> argument to make sure it is not null, has length > 0, and
+   * none of its elements are null. If the <code>List&lt;?&gt;</code> or any contained instance is
+   * null, a <code>NullPointerException</code> is thrown. If the <code>List&lt;?&gt;</code> or
+   * any contained instance has length zero, an <code>IllegalArgumentException</code> is thrown.
+   * 
+   * @param list
+   *          The list to check.
+   * @param variableName
+   *          The name of the variable being checked; for use in exception messages.
+   */
+  public static void checkNullListArgument(List<?> list, String variableName) {
+    // TODO (jhl388): Write a unit test for this method.
+    if (null == list) {
+      throw new NullPointerException(ExceptionMessageMap.getMessage("000005")
+          + "  { variableName=[" + variableName + "] }");
+    }
+    if (list.size() == 0) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000005")
+          + "  { variableName=[" + variableName + "] }");
+    }
+    for (int i = 0; i < list.size(); i++) {
+      checkNullArgument(list.get(i), variableName);
+    }
+  }
+
+  /**
    * Checks to see if two objects are equal. The Object.equal() method is used to check for
    * equality.
    * 
@@ -106,9 +132,10 @@ public class CheckUtilities {
   /**
    * Checks a <code>List&lt;String&gt;</code> argument to make sure it is not null, none of its
    * elements are null, and all its elements contain one or more characters. If the
-   * <code>List&lt;String&gt;</code> or any <code>String</code> is null, a
-   * <code>NullPointerException</code> is thrown. If a <code>String</code> has length zero, an
-   * <code>IllegalArgumentException</code> is thrown.
+   * <code>List&lt;String&gt;</code> or a contained <code>String</code> is null, a
+   * <code>NullPointerException</code> is thrown. If the <code>List&lt;String&gt;</code> or a
+   * contained <code>String</code> has length zero, an <code>IllegalArgumentException</code> is
+   * thrown.
    * 
    * @param str
    *          The <code>List&lt;String&gt;</code> to check.

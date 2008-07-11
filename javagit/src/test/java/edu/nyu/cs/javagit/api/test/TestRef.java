@@ -31,10 +31,10 @@ public class TestRef extends TestCase {
   public void testCreateHeadRef() {
     // Testing invalid input
     assertIllegalCreateHeadRefArgument(-1,
-        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+        "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
             + "{ toCheck=[-1], lowerBound=[-1], variableName=[headOffset] }");
     assertIllegalCreateHeadRefArgument(-23,
-        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+        "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
             + "{ toCheck=[-23], lowerBound=[-1], variableName=[headOffset] }");
 
     // Testing valid input

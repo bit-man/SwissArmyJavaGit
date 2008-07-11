@@ -1,11 +1,12 @@
 package edu.nyu.cs.javagit.client.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions;
 import edu.nyu.cs.javagit.api.commands.GitResetResponse;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions.ResetType;
@@ -19,46 +20,47 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class CliGitReset implements IGitReset {
 
-  public GitResetResponse gitReset(String repositoryPath) throws IOException, JavaGitException {
+  public GitResetResponse gitReset(File repository) throws IOException, JavaGitException {
     return null;
   }
 
-  public GitResetResponse gitReset(String repositoryPath, GitResetOptions options)
-      throws IOException, JavaGitException {
-    return resetProcessor(repositoryPath, new GitResetOptions(), null);
-  }
-
-  public GitResetResponse gitReset(String repositoryPath, Ref commitName, List<String> paths)
-      throws IOException, JavaGitException {
-    return resetProcessor(repositoryPath, new GitResetOptions(commitName), paths);
-  }
-
-  public GitResetResponse gitReset(String repositoryPath, List<String> paths) throws IOException,
+  public GitResetResponse gitReset(File repository, GitResetOptions options) throws IOException,
       JavaGitException {
-    return resetProcessor(repositoryPath, new GitResetOptions(), paths);
+    return resetProcessor(repository, new GitResetOptions(), null);
   }
 
-  public GitResetResponse gitResetHard(String repositoryPath, Ref commitName)
+  public GitResetResponse gitReset(File repository, Ref commitName, List<File> paths)
       throws IOException, JavaGitException {
-    return resetProcessor(repositoryPath, new GitResetOptions(ResetType.HARD, commitName), null);
+    return resetProcessor(repository, new GitResetOptions(commitName), paths);
   }
 
-  public GitResetResponse gitResetSoft(String repositoryPath, Ref commitName)
-      throws IOException, JavaGitException {
-    return resetProcessor(repositoryPath, new GitResetOptions(ResetType.SOFT, commitName), null);
+  public GitResetResponse gitReset(File repository, List<File> paths) throws IOException,
+      JavaGitException {
+    return resetProcessor(repository, new GitResetOptions(), paths);
   }
 
-  protected GitResetResponseImpl resetProcessor(String repositoryPath, GitResetOptions options,
-      List<String> paths) throws IOException, JavaGitException {
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+  public GitResetResponse gitResetHard(File repository, Ref commitName) throws IOException,
+      JavaGitException {
+    return resetProcessor(repository, new GitResetOptions(ResetType.HARD, commitName), null);
+  }
+
+  public GitResetResponse gitResetSoft(File repository, Ref commitName) throws IOException,
+      JavaGitException {
+    return resetProcessor(repository, new GitResetOptions(ResetType.SOFT, commitName), null);
+  }
+
+  protected GitResetResponseImpl resetProcessor(File repository, GitResetOptions options,
+      List<File> paths) throws IOException, JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
 
     List<String> commandLine = buildCommand(options, paths);
     GitResetParser parser = new GitResetParser();
 
-    return (GitResetResponseImpl) ProcessUtilities.runCommand(repositoryPath, commandLine, parser);
+    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository.getAbsolutePath(),
+        commandLine, parser);
   }
 
-  protected List<String> buildCommand(GitResetOptions options, List<String> paths) {
+  protected List<String> buildCommand(GitResetOptions options, List<File> paths) {
 
     // TODO (jhl388): Add a unit test for this method.
 
@@ -80,7 +82,9 @@ public class CliGitReset implements IGitReset {
 
     if (null != paths) {
       cmd.add("--");
-      cmd.addAll(paths);
+      for (File f : paths) {
+        cmd.add(f.getAbsolutePath());
+      }
     }
 
     return cmd;

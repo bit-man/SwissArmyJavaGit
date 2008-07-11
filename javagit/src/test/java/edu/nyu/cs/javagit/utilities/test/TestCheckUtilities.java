@@ -91,10 +91,10 @@ public class TestCheckUtilities extends TestCase {
   public void testCheckIntArgumentGreaterThan() {
     // Test invalid values.
     assertCheckIntArgumentGreaterThanThrowsException(5, 5, "Test variable name",
-        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+        "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
             + "{ toCheck=[5], lowerBound=[5], variableName=[Test variable name] }");
     assertCheckIntArgumentGreaterThanThrowsException(5, 6, "Test variable name",
-        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
+        "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).  "
             + "{ toCheck=[5], lowerBound=[6], variableName=[Test variable name] }");
 
     // Test valid values.

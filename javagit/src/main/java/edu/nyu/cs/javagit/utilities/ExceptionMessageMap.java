@@ -84,7 +84,9 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000002", "000002: A List<String> argument was not specified but is required.");
     MESSAGE_MAP.put("000003", "000003: An Object argument was not specified but is required.");
     MESSAGE_MAP.put("000004",
-        "000005: The int argument is not greater than the lower bound (lowerBound < toCheck).");
+        "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).");
+    MESSAGE_MAP.put("000005",
+        "000005: An List<?> argument was not specified or is empty but is required.");
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");
@@ -95,17 +97,17 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("020101", "020101: Error reading input from the sub-process.");
 
     MESSAGE_MAP.put("410000", "410000: Error calling git-commit.");
-    
+
     MESSAGE_MAP.put("404001", "404000: Error calling git-branch. ");
-    
+
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv. ");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-commit.");
-    
+
     MESSAGE_MAP.put("406000", "406000: Error calling git-checkout");
-    
+
     MESSAGE_MAP.put("438000", "438000: Error calling git-status");
-    
+
   }
 
   /**

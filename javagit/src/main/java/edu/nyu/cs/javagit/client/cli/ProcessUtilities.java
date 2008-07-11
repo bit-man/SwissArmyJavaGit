@@ -91,7 +91,11 @@ public class ProcessUtilities {
     }
   }
 
-  // TODO (jhl): Add a unit test for this method.
+  // TODO (jhl388): Add a unit test for this method.
+  /*
+   * TODO (jhl388): The workingDirectory argument needs to be modified to take a File argument
+   * instead of a String argument.
+   */
   /**
    * Runs the command specified in the command line with the specified working directory. The
    * IParser is used to parse the response given by the command line.
