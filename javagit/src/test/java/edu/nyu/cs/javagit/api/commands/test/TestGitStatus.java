@@ -129,7 +129,7 @@ public class TestGitStatus extends TestCase {
     // Add the files for committing
     gitAdd.add(repositoryPath, addOptions, filesToAdd);
     // Commit the added files
-    gitCommit.commit(repositoryPath, "Test commit of two files");
+    gitCommit.commit(repositoryDirectory, "Test commit of two files");
     File file = new File(repositoryPath + File.separator + "foobar01");
     // modify one of the committed files
     FileUtilities.modifyFileContents(file, "Test append text");

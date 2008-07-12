@@ -153,7 +153,7 @@ public final class WorkingTree {
    */
   public GitCommitResponse commit(String comment) throws IOException, JavaGitException {
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commit(canonicalPath, comment);
+    return gitCommit.commit(path, comment);
   }
 
   /**
@@ -167,7 +167,7 @@ public final class WorkingTree {
    */
   public GitCommitResponse commitAll(String comment) throws IOException, JavaGitException {
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commitAll(path.getPath(), comment);
+    return gitCommit.commitAll(path, comment);
   }
 
   @Override

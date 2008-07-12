@@ -1,11 +1,21 @@
 package edu.nyu.cs.javagit.api;
 
 // TODO (rs2705): change this to only import the commands we need
-import edu.nyu.cs.javagit.api.commands.*;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+
+import edu.nyu.cs.javagit.api.commands.GitAdd;
+import edu.nyu.cs.javagit.api.commands.GitAddResponse;
+import edu.nyu.cs.javagit.api.commands.GitCommit;
+import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
+import edu.nyu.cs.javagit.api.commands.GitMv;
+import edu.nyu.cs.javagit.api.commands.GitMvResponse;
+import edu.nyu.cs.javagit.api.commands.GitRm;
+import edu.nyu.cs.javagit.api.commands.GitRmResponse;
+import edu.nyu.cs.javagit.api.commands.GitStatus;
+import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 
 /**
  * <code>GitFileSystemObject</code> provides some implementation shared by files and directories
@@ -96,11 +106,11 @@ public abstract class GitFileSystemObject {
     add();
 
     // create a list of filenames and add yourself to it
-    List<String> list = new Vector<String>();
-    list.add(file.getPath());
+    List<File> list = new Vector<File>();
+    list.add(file);
 
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commitOnly(dotGit.getPath().getPath(), comment, list);
+    return gitCommit.commitOnly(dotGit.getPath(), comment, list);
   }
 
   /**

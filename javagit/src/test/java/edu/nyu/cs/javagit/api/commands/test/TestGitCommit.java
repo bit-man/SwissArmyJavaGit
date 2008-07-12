@@ -39,7 +39,7 @@ public class TestGitCommit extends TestCase {
   private GitAdd add;
 
   private GitCommitOptions options;
-  private List<String> paths;
+  private List<File> paths;
 
   @Before
   protected void setUp() throws IOException, JavaGitException {
@@ -50,7 +50,7 @@ public class TestGitCommit extends TestCase {
     add = new GitAdd();
 
     options = new GitCommitOptions();
-    paths = new ArrayList<String>();
+    paths = new ArrayList<File>();
   }
 
   @After
@@ -69,111 +69,92 @@ public class TestGitCommit extends TestCase {
     add.add(repoDirectory.getAbsolutePath(), null, filesToAdd);
 
     // Call commit
-    commit.commit(repoDirectory.getAbsolutePath(), "Making a first test commit");
+    commit.commit(repoDirectory, "Making a first test commit");
   }
 
   @Test
   public void testBadArugmentPassing() throws IOException, JavaGitException {
     // GitCommit.commitAll(String, String);
     assertCommitAllNPEThrown(null, null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitAllNPEThrown("SomePath", null,
+        "000003: An Object argument was not specified but is required.  "
+            + "{ variableName=[repository] }");
+    assertCommitAllNPEThrown(new File("SomePath"), null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
 
-    assertCommitAllIllegalArgumentExceptionThrown("", "",
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitAllIllegalArgumentExceptionThrown("SomePath", "",
+    assertCommitAllIllegalArgumentExceptionThrown(new File("SomePath"), "",
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
 
     // GitCommit.commit(String, GitCommitOptions, String);
     assertCommitWithOptsNPEThrown(null, null, null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitWithOptsNPEThrown("something", null, null,
+        "000003: An Object argument was not specified but is required.  "
+            + "{ variableName=[repository] }");
+    assertCommitWithOptsNPEThrown(new File("something"), null, null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
-    assertCommitWithOptsNPEThrown("/some/path", null, "A message",
+    assertCommitWithOptsNPEThrown(new File("/some/path"), null, "A message",
         "000003: An Object argument was not specified but is required.  { variableName=[options] }");
 
-    assertCommitWithOptsIllegalArgumentExceptionThrown("", null, "",
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitWithOptsIllegalArgumentExceptionThrown("c:\\path\\to somewhere", null, "",
+    assertCommitWithOptsIllegalArgumentExceptionThrown(new File("c:\\path\\to somewhere"), null,
+        "",
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
 
     // GitCommit.commit(String, GitCommitOptions, String, List<String>);
     assertCommitAllParametersNeededNPEThrown(null, null, null, null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitAllParametersNeededNPEThrown("something", null, null, null,
+        "000003: An Object argument was not specified but is required.  "
+            + "{ variableName=[repository] }");
+    assertCommitAllParametersNeededNPEThrown(new File("something"), null, null, null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
-    assertCommitAllParametersNeededNPEThrown("/some/path", null, "A message", null,
+    assertCommitAllParametersNeededNPEThrown(new File("/some/path"), null, "A message", null,
         "000003: An Object argument was not specified but is required.  { variableName=[options] }");
-    assertCommitAllParametersNeededNPEThrown("/some/path", options, "A message", null,
-        "000002: A List<String> argument was not specified but is required.  "
+    assertCommitAllParametersNeededNPEThrown(new File("/some/path"), options, "A message", null,
+        "000005: An List<?> argument was not specified or is empty but is required.  "
             + "{ variableName=[paths] }");
     paths.add(null);
-    assertCommitAllParametersNeededNPEThrown("something", options, "test msg", paths,
-        "000001: A String argument was not specified but is required.  { variableName=[paths] }");
+    assertCommitAllParametersNeededNPEThrown(new File("something"), options, "test msg", paths,
+        "000003: An Object argument was not specified but is required.  { variableName=[paths] }");
 
-    assertCommitAllParametersNeededIllegalArgumentExceptionThrown("", null, "", null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitAllParametersNeededIllegalArgumentExceptionThrown("c:\\path\\to somewhere", null,
-        "", null,
+    assertCommitAllParametersNeededIllegalArgumentExceptionThrown(
+        new File("c:\\path\\to somewhere"), null, "", null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
     paths.clear();
-    assertCommitAllParametersNeededIllegalArgumentExceptionThrown("/some/path", options,
-        "A message", paths, "000002: A List<String> argument was not specified but is required.  "
+    assertCommitAllParametersNeededIllegalArgumentExceptionThrown(new File("/some/path"), options,
+        "A message", paths,
+        "000005: An List<?> argument was not specified or is empty but is required.  "
             + "{ variableName=[paths] }");
-    paths.add("");
-    assertCommitAllParametersNeededIllegalArgumentExceptionThrown("c:\\path\\to somewhere",
-        options, "test message", paths,
-        "000001: A String argument was not specified but is required.  { variableName=[paths] }");
 
     // GitCommit.commit(String, String);
     assertCommitNPEThrown(null, null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitNPEThrown("SomePath", null,
+        "000003: An Object argument was not specified but is required.  "
+            + "{ variableName=[repository] }");
+    assertCommitNPEThrown(new File("SomePath"), null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
 
-    assertCommitIllegalArgumentExceptionThrown("", "",
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitIllegalArgumentExceptionThrown("SomePath", "",
+    assertCommitIllegalArgumentExceptionThrown(new File("SomePath"), "",
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
 
     // GitCommit.commitOnly(String, String, List<String>);
     assertCommitOnlyNPEThrown(null, null, null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitOnlyNPEThrown("something", null, null,
+        "000003: An Object argument was not specified but is required.  "
+            + "{ variableName=[repository] }");
+    assertCommitOnlyNPEThrown(new File("something"), null, null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
-    assertCommitOnlyNPEThrown("/some/path", "A message", null,
-        "000002: A List<String> argument was not specified but is required.  { variableName=[paths] }");
+    assertCommitOnlyNPEThrown(new File("/some/path"), "A message", null,
+        "000005: An List<?> argument was not specified or is empty but is required.  "
+            + "{ variableName=[paths] }");
     paths.clear();
     paths.add(null);
-    assertCommitOnlyNPEThrown("something", "test msg", paths,
-        "000001: A String argument was not specified but is required.  { variableName=[paths] }");
+    assertCommitOnlyNPEThrown(new File("something"), "test msg", paths,
+        "000003: An Object argument was not specified but is required.  { variableName=[paths] }");
 
-    assertCommitOnlyIllegalArgumentExceptionThrown("", "", null,
-        "000001: A String argument was not specified but is required.  "
-            + "{ variableName=[repositoryPath] }");
-    assertCommitOnlyIllegalArgumentExceptionThrown("c:\\path\\to somewhere", "", null,
+    assertCommitOnlyIllegalArgumentExceptionThrown(new File("c:\\path\\to somewhere"), "", null,
         "000001: A String argument was not specified but is required.  { variableName=[message] }");
     paths.clear();
-    assertCommitOnlyIllegalArgumentExceptionThrown("/some/path", "A message", paths,
-        "000002: A List<String> argument was not specified but is required.  "
+    assertCommitOnlyIllegalArgumentExceptionThrown(new File("/some/path"), "A message", paths,
+        "000005: An List<?> argument was not specified or is empty but is required.  "
             + "{ variableName=[paths] }");
-    paths.add("");
-    assertCommitOnlyIllegalArgumentExceptionThrown("c:\\path\\to somewhere", "test message", paths,
-        "000001: A String argument was not specified but is required.  { variableName=[paths] }");
 
   }
 
-  private void assertCommitAllNPEThrown(String repoPath, String message, String expectedMessage) {
+  private void assertCommitAllNPEThrown(File repoPath, String message, String expectedMessage) {
     try {
       commit.commitAll(repoPath, message);
       assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
@@ -186,7 +167,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitAllIllegalArgumentExceptionThrown(String repoPath, String message,
+  private void assertCommitAllIllegalArgumentExceptionThrown(File repoPath, String message,
       String expectedMessage) {
     try {
       commit.commitAll(repoPath, message);
@@ -201,7 +182,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitWithOptsNPEThrown(String repoPath, GitCommitOptions options,
+  private void assertCommitWithOptsNPEThrown(File repoPath, GitCommitOptions options,
       String message, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message);
@@ -215,7 +196,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitWithOptsIllegalArgumentExceptionThrown(String repoPath,
+  private void assertCommitWithOptsIllegalArgumentExceptionThrown(File repoPath,
       GitCommitOptions options, String message, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message);
@@ -230,8 +211,8 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitAllParametersNeededNPEThrown(String repoPath, GitCommitOptions options,
-      String message, List<String> paths, String expectedMessage) {
+  private void assertCommitAllParametersNeededNPEThrown(File repoPath, GitCommitOptions options,
+      String message, List<File> paths, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message, paths);
       assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
@@ -244,8 +225,8 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitAllParametersNeededIllegalArgumentExceptionThrown(String repoPath,
-      GitCommitOptions options, String message, List<String> paths, String expectedMessage) {
+  private void assertCommitAllParametersNeededIllegalArgumentExceptionThrown(File repoPath,
+      GitCommitOptions options, String message, List<File> paths, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message, paths);
       assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
@@ -259,7 +240,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitNPEThrown(String repoPath, String message, String expectedMessage) {
+  private void assertCommitNPEThrown(File repoPath, String message, String expectedMessage) {
     try {
       commit.commit(repoPath, message);
       assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
@@ -272,7 +253,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitIllegalArgumentExceptionThrown(String repoPath, String message,
+  private void assertCommitIllegalArgumentExceptionThrown(File repoPath, String message,
       String expectedMessage) {
     try {
       commit.commit(repoPath, message);
@@ -287,7 +268,7 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitOnlyNPEThrown(String repoPath, String message, List<String> paths,
+  private void assertCommitOnlyNPEThrown(File repoPath, String message, List<File> paths,
       String expectedMessage) {
     try {
       commit.commitOnly(repoPath, message, paths);
@@ -301,8 +282,8 @@ public class TestGitCommit extends TestCase {
     }
   }
 
-  private void assertCommitOnlyIllegalArgumentExceptionThrown(String repoPath, String message,
-      List<String> paths, String expectedMessage) {
+  private void assertCommitOnlyIllegalArgumentExceptionThrown(File repoPath, String message,
+      List<File> paths, String expectedMessage) {
     try {
       commit.commitOnly(repoPath, message, paths);
       assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
