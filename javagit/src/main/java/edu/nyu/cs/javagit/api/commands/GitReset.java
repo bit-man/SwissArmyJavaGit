@@ -29,8 +29,8 @@ public class GitReset {
    * &quote;git-reset&quote; against the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -55,8 +55,8 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options for a git-reset command. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -86,8 +86,8 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -122,8 +122,8 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
    *          A list of paths to folders or files to reset. A non-null and non-empty list is
    *          required for this parameter, otherwise a <code>NullPointerException</code> or
@@ -154,8 +154,8 @@ public class GitReset {
    * Perform a hard reset on the repository to the specified <code>CommitName</code>.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -185,8 +185,8 @@ public class GitReset {
    * Perform a soft reset on the repository to the specified <code>CommitName</code>.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository to perform reset
+   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
