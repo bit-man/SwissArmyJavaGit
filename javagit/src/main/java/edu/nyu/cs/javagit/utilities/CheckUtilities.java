@@ -198,5 +198,38 @@ public class CheckUtilities {
 
     return true;
   }
+  
+  /**
+   * Check if the index provided to list is within the range i.e. positive 
+   * and less than the size of the <List>. If the index is less than 0 or
+   * greater than equal to the size of the list then <code>IndexOutOfBoundsException</code>
+   * is thrown.
+   * @param list <List> for which the index is being verified.
+   * @param index Index in the list.
+   */
+  public static void checkIntIndexInListRange(List<?> list, int index ) {
+    checkIntInRange( index, 0, list.size());
+  }
+  
+  /**
+   * A general range check utility for checking whether a given &lt;integer&gt; value
+   * is between a given start and end indexes. This is a helper method for
+   * other methods such as checkIntIndexInListRange or can also be
+   * used independently by external objects.
+   * @param index Given index that is being checked for validity between
+   *    start and end.
+   * @param start index should be greater than or equal to start.
+   * @param end index should be less than end.
+   */
+  public static void checkIntInRange(int index, int start, int end) {
+    if (index < start) {
+      throw new IndexOutOfBoundsException(ExceptionMessageMap.getMessage("000006") + "  { index=["
+          + index + "], start=[" + start + "], end=[" + end + "] }");
+    }
+    if (index >= end) {
+      throw new IndexOutOfBoundsException(ExceptionMessageMap.getMessage("000006") + "  { index=["
+          + index + "], start=[" + start + "], end=[" + end + "] }");
+    }
+  }
 
 }

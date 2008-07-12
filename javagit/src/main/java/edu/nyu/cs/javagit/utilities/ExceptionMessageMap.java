@@ -87,6 +87,8 @@ public class ExceptionMessageMap {
         "000004: The int argument is not greater than the lower bound (lowerBound < toCheck).");
     MESSAGE_MAP.put("000005",
         "000005: An List<?> argument was not specified or is empty but is required.");
+    MESSAGE_MAP.put("000006",
+        "000006: The int argument is outside the allowable range (start <= index < end).");
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");
