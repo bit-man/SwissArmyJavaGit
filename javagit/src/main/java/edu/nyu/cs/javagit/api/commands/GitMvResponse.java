@@ -2,11 +2,6 @@ package edu.nyu.cs.javagit.api.commands;
 
 public class GitMvResponse implements CommandResponse {
 
-  // Variable to store the status of execution.
-  private boolean status;
-
-  // private String errorMessage;
-
   // Variable to store the source file/folder/symlink of the response.
   private String source;
 
@@ -15,34 +10,6 @@ public class GitMvResponse implements CommandResponse {
 
   // String Buffer to store the comment message after execution of git-mv.
   private StringBuffer message = new StringBuffer();
-
-  /**
-   * Constructor. Sets the status as true if command executed successfully else false, in the
-   * GitMvResponse object.
-   * 
-   * @param status
-   */
-  public GitMvResponse(boolean status) {
-    this.status = status;
-  }
-
-  /**
-   * Gets the status of the command (true or false) from GitMvResponse object.
-   * 
-   * @return status
-   */
-  public boolean IsSuccess() {
-    return status;
-  }
-
-  /**
-   * Sets the status message as true or false.
-   * 
-   * @param status
-   */
-  public void setStatus(boolean status) {
-    this.status = status;
-  }
 
   /**
    * Adds comments from each line of the message received upon successful execution of the git-mv

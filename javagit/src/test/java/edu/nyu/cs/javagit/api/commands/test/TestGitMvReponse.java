@@ -12,8 +12,6 @@ import org.junit.Before;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitAdd;
-import edu.nyu.cs.javagit.api.commands.GitCommit;
-import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
 import edu.nyu.cs.javagit.api.commands.GitMv;
 import edu.nyu.cs.javagit.api.commands.GitMvOptions;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
@@ -29,8 +27,8 @@ public class TestGitMvReponse extends TestCase {
   private GitAdd add;
   
   private String subDir = "sub_dir";
-  @Before
-  /**
+  
+  /*
    * Before starting this test making sure that repository path is the path to a working directory
    * where the files and sub-directories are located.
    * 
@@ -43,6 +41,7 @@ public class TestGitMvReponse extends TestCase {
    * 
    * Folders 'sub_dir2' is non-empty and, 'sub_dir3' is present in repoDirectory and sub_dir2.
    */
+  @Before
   protected void setUp() throws IOException, JavaGitException {
     repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
     HelperGitCommands.initRepo(repoDirectory);
@@ -110,7 +109,9 @@ public class TestGitMvReponse extends TestCase {
     destination = "t3.pl";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for success expected", true, response.IsSuccess());
+      assertEquals("Empty Response for success expected", "", response.getComment());
+      assertEquals("Empty Response for success expected", "", response.getSource());
+      assertEquals("Empty Response for success expected", "", response.getDestination());
     } catch (Exception e) {
       assertNull("Should not get an Exception", e.getMessage());
     }
@@ -129,9 +130,8 @@ public class TestGitMvReponse extends TestCase {
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), options, source, 
           destination);
-      assertEquals("Response for failure expected", true, response.IsSuccess());
       assertEquals("a message saying destination exists is expected", 
-          "destination exists; will overwrite!\n",response.getComment());
+          "Warning: destination exists; will overwrite!",response.getComment());
     } catch (Exception e) {
       assertNull("Should not get an Exception", e.getMessage());
     }
@@ -146,18 +146,16 @@ public class TestGitMvReponse extends TestCase {
     source = "t111.pl";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("Response is not expected",response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"bad source, source=" + source +", destination=" 
-          + destination, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: bad source, source=" + source +", " +
+          "destination=" + destination, e.getMessage());
     }
     /**
-     * Testing response message and JavaGitException for the case when git-mv is run with 
-     * -n option, and source is invalid i.e. doesn't exist. It is case of success because
-     * it does what it is expected to do i.e. tells what would happen if git-mv is run 
-     * without -n option.
-     * succeeds with a message 'bad source'.
+     * Testing response message and <code>JavaGitException</code> for the case when git-mv is run 
+     * with -n option, and source is invalid i.e. doesn't exist. 
+     * Fails with a message 'bad source'.
      * 
      * Source file doesn't exist.
      */
@@ -168,17 +166,17 @@ public class TestGitMvReponse extends TestCase {
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), options, source, 
           destination);
-      assertEquals("Response for success expected", true, response.IsSuccess());
-      assertEquals("A message saying 'checking rename of' expected", "bad source, source="+ 
-          source+", destination=" +destination+"\nChecking rename of '"+source+"' to '"+destination
-          +"'\n", response.getComment());
+      assertNull("Response is not expected",response);
     } catch (Exception e) {
-      assertNull("Should not get an Exception", e.getMessage());
+      assertEquals("Should throw a JavaGitException related to git-mv with following message",
+          ExceptionMessageMap.getMessage("424001")+"fatal: bad source, source="+ source+", " +
+          "destination=" +destination+"\nChecking rename of '"+source+"' to '"+destination
+          + "'", e.getMessage());
     }
     
     /**
-     * Testing response message and JavaGitException for the case when git-mv is run with 
-     * -k (quiet) option, and source is invalid i.e. doesn't exist. It is a case of failure 
+     * Testing response message and <code>JavaGitException</code> for the case when git-mv is run 
+     * with -k (quiet) option, and source is invalid i.e. doesn't exist. It is a case of failure 
      * but it doesn't give any message(that is what is expected hence, success).
      * 
      * Source file doesn't exist.
@@ -190,7 +188,6 @@ public class TestGitMvReponse extends TestCase {
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), options, source, 
           destination);
-      assertEquals("Response for success expected", true, response.IsSuccess());
       assertEquals("No message expected", "",response.getComment()); 
     } catch (Exception e) {
       assertNull("Should not get an Exception", e.getMessage());
@@ -206,16 +203,16 @@ public class TestGitMvReponse extends TestCase {
     destination = "t1.pl";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("No response expected", response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"destination exists, source=" + source +", " +
-          		"destination=" + destination, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: destination exists, source=" + source +
+          ", " + "destination=" + destination, e.getMessage());
     }
     
     /**
-     * Testing response message and JavaGitException for the case when git-mv, without any option,
-     * fails because the source file is not under version control i.e. the source file is not 
+     * Testing response message and JavaGitException for the case when git-mv, without any option.
+     * It fails because the source file is not under version control i.e. the source file is not 
      * added (by git-add) to the repository yet.
      * 
      * Set the source to a file which exists but not added to the repository. Set the destination 
@@ -225,11 +222,11 @@ public class TestGitMvReponse extends TestCase {
     destination = "t5.pl";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("No response expected", response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"not under version control, source=" + source +
-          ", destination=" + destination, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: not under version control, source=" + 
+          source + ", destination=" + destination, e.getMessage());
     }
     
     /**
@@ -243,11 +240,11 @@ public class TestGitMvReponse extends TestCase {
     destination = "temp_dir";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("No response expected", response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"source directory is empty, source=" + source +
-          ", destination=" + destination, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: source directory is empty, source=" + 
+          source + ", destination=" + destination, e.getMessage());
     }
     
     /**
@@ -261,11 +258,11 @@ public class TestGitMvReponse extends TestCase {
     destination = "sub_dir2";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("No response expected", response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"can not move directory into itself, source=" + 
-          source +", destination=" + destination+"/"+source, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: can not move directory into itself, " +
+          "source=" + source +", destination=" + destination+"/"+source, e.getMessage());
     }
     /**
      * Testing response message and JavaGitException for the case when git-mv, without any option,
@@ -282,16 +279,16 @@ public class TestGitMvReponse extends TestCase {
     destination = "sub_dir2";
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), source, destination);
-      assertEquals("Response for failure expected", false, response.IsSuccess());
+      assertNull("No response expected", response);
     } catch (Exception e) {
       assertEquals("Should throw a JavaGitException related to git-mv with following message",
-          ExceptionMessageMap.getMessage("424001")+"cannot move directory over file, source=" + 
-          source +", destination=" + destination+"/" + source, e.getMessage());
+          ExceptionMessageMap.getMessage("424000")+"fatal: cannot move directory over file, " +
+          "source=" + source +", destination=" + destination+"/" + source, e.getMessage());
     }
     
     /**
      * Testing response message and JavaGitException for the case when git-mv, with -n(dry-run) 
-     * option, succeeds with message 'Checking rename of...'.
+     * option, succeeds with source and destination objects.
      * 
      * The source and destination defined below should be valid i.e. source should exist and
      * destination shouldn't exist in given directory(repository path).
@@ -304,11 +301,8 @@ public class TestGitMvReponse extends TestCase {
     try {
       GitMvResponse response = gitMv.mv(repoDirectory.getAbsolutePath(), options, source, 
           destination);
-      assertEquals("Response for success expected", true, response.IsSuccess());
-      assertEquals("a message saying 'checking rename of' expected", 
-          "Checking rename of '"+source+"' to '"+destination +"'\nRenaming "+ source
-          + " to " + destination + "\nAdding   : "+destination + "\nDeleting : "+ source +
-          "\n",response.getComment());
+      assertEquals("Source object is expected", source, response.getSource());
+      assertEquals("Destination object is expected", destination, response.getDestination());
     } catch (Exception e) {
       assertNull("Should not get an Exception", e.getMessage());
     }

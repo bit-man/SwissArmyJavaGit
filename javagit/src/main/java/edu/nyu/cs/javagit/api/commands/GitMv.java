@@ -3,6 +3,7 @@
  */
 package edu.nyu.cs.javagit.api.commands;
 
+import java.io.File;
 import java.io.IOException;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
@@ -50,12 +51,12 @@ public class GitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mv(String repositoryPath, GitMvOptions options, String source,
+  public GitMvResponse mv(File repositoryPath, GitMvOptions options, String source,
       String destination) throws IOException, JavaGitException {
 
     // TODO : Change this method to take the JavaGitConfig object,
     // or whatever it ends up being called, once Ross and Max create it.
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath.getName(), "repository path");
     CheckUtilities.checkStringArgument(source, "source");
     CheckUtilities.checkStringArgument(destination, "destination");
 
@@ -96,12 +97,12 @@ public class GitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mv(String repositoryPath, String source, String destination)
+  public GitMvResponse mv(File repositoryPath, String source, String destination)
       throws IOException, JavaGitException {
 
     // TODO : Change this method to take the JavaGitConfig object,
     // or whatever it ends up being called, once Ross and Max create it.
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
+    CheckUtilities.checkStringArgument(repositoryPath.getName(), "repository path");
     CheckUtilities.checkStringArgument(source, "source");
     CheckUtilities.checkStringArgument(destination, "destination");
 
