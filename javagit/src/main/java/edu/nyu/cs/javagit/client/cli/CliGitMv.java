@@ -2,11 +2,7 @@ package edu.nyu.cs.javagit.client.cli;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import edu.nyu.cs.javagit.api.DotGit;
-import edu.nyu.cs.javagit.api.GitFileSystemObject;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitMvOptions;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
@@ -21,29 +17,14 @@ public class CliGitMv implements IGitMv {
   // Variable, which if set the fatal messages are not considered for throwing exceptions.
   private boolean dryRun;
 
-  public GitMvResponse mv(File repoPath, GitMvOptions options, String source, String destination)
+  public GitMvResponse mv(String repoPath, GitMvOptions options, String source, String destination)
       throws IOException, JavaGitException {
     return mvProcess(repoPath, options, source, destination);
   }
-  public GitMvResponse mv(File repoPath, GitMvOptions options, File source, File destination)
-      throws IOException, JavaGitException {
-    return mvProcess(repoPath, options, source.getName(), destination.getName());
-  }
-  public GitMvResponse mv(File repoPath, GitMvOptions options, GitFileSystemObject source, 
-      GitFileSystemObject destination) throws IOException, JavaGitException {
-    return mvProcess(repoPath, options, source.getName(), destination.getName());
-  }
-  public GitMvResponse mv(File repoPath, String source, String destination) throws IOException,
+
+  public GitMvResponse mv(String repoPath, String source, String destination) throws IOException,
       JavaGitException {
     return mvProcess(repoPath, null, source, destination);
-  }
-  public GitMvResponse mv(File repoPath, File source, File destination) throws IOException,
-      JavaGitException {
-    return mvProcess(repoPath, null, source.getName(), destination.getName());
-  }
-  public GitMvResponse mv(File repoPath, GitFileSystemObject source, GitFileSystemObject 
-      destination) throws IOException, JavaGitException {
-    return mvProcess(repoPath, null, source.getName(), destination.getName());
   }
 
   /**
@@ -77,47 +58,39 @@ public class CliGitMv implements IGitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mvProcess(File repoPath, GitMvOptions options, String source,
+  public GitMvResponse mvProcess(String repoPath, GitMvOptions options, String source,
       String destination) throws IOException, JavaGitException {
 
-    CheckUtilities.checkNullArgument(repoPath, "repository path");
+    CheckUtilities.checkStringArgument(repoPath, "repository path");
     CheckUtilities.checkStringArgument(source, "source");
     CheckUtilities.checkStringArgument(destination, "destination");
-    
-    List<String> commandLine = buildCommand(options, source, destination);
-    GitMvParser parser = new GitMvParser();
 
-    return (GitMvResponse) ProcessUtilities.runCommand(repoPath, commandLine, parser);
-  }
-  /**
-   * Builds a list of command arguments to pass to <code>ProcessBuilder</code>.
-   * 
-   * @param options
-   *          The options to include on the command line.
-   * @param source
-   *          The source file/directory/symlink to rename/move.
-   * @param destination
-   *          The destination file/directory/symlink to rename/move to.
-   * @return A list of the individual arguments to pass to <code>ProcessBuilder</code>.
-   */
-  protected List<String> buildCommand(GitMvOptions options, String source, String destination) {
-    List<String> cmd = new ArrayList<String>();
-    cmd.add("git-mv");
-    if (null != options) {
+    ProcessBuilder pb = null;
+    if (null == options) {
+      pb = new ProcessBuilder("git-mv", source, destination);
+    } else {
+      StringBuffer optionList = new StringBuffer("-");
       if (options.isOptF()) {
-        cmd.add("-f");
+        optionList.append("f");
       }
       if (options.isOptK()) {
-        cmd.add("-k");
+        optionList.append("k");
       }
       if (options.isOptN()) {
-        cmd.add("-n");
+        optionList.append("n");
         setDryRun(true);
       }
+      CheckUtilities.checkStringArgument(optionList.substring(1), "options");
+      pb = new ProcessBuilder("git-mv", optionList.toString(), source, destination);
     }
-    cmd.add(source);
-    cmd.add(destination);
-    return cmd;
+    pb.directory(new File(repoPath));
+    pb.redirectErrorStream(true);
+
+    GitMvParser parser = new GitMvParser();
+    Process p = ProcessUtilities.startProcess(pb);
+    ProcessUtilities.getProcessOutput(p, parser);
+    ProcessUtilities.waitForAndDestroyProcess(p);
+    return parser.getResponse();
   }
 
   /**
@@ -125,8 +98,11 @@ public class CliGitMv implements IGitMv {
    */
   public class GitMvParser implements IParser {
 
+    // Varible showing the status of the git-mv command.
+    private boolean status = true;
+
     // The response object for an mv operation.
-    private GitMvResponse response = null;
+    private GitMvResponse response = new GitMvResponse(status);
 
     // While handling the error cases this buffer will have the error messages.
     private StringBuffer errorMessage = null;
@@ -139,24 +115,35 @@ public class CliGitMv implements IGitMv {
      * 
      */
     public void parseLine(String line) {
-      if (null != errorMessage) {
-        errorMessage.append("\n" + line);
-        return;
-      }
-      if (line.startsWith("error") || line.startsWith("fatal")) {
-        if (null == errorMessage) {
-          errorMessage = new StringBuffer();
-        }
-        errorMessage.append(line);
+      if (line.startsWith("error")) {
+        status = false;
+        response.setStatus(status);
+        int colonIndex = line.indexOf(':');
+        errorMessage.append(line.substring(colonIndex + 2));
+      } else if (line.startsWith("fatal") && (false == isDryRun())) {
+        status = false;
+        handleErrorCase(line);
       } else {
-        if (null == response) {
-          response = new GitMvResponse();
-        }
+        status = true;
+        response.setStatus(status);
         // This is to parse the output when -n or -f options were given
         if (null != line) {
           parseLineForSuccess(line);
         }
       }
+    }
+
+    /**
+     * Handles the case when there was an error executing the git-mv command.
+     * 
+     * @param line
+     *          The line of text to process.
+     */
+    public void handleErrorCase(String line) {
+      response.setStatus(status);
+      errorMessage = new StringBuffer();
+      int colonIndex = line.indexOf(':');
+      errorMessage.append(line.substring(colonIndex + 2));
     }
 
     /**
@@ -166,8 +153,22 @@ public class CliGitMv implements IGitMv {
      *          The line of text to process.
      */
     public void parseLineForSuccess(String line) {
-      if (line.contains("Warning:")) {
-        response.addComment(line);
+      String comment;
+      if (line.contains("Warning:") || line.contains("fatal")) {
+        int colonIndex = line.indexOf(':');
+        comment = line.substring(colonIndex + 2);
+        response.addComment(comment + "\n");
+      } else {
+        response.addComment(line + "\n");
+      }
+      if (line.contains("source=")) {
+        int equalIndex = line.indexOf('=');
+        int commaIndex = line.indexOf(',', equalIndex);
+        response.setSource(line.substring(equalIndex+1, commaIndex));
+      }
+      if(line.contains("destination=")) {
+        int destinationIndex = line.indexOf("destination");
+        response.setDestination(line.substring(destinationIndex + 12));
       }
       if(line.contains("Adding")) {
         response.setDestination(line.substring(11));
@@ -186,13 +187,8 @@ public class CliGitMv implements IGitMv {
      */
     public GitMvResponse getResponse() throws JavaGitException {
       if (null != errorMessage) {
-        if (isDryRun()) {
-          throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001")
-              + errorMessage.toString());
-        } else {
-          throw new JavaGitException(424000, ExceptionMessageMap.getMessage("424000")
-              + errorMessage.toString());
-        }
+        throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001")
+            + errorMessage.toString());
       }
       return response;
     }
