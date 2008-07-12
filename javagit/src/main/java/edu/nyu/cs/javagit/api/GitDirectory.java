@@ -2,11 +2,9 @@ package edu.nyu.cs.javagit.api;
 
 import java.util.List;
 import java.util.Vector;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+
 
 /**
  * <code>GitDirectory</code> represents a directory object in a git working tree.
@@ -40,34 +38,24 @@ public class GitDirectory extends GitFileSystemObject {
    */
   public List<GitFileSystemObject> getChildren() throws IOException {
     List<GitFileSystemObject> children = new Vector<GitFileSystemObject>();
-    
-    ProcessBuilder pb = new ProcessBuilder("ls");
-    pb.directory(new File(file.getPath()));
-    pb.redirectErrorStream(true);
-    
-    Process p = pb.start();
-    BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-    while (true) {
-      String line = br.readLine();
-      if(line == null || line.length() == 0 ) {
-        break;
-      }
-      StringTokenizer st = new StringTokenizer(line);
-      while (st.hasMoreTokens()) {
-          String name = st.nextToken();
-          if((name == null) || (name.length() == 0)) {
-            continue;
-          }
-          String path = file.getPath() + File.separator + name;
-          File member = new File(path);
-          if(member.isDirectory()) {
-            children.add(new GitDirectory(member, dotGit, this));
-          }
-          else {
-            children.add(new GitFile(member, dotGit, this));
-          }
+
+    //get all of the file system objects currently located under this directory
+    File directoryFiles[] = file.listFiles();
+    for(int i=0; i<directoryFiles.length; ++i) {
+      File memberFile = directoryFiles[i];
+      //check if this file is hidden
+      if(memberFile.isHidden()) {
+        //ignore (could be .git directory)
+        continue;
       }
 
+      //now, just check for the type of the filesystem object
+      if(memberFile.isDirectory()) {
+        children.add(new GitDirectory(memberFile, dotGit, this));
+      }
+      else {
+        children.add(new GitFile(memberFile, dotGit, this));
+      }
     }
 
     return children;

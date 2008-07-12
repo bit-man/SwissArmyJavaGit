@@ -44,7 +44,7 @@ public final class WorkingTree {
 
     this.path = path;
     this.canonicalPath = canonicalPath;
-    rootDir = new GitDirectory(path, null, null);
+    rootDir = new GitDirectory(path, DotGit.getInstance(path), null);
   }
 
   /**
