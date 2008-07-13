@@ -4,7 +4,7 @@ import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
- * A class to manage passing commit arguments to the <code>GitReset</code> command.
+ * A class to manage passing arguments to the <code>GitReset</code> command.
  * <code>GitReset</code> resets the HEAD of the current checked out branch to the state of a
  * previous commit. <br>
  * <br>
@@ -15,8 +15,6 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * <li> commitName - <code>CommitName.HEAD</code></li>
  * <li> quiet - false</li>
  * </ul>
- * 
- * TODO (jhl388): implement toString(), equals() and hashcode().
  */
 public class GitResetOptions {
 
