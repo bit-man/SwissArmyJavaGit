@@ -57,7 +57,8 @@ public class GitCommit {
    *          A <code>File</code> instance for the path to the repository to commit against. If
    *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
-   *          The options to commit with.
+   *          The options to commit with. If null is passed, a <code>NullPointerException</code>
+   *          will be thrown.
    * @param message
    *          The message to attach to the commit. A non-zero length argument is required for this
    *          parameter, otherwise a <code>NullPointerException</code> or
@@ -94,7 +95,8 @@ public class GitCommit {
    *          A <code>File</code> instance for the path to the repository to commit against. If
    *          null is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
-   *          The options to commit with.
+   *          The options to commit with. If null is passed, a <code>NullPointerException</code>
+   *          will be thrown.
    * @param message
    *          The message to attach to the commit. A non-zero length argument is required for this
    *          parameter, otherwise a <code>NullPointerException</code> or
