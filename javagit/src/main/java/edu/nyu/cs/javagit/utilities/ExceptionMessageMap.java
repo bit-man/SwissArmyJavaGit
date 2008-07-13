@@ -105,10 +105,11 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("404000", "404000: Error calling git-branch. ");
 
     MESSAGE_MAP.put("424000", "424000: Error calling git-mv. ");
-    
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv for dry-run. ");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-commit.");
+
+    MESSAGE_MAP.put("434000", "434000: Error calling git-rm.");
 
     MESSAGE_MAP.put("406000", "406000: Error calling git-checkout");
 

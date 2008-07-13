@@ -1,8 +1,10 @@
 package edu.nyu.cs.javagit.api.commands;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitRm;
@@ -15,10 +17,77 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 public class GitRm {
 
   /**
+   * Remove files relative to the path within the repository.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to run rm against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   * @param options
+   *          The options to run rm with. If null is passed, a <code>NullPointerException</code>
+   *          will be thrown.
+   * @param paths
+   *          A list of files to remove. A non-zero length argument is required for this parameter
+   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
+      throws IOException, JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
+    CheckUtilities.checkNullArgument(options, "options");
+    CheckUtilities.checkNullListArgument(paths, "paths");
+
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitRm GitRm = client.getGitRmInstance();
+    return GitRm.rm(repository, options, paths);
+  }
+
+  /**
+   * Remove files relative to the path within the repository.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to run rm against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   * @param path
+   *          A single file to remove. If null is passed, a <code>NullPointerException</code> will
+   *          be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rm(File repository, File path) throws IOException, JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
+    CheckUtilities.checkNullArgument(path, "path");
+
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitRm GitRm = client.getGitRmInstance();
+    return GitRm.rm(repository, path);
+  }
+
+  /**
    * Removes files from the specified repository.
    * 
-   * @param repositoryPath
-   *          The path to the repository to commit against. A non-zero length argument is required
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to run rm against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   * @param paths
+   *          The list of folders and/or files to remove. A non-null and non-empty list is required
    *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the rm.
@@ -31,17 +100,75 @@ public class GitRm {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    */
-  public GitRmResponse rm(String repositoryPath, List<String> files) throws IOException {
-
-    // TODO (jhl388): Change this method to take the JavaGitConfig object,
-    // or whatever it ends up being called, once Ross and Max create it.
-
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
-    CheckUtilities.checkStringListArgument(files, "file list");
+  public GitRmResponse rm(File repository, List<File> paths) throws IOException, JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
+    CheckUtilities.checkNullListArgument(paths, "paths");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitRm GitRm = client.getGitRmInstance();
-    return GitRm.rm(repositoryPath, files);
+    return GitRm.rm(repository, paths);
+  }
+
+  /**
+   * Remove files relative to the path within the repository but only effect the index.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to run rm against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   * @param paths
+   *          A list of files to remove. A non-zero length argument is required for this parameter
+   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rmCached(File repository, List<File> paths) throws IOException,
+      JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
+    CheckUtilities.checkNullListArgument(paths, "paths");
+
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitRm GitRm = client.getGitRmInstance();
+    return GitRm.rmCached(repository, paths);
+  }
+
+  /**
+   * Recursively remove files relative to the path within the repository.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository to run rm against. If
+   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   * @param paths
+   *          A list of files to remove. A non-zero length argument is required for this parameter
+   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rmRecursive(File repository, List<File> paths) throws IOException,
+      JavaGitException {
+    CheckUtilities.checkNullArgument(repository, "repository");
+    CheckUtilities.checkNullListArgument(paths, "paths");
+
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitRm GitRm = client.getGitRmInstance();
+    return GitRm.rmRecursive(repository, paths);
   }
 
 }

@@ -5,63 +5,159 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.GitRmOptions;
 import edu.nyu.cs.javagit.api.commands.GitRmResponse;
+import edu.nyu.cs.javagit.client.GitRmResponseImpl;
 import edu.nyu.cs.javagit.client.IGitRm;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Command-line implementation of the <code>IGitRm</code> interface.
  */
 public class CliGitRm implements IGitRm {
 
-  public CliGitRm() {
+  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
+      throws IOException, JavaGitException {
+    return processRm(repository, options, null, paths);
   }
 
-  public GitRmResponse rm(String repoPath, List<String> filePaths) throws IOException {
+  public GitRmResponse rm(File repository, File path) throws IOException, JavaGitException {
+    return processRm(repository, null, path, null);
+  }
 
-    List<String> pbin = new ArrayList<String>();
-    pbin.add("git");
-    pbin.add("rm");
-    pbin.addAll(filePaths);
+  public GitRmResponse rm(File repository, List<File> paths) throws IOException, JavaGitException {
+    return processRm(repository, null, null, paths);
+  }
 
-    ProcessBuilder pb = new ProcessBuilder(pbin);
-    pb.directory(new File(repoPath));
-    pb.redirectErrorStream(true);
+  public GitRmResponse rmCached(File repository, List<File> paths) throws IOException,
+      JavaGitException {
+    GitRmOptions options = new GitRmOptions();
+    options.setOptCached(true);
+    return processRm(repository, options, null, paths);
+  }
+
+  public GitRmResponse rmRecursive(File repository, List<File> paths) throws IOException,
+      JavaGitException {
+    GitRmOptions options = new GitRmOptions();
+    options.setOptR(true);
+    return processRm(repository, options, null, paths);
+  }
+
+  /**
+   * Processes an incoming <code>GitRm</code> request.
+   * 
+   * @param repository
+   *          The path to the repository.
+   * @param options
+   *          The options to use in constructing the command line.
+   * @param path
+   *          A single file/directory to delete. This should be null if there is a list of paths to
+   *          delete.
+   * @param paths
+   *          A list of files/paths to delete. This should be null if there is a single path to
+   *          delete.
+   * @return The response from running the command.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  private GitRmResponse processRm(File repository, GitRmOptions options, File path, List<File> paths)
+      throws IOException, JavaGitException {
+    List<String> cmdline = buildCommandLine(options, path, paths);
 
     GitRmParser parser = new GitRmParser();
+    return (GitRmResponse) ProcessUtilities.runCommand(repository.getAbsolutePath(), cmdline,
+        parser);
+  }
 
-    Process p = ProcessUtilities.startProcess(pb);
-    ProcessUtilities.getProcessOutput(p, parser);
-    ProcessUtilities.waitForAndDestroyProcess(p);
-
-    return parser.getResponse();
-
+  /**
+   * Builds the command line.
+   * 
+   * @param options
+   *          The options to build with.
+   * @param path
+   *          If just a single path, this is it.
+   * @param paths
+   *          If there are multiple paths, these are they. <code>path</code> must be null for
+   *          these paths to be used.
+   * @return The list of arguments for the command line.
+   */
+  private List<String> buildCommandLine(GitRmOptions options, File path, List<File> paths) {
+    List<String> cmdline = new ArrayList<String>();
+    cmdline.add("git-rm");
+    if (null != options) {
+      if (options.isOptCached()) {
+        cmdline.add("--cached");
+      }
+      if (options.isOptF()) {
+        cmdline.add("-f");
+      }
+      if (options.isOptN()) {
+        cmdline.add("-n");
+      }
+      if (options.isOptQ()) {
+        cmdline.add("-q");
+      }
+      if (options.isOptR()) {
+        cmdline.add("-r");
+      }
+    }
+    if (null != path) {
+      cmdline.add(path.getAbsolutePath());
+    } else {
+      for (File f : paths) {
+        cmdline.add(f.getAbsolutePath());
+      }
+    }
+    return cmdline;
   }
 
   class GitRmParser implements IParser {
 
-    private boolean success;
+    // Holding onto the error message to make part of an exception
+    private StringBuffer errorMsg = null;
 
-    GitRmParser() {
-      success = true;
-    }
+    // Track the number of lines parsed.
+    private int numLinesParsed = 0;
+
+    // The response.
+    private GitRmResponseImpl response = new GitRmResponseImpl();
 
     public void parseLine(String line) {
-      // handle failures
-      if (line.indexOf("index file corrupt") == 0
-          || line.matches("pathspec .* did not match any files")
-          || line.matches("not removing. * recursively without -r")
-          || line.indexOf("git-rm: ") == 0 || line.indexOf("Unable to write new index file") == 0) {
-        success = false;
+
+      // TODO (jhl388): handle error messages in a better manner.
+
+      if (null != errorMsg) {
+        ++numLinesParsed;
+        errorMsg.append(", line" + numLinesParsed + "=[" + line + "]");
+        return;
       }
 
+      if (line.startsWith("rm '")) {
+        int locQuote = line.indexOf('\'');
+        int locLastQuote = line.lastIndexOf('\'');
+        response.addFileToRemovedFilesList(new File(line.substring(locQuote + 1, locLastQuote)));
+      } else {
+        errorMsg = new StringBuffer();
+        errorMsg.append("line1=[" + line + "]");
+      }
     }
 
-    // TODO Auto-generated method stub
-
-    public GitRmResponse getResponse() {
-      return new GitRmResponse(success);
+    public GitRmResponse getResponse() throws JavaGitException {
+      if (null != errorMsg) {
+        throw new JavaGitException(434000, ExceptionMessageMap.getMessage("434000") + "  { "
+            + errorMsg.toString() + " }");
+      }
+      return response;
     }
-
   }
 
 }

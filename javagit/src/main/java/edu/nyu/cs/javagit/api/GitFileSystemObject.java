@@ -143,12 +143,8 @@ public abstract class GitFileSystemObject {
   public GitRmResponse rm() throws IOException, JavaGitException {
     GitRm gitRm = new GitRm();
 
-    // create a list of filenames and add yourself to it
-    List<String> list = new Vector<String>();
-    list.add(file.getPath());
-
     // run git rm command
-    return gitRm.rm(dotGit.getPath().getPath(), list);
+    return gitRm.rm(dotGit.getPath(), file);
   }
 
   /**
