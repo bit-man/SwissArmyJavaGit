@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+
 import edu.nyu.cs.javagit.api.commands.GitMv;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
@@ -30,7 +31,7 @@ public class TestGitMv extends TestCase {
 
   //check if exceptions are thrown below for ivalid arguments
   public void testGitMvInvalidInput() throws IOException, JavaGitException {
-    repoPath = new File ("/tmp/");
+    repoPath = FileUtilities.createTempDirectory("GitMvTestRepo");
     
     //source file.
     File source = new File("t2.pl");
@@ -75,7 +76,6 @@ public class TestGitMv extends TestCase {
               e.getMessage());
     }
     
-    repoPath = FileUtilities.createTempDirectory("GitMvTestRepo");
     HelperGitCommands.initRepo(repoPath);
     try {
       gitMv.mv(repoPath, source, destination);

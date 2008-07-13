@@ -40,7 +40,7 @@ public class TestGitMvReponse extends TestCase {
   
   @Before
   protected void setUp() throws IOException, JavaGitException {
-    repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
+    repoDirectory = FileUtilities.createTempDirectory("GitMvTestResponseRepo");
     HelperGitCommands.initRepo(repoDirectory);
 
     add = new GitAdd();
