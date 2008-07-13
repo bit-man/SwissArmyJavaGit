@@ -12,13 +12,12 @@ import edu.nyu.cs.javagit.api.JavaGitException;
 
 import edu.nyu.cs.javagit.api.commands.GitMv;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
-import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 public class TestGitMv extends TestCase {
   //Repository path. Need not be valid.
   private File repoPath;
-  
+   
   @Before
   protected void setUp() {
   }
@@ -29,7 +28,7 @@ public class TestGitMv extends TestCase {
     FileUtilities.removeDirectoryRecursivelyAndForcefully(repoPath);
   }
 
-  //check if exceptions are thrown below for ivalid arguments
+  //check if exceptions are thrown below for invalid arguments
   public void testGitMvInvalidInput() throws IOException, JavaGitException {
     repoPath = FileUtilities.createTempDirectory("GitMvTestRepo");
     
@@ -74,24 +73,6 @@ public class TestGitMv extends TestCase {
       assertEquals("Should have null pointer exception or illegal argument exception",
           ExceptionMessageMap.getMessage("424000")+ "fatal: Not a git repository",
               e.getMessage());
-    }
-    
-    HelperGitCommands.initRepo(repoPath);
-    try {
-      gitMv.mv(repoPath, source, destination);
-    } catch (Exception e) {
-      assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("424000")+ "error: '"+ source.getAbsolutePath() + 
-          "' is outside repository", e.getMessage());
-    }
-    
-    source = FileUtilities.createFile(repoPath, "test.pl", "Testfile");
-    try {
-      gitMv.mv(repoPath, source, destination);
-    } catch (Exception e) {
-      assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("424000")+ "error: '"+ destination.getAbsolutePath() + 
-          "' is outside repository", e.getMessage());
     }
   }
 }
