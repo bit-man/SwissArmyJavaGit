@@ -204,7 +204,7 @@ public abstract class GitFileSystemObject {
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();
     // run git-status command
-    GitStatusResponse response = gitStatus.status(dotGit.getPath().getPath(), null, file.getPath());
+    GitStatusResponse response = gitStatus.status(dotGit.getPath(), null, file);
 
     String relativePath = getRelativePath();
 

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
+import edu.nyu.cs.javagit.client.cli.CliGitStatus;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
 
 public class TestGitStatusResponse extends TestCase {
@@ -13,10 +14,10 @@ public class TestGitStatusResponse extends TestCase {
   GitStatusParser parser;
   
   @Before
-  public void setUp() throws Exception {
+  public void setUp() throws Exception {   
     parser = new GitStatusParser();
   }
-
+  
   @Test
   public void testGitStatus() {
     parser.parseLine("# On branch foo");
@@ -63,7 +64,7 @@ public class TestGitStatusResponse extends TestCase {
     line = "#       deleted:                  foobar03";
     assertTrue(parser.matchDeletedFilePattern(line));
     line = "# xyz deleted: pattern06";
-    assertFalse(parser.matchDeletedFilePattern(line));
+    assertFalse(parser.matchDeletedFilePattern(line));   
     line = "# deleted: xyz pattern06";
     assertFalse(parser.matchDeletedFilePattern(line));    
   }
