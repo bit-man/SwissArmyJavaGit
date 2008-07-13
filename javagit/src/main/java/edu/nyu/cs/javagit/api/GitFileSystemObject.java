@@ -123,12 +123,11 @@ public abstract class GitFileSystemObject {
    */
   public GitMvResponse mv(File dest) throws IOException, JavaGitException {
     // source; current location
-    String source = file.getPath();
-    String destination = dest.getPath();
+    File source = file;
 
     // perform git-mv
     GitMv gitMv = new GitMv();
-    GitMvResponse response = gitMv.mv(dotGit.getPath().getPath(), source, destination);
+    GitMvResponse response = gitMv.mv(dotGit.getPath(), source, dest);
 
     // file has changed; update
     file = dest;

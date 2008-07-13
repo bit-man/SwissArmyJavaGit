@@ -51,14 +51,13 @@ public class GitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mv(String repositoryPath, GitMvOptions options, String source,
-      String destination) throws IOException, JavaGitException {
+  public GitMvResponse mv(File repositoryPath, GitMvOptions options, File source,
+      File destination) throws IOException, JavaGitException {
 
-    // TODO : Change this method to take the JavaGitConfig object,
-    // or whatever it ends up being called, once Ross and Max create it.
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
-    CheckUtilities.checkStringArgument(source, "source");
-    CheckUtilities.checkStringArgument(destination, "destination");
+    CheckUtilities.checkNullArgument(repositoryPath, "repository path");
+    CheckUtilities.checkNullArgument(source, "source");
+    CheckUtilities.checkNullArgument(options, "options");
+    CheckUtilities.checkNullArgument(destination, "destination");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitMv gitMv = client.getGitMvInstance();
@@ -97,14 +96,14 @@ public class GitMv {
    * @exception JavaGitException
    *              Thrown when there is an error excecuting git-mv.
    */
-  public GitMvResponse mv(String repositoryPath, String source, String destination)
+  public GitMvResponse mv(File repositoryPath, File source, File destination)
       throws IOException, JavaGitException {
 
     // TODO : Change this method to take the JavaGitConfig object,
     // or whatever it ends up being called, once Ross and Max create it.
-    CheckUtilities.checkStringArgument(repositoryPath, "repository path");
-    CheckUtilities.checkStringArgument(source, "source");
-    CheckUtilities.checkStringArgument(destination, "destination");
+    CheckUtilities.checkNullArgument(repositoryPath, "repository path");
+    CheckUtilities.checkNullArgument(source, "source");
+    CheckUtilities.checkNullArgument(destination, "destination");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitMv gitMv = client.getGitMvInstance();
