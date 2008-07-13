@@ -25,6 +25,19 @@ public class CheckUtilities {
   }
 
   /**
+   * Checks that the specified file exists.
+   * 
+   * @param file
+   *          File or directory path
+   */
+  public static void checkFileValidity( File file ) throws IOException {
+    if ( !file.exists() ) {
+      throw new IOException(ExceptionMessageMap.getMessage("020001") + "  { filename=[" + file.getName()
+          + "] }");
+    }
+  }
+
+  /**
    * Checks that the int to check is greater than <code>lowerBound</code>. If the int to check is
    * not greater than <code>lowerBound</code>, an <code>IllegalArgumentException</code> is
    * thrown.
