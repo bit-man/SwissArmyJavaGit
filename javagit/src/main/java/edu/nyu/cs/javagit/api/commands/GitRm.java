@@ -16,6 +16,8 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 public class GitRm {
 
+  // TODO (jhl388): Add test cases for this class.
+
   /**
    * Remove files relative to the path within the repository.
    * 

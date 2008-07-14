@@ -17,6 +17,8 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class CliGitRm implements IGitRm {
 
+  // TODO (jhl388): Add test cases for this class.
+
   public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
       throws IOException, JavaGitException {
     return processRm(repository, options, null, paths);
