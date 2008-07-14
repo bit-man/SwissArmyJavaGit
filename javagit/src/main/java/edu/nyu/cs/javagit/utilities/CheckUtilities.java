@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.Ref;
+
 /**
  * This class provides utilities methods that perform various checks for validity.
  */
@@ -244,5 +246,38 @@ public class CheckUtilities {
           + index + "], start=[" + start + "], end=[" + end + "] }");
     }
   }
-
+  
+  /**
+   * Checks a <code>List</code> argument to make sure that all the Refs in the list are of same 
+   * refType type. If there is a mismatch <code>IllegalArgumentException</code> is thrown.
+   * 
+   * @param list
+   *          The list to check.
+   * @param variableName
+   *          The name of the variable being checked; for use in exception messages.
+   */
+  public static void validateListRefType(List<Ref> list, Ref.RefType type, String variableName) {
+    // TODO (ns1344): Write a unit test for this method.
+    for (int i = 0; i < list.size(); i++) {
+      validateArgumentRefType(list.get(i), type, variableName);
+    }
+  }
+  
+  /**
+   * Checks a <code>Ref</code> argument to make sure that it is of given refType type. If not 
+   * <code>IllegalArgumentException</code> is thrown.
+   * 
+   * @param Ref
+   *          The argument to check.
+   * @param type
+   *          The refType to check against.
+   * @param variableName
+   *          The name of the variable being checked; for use in exception messages.
+   */
+  public static void validateArgumentRefType(Ref name, Ref.RefType type, String variableName) {
+    if (name.getRefType() != type) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("100000")
+          + "  { variableName=[" + variableName + "] }");
+    }
+  }
 }

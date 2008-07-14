@@ -93,12 +93,13 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");
     MESSAGE_MAP.put("000120", "000120: Invalid option combination for git-branch command.");
-    MESSAGE_MAP.put("000121", "000121: Invalid optiontype for git-branch command.");
 
     MESSAGE_MAP.put("020001", "020001: File or path does not exist.");
 
     MESSAGE_MAP.put("020100", "020100: Unable to start sub-process.");
     MESSAGE_MAP.put("020101", "020101: Error reading input from the sub-process.");
+    
+    MESSAGE_MAP.put("100000", "100000: Incorrect refType type.");
 
     MESSAGE_MAP.put("410000", "410000: Error calling git-commit.");
 
