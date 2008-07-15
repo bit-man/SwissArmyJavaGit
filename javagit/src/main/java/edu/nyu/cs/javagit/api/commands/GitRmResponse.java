@@ -22,7 +22,7 @@ public abstract class GitRmResponse implements CommandResponse {
    * @param index
    *          The index of the file to get. It must fall in the range:
    *          <code>0 &lt;= index &lt; getRemovedFilesSize()</code>.
-   * @return
+   * @return The file at the specified index.
    */
   public File getRemovedFile(int index) {
     CheckUtilities.checkIntIndexInListRange(removedFiles, index);
