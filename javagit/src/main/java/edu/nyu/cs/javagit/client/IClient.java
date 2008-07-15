@@ -81,12 +81,19 @@ public interface IClient {
    * @return An instance of <code>IGitStatus</code>.
    */
   public IGitStatus getGitStatusInstance();
-  
+
   /**
    * Gets an instance of <code>IGitBranch</code>
    * 
    * @return An instance of <code>IGitBranch</code>
    */
   public IGitBranch getGitBranchInstance();
+
+  /**
+   * Gets an instance of <code>IGitCheckout</code>
+   * 
+   * @return An instance of <code>IGitCheckou</code>
+   */
+  public IGitCheckout getGitCheckoutInstance();
 
 }
