@@ -54,7 +54,7 @@ public class CliGitReset implements IGitReset {
     CheckUtilities.checkNullArgument(repository, "repository");
 
     List<String> commandLine = buildCommand(options, paths);
-    GitResetParser parser = new GitResetParser();
+    GitResetParser parser = new GitResetParser(repository.getAbsolutePath());
 
     return (GitResetResponseImpl) ProcessUtilities.runCommand(repository.getAbsolutePath(),
         commandLine, parser);
@@ -95,6 +95,15 @@ public class CliGitReset implements IGitReset {
     // TODO (jhl388): Create test case for this class.
     // TODO (jhl388): Finish implementing the GitResetParser.
 
+    // The index of the start of the short SHA1 in the HEAD record. Result of the --hard option
+    private final int HEAD_RECORD_SHA1_START = 15;
+
+    /*
+     * The working directory path set for the command line. Used to generate the correct paths to
+     * the files needing update.
+     */
+    private String workingDirectoryPath;
+
     // Holding onto the error message to make part of an exception
     private StringBuffer errorMsg = null;
 
@@ -103,6 +112,16 @@ public class CliGitReset implements IGitReset {
 
     // The response object for a reset.
     private GitResetResponseImpl response;
+
+    /**
+     * Constructor for <code>GitResetParser</code>
+     * 
+     * @param workingDirectoryPath
+     *          The working directory path set for the command line.
+     */
+    public GitResetParser(String workingDirectoryPath) {
+      this.workingDirectoryPath = workingDirectoryPath;
+    }
 
     public void parseLine(String line) {
 
@@ -114,16 +133,28 @@ public class CliGitReset implements IGitReset {
         return;
       }
 
-      switch (numLinesParsed) {
-      case 0:
-        // parseLineOne(line);
-        break;
-      case 1:
-        // parseLineTwo(line);
-        break;
-      default:
-        // parseAllOtherLines(line);
+      if (line.startsWith("HEAD ")) {
+        // A record indicating the new HEAD commit resulting from using the --hard option.
+        int sha1End = line.indexOf(' ', HEAD_RECORD_SHA1_START);
+        Ref sha1 = Ref.createSha1Ref(line.substring(HEAD_RECORD_SHA1_START, sha1End));
+        response = new GitResetResponseImpl(sha1, line.substring(sha1End + 1));
+      } else if (numLinesParsed > 0 && response.getNewHeadSha1() != null) {
+        // No line is expected after getting a HEAD record. Doing nothing for now. Must revisit.
+
+        // TODO (jhl388): Figure out what to do if a line is received after a HEAD record.
+      } else if (line.endsWith(": needs update")) {
+        // A file needs update record.
+        int lastColon = line.lastIndexOf(":");
+        File f = new File(workingDirectoryPath + line.substring(0, lastColon));
+        response.addFileToFilesNeedingUpdateList(f);
+      } else if (numLinesParsed > 0) {
+        errorMsg = new StringBuffer();
+        errorMsg.append("Unexpected results.  line" + (numLinesParsed + 1) + "=[" + line + "]");
+      } else {
+        errorMsg = new StringBuffer();
+        errorMsg.append("line1=[" + line + "]");
       }
+
       ++numLinesParsed;
     }
 

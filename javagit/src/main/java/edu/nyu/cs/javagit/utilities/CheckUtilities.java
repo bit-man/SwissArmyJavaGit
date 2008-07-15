@@ -101,6 +101,50 @@ public class CheckUtilities {
   }
 
   /**
+   * Checks that two lists are equal, specifically: they are both null or the both contain the same
+   * elements.
+   * 
+   * @param l1
+   *          The first list to check.
+   * @param l2
+   *          The second list to check.
+   * @return True if one of the following conditions hold:
+   *         <ol>
+   *         <li>Both lists are null</li>
+   *         <li>a) Neither list is null; b) for each element in list 1 an equivalent element
+   *         exists in list 2; and c) for each element in list 2, an equivalent element exists in
+   *         list 1</li>
+   *         </ol>
+   */
+  public static boolean checkListsEqual(List<?> l1, List<?> l2) {
+  
+    // TODO (jhl388): write a test case for this method.
+  
+    if (null != l1 && null == l2) {
+      return false;
+    }
+  
+    if (null == l1 && null != l2) {
+      return false;
+    }
+  
+    if (null != l1) {
+      for (Object e : l1) {
+        if (!l2.contains(e)) {
+          return false;
+        }
+      }
+  
+      for (Object e : l2) {
+        if (!l1.contains(e)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
    * Checks to see if two objects are equal. The Object.equal() method is used to check for
    * equality.
    * 
