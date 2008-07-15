@@ -141,4 +141,27 @@ public class GitStatus {
     options.setOptAll(true);
     return status(repositoryPath, options);
   }
+  
+  /**
+   * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
+   * of &lt;git-status&gt; command, but filters output for a single file
+   * 
+   * @param repositoryPath
+   *          Directory path to the root of the repository.
+   * @param path
+   * @return <code>GitStatusResponse</code> object
+   * @throws JavaGitException
+   *           Exception thrown if the repositoryPath is null
+   * @throws IOException
+   *           Exception is thrown if any of the IO operations fail.
+   */
+  public GitStatusResponse statusSingleFile(File repositoryPath, File path) throws JavaGitException, IOException {
+    CheckUtilities.checkFileValidity(path);
+    List<File> paths = new ArrayList<File>();
+    paths.add(path);
+    //set appropriate option
+    GitStatusOptions options = new GitStatusOptions();
+    options.setOptCheckInputFileOnly(true);
+    return status(repositoryPath, options, paths);
+  }
 }

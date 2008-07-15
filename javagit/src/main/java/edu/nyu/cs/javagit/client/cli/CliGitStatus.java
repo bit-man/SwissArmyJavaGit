@@ -36,6 +36,8 @@ public class CliGitStatus implements IGitStatus {
       return line.matches(this.pattern);
     }
   }
+  
+  private File inputFile = null;
 
   /**
    * This method returns <code>GitStatusResponse</code> object after parsing the options and then
@@ -53,7 +55,13 @@ public class CliGitStatus implements IGitStatus {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
     List<String> command  = buildCommandLine(options, paths);
-    GitStatusParser parser = new GitStatusParser();
+    GitStatusParser parser;
+    if(inputFile != null) {
+      parser = new GitStatusParser(inputFile);
+    }
+    else {
+      parser = new GitStatusParser();
+    }
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
   }
 
@@ -74,7 +82,12 @@ public class CliGitStatus implements IGitStatus {
       setOptions( argsList, options );
     }
     if ( paths != null ) {
-      setPaths( argsList, paths);
+      if((options != null) && options.isOptCheckInputFileOnly() && (paths.size() == 1)) {
+        inputFile = paths.get(0);
+      }
+      else {
+        setPaths( argsList, paths);
+      }
     }
     return argsList;
   }
@@ -141,12 +154,19 @@ public class CliGitStatus implements IGitStatus {
     private State outputState;
     private int lineNum;
     private GitStatusResponseImpl response;
+    private File inputFile = null;
 
     public GitStatusParser() {
       lineNum = 0;
       response = new GitStatusResponseImpl();
     }
-
+    
+    public GitStatusParser(File in) {
+      inputFile = in;
+      lineNum = 0;
+      response = new GitStatusResponseImpl();
+    }
+    
     public void parseLine(String line) {
       if (line == null || line.length() == 0) {
         return;
@@ -195,21 +215,29 @@ public class CliGitStatus implements IGitStatus {
       }
       if (matchDeletedFilePattern(line)) {
         String deletedFile = getFilename(line);
+        if((inputFile != null) && (!deletedFile.matches(inputFile.getName())))
+            return;
         addDeletedFile(deletedFile);
         return;
       }
       if (matchModifiedFilePattern(line)) {
         String modifiedFile = getFilename(line);
+        if((inputFile != null) && (!modifiedFile.matches(inputFile.getName())))
+            return;
         addModifiedFile(modifiedFile);
         return;
       }
       if (matchNewFilePattern(line)) {
         String newFile = getFilename(line);
+        if((inputFile != null) && (!newFile.matches(inputFile.getName())))
+            return;
         addNewFile(newFile);
         return;
       }
       if (outputState == State.UNTRACKED_FILES) {
         String untrackedFile = getFilename(line);
+        if((inputFile != null) && (!untrackedFile.matches(inputFile.getName())))
+            return;
         addUntrackedFile(untrackedFile);
       }
     }

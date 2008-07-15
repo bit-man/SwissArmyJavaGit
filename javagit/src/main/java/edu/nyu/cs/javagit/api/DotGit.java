@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
+import java.io.IOException;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
@@ -33,6 +34,27 @@ public final class DotGit {
     // TODO (rs2705): Ensure that these arguments are valid (not null, not empty)
     this.path = path;
     this.canonicalPath = canonicalPath;
+  }
+
+  /**
+   * Checks if there is a DotGit instance for a given path
+   * 
+   * @param path
+   *          <code>File</code> object representing the path to the repository.
+   * @return
+   *          true if exits, false otherwise;
+   */
+  public static synchronized boolean existsInstance(File path) {
+    String canonicalPath = "";
+
+    try {
+      canonicalPath = path.getCanonicalPath();
+    } catch (IOException e) {
+      //obviously, the answer is NO
+      return false;
+    }
+
+    return INSTANCES.containsKey(canonicalPath);
   }
 
   /**
@@ -116,6 +138,7 @@ public final class DotGit {
    * @return The new branch
    */
   public Branch createBranch(String name) {
+    // TODO (ma1683): Implement this method
     // GitBranch.branch();
     return new Branch(name);
   }
@@ -127,6 +150,7 @@ public final class DotGit {
    *          The branch to delete
    */
   public void deleteBranch(Branch branch) {
+    // TODO (ma1683): Implement this method
     // GitBranch.branch(-d);
     branch = null;
   }
@@ -147,6 +171,7 @@ public final class DotGit {
    * @return The branches in the repository.
    */
   public List<Branch> getBranches() {
+    // TODO (ma1683): Implement this method
     // return GitBranch.branch();
     return null;
   }
@@ -178,6 +203,7 @@ public final class DotGit {
    * Initializes Git repository
    */
   public void init() {
+    // TODO (ma1683): Implement this method
     // GitInit.init();
   }
 

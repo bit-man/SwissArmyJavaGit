@@ -40,11 +40,14 @@ public final class WorkingTree {
    * 
    */
   private WorkingTree(File path, String canonicalPath) {
-    // TODO (rs2705): Ensure that these arguments are valid (not null, not empty)
-
     this.path = path;
     this.canonicalPath = canonicalPath;
-    rootDir = new GitDirectory(path, DotGit.getInstance(path), null);
+    //TODO(ma1683): temporary solution
+    try {
+      rootDir = new GitDirectory(path);
+    }
+    catch(JavaGitException e) {
+    }
   }
 
   /**
@@ -117,10 +120,8 @@ public final class WorkingTree {
    * 
    * @return The new <code>GitDirectory</code> object
    */
-  public GitDirectory addDirectory(String dir) {
-    // createDir(dir);
-    // TODO (rs2705): Fix the call below. Currently it does nothing - just need it to compile.
-    return new GitDirectory(new File(dir), null, null);
+  public GitDirectory addDirectory(String dir) throws JavaGitException {
+    return new GitDirectory(new File(dir));
   }
 
   /**
@@ -130,7 +131,7 @@ public final class WorkingTree {
    *          Git commit id
    */
   public void checkout(String sha1) {
-    // GitCheckout.checkout(path, sha1);
+    // TODO (ma1683): Implement this method
   }
 
   /**
@@ -186,7 +187,7 @@ public final class WorkingTree {
    * @return The currently checked-out branch of the working directory.
    */
   public Branch getCurrentBranch() {
-    // GitBranch
+ // TODO (ma1683): Implement this method
     return null;
   }
 
@@ -196,7 +197,7 @@ public final class WorkingTree {
    * @return List of commits for the working directory
    */
   public List<Commit> getLog() {
-    // GitLog.log(path);
+ // TODO (ma1683): Implement this method
     return null;
   }
 
@@ -241,16 +242,6 @@ public final class WorkingTree {
     return canonicalPath.hashCode();
   }
 
-  /**
-   * Show commit logs
-   * 
-   * @return List of commits for the working directory
-   */
-
-  public List<Commit> log() {
-    // GitLog.log(path);
-    return null;
-  }
 
   /**
    * Reverts the specified git commit
@@ -259,6 +250,7 @@ public final class WorkingTree {
    *          Git commit that user wishes to revert
    */
   public void revert(Commit commit) {
+    // TODO (ma1683): Implement this method
     // GitRevert.revert(commit.getSHA1());
   }
 

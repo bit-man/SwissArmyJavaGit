@@ -12,23 +12,26 @@ import java.io.IOException;
  * TODO: Build out the class
  */
 public class GitDirectory extends GitFileSystemObject {
-  // parent directory
-  private GitDirectory parent = null;
 
   /**
    * The constructor.
    * 
    * @param dir
-   *          underlying java.io.File object
-   * @param dotGit
-   *          The object representing .git directory of the repository
-   * @param parent
-   *          The parent directory
+   *          underlying <code>java.io.File</code> object
    */
-  public GitDirectory(File dir, DotGit dotGit, GitDirectory parent) {
-    // TODO (rs2705): Fix this constructor. It's overkill to pass in this much stuff.
-    super(dir, dotGit);
-    this.parent = parent;
+  public GitDirectory(File dir) throws JavaGitException {
+    super(dir);
+  }
+  
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof GitDirectory)) {
+      return false;
+    }
+
+    GitFileSystemObject gitObj = (GitFileSystemObject) obj;
+    return super.equals(gitObj);
   }
 
   /**
@@ -50,11 +53,17 @@ public class GitDirectory extends GitFileSystemObject {
       }
 
       //now, just check for the type of the filesystem object
-      if(memberFile.isDirectory()) {
-        children.add(new GitDirectory(memberFile, dotGit, this));
+      try {
+        if(memberFile.isDirectory()) {
+          children.add(new GitDirectory(memberFile));
+        }
+        else {
+          children.add(new GitFile(memberFile));
+        }
       }
-      else {
-        children.add(new GitFile(memberFile, dotGit, this));
+      catch (JavaGitException e) {
+        //TODO(ma1683): is this really possible scenario? Ignoring at the moment
+        continue;
       }
     }
 
@@ -62,38 +71,29 @@ public class GitDirectory extends GitFileSystemObject {
   }
 
   /**
-   * Adds a GitFile to the working directory.
+   * Adds a <code>GitFile</code> to the working directory. Does not create a physical file
    * 
    * @param name
    *          The name of the file
    * 
-   * @return The GitFile object
+   * @return The <code>GitFile</code> object
    */
-  public GitFile addFile(String name) {
+  public GitFile addFile(String name) throws JavaGitException {
     String filePath = file.getPath() + File.separator + name;
-    return new GitFile(new File(filePath), dotGit, this);
+    return new GitFile(new File(filePath));
   }
 
   /**
-   * Adds a GitFile to the working directory.
+   * Adds a <code>GitDirectory</code> to the working directory. Does not create a physical dir
    * 
    * @param name
    *          The name of the file
    * 
-   * @return The GitFile object
+   * @return The <code>GitDirectory</code> object
    */
-  public GitDirectory addDirectory(String name) {
+  public GitDirectory addDirectory(String name) throws JavaGitException {
     String dirPath = file.getPath() + File.separator + name;
-    return new GitDirectory(new File(dirPath), dotGit, this);
-  }
-
-  /**
-   * Gets parent directory of this File object
-   * 
-   * @return parent directory
-   */
-  public GitDirectory getParent() {
-    return parent;
+    return new GitDirectory(new File(dirPath));
   }
 
 }

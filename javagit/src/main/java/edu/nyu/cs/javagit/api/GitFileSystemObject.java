@@ -4,7 +4,7 @@ package edu.nyu.cs.javagit.api;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
@@ -16,6 +16,7 @@ import edu.nyu.cs.javagit.api.commands.GitRm;
 import edu.nyu.cs.javagit.api.commands.GitRmResponse;
 import edu.nyu.cs.javagit.api.commands.GitStatus;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * <code>GitFileSystemObject</code> provides some implementation shared by files and directories
@@ -29,13 +30,15 @@ public abstract class GitFileSystemObject {
    */
 
   public static enum Status {
-    // untracked
+    // untracked (created but not added to the repository)
     UNTRACKED,
     // new, waiting to commit
     NEW_TO_COMMIT,
+    // in repository and deleted locally
+    DELETED,
     // deleted, waiting to commit
     DELETED_TO_COMMIT,
-    // changed, but not updated
+    // changed locally, but not updated
     MODIFIED,
     // changed and added to the index
     MODIFIED_TO_COMMIT,
@@ -50,15 +53,44 @@ public abstract class GitFileSystemObject {
    * The constructor.
    * 
    * @param file
-   *          underlying java.io.File object
-   * @param dotGit
-   *          The object representing .git directory of the repository
+   *          underlying <code>java.io.File</code> object
    */
-  public GitFileSystemObject(File file, DotGit dotGit) {
-    this.dotGit = dotGit;
+  public GitFileSystemObject(File file) throws JavaGitException {
     this.file = file;
+
+    //search for .git up the directory tree
+    boolean found = false;
+    File currentParent = file;
+    while(currentParent != null) {
+      if(DotGit.existsInstance(currentParent)) {
+        dotGit = DotGit.getInstance(currentParent);
+        found = true;
+        break;
+      }
+      else {
+        currentParent = currentParent.getParentFile();
+      }
+    }
+    
+    //TODO(ma1683): pick proper code
+    if(!found) {
+      String errorMessage = file.getPath() + " is not part of any git repository";
+      throw new JavaGitException(999, errorMessage);
+    }
   }
 
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof GitFileSystemObject)) {
+      return false;
+    }
+
+    GitFileSystemObject gitObj = (GitFileSystemObject) obj;
+    return CheckUtilities.checkObjectsEqual(gitObj.getFile(), file);
+  }
+
+  
   /**
    * Gets the name of the file system object
    * 
@@ -69,12 +101,34 @@ public abstract class GitFileSystemObject {
   }
 
   /**
-   * Gets the underlying java.io.File object
+   * Gets the underlying <code>java.io.File</code> object
    * 
-   * @return java.io.File object
+   * @return <code>java.io.File</code> object
    */
   public File getFile() {
     return file;
+  }
+
+  /**
+   * Gets parent directory of this <code>GitFileSystemObject</code> object
+   * 
+   * @return parent directory
+   */
+  public GitDirectory getParent() {
+    if(file.getParentFile() == null) {
+      return null;
+    }
+    
+    GitDirectory parent;
+    try {
+      parent = new GitDirectory(file.getParentFile());
+    }
+    catch(JavaGitException e) {
+      //no valid parent
+      return null;
+    }
+    
+    return parent;
   }
 
   /**
@@ -86,7 +140,7 @@ public abstract class GitFileSystemObject {
     GitAdd gitAdd = new GitAdd();
 
     // create a list of filenames and add yourself to it
-    List<String> list = new Vector<String>();
+    List<String> list = new ArrayList<String>();
     list.add(file.getPath());
 
     // run git-add command
@@ -106,7 +160,7 @@ public abstract class GitFileSystemObject {
     add();
 
     // create a list of filenames and add yourself to it
-    List<File> list = new Vector<File>();
+    List<File> list = new ArrayList<File>();
     list.add(file);
 
     GitCommit gitCommit = new GitCommit();
@@ -189,66 +243,6 @@ public abstract class GitFileSystemObject {
   public List<Commit> getLog() throws JavaGitException {
     // GitLog.log(path);
     return null;
-  }
-
-  /**
-   * Show object's status in the working directory
-   * 
-   * @return status (untracked, changed but not updated, etc)
-   */
-  public Status getStatus() throws IOException, JavaGitException {
-    GitStatus gitStatus = new GitStatus();
-    // run git-status command
-    GitStatusResponse response = gitStatus.status(dotGit.getPath(), null, file);
-
-    String relativePath = getRelativePath();
-
-    if (response.getDeletedFilesToCommitSize() > 0) {
-      if (relativePath.equals(response.getFileFromDeletedFilesToCommit(0))) {
-        return Status.DELETED_TO_COMMIT;
-      }
-    }
-
-    if (response.getModifiedFilesNotUpdatedSize() > 0) {
-      if (relativePath.equals(response.getFileFromModifiedFilesNotUpdated(0))) {
-        return Status.MODIFIED;
-      }
-    }
-
-    if (response.getModifiedFilesToCommitSize() > 0) {
-      if (relativePath.equals(response.getFileFromModifiedFilesToCommit(0))) {
-        return Status.MODIFIED_TO_COMMIT;
-      }
-    }
-
-    if (response.getNewFilesToCommitSize() > 0) {
-      if (relativePath.equals(response.getFileFromNewFilesToCommit(0))) {
-        return Status.NEW_TO_COMMIT;
-      }
-    }
-
-    if (response.getUntrackedFilesSize() > 0) {
-      if (relativePath.equals(response.getFileFromUntrackedFiles(0))) {
-        return Status.UNTRACKED;
-      }
-    }
-
-    return Status.IN_REPOSITORY;
-  }
-
-  /**
-   * Gets the relative path; for git-status use only
-   * 
-   * @return relative path
-   */
-  private String getRelativePath() {
-    String path = file.getPath();
-    String gitPath = dotGit.getPath() + File.separator;
-    if (!path.startsWith(gitPath)) {
-      return null;
-    }
-
-    return path.substring(gitPath.length());
   }
 
 }

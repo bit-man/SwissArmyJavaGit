@@ -3,7 +3,6 @@ package edu.nyu.cs.javagit.api;
 /**
  * <code>MergeOpions</code> represents merge options
  * 
- * TODO: Build out the class
  */
 public class MergeOptions {
   private final String message;
