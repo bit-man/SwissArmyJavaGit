@@ -1,11 +1,15 @@
 package edu.nyu.cs.javagit.api;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
+import edu.nyu.cs.javagit.api.commands.GitBranch;
+import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
 
 /**
  * The <code>DotGit</code> represents the .git directory.
@@ -137,10 +141,9 @@ public final class DotGit {
    * 
    * @return The new branch
    */
-  public Branch createBranch(String name) {
+  public Ref createBranch(String name) {
     // TODO (ma1683): Implement this method
-    // GitBranch.branch();
-    return new Branch(name);
+    return null;
   }
 
   /**
@@ -149,10 +152,21 @@ public final class DotGit {
    * @param branch
    *          The branch to delete
    */
-  public void deleteBranch(Branch branch) {
+  public void deleteBranch(Ref branch) {
     // TODO (ma1683): Implement this method
     // GitBranch.branch(-d);
     branch = null;
+  }
+
+  /**
+   * Gets a list of the branches in the repository.
+   * 
+   * @return The branches in the repository.
+   */
+  public Iterator<Ref> getBranches() throws IOException, JavaGitException {
+    GitBranch gitBranch = new GitBranch();
+    GitBranchResponse response = gitBranch.branch(path, null);
+    return response.getBranchListIterator();
   }
 
   @Override
@@ -164,18 +178,7 @@ public final class DotGit {
     DotGit dotGit = (DotGit) obj;
     return CheckUtilities.checkObjectsEqual(canonicalPath, dotGit.canonicalPath);
   }
-
-  /**
-   * Gets a list of the branches in the repository.
-   * 
-   * @return The branches in the repository.
-   */
-  public List<Branch> getBranches() {
-    // TODO (ma1683): Implement this method
-    // return GitBranch.branch();
-    return null;
-  }
-
+  
   /**
    * Gets the repository path represented by this repository object.
    * 

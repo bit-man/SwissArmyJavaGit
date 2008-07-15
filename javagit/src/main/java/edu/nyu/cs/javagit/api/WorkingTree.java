@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
+import edu.nyu.cs.javagit.api.commands.GitCheckout;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
@@ -122,16 +123,6 @@ public final class WorkingTree {
    */
   public GitDirectory addDirectory(String dir) throws JavaGitException {
     return new GitDirectory(new File(dir));
-  }
-
-  /**
-   * Checks out some earlier version of the repository
-   * 
-   * @param sha1
-   *          Git commit id
-   */
-  public void checkout(String sha1) {
-    // TODO (ma1683): Implement this method
   }
 
   /**
@@ -257,11 +248,12 @@ public final class WorkingTree {
   /**
    * Switches to a new branch
    * 
-   * @param branch
-   *          Git branch to switch to
+   * @param ref
+   *          Git branch/sha1 to switch to
    */
-  public void setBranch(Branch branch) {
-    // GitCheckout.checkout(branch.getBranchName());
+  public void checkout(Ref ref) throws IOException, JavaGitException {
+    GitCheckout gitCheckout = new GitCheckout();
+    gitCheckout.checkout(path, null, ref.getName());
     /*
      * TODO (rs2705): Figure out why this function is setting this.path. When does the WorkingTree
      * path change?

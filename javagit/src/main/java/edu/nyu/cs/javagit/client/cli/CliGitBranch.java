@@ -219,12 +219,15 @@ public class CliGitBranch implements IGitBranch {
         else {
           response.setResponseType(responseType.BRANCH_LIST);
           int indexOfSpace = line.indexOf(" ", 2);
-          int lastIndexOfSpace = line.lastIndexOf(" ");   
+          if(indexOfSpace < 0) {
+            indexOfSpace = line.length();
+          }
+          int lastIndexOfSpace = line.lastIndexOf(" ");
           response.addIntoBranchList(Ref.createBranchRef(line.substring(2, indexOfSpace)));
           if (line.startsWith("*")) {
             response.setCurrentBranch(Ref.createBranchRef(line.substring(2, indexOfSpace)));
           }
-          if(indexOfSpace != lastIndexOfSpace) {
+          if((indexOfSpace != lastIndexOfSpace) && (indexOfSpace != line.length())) {
             int indexOfNextSpace = line.indexOf(" ", indexOfSpace);
             String sha = line.substring(indexOfSpace, indexOfNextSpace);
             int noOfSpacesToBeTruncated = sha.lastIndexOf(" ");
