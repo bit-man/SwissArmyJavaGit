@@ -89,7 +89,9 @@ public class CliGitBranch implements IGitBranch {
   protected List<String> buildCommand(GitBranchOptions options, Ref arg1, Ref arg2, 
       List<Ref> branchList) {
     List<String> cmd = new ArrayList<String>();
-    cmd.add("git-branch");
+
+    cmd.add("git");
+    cmd.add("branch");
 
     if (null != options) {
       String commit = options.getOptContains();

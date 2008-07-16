@@ -77,10 +77,14 @@ public class CliGitStatus implements IGitStatus {
    */
   private List<String> buildCommandLine(GitStatusOptions options, List<File> paths) {
     List<String> argsList = new ArrayList<String>();
-    argsList.add("git-status");
+
+    argsList.add("git");
+    argsList.add("status");
+    
     if ( options != null ) {
       setOptions( argsList, options );
     }
+    
     if ( paths != null ) {
       if((options != null) && options.isOptCheckInputFileOnly() && (paths.size() == 1)) {
         inputFile = paths.get(0);
@@ -89,6 +93,7 @@ public class CliGitStatus implements IGitStatus {
         setPaths( argsList, paths);
       }
     }
+    
     return argsList;
   }
   

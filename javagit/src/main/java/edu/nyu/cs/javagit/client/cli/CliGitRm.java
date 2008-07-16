@@ -94,7 +94,10 @@ public class CliGitRm implements IGitRm {
    */
   private List<String> buildCommandLine(GitRmOptions options, File path, List<File> paths) {
     List<String> cmdline = new ArrayList<String>();
-    cmdline.add("git-rm");
+
+    cmdline.add("git");
+    cmdline.add("rm");
+
     if (null != options) {
       if (options.isOptCached()) {
         cmdline.add("--cached");

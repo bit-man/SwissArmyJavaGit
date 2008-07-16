@@ -78,7 +78,10 @@ public class CliGitCheckout implements IGitCheckout {
 
   private List<String> buildCommand(List<File> paths) {
     List<String> command = new ArrayList<String>();
-    command.add("git-checkout");
+
+    command.add("git");
+    command.add("checkout");
+
     for (File file : paths) {
       command.add(file.getName());
     }

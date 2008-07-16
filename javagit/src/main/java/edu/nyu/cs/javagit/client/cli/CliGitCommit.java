@@ -101,7 +101,8 @@ public class CliGitCommit implements IGitCommit {
     // TODO (jhl388): Add a unit test for this method (CliGitCommit.buildCommand()).
 
     List<String> cmd = new ArrayList<String>();
-    cmd.add("git-commit");
+    cmd.add("git");
+    cmd.add("commit");
 
     if (null != options) {
       if (options.isOptAll()) {

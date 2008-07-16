@@ -65,7 +65,8 @@ public class CliGitReset implements IGitReset {
     // TODO (jhl388): Add a unit test for this method.
 
     List<String> cmd = new ArrayList<String>();
-    cmd.add("git-reset");
+    cmd.add("git");
+    cmd.add("reset");
 
     if (null != options) {
       if (null == paths) {

@@ -95,7 +95,10 @@ public class CliGitMv implements IGitMv {
    */
   protected List<String> buildCommand(GitMvOptions options, String source, String destination) {
     List<String> cmd = new ArrayList<String>();
-    cmd.add("git-mv");
+
+    cmd.add("git");
+    cmd.add("mv");
+
     if (null != options) {
       if (options.isOptF()) {
         cmd.add("-f");
