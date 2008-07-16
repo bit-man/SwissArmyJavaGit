@@ -112,6 +112,7 @@ public class GitReset {
     CheckUtilities.checkNullArgument(repository, "repository");
     CheckUtilities.checkNullArgument(commitName, "options");
     CheckUtilities.checkNullListArgument(paths, "paths");
+    // TODO (jhl388): Check that commitName is a correct type.
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitReset gitReset = client.getGitResetInstance();
