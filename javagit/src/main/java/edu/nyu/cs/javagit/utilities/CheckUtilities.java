@@ -296,29 +296,32 @@ public class CheckUtilities {
   }
 
   /**
-   * Checks a <code>List</code> argument to make sure that all the Refs in the list are of same
-   * refType type. If there is a mismatch <code>IllegalArgumentException</code> is thrown.
+   * Checks a <code>List</code> argument to make sure that all the <code>Ref</code> in the list 
+   * are of same <code>refType</code> type. If there is a mismatch 
+   * <code>IllegalArgumentException</code> is thrown.
    * 
    * @param list
-   *          The list to check.
+   *          The <code>List</code> to check.
+   * @param type
+   *          The <code>refType</code> check against.
    * @param variableName
    *          The name of the variable being checked; for use in exception messages.
    */
   public static void validateListRefType(List<Ref> list, Ref.RefType type, String variableName) {
     // TODO (ns1344): Write a unit test for this method.
-    for (int i = 0; i < list.size(); i++) {
-      validateArgumentRefType(list.get(i), type, variableName);
+    for (Ref ref : list) {
+      validateArgumentRefType(ref, type, variableName);
     }
   }
 
   /**
-   * Checks a <code>Ref</code> argument to make sure that it is of given refType type. If not
-   * <code>IllegalArgumentException</code> is thrown.
+   * Checks a <code>Ref</code> argument to make sure that it is of given <code>refType</code> type.
+   * If not <code>IllegalArgumentException</code> is thrown.
    * 
-   * @param Ref
+   * @param name
    *          The argument to check.
    * @param type
-   *          The refType to check against.
+   *          The <code>refType</code> to check against.
    * @param variableName
    *          The name of the variable being checked; for use in exception messages.
    */

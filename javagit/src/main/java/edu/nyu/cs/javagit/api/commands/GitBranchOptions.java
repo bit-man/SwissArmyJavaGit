@@ -1,503 +1,565 @@
 package edu.nyu.cs.javagit.api.commands;
 
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
 /**
  * A class to manage passing branch options to the <code>GitBranch</code> command.
  */
 public class GitBranchOptions {
-  
-  //Enum class for optionType. There are 4 categories.
-  public static enum optionType {
-    NO_ARG, BRANCHNAME_STARTPOINT, BRANCHLIST, OLDBRANCH_NEWBRANCH
-  }
-  
   /*
    * Generic Options.
    */
+  
   //The -v or --verbose option
   private boolean optVerbose = false;
-  
+
   //The --track option
   private boolean optTrack = false;
-  
+
   //The --no-track option. Ignore the branch.autosetupmerge configuration variable.
   private boolean optNoTrack = false;
-  
+
   //The color option. Color branches to highlight current, local, and remote branches
   private boolean optColor = false;
-  
-  /**The --no-color option. Turn off branch colors, even when the configuration file gives the
+
+  /*The --no-color option. Turn off branch colors, even when the configuration file gives the
    *default to color output.
    */
   private boolean optNoColor = false;
-  
+
   //The -r (remote-tracking) option
   private boolean optR = false;
-  
+
   //The --contains option. Prints only branches that contain the commit
-  private String optContains;
-  
+  private Ref optContains;
+
   //The --abbrev option. --abbrev to set with default <n>.
   private boolean optAbbrev = false;
+
+  //The default abbrev length.
+  public static final int DEFAULT_ABBREV_LEN = 7;
   
   //The --abbrev option. --abbrev [<n>]   use <n> digits to display SHA-1s
-  private String optAbbrevVal;
-  
-  //The -no-abbrev option. Displays the full sha1s in output listing rather than abbreviating them.
+  private int optAbbrevLen = DEFAULT_ABBREV_LEN; 
+
+  //The -no-abbrev option. Displays the full SHA1s in output listing rather than abbreviating them.
   private boolean optNoAbbrev = false;
-  
+
   /*
    * Non-generic options.
    */
   //The -a option. List both remote-tracking and local branches.
   private boolean optA = false;
-  
-  //The -d option. delete fully merged branch.
-  private boolean optSmallD = false;
-  
-  //The -D option. Delete branch (even if not merged).
-  private boolean optBigD = false;
-  
-  //The -m option. move/rename a branch and its reflog.
-  private boolean optSmallM = false;
-  
-  //The -M option. move/rename a branch, even if target exists.
-  private boolean optBigM = false;
-  
-  //The -l option. create the branch's reflog.
+
+  //The -l option. Create the branch's reflog.
   private boolean optL = false;
-  
-  //The -f option. force creation (when already exists).
+
+  //The -f option. Force creation (when already exists).
   private boolean optF = false;
-  
-  //The --merged option. list only branches merged with HEAD.
+
+  //The --merged option. List only branches merged with HEAD.
   private boolean optMerged = false;
-  
-  //The --no-merged option. list only branches not merged with HEAD.
+
+  //The --no-merged option. List only branches not merged with HEAD.
   private boolean optNoMerged = false;
   
+  //The -d option. Deletes a branch or the branch list.
+  private boolean optDLower = false;
   
-  //Option class. One of the four enum values.
-  private optionType optType;
+  //The -D option. Force deletes a branch or the branch list.
+  private boolean optDUpper = false;
+  
+  //The -m option. Moves old branch to new branch.
+  private boolean optMLower = false;
+
+  //The -M option. Moves old branch to new branch.
+  private boolean optMUpper = false;
   
   /**
-   * @return the optType
-   */
-  public optionType getOptType() {
-    return optType;
-  }
-
-  /**
-   * @param optType the optType to set
-   */
-  public void setOptType(optionType optType) {
-    this.optType = optType;
-  }
-
-  /**
-   * @return the optVerbose
+   * Indicates if the verbose option should be used.
+   *
+   * @return True if the verbose option should be used, false otherwise. 
    */
   public boolean isOptVerbose() {
     return optVerbose;
   }
 
   /**
-   * @param optVerbose the optVerbose to set
+   * Checks whether the verbose option should be set and sets it. 
+   *
+   * @param optVerbose
+   *        True if the verbose option should be used, false otherwise. 
    */
   public void setOptVerbose(boolean optVerbose) {
-    if ((optionType.NO_ARG == optType) && optVerbose) {
-      this.optVerbose = optVerbose;
-    } else if (optVerbose) {
+    checkCanSetNoArgOption("--verbose");
+    if ((false == optVerbose) && (optAbbrev || optNoAbbrev)) {
       throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --verbose should be used when there are no arguments.");
-    } else {
-      this.optVerbose = optVerbose;
+          + "  --no-abbrev or --abbrev can only be used with --verbose.");
     }
+    this.optVerbose = optVerbose;
   }
 
   /**
-   * @return the optTrack
-   */
-  public boolean isOptTrack() {
-    return optTrack;
-  }
-
-  /**
-   * @param optTrack the optTrack to set
-   */
-  public void setOptTrack(boolean optTrack) {
-    if ((optionType.BRANCHNAME_STARTPOINT == optType) && optTrack) {
-      this.optTrack = optTrack;
-      this.optNoTrack = false;
-    } else if (optTrack) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --track should be used when there are arguments, <branchname> and optional " +
-          		"<starpoint>");
-    } else {
-      this.optTrack = optTrack;
-    }
-  }
-
-  /**
-   * @return the optNoTrack
-   */
-  public boolean isOptNoTrack() {
-    return optNoTrack;
-  }
-
-  /**
-   * @param optNoTrack the optNoTrack to set
-   */
-  public void setOptNoTrack(boolean optNoTrack) {
-    if ((optionType.BRANCHNAME_STARTPOINT == optType) && optNoTrack) {
-      this.optNoTrack = optNoTrack;
-      this.optTrack = false;
-    } else if (optNoTrack) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --no-track should be used when there are arguments, <branchname> and optional " +
-              "<starpoint>");
-    } else {
-      this.optNoTrack = optNoTrack;
-    }
-  }
-
-  /**
-   * @return the optColor
-   */
-  public boolean isOptColor() {
-    return optColor;
-  }
-
-  /**
-   * @param optColor the optColor to set
-   */
-  public void setOptColor(boolean optColor) {
-    if ((optionType.NO_ARG == optType) && optColor) {
-      this.optColor = optColor;
-      this.optNoColor = false;
-    } else if (optColor) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --color should be used when there are no arguments");
-    } else {
-      this.optColor = optColor;
-    }
-  }
-
-  /**
-   * @return the optNoColor
-   */
-  public boolean isOptNoColor() {
-    return optNoColor;
-  }
-
-  /**
-   * @param optNoColor the optNoColor to set
-   */
-  public void setOptNoColor(boolean optNoColor) {
-    if ((optionType.NO_ARG == optType) && optNoColor) {
-      this.optNoColor = optNoColor;
-      this.optColor = false;
-    } else if (optNoColor) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --no-color should be used when there are no arguments");
-    } else {
-      this.optNoColor = optNoColor;
-    }
-  }
-
-  /**
-   * @return the optR
-   */
-  public boolean isOptR() {
-    return optR;
-  }
-
-  /**
-   * @param optR the optR to set
-   */
-  public void setOptR(boolean optR) {
-    if (((optionType.NO_ARG == optType) || (optionType.BRANCHLIST == optType)) && optR) {
-      this.optR = optR;
-      this.optA = false;
-    } else if (optR) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  -r should be used when there are no arguments or list of branches.");
-    } else {
-      this.optR = optR;
-    }
-  }
-
-  /**
-   * @return the optContains
-   */
-  public String getOptContains() {
-    return optContains;
-  }
-
-  /**
-   * @param optContains the optContains to set
-   */
-  public void setOptContains(String commit) {
-    if ((optionType.NO_ARG == optType) && (null != commit)) {
-      this.optContains = commit;
-    } else if (null != commit) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  --contains should be used when there are no arguments.");
-    } else {
-      this.optContains = commit;
-    }
-  }
-
-  /**
-   * @return the optAbbrev
+   * Indicates if the --abbrev option should be used.
+   *
+   * @return True if the --abbrev option should be used, false otherwise. 
    */
   public boolean isOptAbbrev() {
     return optAbbrev;
   }
 
   /**
-   * @param optAbbrev the optAbbrev to set
+   * Checks whether the --abbrev option should be set and sets it. 
+   *
+   * @param optAbbrev True if the --abbrev option should be used, false otherwise.
    */
   public void setOptAbbrev(boolean optAbbrev) {
-    if (optAbbrev) {
-      if (optVerbose) {
-        this.optAbbrev = optAbbrev;
-        this.optNoAbbrev = false;
+    if (optVerbose) {
+      if (optAbbrev && optNoAbbrev) {
+        throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+            + "  --abbrev cannot be used with --no-abbrev.");
       }
-    }
-    else {
       this.optAbbrev = optAbbrev;
     }
   }
 
   /**
-   * @return the optAbbrev
+   * Indicates if the length other than default length should be used for --abbrev option.
+   *
+   * @return An integer value for abbrev length if the --abbrev option should be used.
    */
-  public String getOptAbbrevVal() {
-    return optAbbrevVal;
+  public int getOptAbbrevLen() {
+    return optAbbrevLen;
   }
 
   /**
-   * @param optAbbrev the optAbbrev to set
+   * Sets the length to be used for --abbrev option to a value other than default length.
+   * 
+   * @param optAbbrevLen An integer value for abbrev length if the --abbrev option should be used.
    */
-  public void setOptAbbrevVal(String optAbbrevVal) {
+  public void setOptAbbrevLen(int optAbbrevLen) {
     if (isOptAbbrev()) {
-      this.optAbbrevVal = optAbbrevVal;
-      this.optNoAbbrev = false;
+      this.optAbbrevLen = optAbbrevLen;
     }
   }
 
   /**
-   * @return the optNoAbbrev
+   * Indicates if the --no-abbrev option should be used.
+   *
+   * @return True if the --no-abbrev option should be used, false otherwise. 
    */
   public boolean isOptNoAbbrev() {
     return optNoAbbrev;
   }
 
   /**
-   * @param optNoAbbrev the optNoAbbrev to set
+   * Checks whether the --no-abbrev option should be set and sets it. 
+   *
+   * @param optNoAbbrev True if the --no-abbrev option should be used, false otherwise.
    */
   public void setOptNoAbbrev(boolean optNoAbbrev) {
-    if (optNoAbbrev) {
-      if (optVerbose) {
-        this.optNoAbbrev = optNoAbbrev;
-        this.optAbbrev = false;
+    if (optVerbose) {
+      if (optAbbrev && optNoAbbrev) {
+        throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+            + "  --no-abbrev cannot be used with --abbrev.");
       }
-    }
-    else {
       this.optNoAbbrev = optNoAbbrev;
     }
   }
+  
+  /**
+   * Indicates if the --track option should be used.
+   *
+   * @return True if the --track option should be used, false otherwise. 
+   */
+  public boolean isOptTrack() {
+    return optTrack;
+  }
 
   /**
-   * @return the optA
+   * Checks whether the --track option should be set and sets it. 
+   *
+   * @param optTrack True if the --track option should be used, false otherwise.
+   */
+  public void setOptTrack(boolean optTrack) {
+    checkCanSetCreateOption("--track");
+    if (optNoTrack && optTrack) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --track cannot be used with --no-track.");
+    } 
+    this.optTrack = optTrack;
+  }
+
+  /**
+   * Indicates if the --no-track option should be used.
+   *
+   * @return True if the --no-track option should be used, false otherwise. 
+   */
+  public boolean isOptNoTrack() {
+    return optNoTrack;
+  }
+
+  /**
+   * Checks whether the --no-track option should be set and sets it. 
+   *
+   * @param optNoTrack True if the --no-track option should be used, false otherwise.
+   */
+  public void setOptNoTrack(boolean optNoTrack) {
+    checkCanSetNoArgOption("--no-track");
+    if (optNoTrack && optTrack) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --no-track cannot be used with --track.");
+    } 
+    this.optNoTrack = optNoTrack;
+  }
+
+  /**
+   * Indicates if the --color option should be used.
+   *
+   * @return True if the --color option should be used, false otherwise. 
+   */
+  public boolean isOptColor() {
+    return optColor;
+  }
+
+  /**
+   * Checks whether the --color option should be set and sets it. 
+   *
+   * @param optColor True if the --color option should be used, false otherwise.
+   */
+  public void setOptColor(boolean optColor) {
+    checkCanSetNoArgOption("--color");
+    if (optNoColor && optColor) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --color cannot be used with --no-color.");
+    } 
+    this.optColor = optColor;
+  }
+
+  /**
+   * Indicates if the --no-color option should be used.
+   *
+   * @return True if the --no-color option should be used, false otherwise. 
+   */
+  public boolean isOptNoColor() {
+    return optNoColor;
+  }
+
+  /**
+   * Checks whether the --no-color option should be set and sets it. 
+   *
+   * @param optNoColor True if the --no-color option should be used, false otherwise.
+   */
+  public void setOptNoColor(boolean optNoColor) {
+    checkCanSetNoArgOption("--no-color");
+    if (optNoColor && optColor) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --no-color cannot be used with --color.");
+    } 
+    this.optNoColor = optNoColor;
+  }
+
+  /**
+   * Indicates if the -r option should be used.
+   *
+   * @return True if the -r option should be used, false otherwise. 
+   */
+  public boolean isOptR() {
+    return optR;
+  }
+
+  /**
+   * Checks whether the -r option should be set and sets it. 
+   *
+   * @param optR True if the -r option should be used, false otherwise.
+   */
+  public void setOptR(boolean optR) {
+    if (true == optR) {
+      checkCanSetNoArgOption("-r");
+    }
+    this.optR = optR;
+  }
+
+  /**
+   * Indicates if the --contains option should be used. This is the commit value for --contains.
+   *
+   * @return Ref 
+   *          Ref if the verbose option should be used, null otherwise. 
+   */
+  public Ref getOptContains() {
+    return optContains;
+  }
+
+  /**
+   * Checks if the --contains option should be used and sets it to the commit Ref.
+   * 
+   * @param optContains 
+   *          Commit Ref if the --contains option should be used, null otherwise.
+   */
+  public void setOptContains(Ref commit) {
+    if (null != commit) {
+      checkCanSetNoArgOption("--contains");
+    }
+    this.optContains = commit;
+  }
+
+  /**
+   * Indicates if the -a option should be used.
+   *
+   * @return True if the -a option should be used, false otherwise. 
    */
   public boolean isOptA() {
     return optA;
   }
 
   /**
-   * @param optA the optA to set
+   * Checks whether the -a option should be set and sets it. 
+   *
+   * @param optA True if the -a option should be used, false otherwise.
    */
   public void setOptA(boolean optA) {
-    if ((optionType.NO_ARG == optType) && optA) {
-      this.optA = optA;
-      this.optR = false;
-    } else if (optA) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  -a should be used when there are no arguments");
-    } else {
-      this.optA = optA;
-    }
+    checkCanSetNoArgOption("-a");
+    this.optA = optA;
   }
 
   /**
-   * @return the optSmallD
-   */
-  public boolean isOptSmallD() {
-    return optSmallD;
-  }
-
-  /**
-   * @param optSmallD the optSmallD to set
-   */
-  public void setOptSmallD(boolean optSmallD) {
-    if ((optionType.BRANCHLIST == optType) && optSmallD) {
-      this.optSmallD = optSmallD;
-    } else if (optSmallD) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  -d should be used when there is a list of branches to be deleted.");
-    } else {
-      this.optSmallD = optSmallD;
-    }
-  }
-
-  /**
-   * @return the optBigD
-   */
-  public boolean isOptBigD() {
-    return optBigD;
-  }
-
-  /**
-   * @param optBigD the optBigD to set
-   */
-  public void setOptBigD(boolean optBigD) {
-    if ((optionType.BRANCHLIST == optType) && optBigD) {
-      this.optBigD = optBigD;
-    } else if (optBigD) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
-          + "  -D should be used when there is a list of branches to be deleted.");
-    } else {
-      this.optBigD = optBigD;
-    }
-  }
-
-  /**
-   * @return the optSmallM
-   */
-  public boolean isOptSmallM() {
-    return optSmallM;
-  }
-
-  /**
-   * @param optSmallM the optSmallM to set
-   */
-  public void setOptSmallM(boolean optSmallM) {
-    if ((optionType.OLDBRANCH_NEWBRANCH == optType) && optSmallM) {
-      this.optSmallM = optSmallM;
-    } else if (optSmallM) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  -m should be used when there is <oldbranch> <newbranch> in command");
-    } else {
-      this.optSmallM = optSmallM;
-    }
-  }
-
-  /**
-   * @return the optBigM
-   */
-  public boolean isOptBigM() {
-    return optBigM;
-  }
-
-  /**
-   * @param optBigM the optBigM to set
-   */
-  public void setOptBigM(boolean optBigM) {
-    if ((optionType.OLDBRANCH_NEWBRANCH == optType) && optBigM) {
-      this.optBigM = optBigM;
-    } else if (optBigM) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  -M should be used when there is <oldbranch> <newbranch> in command");
-    } else {
-      this.optBigM = optBigM;
-    }
-  }
-
-  /**
-   * @return the optL
+   * Indicates if the -l option should be used.
+   *
+   * @return True if the -l option should be used, false otherwise. 
    */
   public boolean isOptL() {
     return optL;
   }
 
   /**
-   * @param optL the optL to set
+   * Checks whether the -l option should be set and sets it. 
+   *
+   * @param optL True if the -l option should be used, false otherwise.
    */
   public void setOptL(boolean optL) {
-    if ((optionType.BRANCHNAME_STARTPOINT == optType) && optL) {
-      this.optL = optL;
-    } else if (optL) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  -l should be used when there is <branchname> [<startpoint>] in command");
-    } else {
-      this.optL = optL;
-    }
+    checkCanSetCreateOption("-l");
+    this.optL = optL;
   }
 
   /**
-   * @return the optF
+   * Indicates if the -f option should be used.
+   *
+   * @return True if the -f option should be used, false otherwise. 
    */
   public boolean isOptF() {
     return optF;
   }
 
   /**
-   * @param optF the optF to set
+   * Checks whether the -f option should be set and sets it. 
+   *
+   * @param optF True if the -f option should be used, false otherwise.
    */
   public void setOptF(boolean optF) {
-    if ((optionType.BRANCHNAME_STARTPOINT == optType) && optF) {
-      this.optF = optF;
-    } else if (optF) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  -f should be used when there is <branchname> [<startpoint>] in command");
-    } else {
-      this.optF = optF;
-    }
+    checkCanSetCreateOption("-f");
+    this.optF = optF;
   }
 
   /**
-   * @return the optMerged
+   * Indicates if the --merged option should be used.
+   *
+   * @return True if the --merged option should be used, false otherwise. 
    */
   public boolean isOptMerged() {
     return optMerged;
   }
 
   /**
-   * @param optMerged the optMerged to set
+   * Checks whether the --merged option should be set and sets it. 
+   *
+   * @param optMerged True if the --merged option should be used, false otherwise.
    */
   public void setOptMerged(boolean optMerged) {
-    if ((optionType.NO_ARG == optType) && optMerged) {
-      this.optMerged = optMerged;
-      this.optNoMerged = false;
-    } else if (optMerged) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  --merged should be used when there is no argument in command");
-    } else {
-      this.optMerged = optMerged;
-    }
+    checkCanSetNoArgOption("--merged");
+    if (optNoMerged && optMerged) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --merged cannot be used with --no-merged.");
+    } 
+    this.optMerged = optMerged;
   }
 
   /**
-   * @return the optNoMerged
+   * Indicates if the --no-merged option should be used.
+   *
+   * @return True if the --no-merged option should be used, false otherwise. 
    */
   public boolean isOptNoMerged() {
     return optNoMerged;
   }
 
   /**
-   * @param optNoMerged the optNoMerged to set
+   * Checks whether the --no-merged option should be set and sets it. 
+   *
+   * @param optNoMerged True if the --no-merged option should be used, false otherwise.
    */
   public void setOptNoMerged(boolean optNoMerged) {
-    if ((optionType.NO_ARG == optType) && optNoMerged) {
-      this.optNoMerged = optNoMerged;
-      this.optMerged = false;
-    } else if (optNoMerged) {
-      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000121")
-          + "  --no-merged should be used when there is no argument in command");
-    } else {
-      this.optNoMerged = optNoMerged;
+    checkCanSetNoArgOption("--no-merged");
+    if (optNoMerged && optMerged) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  --no-merged cannot be used with --merged.");
+    } 
+    this.optNoMerged = optNoMerged;
+  }
+  
+  /**
+   * Indicates if the -d option should be used.
+   *
+   * @return True if the -d option should be used, false otherwise. 
+   */
+  public boolean isOptDLower() {
+    return optDLower;
+  }
+
+  /**
+   * Checks whether the -d option should be set and sets it. 
+   *
+   * @param optDLower True if the -d option should be used, false otherwise.
+   */
+  public void setOptDLower(boolean optDLower) {
+    checkCanSetDeleteOption("-d");
+    if (optDLower && optDUpper) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  -d cannot be used with -D.");
+    } 
+    this.optDLower = optDLower;
+  }
+
+  /**
+   * Indicates if the -D option should be used.
+   *
+   * @return True if the -D option should be used, false otherwise. 
+   */
+  public boolean isOptDUpper() {
+    return optDUpper;
+  }
+
+  /**
+   * Checks whether the -D option should be set and sets it. 
+   *
+   * @param optDUpper True if the -D option should be used, false otherwise.
+   */
+  public void setOptDUpper(boolean optDUpper) {
+    checkCanSetDeleteOption("-D");
+    if (optDLower && optDUpper) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  -D cannot be used with -d.");
+    } 
+    this.optDUpper = optDUpper;
+  }
+
+  /**
+   * Indicates if the -m option should be used.
+   *
+   * @return True if the -m option should be used, false otherwise. 
+   */
+  public boolean isOptMLower() {
+    return optMLower;
+  }
+
+  /**
+   * Checks whether the -m option should be set and sets it. 
+   *
+   * @param optMLower True if the -m option should be used, false otherwise.
+   */
+  public void setOptMLower(boolean optMLower) {
+    checkCanSetRenameOption("-m");
+    if (optMLower && optMUpper) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  -m cannot be used with -M.");
+    } 
+    this.optMLower = optMLower;
+  }
+
+  /**
+   * Indicates if the -M option should be used.
+   *
+   * @return True if the -M option should be used, false otherwise. 
+   */
+  public boolean isOptMUpper() {
+    return optMUpper;
+  }
+
+  /**
+   * Checks whether the -M option should be set and sets it. 
+   *
+   * @param optMUpper True if the -M option should be used, false otherwise.
+   */
+  public void setOptMUpper(boolean optMUpper) {
+    checkCanSetRenameOption("-M");
+    if (optMLower && optMUpper) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + "  -M cannot be used with -m.");
+    } 
+    this.optMUpper = optMUpper;
+  }
+
+  /**
+   * Checks whether an option for displaying branches can be set. If not, throws an 
+   * <code>IllegalArgumentException</code>.
+   * 
+   * @param option
+   *        The name of the option being checked; for use in exception messages.
+   */
+  public void checkCanSetNoArgOption(String option) {
+    if (isOptTrack() || isOptNoTrack() || isOptL() || isOptF() || isOptDLower() || isOptDUpper()
+        || isOptMLower() || isOptMUpper()) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120")
+          + option + " should be used without arguments, to display branches");
+    } 
+  }
+  
+  /**
+   * Checks whether an option for creating a branch can be set. If not, throws an 
+   * <code>IllegalArgumentException</code>.
+   * 
+   * @param option
+   *        The name of the option being checked; for use in exception messages.
+   */
+  public void checkCanSetCreateOption(String option) {
+    if (isOptColor() || isOptNoColor() || isOptR() || isOptA() || isOptVerbose() ||
+        isOptMerged() || isOptNoMerged() || (null != getOptContains()) || isOptMLower() || 
+        isOptMUpper() || isOptDLower() || isOptDUpper()) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120") + option + 
+      " should be used with a branch name and optional start point, to create a branch");
     }
   }
-}
+  
+  /**
+   * Checks whether an option for deleting a branch or branch list can be set. If not, throws an 
+   * <code>IllegalArgumentException</code>.
+   * 
+   * @param option
+   *        The name of the option being checked; for use in exception messages.
+   */
+  public void checkCanSetDeleteOption(String option) {
+    if (isOptColor() || isOptNoColor() || isOptA() || isOptVerbose() || isOptMerged() || 
+        isOptNoMerged() || (null != getOptContains()) || isOptTrack() || isOptNoTrack() || 
+        isOptL() || isOptF() || isOptMLower() || isOptMUpper()) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120") + option + 
+      " should be used with branch(es), to delete the branch(es).");
+    }
+  }
+  
+  /**
+   * Checks whether an option for renaming a branch can be set. If not, throws an 
+   * <code>IllegalArgumentException</code>.
+   * 
+   * @param option
+   *        The name of the option being checked; for use in exception messages.
+   */
+  public void checkCanSetRenameOption(String option) {
+    if (isOptColor() || isOptNoColor() || isOptR() || isOptA() || isOptVerbose() ||
+        isOptMerged() || isOptNoMerged() || (null != getOptContains()) || isOptTrack() || 
+        isOptNoTrack() || isOptL() || isOptF() || isOptDLower() || isOptDUpper()) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000120") + option + 
+      " should be used with optional oldbranch and newbranch, to rename oldbranch/current branch" +
+      "to newbranch.");
+    }
+  }
+} 
