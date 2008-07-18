@@ -7,6 +7,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,11 +53,11 @@ public class TestGitBranch extends TestCase {
     commit.commit(repoDirectory, "Making a first test commit");
   }
 
-  /*
-   protected void tearDown() throws JavaGitException {
-   // delete repo dir
-   FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
-   }*/
+  @After
+  protected void tearDown() throws JavaGitException {
+    // delete repo dir
+    FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
+  }
 
   @Test
   public void testCreateBranch() throws IOException, JavaGitException {

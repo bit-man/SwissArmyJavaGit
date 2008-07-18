@@ -15,6 +15,7 @@ import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
 import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
 import edu.nyu.cs.javagit.api.commands.GitBranchResponse.BranchRecord;
 import edu.nyu.cs.javagit.api.commands.GitBranchResponse.responseType;
+import edu.nyu.cs.javagit.client.GitBranchResponseImpl;
 import edu.nyu.cs.javagit.client.IGitBranch;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
@@ -27,26 +28,26 @@ public class CliGitBranch implements IGitBranch {
     return branchProcess(repoPath, null, null, null, null);
   }
 
-  public GitBranchResponse branch(File repoPath, GitBranchOptions options) throws IOException,
+  public GitBranchResponseImpl branch(File repoPath, GitBranchOptions options) throws IOException,
       JavaGitException {
     return branchProcess(repoPath, options, null, null, null);
   }
 
-  public GitBranchResponse deleteBranch(File repoPath, boolean forceDelete, boolean remote,
+  public GitBranchResponseImpl deleteBranch(File repoPath, boolean forceDelete, boolean remote,
       Ref branchName) throws IOException, JavaGitException {
     GitBranchOptions options = new GitBranchOptions();
     setDeleteOptions(options, forceDelete, remote);
     return branchProcess(repoPath, options, branchName, null, null);
   }
 
-  public GitBranchResponse deleteBranches(File repoPath, boolean forceDelete, boolean remote,
+  public GitBranchResponseImpl deleteBranches(File repoPath, boolean forceDelete, boolean remote,
       List<Ref> branchList) throws IOException, JavaGitException {
     GitBranchOptions options = new GitBranchOptions();
     setDeleteOptions(options, forceDelete, remote);
     return branchProcess(repoPath, options, null, null, branchList);
   }
 
-  public GitBranchResponse renameBranch(File repoPath, boolean forceRename, Ref newName)
+  public GitBranchResponseImpl renameBranch(File repoPath, boolean forceRename, Ref newName)
       throws IOException, JavaGitException {
     GitBranchOptions options = new GitBranchOptions();
     if (forceRename) {
@@ -57,7 +58,7 @@ public class CliGitBranch implements IGitBranch {
     return branchProcess(repoPath, options, newName, null, null);
   }
 
-  public GitBranchResponse renameBranch(File repoPath, boolean forceRename, Ref oldName, Ref newName)
+  public GitBranchResponseImpl renameBranch(File repoPath, boolean forceRename, Ref oldName, Ref newName)
       throws IOException, JavaGitException {
     GitBranchOptions options = new GitBranchOptions();
     if (forceRename) {
@@ -68,22 +69,22 @@ public class CliGitBranch implements IGitBranch {
     return branchProcess(repoPath, options, oldName, newName, null);
   }
 
-  public GitBranchResponse createBranch(File repoPath, Ref branchName) throws IOException,
+  public GitBranchResponseImpl createBranch(File repoPath, Ref branchName) throws IOException,
       JavaGitException {
     return branchProcess(repoPath, null, branchName, null, null);
   }
 
-  public GitBranchResponse createBranch(File repoPath, GitBranchOptions options, Ref branchName)
+  public GitBranchResponseImpl createBranch(File repoPath, GitBranchOptions options, Ref branchName)
       throws IOException, JavaGitException {
     return branchProcess(repoPath, options, branchName, null, null);
   }
 
-  public GitBranchResponse createBranch(File repoPath, Ref branchName, Ref startPoint)
+  public GitBranchResponseImpl createBranch(File repoPath, Ref branchName, Ref startPoint)
       throws IOException, JavaGitException {
     return branchProcess(repoPath, null, branchName, startPoint, null);
   }
 
-  public GitBranchResponse createBranch(File repoPath, GitBranchOptions options, Ref branchName,
+  public GitBranchResponseImpl createBranch(File repoPath, GitBranchOptions options, Ref branchName,
       Ref startPoint) throws IOException, JavaGitException {
     return branchProcess(repoPath, options, branchName, startPoint, null);
   }
@@ -115,13 +116,13 @@ public class CliGitBranch implements IGitBranch {
    * @throws JavaGitException
    *           Thrown when there is an error executing git-branch.
    */
-  public GitBranchResponse branchProcess(File repoPath, GitBranchOptions options, Ref arg1,
+  public GitBranchResponseImpl branchProcess(File repoPath, GitBranchOptions options, Ref arg1,
       Ref arg2, List<Ref> branchList) throws IOException, JavaGitException {
     CheckUtilities.checkNullArgument(repoPath, "repository path");
     List<String> commandLine = buildCommand(options, arg1, arg2, branchList);
     GitBranchParser parser = new GitBranchParser();
 
-    return (GitBranchResponse) ProcessUtilities.runCommand(repoPath.getAbsolutePath(), commandLine,
+    return (GitBranchResponseImpl) ProcessUtilities.runCommand(repoPath.getAbsolutePath(), commandLine,
         parser);
   }
 
@@ -253,7 +254,7 @@ public class CliGitBranch implements IGitBranch {
    */
   public class GitBranchParser implements IParser {
     // The response object for a branch operation.
-    private GitBranchResponse response;
+    private GitBranchResponseImpl response;
 
     // While handling the error cases this buffer will have the error messages.
     private StringBuffer errorMessage = null;
@@ -280,7 +281,7 @@ public class CliGitBranch implements IGitBranch {
         errorMessage.append("line1=[" + line + "]");
       } else {
         if (null == response) {
-          response = new GitBranchResponse();
+          response = new GitBranchResponseImpl();
         }
 
         if (line.startsWith("Deleted branch")) {
@@ -307,24 +308,26 @@ public class CliGitBranch implements IGitBranch {
      */
     public void handleBranchDisplay(String line) {
       String nextWord;
+      boolean isCurrentBranch = false;
       StringTokenizer st = new StringTokenizer(line);
 
       nextWord = st.nextToken();
       response.setResponseType(responseType.BRANCH_LIST);
 
       if ('*' == nextWord.charAt(0)) {
+        isCurrentBranch = true;
         nextWord = st.nextToken();
         response.setCurrentBranch(Ref.createBranchRef(nextWord));
       }
       response.addIntoBranchList(Ref.createBranchRef(nextWord));
 
       if (st.hasMoreTokens()) {
-        BranchRecord record = new BranchRecord();
-        record.setBranch(Ref.createBranchRef(nextWord));
+        Ref branch = Ref.createBranchRef(nextWord);
         nextWord = st.nextToken();
-        record.setSha1(Ref.createBranchRef(nextWord));
+        Ref sha1 = Ref.createSha1Ref(nextWord);
         int indexOfSha = line.indexOf(nextWord);
-        record.setComment(line.substring(indexOfSha+nextWord.length()+1));
+        String comment = line.substring(indexOfSha+nextWord.length()+1);
+        BranchRecord record = new BranchRecord(branch, sha1, comment, isCurrentBranch);
         response.addIntoListOfBranchRecord(record);
       }
     }
