@@ -1,11 +1,14 @@
 package edu.nyu.cs.javagit.api;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import edu.nyu.cs.javagit.api.commands.GitAdd;
+import edu.nyu.cs.javagit.api.commands.GitAddOptions;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 import edu.nyu.cs.javagit.api.commands.GitCheckout;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
@@ -43,11 +46,10 @@ public final class WorkingTree {
   private WorkingTree(File path, String canonicalPath) {
     this.path = path;
     this.canonicalPath = canonicalPath;
-    //TODO(ma1683): temporary solution
+    // TODO(ma1683): temporary solution
     try {
       rootDir = new GitDirectory(path);
-    }
-    catch(JavaGitException e) {
+    } catch (JavaGitException e) {
     }
   }
 
@@ -109,8 +111,9 @@ public final class WorkingTree {
    */
   public GitAddResponse add() throws IOException, JavaGitException {
     GitAdd gitAdd = new GitAdd();
-    String args[] = { "git-add" };
-    return gitAdd.add(path.getPath(), args);
+    List<File> paths = new ArrayList<File>();
+    GitAddOptions options = null;
+    return gitAdd.add(path, options, paths);
   }
 
   /**
@@ -178,7 +181,7 @@ public final class WorkingTree {
    * @return The currently checked-out branch of the working directory.
    */
   public Branch getCurrentBranch() {
- // TODO (ma1683): Implement this method
+    // TODO (ma1683): Implement this method
     return null;
   }
 
@@ -188,7 +191,7 @@ public final class WorkingTree {
    * @return List of commits for the working directory
    */
   public List<Commit> getLog() {
- // TODO (ma1683): Implement this method
+    // TODO (ma1683): Implement this method
     return null;
   }
 
@@ -233,7 +236,6 @@ public final class WorkingTree {
     return canonicalPath.hashCode();
   }
 
-
   /**
    * Reverts the specified git commit
    * 
@@ -253,7 +255,7 @@ public final class WorkingTree {
    */
   public void checkout(Ref ref) throws IOException, JavaGitException {
     GitCheckout gitCheckout = new GitCheckout();
-    gitCheckout.checkout(path, null, ref.getName());
+    gitCheckout.checkout(path, null, ref);
     /*
      * TODO (rs2705): Figure out why this function is setting this.path. When does the WorkingTree
      * path change?

@@ -1,67 +1,64 @@
 package edu.nyu.cs.javagit.client.cli.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.GitAddOptions;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 import edu.nyu.cs.javagit.client.cli.CliGitAdd;
 
-public class TestCliGitAdd {
+public class TestCliGitAdd extends TestCase {
 
   @Before
   public void setUp() throws Exception {
   }
 
   /**
-   * Test for NullPointerException
+   * Test for NullPointerException thrown if the repository path is null
    * 
    * @throws IOException
    */
-  @Test(expected = NullPointerException.class)
-  public void testGitAddNoFilesProvided() throws IOException {
-    CliGitAdd gitAdd = new CliGitAdd();
-    List<String> options = null;
-    List<String> fileNames = null;
-    gitAdd.add("/home/gsd216/osp2008/git", options, fileNames);
+  @Test
+  public void testGitAddNullRepositoryPath() throws IOException, JavaGitException {
+    try {
+      CliGitAdd gitAdd = new CliGitAdd();
+      GitAddOptions options = null;
+      List<File> files = null;
+      gitAdd.add(null, options, files);
+    } catch (NullPointerException e) {
+      return;
+    }
+    fail("Failed to throw NullPointerException");
   }
 
   /**
-   * Test for testing IOException
+   * Test for testing IOException when the given repository path does not exist. This is different
+   * <code>testGitAddNullRepositoryPath</code> where the repositoryPath is null.
    * 
    * @throws IOException
-   *           thrown if file paths or repository path provided is found or git command is not
-   *           found.
+   * 
+   * thrown if file paths or repository path provided is found or git command is not found.
    */
   @Test(expected = IOException.class)
-  public void testGitAddIOExceptionThrown() throws IOException {
-    CliGitAdd gitAdd = new CliGitAdd();
-    List<String> options = null;
-    List<String> fileNames = new ArrayList<String>();
-    fileNames.add("testFile");
-    gitAdd.add("/foo/tmp", options, fileNames);
-  }
-
-  /**
-   * Test for testing IllegalArgumentException
-   * 
-   * @throws IOException
-   *           thrown if file paths or repository path provided is found or git command is not
-   *           found.
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testGitAddIllegalArgumentRepositoryPath() throws IOException {
-    CliGitAdd gitAdd = new CliGitAdd();
-    List<String> options = null;
-    List<String> fileNames = new ArrayList<String>();
-    fileNames.add("testFile");
-    gitAdd.add("", options, fileNames);
+  public void testGitAddIOExceptionThrown() throws IOException, JavaGitException {
+    try {
+      CliGitAdd gitAdd = new CliGitAdd();
+      GitAddOptions options = null;
+      List<File> fileNames = new ArrayList<File>();
+      fileNames.add(new File("testFile"));
+      gitAdd.add(new File("repo/path/should/not/exist"), options, fileNames);
+    } catch (IOException e) {
+      return;
+    }
+    fail("IOException not thrown");
   }
 
   /**
@@ -76,10 +73,12 @@ public class TestCliGitAdd {
     parser.parseLine("add 'test-repository/testdir/foo'");
     GitAddResponse response = parser.getResponse();
     assertEquals("No of lines in output does not match", 2, response.getFileListSize());
-    assertEquals("File add to repository does not match", "'test-repository/eg9'", response.get(0));
-    assertEquals("File add to repository does not match", "'test-repository/testdir/foo'", response
-        .get(1));
-
+    assertEquals("File name does not match", "eg9", response.get(0).getName());
+    assertEquals("File path provided when adding does not match.", "test-repository/eg9", response
+        .get(0).toString());
+    assertEquals("File name does not match", "foo", response.get(1).getName());
+    assertEquals("File path provided when adding does not match.", "test-repository/testdir/foo",
+        response.get(1).toString());
   }
 
   /**
@@ -97,25 +96,9 @@ public class TestCliGitAdd {
     CliGitAdd.GitAddParser parser = gitAdd.new GitAddParser();
     parser.parseLine("fatal: pathspec 'test-repository/foobar001' did not match any files");
     GitAddResponse response = parser.getResponse();
-    assertTrue(response.inErrorState());
-    assertEquals(response.getError(),
+    assertTrue(response.containsError());
+    assertEquals(response.getError(0).error(),
         "fatal: pathspec 'test-repository/foobar001' did not match any files");
-  }
-
-  /**
-   * This test is for git-add command without verbose flag. If a file is add using git-add without
-   * '-v' option then it will get added without any output.
-   */
-  @Test
-  public void testGitAddParserAddValidFileNonVerbose() {
-    CliGitAdd gitAdd = new CliGitAdd();
-    CliGitAdd.GitAddParser parser = gitAdd.new GitAddParser();
-    parser.parseLine(null);
-    parser.parseLine("");
-    GitAddResponse response = parser.getResponse();
-    assertTrue(response.noOutput());
-    assertEquals("No options used on command line", response.getOptions().size(), 0);
-    assertEquals("File List size does not match", response.getFileListSize(), 0);
   }
 
 }

@@ -61,12 +61,13 @@ public class TestGitCommit extends TestCase {
 
   @Test
   public void testCommit() throws IOException, JavaGitException {
-    FileUtilities.createFile(repoDirectory, "fileA.txt", "Sameple Contents");
+    File testFile = FileUtilities.createFile(repoDirectory, "fileA.txt", "Sameple Contents");
 
     // Add a file to the repo
-    List<String> filesToAdd = new ArrayList<String>();
-    filesToAdd.add("fileA.txt");
-    add.add(repoDirectory.getAbsolutePath(), null, filesToAdd);
+    List<File> filesToAdd = new ArrayList<File>();
+    //filesToAdd.add(new File("fileA.txt"));
+    filesToAdd.add(testFile);
+    add.add(repoDirectory, null, filesToAdd);
 
     // Call commit
     commit.commit(repoDirectory, "Making a first test commit");

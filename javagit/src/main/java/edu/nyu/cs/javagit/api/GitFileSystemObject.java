@@ -58,27 +58,25 @@ public abstract class GitFileSystemObject {
   public GitFileSystemObject(File file) throws JavaGitException {
     this.file = file;
 
-    //search for .git up the directory tree
+    // search for .git up the directory tree
     boolean found = false;
     File currentParent = file;
-    while(currentParent != null) {
-      if(DotGit.existsInstance(currentParent)) {
+    while (currentParent != null) {
+      if (DotGit.existsInstance(currentParent)) {
         dotGit = DotGit.getInstance(currentParent);
         found = true;
         break;
-      }
-      else {
+      } else {
         currentParent = currentParent.getParentFile();
       }
     }
-    
-    //TODO(ma1683): pick proper code
-    if(!found) {
+
+    // TODO(ma1683): pick proper code
+    if (!found) {
       String errorMessage = file.getPath() + " is not part of any git repository";
       throw new JavaGitException(999, errorMessage);
     }
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -90,7 +88,6 @@ public abstract class GitFileSystemObject {
     return CheckUtilities.checkObjectsEqual(gitObj.getFile(), file);
   }
 
-  
   /**
    * Gets the name of the file system object
    * 
@@ -115,19 +112,18 @@ public abstract class GitFileSystemObject {
    * @return parent directory
    */
   public GitDirectory getParent() {
-    if(file.getParentFile() == null) {
+    if (file.getParentFile() == null) {
       return null;
     }
-    
+
     GitDirectory parent;
     try {
       parent = new GitDirectory(file.getParentFile());
-    }
-    catch(JavaGitException e) {
-      //no valid parent
+    } catch (JavaGitException e) {
+      // no valid parent
       return null;
     }
-    
+
     return parent;
   }
 
@@ -140,11 +136,11 @@ public abstract class GitFileSystemObject {
     GitAdd gitAdd = new GitAdd();
 
     // create a list of filenames and add yourself to it
-    List<String> list = new ArrayList<String>();
-    list.add(file.getPath());
+    List<File> list = new ArrayList<File>();
+    list.add(file);
 
     // run git-add command
-    return gitAdd.add(dotGit.getPath().getPath(), null, list);
+    return gitAdd.add(dotGit.getPath(), null, list);
   }
 
   /**
