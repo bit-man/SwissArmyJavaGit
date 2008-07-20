@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.api.commands.test;
+package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.util.Iterator;

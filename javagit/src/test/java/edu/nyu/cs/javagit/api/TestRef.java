@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.api.test;
+package edu.nyu.cs.javagit.api;
 
 import junit.framework.TestCase;
 

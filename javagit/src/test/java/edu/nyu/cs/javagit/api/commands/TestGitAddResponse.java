@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.api.commands.test;
+package edu.nyu.cs.javagit.api.commands;
 
 import java.io.IOException;
 import java.util.List;

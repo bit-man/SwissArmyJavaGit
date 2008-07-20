@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.utilities.test;
+package edu.nyu.cs.javagit.utilities;
 
 import org.junit.Before;
 import org.junit.Test;

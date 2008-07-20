@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.client.cli.test;
+package edu.nyu.cs.javagit.client.cli;
 
 import java.io.File;
 import java.io.IOException;
