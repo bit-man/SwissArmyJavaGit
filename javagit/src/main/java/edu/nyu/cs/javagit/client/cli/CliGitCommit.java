@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 import edu.nyu.cs.javagit.client.IGitCommit;
@@ -81,7 +82,7 @@ public class CliGitCommit implements IGitCommit {
     CheckUtilities.checkStringArgument(message, "message");
 
     List<String> commandLine = buildCommand(options, message, paths);
-    GitCommitParser parser = new GitCommitParser();
+    GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
 
     return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository.getAbsolutePath(),
         commandLine, parser);
@@ -151,6 +152,13 @@ public class CliGitCommit implements IGitCommit {
     // The response object for a commit.
     private GitCommitResponseImpl response;
 
+    // The working directory for the command that was run.
+    private String workingDirectory;
+
+    public GitCommitParser(String workingDirectory) {
+      this.workingDirectory = workingDirectory;
+    }
+
     public void parseLine(String line) {
 
       // TODO (jhl388): handle error messages in a better manner.
@@ -186,7 +194,7 @@ public class CliGitCommit implements IGitCommit {
         int locShortHash = line.lastIndexOf(' ', locColon);
         String shortHash = line.substring(locShortHash + 1, locColon);
         String shortComment = line.substring(locColon + 2);
-        response = new GitCommitResponseImpl(shortHash, shortComment);
+        response = new GitCommitResponseImpl(Ref.createSha1Ref(shortHash), shortComment);
       } else {
         errorMsg = new StringBuffer();
         errorMsg.append("line1=[" + line + "]");
@@ -259,7 +267,8 @@ public class CliGitCommit implements IGitCommit {
       final int endModeOffset = 19;
       final int startPathOffset = 20;
       String mode = line.substring(modeOffset, endModeOffset);
-      String path = line.substring(startPathOffset);
+      String pathStr = line.substring(startPathOffset);
+      File path = new File(workingDirectory + pathStr);
       if (isAdd) {
         response.addAddedFile(path, mode);
       } else {
@@ -298,20 +307,23 @@ public class CliGitCommit implements IGitCommit {
       int openCurlyOffset = line.indexOf('{', pathStart);
       int openParenOffset = line.lastIndexOf('(');
 
-      String fromPath = null;
-      String toPath = null;
+      String fromPathStr = null;
+      String toPathStr = null;
 
       if (-1 == openCurlyOffset) {
         int arrowOffset = line.indexOf("=>");
-        fromPath = line.substring(pathStart, arrowOffset - 1);
-        toPath = line.substring(arrowOffset + 3, openParenOffset - 1);
+        fromPathStr = line.substring(pathStart, arrowOffset - 1);
+        toPathStr = line.substring(arrowOffset + 3, openParenOffset - 1);
       } else {
         String base = line.substring(pathStart, openCurlyOffset);
         int arrowOffset = line.indexOf("=>", openCurlyOffset);
-        fromPath = base + line.substring(openCurlyOffset + 1, arrowOffset - 1);
+        fromPathStr = base + line.substring(openCurlyOffset + 1, arrowOffset - 1);
         int closeCurlyOffset = line.indexOf('}', arrowOffset + 3);
-        toPath = base + line.substring(arrowOffset + 3, closeCurlyOffset);
+        toPathStr = base + line.substring(arrowOffset + 3, closeCurlyOffset);
       }
+
+      File fromPath = new File(workingDirectory + fromPathStr);
+      File toPath = new File(workingDirectory + toPathStr);
 
       int percentOffset = line.lastIndexOf('%');
       int percentage = 0;

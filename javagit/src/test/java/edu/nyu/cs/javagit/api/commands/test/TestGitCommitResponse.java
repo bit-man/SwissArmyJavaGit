@@ -1,11 +1,13 @@
 package edu.nyu.cs.javagit.api.commands.test;
 
+import java.io.File;
 import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse.AddedOrDeletedFile;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse.CopiedOrMovedFile;
 
@@ -21,14 +23,15 @@ public class TestGitCommitResponse extends TestCase {
 
   @Before
   protected void setUp() {
-    resp = new GitCommitResponseImpl("3d3ef1a", "A Comment");
-    respSame = new GitCommitResponseImpl("3d3ef1a", "A Comment");
+    resp = new GitCommitResponseImpl(Ref.createSha1Ref("3d3ef1a"), "A Comment");
+    respSame = new GitCommitResponseImpl(Ref.createSha1Ref("3d3ef1a"), "A Comment");
   }
 
   @Test
   public void testGitCommitResponseBasicFunctionality() {
     // These tests use the variables set up in setUp().
-    assertEquals("Short hash name is not the same.", "3d3ef1a", resp.getCommitShortHashName());
+    assertEquals("Short hash name is not the same.", Ref.createSha1Ref("3d3ef1a"), resp
+        .getCommitShortHashName());
     assertEquals("Short comment is not the same.", "A Comment", resp.getCommitShortComment());
 
     resp.setFilesChanged(5);
@@ -40,60 +43,60 @@ public class TestGitCommitResponse extends TestCase {
     resp.setLinesInserted(6423);
     assertEquals("Number of lines inserted is not the same.", 6423, resp.getLinesInserted());
 
-    resp.addAddedFile("/some/path/to/file.txt", "100644");
-    resp.addAddedFile("/gumbee/fiddle/friars/whine.txt", "100777");
+    resp.addAddedFile(new File("/some/path/to/file.txt"), "100644");
+    resp.addAddedFile(new File("/gumbee/fiddle/friars/whine.txt"), "100777");
     Iterator<AddedOrDeletedFile> adIter = resp.getAddedFilesIterator();
     AddedOrDeletedFile adf = adIter.next();
-    assertEquals("Excpected different path to added file", "/some/path/to/file.txt", adf
+    assertEquals("Excpected different path to added file", new File("/some/path/to/file.txt"), adf
         .getPathTofile());
     assertEquals("Excpected different mode for added file", "100644", adf.getMode());
     adf = adIter.next();
-    assertEquals("Excpected different path to added file", "/gumbee/fiddle/friars/whine.txt", adf
-        .getPathTofile());
+    assertEquals("Excpected different path to added file", new File(
+        "/gumbee/fiddle/friars/whine.txt"), adf.getPathTofile());
     assertEquals("Excpected different mode for added file", "100777", adf.getMode());
 
-    resp.addDeletedFile("/some/path/to/deleted/file.txt", "100644");
-    resp.addDeletedFile("/gumbee/fiddle/friars/del/whine.txt", "100777");
+    resp.addDeletedFile(new File("/some/path/to/deleted/file.txt"), "100644");
+    resp.addDeletedFile(new File("/gumbee/fiddle/friars/del/whine.txt"), "100777");
     adIter = resp.getDeletedFilesIterator();
     adf = adIter.next();
-    assertEquals("Excpected different path to deleted file", "/some/path/to/deleted/file.txt", adf
-        .getPathTofile());
+    assertEquals("Excpected different path to deleted file", new File(
+        "/some/path/to/deleted/file.txt"), adf.getPathTofile());
     assertEquals("Excpected different mode for deleted file", "100644", adf.getMode());
     adf = adIter.next();
-    assertEquals("Excpected different path to deleted file", "/gumbee/fiddle/friars/del/whine.txt",
-        adf.getPathTofile());
+    assertEquals("Excpected different path to deleted file", new File(
+        "/gumbee/fiddle/friars/del/whine.txt"), adf.getPathTofile());
     assertEquals("Excpected different mode for deleted file", "100777", adf.getMode());
 
-    resp.addCopiedFile("/starter/path.txt", "/copied/path.txt", 99);
-    resp.addCopiedFile("/filler/filet.txt", "/floppin/fandiggery.txt", 87);
+    resp.addCopiedFile(new File("/starter/path.txt"), new File("/copied/path.txt"), 99);
+    resp.addCopiedFile(new File("/filler/filet.txt"), new File("/floppin/fandiggery.txt"), 87);
     Iterator<CopiedOrMovedFile> cmIter = resp.getCopiedFilesIterator();
     CopiedOrMovedFile cmf = cmIter.next();
-    assertEquals("Excpected different path for from copied file", "/starter/path.txt", cmf
-        .getSourceFilePath());
-    assertEquals("Excpected different path for to copied file", "/copied/path.txt", cmf
+    assertEquals("Excpected different path for from copied file", new File("/starter/path.txt"),
+        cmf.getSourceFilePath());
+    assertEquals("Excpected different path for to copied file", new File("/copied/path.txt"), cmf
         .getDestinationFilePath());
     assertEquals("Excpected different percentage for copied file", 99, cmf.getPercentage());
     cmf = cmIter.next();
-    assertEquals("Excpected different path for from copied file", "/filler/filet.txt", cmf
-        .getSourceFilePath());
-    assertEquals("Excpected different path for to copied file", "/floppin/fandiggery.txt", cmf
-        .getDestinationFilePath());
+    assertEquals("Excpected different path for from copied file", new File("/filler/filet.txt"),
+        cmf.getSourceFilePath());
+    assertEquals("Excpected different path for to copied file",
+        new File("/floppin/fandiggery.txt"), cmf.getDestinationFilePath());
     assertEquals("Excpected different percentage for copied file", 87, cmf.getPercentage());
 
-    resp.addRenamedFile("/starter/path.txt", "/renamed/path.txt", 99);
-    resp.addRenamedFile("/filler/filet.txt", "/floppin/fandiggery.txt", 87);
+    resp.addRenamedFile(new File("/starter/path.txt"), new File("/renamed/path.txt"), 99);
+    resp.addRenamedFile(new File("/filler/filet.txt"), new File("/floppin/fandiggery.txt"), 87);
     cmIter = resp.getRenamedFilesIterator();
     cmf = cmIter.next();
-    assertEquals("Excpected different path for from copied file", "/starter/path.txt", cmf
-        .getSourceFilePath());
-    assertEquals("Excpected different path for to copied file", "/renamed/path.txt", cmf
+    assertEquals("Excpected different path for from copied file", new File("/starter/path.txt"),
+        cmf.getSourceFilePath());
+    assertEquals("Excpected different path for to copied file", new File("/renamed/path.txt"), cmf
         .getDestinationFilePath());
     assertEquals("Excpected different percentage for copied file", 99, cmf.getPercentage());
     cmf = cmIter.next();
-    assertEquals("Excpected different path for from copied file", "/filler/filet.txt", cmf
-        .getSourceFilePath());
-    assertEquals("Excpected different path for to copied file", "/floppin/fandiggery.txt", cmf
-        .getDestinationFilePath());
+    assertEquals("Excpected different path for from copied file", new File("/filler/filet.txt"),
+        cmf.getSourceFilePath());
+    assertEquals("Excpected different path for to copied file",
+        new File("/floppin/fandiggery.txt"), cmf.getDestinationFilePath());
     assertEquals("Excpected different percentage for copied file", 87, cmf.getPercentage());
 
   }
@@ -121,42 +124,45 @@ public class TestGitCommitResponse extends TestCase {
     respSame.setLinesInserted(6423);
     assertEquals("GitCommitResponse objects are not equal when they should be", resp, respSame);
 
-    resp.addAddedFile("/some/path/to/file.txt", "100644");
+    resp.addAddedFile(new File("/some/path/to/file.txt"), "100644");
     assertTrue("GitCommitResponseObjects are equal when they should not be.", !resp
         .equals(respSame));
-    respSame.addAddedFile("/some/path/to/file.txt", "100644");
+    respSame.addAddedFile(new File("/some/path/to/file.txt"), "100644");
     assertEquals("GitCommitResponse objects are not equal when they should be", resp, respSame);
 
-    resp.addDeletedFile("/another/path/to/file.txt", "100644");
+    resp.addDeletedFile(new File("/another/path/to/file.txt"), "100644");
     assertTrue("GitCommitResponseObjects are equal when they should not be.", !resp
         .equals(respSame));
-    respSame.addDeletedFile("/another/path/to/file.txt", "100644");
+    respSame.addDeletedFile(new File("/another/path/to/file.txt"), "100644");
     assertEquals("GitCommitResponse objects are not equal when they should be", resp, respSame);
 
-    resp.addCopiedFile("/from/this/path.txt", "/to/this/altered-path.txt", 56);
+    resp.addCopiedFile(new File("/from/this/path.txt"), new File("/to/this/altered-path.txt"), 56);
     assertTrue("GitCommitResponseObjects are equal when they should not be.", !resp
         .equals(respSame));
-    respSame.addCopiedFile("/from/this/path.txt", "/to/this/altered-path.txt", 56);
+    respSame.addCopiedFile(new File("/from/this/path.txt"), new File("/to/this/altered-path.txt"),
+        56);
     assertEquals("GitCommitResponse objects are not equal when they should be", resp, respSame);
 
-    resp.addRenamedFile("/from/another/path.txt", "/to/another/altered-path.txt", 23);
+    resp.addRenamedFile(new File("/from/another/path.txt"),
+        new File("/to/another/altered-path.txt"), 23);
     assertTrue("GitCommitResponseObjects are equal when they should not be.", !resp
         .equals(respSame));
-    respSame.addRenamedFile("/from/another/path.txt", "/to/another/altered-path.txt", 23);
+    respSame.addRenamedFile(new File("/from/another/path.txt"), new File(
+        "/to/another/altered-path.txt"), 23);
     assertEquals("GitCommitResponse objects are not equal when they should be", resp, respSame);
 
   }
 
   @Test
   public void testAddedOrDeletedFile() {
-    GitCommitResponseImpl.AddedOrDeletedFile addDel = new AddedOrDeletedFile(
-        "/a/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelSame = new AddedOrDeletedFile(
-        "/a/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff1 = new AddedOrDeletedFile(
-        "/another/path/to/add/del/file.txt", "100644");
-    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff2 = new AddedOrDeletedFile(
-        "/a/path/to/add/del/file.txt", "100777");
+    GitCommitResponseImpl.AddedOrDeletedFile addDel = new AddedOrDeletedFile(new File(
+        "/a/path/to/add/del/file.txt"), "100644");
+    GitCommitResponseImpl.AddedOrDeletedFile addDelSame = new AddedOrDeletedFile(new File(
+        "/a/path/to/add/del/file.txt"), "100644");
+    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff1 = new AddedOrDeletedFile(new File(
+        "/another/path/to/add/del/file.txt"), "100644");
+    GitCommitResponseImpl.AddedOrDeletedFile addDelDiff2 = new AddedOrDeletedFile(new File(
+        "/a/path/to/add/del/file.txt"), "100777");
 
     assertEquals("AddedOrDeletedFile instances not equal when they should be equal", addDel,
         addDelSame);
@@ -172,16 +178,16 @@ public class TestGitCommitResponse extends TestCase {
 
   @Test
   public void testCopiedOrMovedFile() {
-    GitCommitResponseImpl.CopiedOrMovedFile copyMove = new CopiedOrMovedFile(
-        "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveSame = new CopiedOrMovedFile(
-        "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff1 = new CopiedOrMovedFile(
-        "c:\\path\\1\\notSame.txt", "c:\\other\\path\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff2 = new CopiedOrMovedFile(
-        "c:\\path\\1\\txt.txt", "c:\\path\\1\\bob.txt", 32);
-    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff3 = new CopiedOrMovedFile(
-        "c:\\path\\1\\txt.txt", "c:\\other\\path\\bob.txt", 83);
+    GitCommitResponseImpl.CopiedOrMovedFile copyMove = new CopiedOrMovedFile(new File(
+        "c:\\path\\1\\txt.txt"), new File("c:\\other\\path\\bob.txt"), 32);
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveSame = new CopiedOrMovedFile(new File(
+        "c:\\path\\1\\txt.txt"), new File("c:\\other\\path\\bob.txt"), 32);
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff1 = new CopiedOrMovedFile(new File(
+        "c:\\path\\1\\notSame.txt"), new File("c:\\other\\path\\bob.txt"), 32);
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff2 = new CopiedOrMovedFile(new File(
+        "c:\\path\\1\\txt.txt"), new File("c:\\path\\1\\bob.txt"), 32);
+    GitCommitResponseImpl.CopiedOrMovedFile copyMoveDiff3 = new CopiedOrMovedFile(new File(
+        "c:\\path\\1\\txt.txt"), new File("c:\\other\\path\\bob.txt"), 83);
 
     assertEquals("CopiedOrMovedFile instances not equal when they should be equal", copyMove,
         copyMoveSame);

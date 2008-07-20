@@ -1,5 +1,8 @@
 package edu.nyu.cs.javagit.client;
 
+import java.io.File;
+
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
 
 /**
@@ -15,7 +18,7 @@ public class GitCommitResponseImpl extends GitCommitResponse {
    *          The short hash name
    * @param shortComment
    */
-  public GitCommitResponseImpl(String shortHashName, String shortComment) {
+  public GitCommitResponseImpl(Ref shortHashName, String shortComment) {
     super(shortHashName, shortComment);
   }
 
@@ -28,8 +31,8 @@ public class GitCommitResponseImpl extends GitCommitResponse {
    *          The mode of the file.
    * @return False if the <code>pathToFile</code> is null or length zero. True otherwise.
    */
-  public boolean addAddedFile(String pathToFile, String mode) {
-    if (null == pathToFile || pathToFile.length() == 0) {
+  public boolean addAddedFile(File pathToFile, String mode) {
+    if (null == pathToFile) {
       return false;
     }
 
@@ -48,9 +51,8 @@ public class GitCommitResponseImpl extends GitCommitResponse {
    * @return False if <code>sourceFilePath</code> or <code>destinationFilePath</code> is null or
    *         length zero. True otherwise.
    */
-  public boolean addCopiedFile(String sourceFilePath, String destinationFilePath, int percentage) {
-    if (null == sourceFilePath || sourceFilePath.length() == 0 || null == destinationFilePath
-        || destinationFilePath.length() == 0) {
+  public boolean addCopiedFile(File sourceFilePath, File destinationFilePath, int percentage) {
+    if (null == sourceFilePath || null == destinationFilePath) {
       return false;
     }
     return copiedFiles.add(new CopiedOrMovedFile(sourceFilePath, destinationFilePath, percentage));
@@ -65,8 +67,8 @@ public class GitCommitResponseImpl extends GitCommitResponse {
    *          The mode of the file.
    * @return False if the <code>pathToFile</code> is null or length zero. True otherwise.
    */
-  public boolean addDeletedFile(String pathToFile, String mode) {
-    if (null == pathToFile || pathToFile.length() == 0) {
+  public boolean addDeletedFile(File pathToFile, String mode) {
+    if (null == pathToFile) {
       return false;
     }
 
@@ -85,9 +87,8 @@ public class GitCommitResponseImpl extends GitCommitResponse {
    * @return False if <code>sourceFilePath</code> or <code>destinationFilePath</code> is null or
    *         length zero. True otherwise.
    */
-  public boolean addRenamedFile(String sourceFilePath, String destinationFilePath, int percentage) {
-    if (null == sourceFilePath || sourceFilePath.length() == 0 || null == destinationFilePath
-        || destinationFilePath.length() == 0) {
+  public boolean addRenamedFile(File sourceFilePath, File destinationFilePath, int percentage) {
+    if (null == sourceFilePath || null == destinationFilePath) {
       return false;
     }
     return renamedFiles.add(new CopiedOrMovedFile(sourceFilePath, destinationFilePath, percentage));

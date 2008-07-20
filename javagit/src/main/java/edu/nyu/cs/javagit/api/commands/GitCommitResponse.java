@@ -1,9 +1,11 @@
 package edu.nyu.cs.javagit.api.commands;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
@@ -13,7 +15,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 abstract public class GitCommitResponse implements CommandResponse {
 
   // The short hash name for the commit.
-  protected String commitShortHashName = "";
+  protected Ref commitShortHashName;
 
   // The short comment for the commit.
   protected String commitShortComment = "";
@@ -58,7 +60,7 @@ abstract public class GitCommitResponse implements CommandResponse {
    *          The short hash name
    * @param shortComment
    */
-  public GitCommitResponse(String shortHashName, String shortComment) {
+  public GitCommitResponse(Ref shortHashName, String shortComment) {
     this.commitShortHashName = shortHashName;
     this.commitShortComment = shortComment;
 
@@ -120,7 +122,7 @@ abstract public class GitCommitResponse implements CommandResponse {
    * @return An <code>Iterator</code> with which to iterate over the added files.
    */
   public Iterator<AddedOrDeletedFile> getAddedFilesIterator() {
-    return addedFiles.iterator();
+    return (new ArrayList<AddedOrDeletedFile>(addedFiles)).iterator();
   }
 
   /**
@@ -139,7 +141,7 @@ abstract public class GitCommitResponse implements CommandResponse {
    * 
    * @return The short hash name for the commit.
    */
-  public String getCommitShortHashName() {
+  public Ref getCommitShortHashName() {
     return commitShortHashName;
   }
 
@@ -211,10 +213,8 @@ abstract public class GitCommitResponse implements CommandResponse {
    */
   public static class AddedOrDeletedFile {
 
-    // TODO (jhl388): Add a method to get a javagit File instance for this file.
-
     // The path to the file.
-    private String pathTofile;
+    private File pathTofile;
 
     // The mode the file was added/deleted with.
     private String mode;
@@ -227,7 +227,7 @@ abstract public class GitCommitResponse implements CommandResponse {
      * @param mode
      *          The mode the file was added/deleted with.
      */
-    public AddedOrDeletedFile(String pathToFile, String mode) {
+    public AddedOrDeletedFile(File pathToFile, String mode) {
       this.pathTofile = pathToFile;
       this.mode = mode;
     }
@@ -264,7 +264,7 @@ abstract public class GitCommitResponse implements CommandResponse {
      * 
      * @return The path to the file.
      */
-    public String getPathTofile() {
+    public File getPathTofile() {
       return pathTofile;
     }
 
@@ -279,13 +279,11 @@ abstract public class GitCommitResponse implements CommandResponse {
    */
   public static class CopiedOrMovedFile {
 
-    // TODO (jhl388): Add methods to get a javagit File instance for these files.
-
     // The path to the file that is the source of the copied/moved file.
-    private String sourceFilePath;
+    private File sourceFilePath;
 
     // The path to the new file/location.
-    private String destinationFilePath;
+    private File destinationFilePath;
 
     // The percentage. (not sure how to read this yet, -- jhl388 2008.06.15)
     private int percentage;
@@ -300,7 +298,7 @@ abstract public class GitCommitResponse implements CommandResponse {
      * @param percentage
      *          The percentage.
      */
-    public CopiedOrMovedFile(String sourceFilePath, String destinationFilePath, int percentage) {
+    public CopiedOrMovedFile(File sourceFilePath, File destinationFilePath, int percentage) {
       this.sourceFilePath = sourceFilePath;
       this.destinationFilePath = destinationFilePath;
       this.percentage = percentage;
@@ -333,7 +331,7 @@ abstract public class GitCommitResponse implements CommandResponse {
      * 
      * @return The path to the destination file.
      */
-    public String getDestinationFilePath() {
+    public File getDestinationFilePath() {
       return destinationFilePath;
     }
 
@@ -351,7 +349,7 @@ abstract public class GitCommitResponse implements CommandResponse {
      * 
      * @return The path to the source file.
      */
-    public String getSourceFilePath() {
+    public File getSourceFilePath() {
       return sourceFilePath;
     }
 

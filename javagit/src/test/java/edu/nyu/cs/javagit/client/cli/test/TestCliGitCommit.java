@@ -1,11 +1,14 @@
 package edu.nyu.cs.javagit.client.cli.test;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.client.GitCommitResponseImpl;
 import edu.nyu.cs.javagit.client.cli.CliGitCommit;
 
@@ -23,13 +26,13 @@ public class TestCliGitCommit extends TestCase {
     CliGitCommit gitcommit = new CliGitCommit();
 
     // Test a simple commit with updates only, no copy, remove, add or delete
-    CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser();
+    CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("");
     parser.parseLine("Created commit c18c00f: a change to test committing");
     assertEquals(1, parser.getNumLinesParsed());
     parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
     assertEquals(2, parser.getNumLinesParsed());
 
-    GitCommitResponseImpl response = new GitCommitResponseImpl("c18c00f",
+    GitCommitResponseImpl response = new GitCommitResponseImpl(Ref.createSha1Ref("c18c00f"),
         "a change to test committing");
     response.setFilesChanged("1");
     response.setLinesInserted("6");
@@ -37,7 +40,7 @@ public class TestCliGitCommit extends TestCase {
     assertResponsesEqual(parser, response);
 
     // Test an initial commit.
-    parser = gitcommit.new GitCommitParser();
+    parser = gitcommit.new GitCommitParser("");
     parser.parseLine("Created initial commit 21efdb4: initial commit");
     assertEquals(1, parser.getNumLinesParsed());
     parser.parseLine(" 133 files changed, 23679 insertions(+), 0 deletions(-)");
@@ -52,21 +55,22 @@ public class TestCliGitCommit extends TestCase {
         .parseLine(" create mode 100644 svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java");
     assertEquals(6, parser.getNumLinesParsed());
 
-    response = new GitCommitResponseImpl("21efdb4", "initial commit");
+    response = new GitCommitResponseImpl(Ref.createSha1Ref("21efdb4"), "initial commit");
     response.setFilesChanged("133");
     response.setLinesInserted("23679");
     response.setLinesDeleted("0");
-    response.addAddedFile("svnClientAdapter/.classpath", "100644");
-    response.addAddedFile("svnClientAdapter/.project", "100644");
-    response.addAddedFile("svnClientAdapter/readme.txt", "100644");
+    response.addAddedFile(new File("svnClientAdapter/.classpath"), "100644");
+    response.addAddedFile(new File("svnClientAdapter/.project"), "100644");
+    response.addAddedFile(new File("svnClientAdapter/readme.txt"), "100644");
     response
         .addAddedFile(
-            "svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java",
+            new File(
+                "svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java"),
             "100644");
     assertResponsesEqual(parser, response);
 
     // Test a commit response with added, removed, copied and renamed files.
-    parser = gitcommit.new GitCommitParser();
+    parser = gitcommit.new GitCommitParser("");
     parser.parseLine("Created commit ab238dd: renaming and copying files for commit tests.");
     assertEquals(1, parser.getNumLinesParsed());
     parser.parseLine(" 5 files changed, 1 insertions(+), 1 deletions(-)");
@@ -82,15 +86,18 @@ public class TestCliGitCommit extends TestCase {
     parser.parseLine(" rename svnClientAdapter/{changelog.txt => CHlog.txt} (100%)");
     assertEquals(7, parser.getNumLinesParsed());
 
-    response = new GitCommitResponseImpl("ab238dd", "renaming and copying files for commit tests.");
+    response = new GitCommitResponseImpl(Ref.createSha1Ref("ab238dd"),
+        "renaming and copying files for commit tests.");
     response.setFilesChanged("5");
     response.setLinesInserted("1");
     response.setLinesDeleted("1");
-    response.addAddedFile("lowerfile.txt", "100644");
-    response.addCopiedFile("another_file.txt", "dadum.dot", 90);
-    response.addDeletedFile("svnClientAdapter/testfile.txt", "100644");
-    response.addRenamedFile("testing_idr/hildebrand.bob", "hildebrand.bob", 100);
-    response.addRenamedFile("svnClientAdapter/changelog.txt", "svnClientAdapter/CHlog.txt", 100);
+    response.addAddedFile(new File("lowerfile.txt"), "100644");
+    response.addCopiedFile(new File("another_file.txt"), new File("dadum.dot"), 90);
+    response.addDeletedFile(new File("svnClientAdapter/testfile.txt"), "100644");
+    response
+        .addRenamedFile(new File("testing_idr/hildebrand.bob"), new File("hildebrand.bob"), 100);
+    response.addRenamedFile(new File("svnClientAdapter/changelog.txt"), new File(
+        "svnClientAdapter/CHlog.txt"), 100);
     assertResponsesEqual(parser, response);
 
   }
@@ -111,7 +118,7 @@ public class TestCliGitCommit extends TestCase {
     CliGitCommit gitcommit = new CliGitCommit();
 
     // Test a spelling mistake
-    CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser();
+    CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("");
     parser.parseLine("Created commi c18c00f: a change to test committing");
     assertEquals(1, parser.getNumLinesParsed());
     parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
@@ -123,7 +130,7 @@ public class TestCliGitCommit extends TestCase {
             + "line2=[ 1 files changed, 6 insertions(+), 1 deletions(-)] }", 410000);
 
     // Test a spelling mistake
-    parser = gitcommit.new GitCommitParser();
+    parser = gitcommit.new GitCommitParser("");
     parser.parseLine("Error Committing:  some random error");
     assertEquals(1, parser.getNumLinesParsed());
 
