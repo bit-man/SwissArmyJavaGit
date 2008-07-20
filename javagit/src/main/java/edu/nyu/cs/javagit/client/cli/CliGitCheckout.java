@@ -3,17 +3,21 @@ package edu.nyu.cs.javagit.client.cli;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.api.Ref.RefType;
 import edu.nyu.cs.javagit.api.commands.GitCheckoutOptions;
 import edu.nyu.cs.javagit.api.commands.GitCheckoutResponse;
 import edu.nyu.cs.javagit.client.GitCheckoutResponseImpl;
 import edu.nyu.cs.javagit.client.IGitCheckout;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
+/**
+ * Command-line implementation of the <code>IGitCheckout</code> interface.
+ */
 public class CliGitCheckout implements IGitCheckout {
 
   /**
@@ -29,106 +33,190 @@ public class CliGitCheckout implements IGitCheckout {
     }
 
     public boolean matches(String line) {
-      if (line.matches(pattern)) {
-        return true;
-      }
-      return false;
+      return line.matches(pattern);
     }
   }
 
   /**
    * Git checkout with options and base branch information provided to &lt;git-checkout&gt; command.
    */
-  public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, String branch)
+  public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref branch)
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
-    String[] command = buildCommand(options, branch);
+    CheckUtilities.validateArgumentRefType(branch, RefType.BRANCH, "Branch Name");
+    List<String> command = buildCommand(options, branch);
     GitCheckoutParser parser = new GitCheckoutParser();
-    return (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(),
-        Arrays.asList(command), parser);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
+        .getAbsolutePath(), command, parser);
+    checkForErrorsInResponse(response);
+    return response;
   }
 
   /**
-   * Git checkout without any options and branch information provided. Just a basic checkout command.
+   * Git checkout without any options and branch information provided. Just a basic checkout
+   * command.
    */
   public GitCheckoutResponse checkout(File repositoryPath) throws JavaGitException, IOException {
-    return checkout(repositoryPath, null, null);
+    GitCheckoutOptions options = null;
+    return checkout(repositoryPath, options, null);
   }
 
   /**
-   * Checks out a branch from the git repository
+   * Checks out a branch from the git repository with a given branch name.
    */
-  public GitCheckoutResponse checkout(File repositoryPath, String branch) throws JavaGitException,
+  public GitCheckoutResponse checkout(File repositoryPath, Ref branch) throws JavaGitException,
       IOException {
-    return checkout( repositoryPath, branch);
+    return checkout(repositoryPath, null, branch);
   }
 
   /**
-   * Checks out a list of files from repository.
+   * Checks out a list of files from repository, no checkout options provided.
    */
   public GitCheckoutResponse checkout(File repositoryPath, List<File> paths)
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
     CheckUtilities.checkNullListArgument(paths, "list of file paths");
     GitCheckoutParser parser = new GitCheckoutParser();
-    List<String> command = buildCommand(paths);
+    List<String> command = buildCommand(null, null, paths);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
+        .getAbsolutePath(), command, parser);
+    checkForErrorsInResponse(response);
+    return response;
+  }
+
+  /**
+   * Checks out a list of file from repository, with &lt;tree-ish&gt; options provided.
+   */
+  public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref branch,
+      List<File> paths) throws JavaGitException, IOException {
+    CheckUtilities.checkFileValidity(repositoryPath);
+    GitCheckoutParser parser = new GitCheckoutParser();
+    List<String> command = buildCommand(options, branch, paths);
     return (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(),
         command, parser);
   }
 
-  private List<String> buildCommand(List<File> paths) {
-    List<String> command = new ArrayList<String>();
+  /**
+   * Checks out a file from repository from a particular branch
+   */
+  public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref branch,
+      File path) throws JavaGitException, IOException {
+    CheckUtilities.checkFileValidity(repositoryPath);
+    GitCheckoutParser parser = new GitCheckoutParser();
+    List<File> paths = new ArrayList<File>();
+    paths.add(path);
+    List<String> command = buildCommand(options, branch, paths);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
+        .getAbsolutePath(), command, parser);
+    checkForErrorsInResponse(response);
+    return response;
+  }
 
+  /**
+   * Checks out a list of files from a given branch
+   */
+  public GitCheckoutResponse checkout(File repositoryPath, Ref branch, List<File> paths)
+      throws JavaGitException, IOException {
+    CheckUtilities.checkFileValidity(repositoryPath);
+    GitCheckoutParser parser = new GitCheckoutParser();
+    List<String> command = buildCommand(null, branch, paths);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
+        .getAbsolutePath(), command, parser);
+    checkForErrorsInResponse(response);
+    return response;
+  }
+
+  /**
+   * builds a &lt;git-checkout&gt; command in sth <code>List<String></code> format.
+   * 
+   * @param options
+   *          <code>GitCheckoutOptions</code> options passed to the &lt;git-checkout&gt; command.
+   * @param treeIsh
+   *          either a branch type or sha1 type object
+   * @param paths
+   *          List of files that are to be checked out
+   * @return
+   * @throws JavaGitException
+   */
+  private List<String> buildCommand(GitCheckoutOptions options, Ref treeIsh, List<File> paths)
+      throws JavaGitException {
+    List<String> command = new ArrayList<String>();
     command.add("git");
     command.add("checkout");
-
+    // Process options
+    if (options != null) {
+      processOptions(command, options);
+    }
+    // Process tree-ish
+    if (treeIsh != null) {
+      command.add(treeIsh.getName());
+    }
+    // return if no file-paths are provided
+    if (paths == null) {
+      return command;
+    }
+    command.add("--");
     for (File file : paths) {
       command.add(file.getName());
     }
     return command;
   }
 
-  private String[] buildCommand(GitCheckoutOptions options, String branch) throws JavaGitException {
+  private List<String> buildCommand(GitCheckoutOptions options, Ref branch) throws JavaGitException {
     List<String> command = new ArrayList<String>();
-    command.add("git-checkout");
+    command.add("git");
+    command.add("checkout");
     if (options != null) {
-      if (options.optQ()) {
-        command.add("-q");
-      }
-      if (options.optF()) {
-        command.add("-f");
-      }
-      /*
-       * --track and --no-track options are valid only with -b option
-       */
-      String newBranch;
-      if ((newBranch = options.getOptB()) != null) {
-        if (options.optNoTrack() && options.optTrack()) {
-          throw new JavaGitException(120, "Both --notrack and --track options are set");
-        }
-        if (options.optTrack()) {
-          command.add("--track");
-        }
-        if (options.optNoTrack()) {
-          command.add("--no-track");
-        }
-        command.add("-b");
-        command.add(newBranch);
-      }
-      if (options.optL()) {
-        command.add("-l");
-      }
-      if (options.optM()) {
-        command.add("-m");
-      }
+      processOptions(command, options);
     }
-    if (branch != null && branch.length() > 0) {
-      command.add(branch);
+    if (branch != null && branch.getName().length() > 0) {
+      command.add(branch.getName());
     }
-    String[] commandArgs = new String[command.size()];
-    return command.toArray(commandArgs);
+    return command;
   }
 
+  private void processOptions(List<String> command, GitCheckoutOptions options)
+      throws JavaGitException {
+    if (options.optQ()) {
+      command.add("-q");
+    }
+    if (options.optF()) {
+      command.add("-f");
+    }
+    // --track and --no-track options are valid only with -b option
+    Ref newBranch;
+    if ((newBranch = options.getOptB()) != null) {
+      if (options.optNoTrack() && options.optTrack()) {
+        throw new JavaGitException(120, "Both --notrack and --track options are set");
+      }
+      if (options.optTrack()) {
+        command.add("--track");
+      }
+      if (options.optNoTrack()) {
+        command.add("--no-track");
+      }
+      command.add("-b");
+      command.add(newBranch.getName());
+    }
+    if (options.optL()) {
+      command.add("-l");
+    }
+    if (options.optM()) {
+      command.add("-m");
+    }
+  }
+
+  //TODO (gsd216) This need to be expanded and cleaned up.
+  private void checkForErrorsInResponse(GitCheckoutResponse response) throws JavaGitException {
+    if (response.error()) {
+      throw new JavaGitException(406000, response.getError(0));
+    }
+  }
+
+  /**
+   * Parser class to parse the output generated by &lt;git-checkout&gt; and return a
+   * <code>GitCheckoutResponse</code> object.
+   */
   public class GitCheckoutParser implements IParser {
 
     private int lineNum;
@@ -144,18 +232,21 @@ public class CliGitCheckout implements IGitCheckout {
         return;
       }
       ++lineNum;
-      parseErrorLine(line);
-      parseSwitchedToBranchLine(line);
-      parseFilesInfo(line);
-    }
-
-    private void parseErrorLine(String line) {
-      if (line.startsWith("error:") || line.startsWith("fatal")) {
-        response.setError(line);
+      if (!isErrorLine(line)) {
+        parseSwitchedToBranchLine(line);
+        parseFilesInfo(line);
       }
     }
 
-    private void parseSwitchedToBranchLine(String line) {
+    private boolean isErrorLine(String line) {
+      if (line.startsWith("error") || line.startsWith("fatal")) {
+        response.setError(lineNum, line);
+        return true;
+      }
+      return false;
+    }
+
+    public void parseSwitchedToBranchLine(String line) {
       if (line.startsWith("Switched to branch")) {
         getSwitchedToBranch(line);
       } else if (line.startsWith("Switched to a new branch")) {
@@ -164,16 +255,18 @@ public class CliGitCheckout implements IGitCheckout {
     }
 
     private void getSwitchedToBranch(String line) {
-      String branch = extractBranch(line);
+      String branchName = extractBranchName(line);
+      Ref branch = Ref.createBranchRef(branchName);
       response.setBranch(branch);
     }
 
     private void getSwitchedToNewBranch(String line) {
-      String newBranch = extractBranch(line);
+      String newBranchName = extractBranchName(line);
+      Ref newBranch = Ref.createBranchRef(newBranchName);
       response.setNewBranch(newBranch);
     }
 
-    private String extractBranch(String line) {
+    private String extractBranchName(String line) {
       int startIndex = line.indexOf('"');
       int endIndex = line.indexOf('"', startIndex + 1);
       return line.substring(startIndex, endIndex + 1);
@@ -181,37 +274,28 @@ public class CliGitCheckout implements IGitCheckout {
 
     private void parseFilesInfo(String line) {
       if (Pattern.MODIFIED.matches(line)) {
-        addModifiedFile(line);
+        File file = new File(extractFileName(line));
+        response.addModifiedFile(file);
         return;
       }
       if (Pattern.DELETED.matches(line)) {
-        addDeletedFile(line);
+        File file = new File(extractFileName(line));
+        response.addDeletedFile(file);
         return;
       }
       if (Pattern.ADDED.matches(line)) {
-        addAddedFile(line);
+        File file = new File(extractFileName(line));
+        response.addAddedFile(file);
       }
     }
 
-    private String extractFile(String line) {
+    private String extractFileName(String line) {
       String filename = null;
       Scanner scanner = new Scanner(line);
       while (scanner.hasNext()) {
         filename = scanner.next();
       }
       return filename;
-    }
-
-    private void addModifiedFile(String line) {
-      response.addModifiedFile(extractFile(line));
-    }
-
-    private void addDeletedFile(String line) {
-      response.addDeletedFile(extractFile(line));
-    }
-
-    private void addAddedFile(String line) {
-      response.addAddedFile(extractFile(line));
     }
 
     public GitCheckoutResponse getResponse() {

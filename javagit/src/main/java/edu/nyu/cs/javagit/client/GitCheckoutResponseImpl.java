@@ -1,7 +1,9 @@
 package edu.nyu.cs.javagit.client;
 
+import java.io.File;
+
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCheckoutResponse;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * This class implements <code>GitCheckoutResponse</code> by setting values in
@@ -15,8 +17,9 @@ public class GitCheckoutResponseImpl extends GitCheckoutResponse {
    * @param error
    *          error string
    */
-  public void setError(String error) {
-    this.error = error;
+  public void setError(int lineNumber, String error) {
+    ErrorDetails errorDetails = new ErrorDetails( lineNumber, error );
+    errors.add(errorDetails);
   }
 
   /**
@@ -25,31 +28,30 @@ public class GitCheckoutResponseImpl extends GitCheckoutResponse {
    * @param newBranch
    *          Name of the new branch created
    */
-  public void setNewBranch(String newBranch) {
+  public void setNewBranch(Ref newBranch) {
     this.newBranch = newBranch;
   }
 
   /**
-   * Sets the branch to the branch, to which the &lt;git-checkout&gt switched the repository to. This
-   * branch should already be existing in the repository. To create a new branch and switch to it,
-   * use the -b option while running &lt;git-checkout&gt.
+   * Sets the branch to the branch, to which the &lt;git-checkout&gt switched the repository to.
+   * This branch should already be existing in the repository. To create a new branch and switch to
+   * it, use the -b option while running &lt;git-checkout&gt.
    * 
    * @param branch
    */
-  public void setBranch(String branch) {
+  public void setBranch(Ref branch) {
     this.branch = branch;
   }
 
   /**
    * Adds the modified file to the list of modifiedFiles. When a file is modified locally but has
    * not been committed to the repository and if we try to switch the branch to another branch, the
-   * &lt;git-checkout&gt fails and outputs the list of modified files that are not yet committed unless -f
-   * option is used by &lt;git-checkout&gt.
+   * &lt;git-checkout&gt fails and outputs the list of modified files that are not yet committed
+   * unless -f option is used by &lt;git-checkout&gt.
    * 
    * @param file
    */
-  public void addModifiedFile(String file) {
-    CheckUtilities.checkStringArgument(file, "Modified File");
+  public void addModifiedFile(File file) {
     modifiedFiles.add(file);
   }
 
@@ -59,8 +61,7 @@ public class GitCheckoutResponseImpl extends GitCheckoutResponse {
    * 
    * @param file
    */
-  public void addAddedFile(String file) {
-    CheckUtilities.checkStringArgument(file, "Newly Added file");
+  public void addAddedFile(File file) {
     addedFiles.add(file);
   }
 
@@ -70,9 +71,9 @@ public class GitCheckoutResponseImpl extends GitCheckoutResponse {
    * 
    * @param file
    */
-  public void addDeletedFile(String file) {
-    CheckUtilities.checkStringArgument(file, "Deleted File");
+  public void addDeletedFile(File file) {
     deletedFiles.add(file);
   }
 
 }
+

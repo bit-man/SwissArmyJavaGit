@@ -255,7 +255,7 @@ public final class WorkingTree {
    */
   public void checkout(Ref ref) throws IOException, JavaGitException {
     GitCheckout gitCheckout = new GitCheckout();
-    gitCheckout.checkout(path, null, ref.getName());
+    gitCheckout.checkout(path, null, ref);
     /*
      * TODO (rs2705): Figure out why this function is setting this.path. When does the WorkingTree
      * path change?
