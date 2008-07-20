@@ -140,7 +140,7 @@ public class TestGitCheckout extends TestCase {
 
   @After
   public void tearDown() throws Exception {
-    // FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
+    FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
   }
 
 }
