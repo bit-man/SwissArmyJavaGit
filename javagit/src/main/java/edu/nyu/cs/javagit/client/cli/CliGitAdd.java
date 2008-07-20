@@ -42,6 +42,16 @@ public class CliGitAdd implements IGitAdd {
     }
     return (GitAddResponse) response;
   }
+  
+  /**
+   * Implementations of &lt;git-add&gt; with options and one file to be added to index.
+   */
+  public GitAddResponse add(File repositoryPath, GitAddOptions options, File file)
+  throws JavaGitException, IOException {
+    List<File> paths = new ArrayList<File>();
+    paths.add(file);
+    return add( repositoryPath, options, paths);
+  }
 
   /**
    * Implementation of &lt;git-add&gt; dry run.
