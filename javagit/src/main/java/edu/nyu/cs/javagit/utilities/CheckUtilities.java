@@ -309,6 +309,7 @@ public class CheckUtilities {
    */
   public static void validateListRefType(List<Ref> list, Ref.RefType type, String variableName) {
     // TODO (ns1344): Write a unit test for this method.
+    checkNullListArgument(list, variableName);
     for (Ref ref : list) {
       validateArgumentRefType(ref, type, variableName);
     }
@@ -326,6 +327,7 @@ public class CheckUtilities {
    *          The name of the variable being checked; for use in exception messages.
    */
   public static void validateArgumentRefType(Ref name, Ref.RefType type, String variableName) {
+    checkNullArgument(name, variableName);
     if (name.getRefType() != type) {
       throw new IllegalArgumentException(ExceptionMessageMap.getMessage("100000")
           + "  { variableName=[" + variableName + "] }");
