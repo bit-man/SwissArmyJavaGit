@@ -71,6 +71,7 @@ public class FileUtilities {
     file.createNewFile();
     FileWriter fw = new FileWriter(file);
     fw.write(contents);
+    fw.flush();
     return file;
   }
 
