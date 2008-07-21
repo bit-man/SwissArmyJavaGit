@@ -79,7 +79,7 @@ public class TestGitMvResponse extends TestCase {
     add.add(repoDirectory, null, filesToAdd);
     
     List<File> addDirToSubDir = new ArrayList<File>();
-    addDirToSubDir.add(subDirThree);
+    addDirToSubDir.add(subDirThree.getAbsoluteFile());
     add.add(subDirTwo, null, addDirToSubDir);
   }
 
