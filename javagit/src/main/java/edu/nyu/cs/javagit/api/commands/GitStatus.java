@@ -155,13 +155,10 @@ public class GitStatus {
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
    */
-  public GitStatusResponse statusSingleFile(File repositoryPath, File path) throws JavaGitException, IOException {
+  public GitStatusResponse getSingleFileStatus(File repositoryPath, File path) throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(path);
-    List<File> paths = new ArrayList<File>();
-    paths.add(path);
-    //set appropriate option
-    GitStatusOptions options = new GitStatusOptions();
-    options.setOptCheckInputFileOnly(true);
-    return status(repositoryPath, options, paths);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.getSingleFileStatus(repositoryPath, null, path);
   }
 }

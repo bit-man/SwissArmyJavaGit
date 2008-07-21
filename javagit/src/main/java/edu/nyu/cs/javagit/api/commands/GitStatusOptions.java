@@ -25,8 +25,6 @@ public final class GitStatusOptions {
   private boolean optUntrackedFiles = false;
   private boolean optAllowEmpty = false;
   private boolean optAmmend = false;
-  //TODO(ma1683): check if this solution is acceptable
-  private boolean optCheckInputFileOnly = false;
   private File optReadFromLogFile = null;
   private String message = null;
   private String author = null;
@@ -281,25 +279,6 @@ public final class GitStatusOptions {
     this.optAmmend = ammend;
   }
 
-  /**
-   * Returns true if we want to check the status of a single file. 
-   * 
-   * @return optCheckInputFileOnly
-   */
-  public boolean isOptCheckInputFileOnly() {
-    return optCheckInputFileOnly;
-  }
-
-  /**
-   * Sets the value of optCheckInputFileOnly. This should be set to true if we would like to 
-   * view status only of a given file
-   * 
-   * @param val
-   */
-  public void setOptCheckInputFileOnly(boolean val) {
-    this.optCheckInputFileOnly = val;
-  }
-  
   /**
    * Returns true if commit message value is not set and is null.
    * @return message

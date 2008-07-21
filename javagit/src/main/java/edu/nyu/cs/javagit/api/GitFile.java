@@ -43,7 +43,7 @@ public class GitFile extends GitFileSystemObject {
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();
     // run git-status command
-    GitStatusResponse response = gitStatus.statusSingleFile(dotGit.getPath(), file);
+    GitStatusResponse response = gitStatus.getSingleFileStatus(dotGit.getPath(), file);
 
     if (response.getUntrackedFilesSize() > 0) {
       return Status.UNTRACKED;

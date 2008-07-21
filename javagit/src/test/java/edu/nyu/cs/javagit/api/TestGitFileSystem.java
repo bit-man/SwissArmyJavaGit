@@ -30,7 +30,7 @@ public class TestGitFileSystem extends TestCase {
   
   @Before
   public void setUp() throws JavaGitException, IOException {
-    repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTestRepository");
+    repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTest");
     HelperGitCommands.initRepo(repositoryDirectory);
     dotGit = DotGit.getInstance(repositoryDirectory);
     workingTree = WorkingTree.getInstance(repositoryDirectory);
@@ -44,7 +44,7 @@ public class TestGitFileSystem extends TestCase {
   @Test
   public void testSingleGitFile() throws IOException, JavaGitException {
     //Create a file
-    FileUtilities.createFile(repositoryDirectory, "file1", "Some data");
+    FileUtilities.createFile(repositoryDirectory, "abc.txt", "Some data");
 
     //check contents
     List<GitFileSystemObject> children = workingTree.getTree();
@@ -55,7 +55,7 @@ public class TestGitFileSystem extends TestCase {
 
     GitFile gitFile = (GitFile)currentFile;
     assertEquals("Error. Expecting UNTRACKED status for the single file.", Status.UNTRACKED, gitFile.getStatus());
-/*    
+
     gitFile.add();
     assertEquals("Error. Expecting NEW_TO_COMMIT status for the single file.", Status.NEW_TO_COMMIT, gitFile.getStatus());
     
@@ -67,7 +67,10 @@ public class TestGitFileSystem extends TestCase {
     
     gitFile.add();
     assertEquals("Error. Expecting MODIFIED_TO_COMMIT status for the single file.", Status.MODIFIED_TO_COMMIT, gitFile.getStatus());
-*/
+    
+    gitFile.commit("commit message");
+    assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
+
   }
   
   

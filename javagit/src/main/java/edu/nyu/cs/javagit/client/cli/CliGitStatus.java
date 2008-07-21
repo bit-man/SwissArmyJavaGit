@@ -24,7 +24,8 @@ public class CliGitStatus implements IGitStatus {
    */
   private enum Patterns {
     DELETED("^#\\s+deleted:\\s+\\w+"), MODIFIED("^#\\s+modified:\\s+\\w+"), 
-    NEW_FILE("^#\\s+new file:\\s+\\w+"), EMPTY_HASH_LINE("^#\\s*$");
+    NEW_FILE("^#\\s+new file:\\s+\\w+"),
+    EMPTY_HASH_LINE("^#\\s*$");
 
     String pattern;
 
@@ -37,8 +38,6 @@ public class CliGitStatus implements IGitStatus {
     }
   }
   
-  private File inputFile = null;
-
   /**
    * This method returns <code>GitStatusResponse</code> object after parsing the options and then
    * executing the &lt;git-status&gt; command.
@@ -55,13 +54,32 @@ public class CliGitStatus implements IGitStatus {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
     List<String> command  = buildCommandLine(options, paths);
-    GitStatusParser parser;
-    if(inputFile != null) {
-      parser = new GitStatusParser(inputFile);
-    }
-    else {
-      parser = new GitStatusParser();
-    }
+    GitStatusParser parser = new GitStatusParser();
+    return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
+  }
+
+  /**
+   * Return status for a single <code>File</code>
+   * 
+   * @param repositoryPath
+   *          Directory path to the root of the repository.
+   * @param options
+   *          Options that are passed to &lt;git-status&gt; command.
+   * @param file
+   *          <code>File</code> instance 
+   * @return <code>GitStatusResponse</code> object
+   * @throws JavaGitException
+   *           Exception thrown if the repositoryPath is null
+   * @throws IOException
+   *           Exception is thrown if any of the IO operations fail.
+   */
+  public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file) 
+    throws JavaGitException, IOException {
+    CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
+    CheckUtilities.checkFileValidity(repositoryPath);
+    List<String> command  = buildCommandLine(options, null);
+    GitStatusParser parser = new GitStatusParser(file);
+
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
   }
 
@@ -86,12 +104,7 @@ public class CliGitStatus implements IGitStatus {
     }
     
     if ( paths != null ) {
-      if((options != null) && options.isOptCheckInputFileOnly() && (paths.size() == 1)) {
-        inputFile = paths.get(0);
-      }
-      else {
-        setPaths( argsList, paths);
-      }
+      setPaths( argsList, paths);
     }
     
     return argsList;
@@ -295,14 +308,14 @@ public class CliGitStatus implements IGitStatus {
     }
 
     public boolean matchModifiedFilePattern(String line) {
-      if (Patterns.MODIFIED.matches(line)) {
+      if (Patterns.MODIFIED.matches(line) || line.startsWith("#\tmodified:")) {
         return true;
       }
       return false;
     }
 
     public boolean matchNewFilePattern(String line) {
-      if (Patterns.NEW_FILE.matches(line)) {
+      if (Patterns.NEW_FILE.matches(line) || line.startsWith("#\tnew file:")) {
         return true;
       }
       return false;
