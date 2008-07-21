@@ -12,10 +12,12 @@ import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
 public class TestGitStatusResponse extends TestCase {
 
   GitStatusParser parser;
+  CliGitStatus gitStatus;
   
   @Before
   public void setUp() throws Exception {   
     parser = new GitStatusParser();
+    gitStatus = new CliGitStatus();
   }
   
   @Test
@@ -33,49 +35,57 @@ public class TestGitStatusResponse extends TestCase {
     parser.parseLine("# foobar02");
 
     GitStatusResponse response = parser.getResponse();
-    assertEquals("Branch Name", "foo", response.getBranch());
+    assertEquals("Branch Name", "foo", response.getBranch().getName());
   }
   
   @Test
   public void testModifiedFilePattern() {
     String line = "#  modified:   patttrn06";
-    assertTrue(parser.matchModifiedFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
     line = "# xyz modified: pattern06";
-    assertFalse(parser.matchModifiedFilePattern(line));
+    assertFalse(CliGitStatus.Patterns.MODIFIED.matches(line));
+    // Files with spaces may exist in Windows system
     line = "# modified: xyz pattern06";
-    assertFalse(parser.matchModifiedFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
+    line = "# modified:   dir1/dir2/dir3/foobar07";
+    assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
   }
   
   @Test
   public void testNewFilePattern() {
     String line = "#  new file:   foobar03";
-    assertTrue(parser.matchNewFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
     line = "#       new file:                  foobar03";
     line = "# xyz new file: pattern06";
-    assertFalse(parser.matchModifiedFilePattern(line));
+    assertFalse(CliGitStatus.Patterns.NEW_FILE.matches(line));
+    // Files with spaces may exist in Windows systems
     line = "# new file: xyz pattern06";
-    assertFalse(parser.matchModifiedFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
+    line = "#  new file:   dir1/dir2/dir3/foobar07";
+    assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
   }
   
   @Test
   public void testDeletedFilePattern() {
     String line = "# deleted:    foobar03";
-    assertTrue(parser.matchDeletedFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
     line = "#       deleted:                  foobar03";
-    assertTrue(parser.matchDeletedFilePattern(line));
+    assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
     line = "# xyz deleted: pattern06";
-    assertFalse(parser.matchDeletedFilePattern(line));   
+    assertFalse(CliGitStatus.Patterns.DELETED.matches(line));   
     line = "# deleted: xyz pattern06";
-    assertFalse(parser.matchDeletedFilePattern(line));    
+    assertTrue(CliGitStatus.Patterns.DELETED.matches(line));  
+    line = "#  deleted:   dir1/dir2/dir3/foobar07";
+    assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
   }
   
   public void testEmptyHashLinePattern() {
     String line = "#";
-    assertTrue(parser.matchEmptyHashLinePattern(line));
+    assertTrue(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
     line = "#      ";
-    assertTrue(parser.matchEmptyHashLinePattern(line));
+    assertTrue(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
     line = "# test";
-    assertFalse(parser.matchEmptyHashLinePattern(line));
+    assertFalse(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
   }
   
   @Test
@@ -84,9 +94,7 @@ public class TestGitStatusResponse extends TestCase {
     assertEquals("foobar03", parser.getFilename(line));
     line = "#  new file:   foobar04";
     assertEquals("foobar04", parser.getFilename(line));
+    line = "#  new file:   testDir1/foobar04";
+    assertEquals("testDir1/foobar04", parser.getFilename(line));
   }
-  
-  
-  
-  
 }

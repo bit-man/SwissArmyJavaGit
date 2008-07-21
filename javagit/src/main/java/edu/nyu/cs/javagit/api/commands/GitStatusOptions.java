@@ -24,13 +24,11 @@ public final class GitStatusOptions {
   private boolean optNoVerify = false;
   private boolean optUntrackedFiles = false;
   private boolean optAllowEmpty = false;
-  private boolean optAmmend = false;
   private File optReadFromLogFile = null;
-  private String message = null;
   private String author = null;
 
   /**
-   * Returns true if '-q' option is passed to &lt;git-status&gt; command.
+   * Returns true if the quiet (-q) option is set.
    * 
    * @return optQuite
    */
@@ -39,7 +37,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the optQuiet(-q) option.
+   * Sets the quiet(-q) option.
    * 
    * @param optQuiet
    */
@@ -48,7 +46,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if '-v' option is passed to git-status command.
+   * Returns true if verbose(-v) option is passed to &lt;git-status&gt; command.
    * 
    * @return
    */
@@ -57,7 +55,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the optVerbose option for git-status.
+   * Sets the verbose option for &lt;git-status&gt;.
    * 
    * @param optVerbose
    */
@@ -66,7 +64,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if optReadFromLogFile '-F' is null
+   * Returns true if read from log file(-F) is null.
    * 
    * @return
    */
@@ -94,7 +92,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if '-s' options is set.
+   * Returns true if sign-off(-s) options is set.
    * 
    * @return value of sign-off option
    */
@@ -103,7 +101,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the signOff option '-s' to git-status command.
+   * Sets the signOff(-s) option to &lt;git-status&gt; command.
    * 
    * @param signOff
    */
@@ -112,16 +110,16 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if edit '-e' option is set.
+   * Returns true if edit(-e) option is set.
    * 
-   * @return value of optEdit
+   * @return true if edit is set
    */
   public boolean isOptEdit() {
     return optEdit;
   }
 
   /**
-   * Sets the '-e' option to git-status command
+   * Sets the edit(-e) option to &lt;git-status&gt; command
    * 
    * @param edit
    */
@@ -133,7 +131,7 @@ public final class GitStatusOptions {
    * optAll tells the command to automatically stage files that have been modified and deleted, but
    * new files you have not told git about are not affected.
    * 
-   * Returns true if '-a' option need to be used for git-status command.
+   * Returns true if all(-a) option need to be used for &lt;git-status&gt; command.
    * 
    * @return value of optAll
    */
@@ -160,7 +158,7 @@ public final class GitStatusOptions {
    * Before making a commit out of staged contents so far, stage the contents of paths given on the
    * command line as well. This is normally not used.
    * 
-   * Returns true if '-i' options is set.
+   * Returns true if include(-i) option is set for &lt;git-status&gt; command.
    * 
    * @return optInclude
    */
@@ -169,7 +167,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the value of optInclude to git-status command.
+   * Sets the value of optInclude to &lt;git-status&gt; command.
    * 
    * @param include
    */
@@ -182,7 +180,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if '-o' option is set.
+   * Returns true if only(-o) option is set.
    * 
    * @return optOnly
    */
@@ -191,8 +189,8 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the optOnly option for git-status command. optOnly should not be set if '-a' optAll
-   * options is set. <code>IllegalArgumentException</code> is thrown if both '-a' and 'o' are set.
+   * Sets the optOnly option for &lt;git-status&gt; command. optOnly should not be set if optAll(-a)
+   * option is set. <code>IllegalArgumentException</code> is thrown if both '-a' and 'o' are set.
    * 
    * @param only
    */
@@ -205,7 +203,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if '-n' no-verify options is set.
+   * Returns true if no-verify(-n) options is set.
    * 
    * @return optNoVerify
    */
@@ -214,7 +212,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Set the value to true if --no-verify or '-n' option is to be set.
+   * Set the value to true if no verify(-n) option is set.
    * 
    * @param noVerify
    */
@@ -232,7 +230,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the value to true if --untracked-files option need to be set.
+   * Sets the value to true if untracked (--untracked-files) option need to be set.
    * 
    * @param untrackedFiles
    */
@@ -241,7 +239,7 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if optAllowEmpty is set. This option should be set if it's ok to record an empty
+   * Returns true if allow empty options is set. This option should be set if it's ok to record an empty
    * change.
    * 
    * @return
@@ -251,57 +249,12 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Sets the value of optAllowEmpty to true if we would like to record an empty change.
+   * Sets the value of allow empty option to true if we would like to record an empty change.
    * 
    * @param allowEmpty
    */
   public void setOptAllowEmpty(boolean allowEmpty) {
     this.optAllowEmpty = allowEmpty;
-  }
-
-  /**
-   * Returns true if --amend option is set. This option should be set if we would like to amend a
-   * previous commit.
-   * 
-   * @return optAmmend
-   */
-  public boolean isOptAmmend() {
-    return optAmmend;
-  }
-
-  /**
-   * Sets the value of optAmmend. This should be set to true if we would like to amend a previous
-   * commit.
-   * 
-   * @param ammend
-   */
-  public void setOptAmmend(boolean ammend) {
-    this.optAmmend = ammend;
-  }
-
-  /**
-   * Returns true if commit message value is not set and is null.
-   * @return message
-   */
-  public boolean isMessageNull() {
-    return message == null;
-  }
-
-  /**
-   * Returns the message for commit.
-   * @return message
-   */
-  public String getMessage() {
-    return message;
-  }
-
-  /**
-   * Sets the <code>String</code> message that will be used during the commit.
-   * @param message
-   */
-  public void setMessage(String message) {
-    CheckUtilities.checkStringArgument(message, "Message for commit");
-    this.message = message;
   }
 
   /**

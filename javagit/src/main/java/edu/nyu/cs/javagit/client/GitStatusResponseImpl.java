@@ -1,5 +1,9 @@
 package edu.nyu.cs.javagit.client;
 
+import java.io.File;
+
+import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.api.Ref.RefType;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
@@ -8,89 +12,109 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * values in a <code>GitStatusResponse</code>
  */
 public class GitStatusResponseImpl extends GitStatusResponse {
-  
+
   /**
    * Constructor
    */
   public GitStatusResponseImpl() {
     super();
   }
-  
+
   /**
-   * Sets the branch name in &lg;GitStatusResponse&gt;. NullPointerException is
-   * thrown if branch is null;
+   * Sets the branch name in <code>GitStatusResponse</code>. <code>NullPointerException</code>
+   * is thrown if branch is null;
+   * 
    * @param branch
+   *          <code>Ref</code> of <code>RefType.BRANCH</code>.
    */
-  public void setBranch(String branch) {
-    CheckUtilities.checkStringArgument(branch, "Branch name");
+  public void setBranch(Ref branch) {
     this.branch = branch;
   }
-  
-  /**
-   * Sets the <code>String</code> message in &lg;GitStatusResponse&gt;. <code>NullPointerException</code>
-   * is thrown if message is null.
-   * @param message
-   */
-  public void setMessage(String message) {
-    CheckUtilities.checkStringArgument(message, "Commit Message");
-    this.message = message;
-  }
-  
+
   /**
    * Sets the error message in the response object.
+   * 
+   * @param lineNumber
+   *          Output line number where the error message appeared.
    * @param errorMsg
+   *          <code>String</code> Error Message
    */
-  public void setError(String errorMsg ) {
-    CheckUtilities.checkStringArgument(errorMsg, "Error Msg String");
-    this.error = errorMsg;
+  public void setError(int lineNumber, String errorMsg) {
+    errors.add(new ErrorDetails(lineNumber, errorMsg));
   }
-  
+
   /**
-   * Adds a file to newFilesToCommit List.
-   * @param filename
+   * Sets the <code>String</code> message in <code>GitStatusResponse</code>.
+   * <code>NullPointerException</code> is thrown if message is null.
+   * 
+   * @param message
+   *          Output message saved from the &lt;git-status&gt; command.
    */
-  public void addToNewFilesToCommit(String filename) {
-    newFilesToCommit.add(filename);
+  public void setStatusOutputComment(String message) {
+    this.message = message;
   }
-  
+
   /**
-   * Adds a file to deletedFilesToCommit list.
-   * @param filename
+   * Adds a file to list of files that are deleted and will be committed next time
+   * &lt;git-commit&gt; is run.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
    */
-  public void addToDeletedFilesToCommit(String filename) {
-    deletedFilesToCommit.add(filename);
+  public void addToDeletedFilesToCommit(File file) {
+    deletedFilesToCommit.add(file);
   }
-  
+
   /**
-   * Adds a file to modifiedFilesToCommit list.
-   * @param filename
+   * Adds a file to the list of files that are deleted locally but not yet deleted from index using
+   * &lt;git-rm&gt; command.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
    */
-  public void addToModifiedFilesToCommit(String filename) {
-    modifiedFilesToCommit.add(filename);
+  public void addToDeletedFilesNotUpdated(File file) {
+    deletedFilesNotUpdated.add(file);
   }
-  
+
   /**
-   * Adds a file to deletedFilesNotUpdated list.
-   * @param filename
+   * Adds a file to list of files that are modified and will be committed next time
+   * &lt;git-commit&gt; is run.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
    */
-  public void addToDeletedFilesNotUpdated(String filename) {
-    deletedFilesNotUpdated.add(filename);
+  public void addToModifiedFilesToCommit(File file) {
+    modifiedFilesToCommit.add(file);
   }
-  
+
   /**
-   * Adds a file to modifiedFilesNotUpdated list.
-   * @param filename
+   * Adds a file to the list of files that are modified files but not yet updated.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
    */
-  public void addToModifiedFilesNotUpdated(String filename) {
-    modifiedFilesNotUpdated.add(filename);
+  public void addToModifiedFilesNotUpdated(File file) {
+    modifiedFilesNotUpdated.add(file);
   }
-  
+
   /**
-   * Adds a file to untrackedFiles list.
-   * @param filename
+   * Adds a file to the list of files that are ready to be committed next time &lt;git-commit&gt;
+   * command is run.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
    */
-  public void addToUntrackedFiles(String filename) {
-    untrackedFiles.add(filename);
+  public void addToNewFilesToCommit(File file) {
+    newFilesToCommit.add(file);
   }
-  
+
+  /**
+   * Adds a file to list of files that have been added locally but not yet added to the index.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
+   */
+  public void addToUntrackedFiles(File file) {
+    untrackedFiles.add(file);
+  }
 }

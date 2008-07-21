@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
@@ -18,14 +19,13 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  * Command-line implementation of the <code>IGitStatus</code> interface.
  */
 public class CliGitStatus implements IGitStatus {
- 
+
   /**
    * Patterns for matching lines for deleted files, modified files, new files and empty lines.
    */
-  private enum Patterns {
-    DELETED("^#\\s+deleted:\\s+\\w+"), MODIFIED("^#\\s+modified:\\s+\\w+"), 
-    NEW_FILE("^#\\s+new file:\\s+\\w+"),
-    EMPTY_HASH_LINE("^#\\s*$");
+  public static enum Patterns {
+    DELETED("^#\\s+deleted:\\s+.*"), MODIFIED("^#\\s+modified:\\s+.*"), NEW_FILE(
+        "^#\\s+new file:\\s+.*"), EMPTY_HASH_LINE("^#\\s*$");
 
     String pattern;
 
@@ -33,47 +33,97 @@ public class CliGitStatus implements IGitStatus {
       this.pattern = pattern;
     }
 
-    boolean matches(String line) {
+    public boolean matches(String line) {
       return line.matches(this.pattern);
     }
   }
-  
+
+  private File inputFile = null;
+
   /**
-   * This method returns <code>GitStatusResponse</code> object after parsing the options and then
-   * executing the &lt;git-status&gt; command.
+   * Implementation of <code>IGitStatus</code> method for getting the status of a list of files
    * 
-   * @param repositoryPath
-   *          Path to repository
-   * @param GitStatusOptions
-   *          Options passed to &lt;git-status&gt; command
-   * @param paths
-   *          List of files or file-pattern
+   *TODO: (gsd216): Redo JavaGitExceptions
    */
   public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths)
       throws JavaGitException, IOException {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
-    List<String> command  = buildCommandLine(options, paths);
-    GitStatusParser parser = new GitStatusParser();
-    return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
+    List<String> command = buildCommandLine(options, paths);
+    GitStatusParser parser;
+    if (inputFile != null) {
+      parser = new GitStatusParser(inputFile);
+    } else {
+      parser = new GitStatusParser();
+    }
+    GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(),
+        command, parser);
+    handleErrorState(response);
+    return response;
   }
-
+  
+  /**
+   * Implementation of <code>IGitStatus</code> method for getting the status of a file.
+   */
+  public GitStatusResponse status(File repositoryPath, GitStatusOptions options, File file)
+  throws JavaGitException, IOException {
+    List<File> paths = new ArrayList<File>();
+    paths.add(file);
+    return status(repositoryPath, options, paths);
+  }
+  
+  /**
+   * Implementation of <code>IGitStatus</code> method with only options passed to &lt;git-status&gt; command.
+   */
+  public GitStatusResponse status(File repositoryPath, GitStatusOptions options)
+  throws JavaGitException, IOException {
+    List<File> paths = null;
+    return status( repositoryPath, options, paths);
+  }
+  
+  /**
+   * Implementation of <code>IGitStatus</code> method with file-paths passed to &lt;git-status&gt; command.
+   */
+  public GitStatusResponse status(File repositoryPath, List<File> paths) throws JavaGitException,
+  IOException {
+    return status(repositoryPath, null, paths);
+  }
+  
+  /**
+   * Implementation of <code>IGitStatus</code> method for getting the status of repository
+   * with no options or files provided.
+   */
+  public GitStatusResponse status(File repositoryPath) throws JavaGitException, IOException {
+    GitStatusOptions options = null;
+    List<File> paths = null;
+    return status(repositoryPath, options, paths);
+  }
+  
+  /**
+   * Implementation of <code>IGitStatus</code> method with options set to all(-a)
+   */
+  public GitStatusResponse statusAll(File repositoryPath) throws JavaGitException, IOException {
+    GitStatusOptions options = new GitStatusOptions();
+    options.setOptAll(true);
+    return status(repositoryPath, options);
+  }
+  
   /**
    * Return status for a single <code>File</code>
-   * 
+   *
    * @param repositoryPath
    *          Directory path to the root of the repository.
    * @param options
    *          Options that are passed to &lt;git-status&gt; command.
    * @param file
-   *          <code>File</code> instance 
+   *          <code>File</code> instance
    * @return <code>GitStatusResponse</code> object
    * @throws JavaGitException
    *           Exception thrown if the repositoryPath is null
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
    */
-  public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file) 
+  public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file)
     throws JavaGitException, IOException {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
@@ -83,34 +133,44 @@ public class CliGitStatus implements IGitStatus {
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
   }
 
+
+  //TODO (gsd216): To redo and re-implement the JavaGitException
+  private void handleErrorState(GitStatusResponse response) throws JavaGitException {
+    if( response.errorState() ) {
+      throw new JavaGitException(438000, response.getError(0));
+    }
+  }
+  
   /**
-   * Parses options provided by the <code>GitStatusOptions</code> object and adds them to the command. 
+   * Parses options provided by the <code>GitStatusOptions</code> object and adds them to the
+   * command.
    * 
    * @param options
    *          <code>GitStatusOptions</code> provided by &lt;gitclipse&gt;.
    * @param paths
    *          List of file paths.
-   * @return
-   *          command to be executed.
+   * @return command to be executed.
    */
   private List<String> buildCommandLine(GitStatusOptions options, List<File> paths) {
-    List<String> argsList = new ArrayList<String>();
+    List<String> command = new ArrayList<String>();
 
-    argsList.add("git");
-    argsList.add("status");
-    
-    if ( options != null ) {
-      setOptions( argsList, options );
+    command.add("git");
+    command.add("status");
+
+    if (options != null) {
+      setOptions(command, options);
     }
-    
-    if ( paths != null ) {
-      setPaths( argsList, paths);
+
+    if (paths != null) {
+      for (File file : paths) {
+        command.add(file.getAbsolutePath());
+      }
     }
-    
-    return argsList;
+
+    return command;
   }
-  
-  private void setOptions( List<String> argsList, GitStatusOptions options ) {
+
+  private void setOptions(List<String> argsList, GitStatusOptions options) {
     if (options.isOptAll()) {
       argsList.add("-a");
     }
@@ -141,10 +201,6 @@ public class CliGitStatus implements IGitStatus {
     if (options.isOptAllowEmpty()) {
       argsList.add("--allow-empty");
     }
-    if (!options.isMessageNull()) {
-      argsList.add("-m");
-      argsList.add(options.getMessage());
-    }
     if (!options.isOptReadFromLogFileNull()) {
       argsList.add("-F");
       argsList.add(options.getOptReadFromLogFile().getName());
@@ -154,21 +210,13 @@ public class CliGitStatus implements IGitStatus {
       argsList.add(options.getAuthor());
     }
   }
-  
-  private void setPaths( List<String> argsList, List<File> paths) {
-    if ( paths == null ) {
-      return;
-    }
-    for( File file: paths) {
-      argsList.add( file.getAbsolutePath());
-    }
-  }
 
   public static class GitStatusParser implements IParser {
 
     private enum State {
       FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
     }
+
     private State outputState;
     private int lineNum;
     private GitStatusResponseImpl response;
@@ -178,19 +226,21 @@ public class CliGitStatus implements IGitStatus {
       lineNum = 0;
       response = new GitStatusResponseImpl();
     }
-    
+
     public GitStatusParser(File in) {
       inputFile = in;
       lineNum = 0;
       response = new GitStatusResponseImpl();
     }
-    
+
     public void parseLine(String line) {
       if (line == null || line.length() == 0) {
         return;
       }
       ++lineNum;
-      parseForError(line);
+      if ( isError(line) ) {
+        return;
+      }
       if (lineNum == 1) {
         parseLineOne(line);
       } else {
@@ -199,7 +249,8 @@ public class CliGitStatus implements IGitStatus {
     }
 
     /*
-     * line1 always start with a '#' and contains the branch name.
+     * Seems like a valid ( non-error ) line 1 always start
+     * with a '#' and contains the branch name.
      */
     private void parseLineOne(String line) {
       if (!line.startsWith("#")) {
@@ -207,13 +258,14 @@ public class CliGitStatus implements IGitStatus {
       }
       String branch = getBranch(line);
       if (branch != null) {
-        response.setBranch(getBranch(line));
+        String branchName = getBranch(line);
+        response.setBranch(Ref.createBranchRef(branchName));
       }
     }
 
     private void parseOtherLines(String line) {
       if (!(line.charAt(0) == '#')) {
-        response.setMessage(line);
+        response.setStatusOutputComment(line);
         return;
       }
       if (line.contains("Changes to be committed")) {
@@ -231,101 +283,75 @@ public class CliGitStatus implements IGitStatus {
       if (ignoreOutput(line)) {
         return;
       }
-      if (matchDeletedFilePattern(line)) {
+      if (Patterns.DELETED.matches(line)) {
         String deletedFile = getFilename(line);
-        if((inputFile != null) && (!deletedFile.matches(inputFile.getName())))
-            return;
+        if ((inputFile != null) && (!deletedFile.matches(inputFile.getName())))
+          return;
         addDeletedFile(deletedFile);
         return;
       }
-      if (matchModifiedFilePattern(line)) {
+      if (Patterns.MODIFIED.matches(line)) {
         String modifiedFile = getFilename(line);
-        if((inputFile != null) && (!modifiedFile.matches(inputFile.getName())))
-            return;
+        if ((inputFile != null) && (!modifiedFile.matches(inputFile.getName())))
+          return;
         addModifiedFile(modifiedFile);
         return;
       }
-      if (matchNewFilePattern(line)) {
+      if (Patterns.NEW_FILE.matches(line)) {
         String newFile = getFilename(line);
-        if((inputFile != null) && (!newFile.matches(inputFile.getName())))
-            return;
+        if ((inputFile != null) && (!newFile.matches(inputFile.getName())))
+          return;
         addNewFile(newFile);
         return;
       }
       if (outputState == State.UNTRACKED_FILES) {
         String untrackedFile = getFilename(line);
-        if((inputFile != null) && (!untrackedFile.matches(inputFile.getName())))
-            return;
+        if ((inputFile != null) && (!untrackedFile.matches(inputFile.getName())))
+          return;
         addUntrackedFile(untrackedFile);
       }
     }
 
-    private void parseForError(String line) {
+    private boolean isError(String line) {
       if (line.startsWith("fatal") || line.startsWith("Error") || line.startsWith("error")) {
-        response.setError(line);
+        response.setError(lineNum, line);
+        return true;
       }
+      return false;
     }
 
     private void addNewFile(String filename) {
-      if (outputState == State.FILES_TO_COMMIT) {
-        response.addToNewFilesToCommit(filename);
-      }
+      response.addToNewFilesToCommit(new File(filename));
     }
 
     private void addDeletedFile(String filename) {
+      File file = new File(filename);
       switch (outputState) {
       case FILES_TO_COMMIT:
-        response.addToDeletedFilesToCommit(filename);
+        response.addToDeletedFilesToCommit(file);
         break;
 
       case NOT_UPDATED:
-        response.addToDeletedFilesNotUpdated(filename);
+        response.addToDeletedFilesNotUpdated(file);
         break;
       }
     }
 
     private void addModifiedFile(String filename) {
+      File file = new File(filename);
       switch (outputState) {
       case FILES_TO_COMMIT:
-        response.addToModifiedFilesToCommit(filename);
+        response.addToModifiedFilesToCommit(file);
         break;
 
       case NOT_UPDATED:
-        response.addToModifiedFilesNotUpdated(filename);
+        response.addToModifiedFilesNotUpdated(file);
         break;
       }
     }
 
     private void addUntrackedFile(String filename) {
-      response.addToUntrackedFiles(filename);
-    }
-
-    public boolean matchDeletedFilePattern(String line) {
-      if (Patterns.DELETED.matches(line)) {
-        return true;
-      }
-      return false;
-    }
-
-    public boolean matchModifiedFilePattern(String line) {
-      if (Patterns.MODIFIED.matches(line) || line.startsWith("#\tmodified:")) {
-        return true;
-      }
-      return false;
-    }
-
-    public boolean matchNewFilePattern(String line) {
-      if (Patterns.NEW_FILE.matches(line) || line.startsWith("#\tnew file:")) {
-        return true;
-      }
-      return false;
-    }
-
-    public boolean matchEmptyHashLinePattern(String line) {
-      if (Patterns.EMPTY_HASH_LINE.matches(line)) {
-        return true;
-      }
-      return false;
+      response.addToUntrackedFiles(new File(filename));
     }
 
     private String getBranch(String line) {
@@ -337,6 +363,7 @@ public class CliGitStatus implements IGitStatus {
       return last;
     }
 
+    //TODO: (gsd216) To add annotation here for unit testing
     public String getFilename(String line) {
       String filename = null;
       Scanner scanner = new Scanner(line);
@@ -356,7 +383,7 @@ public class CliGitStatus implements IGitStatus {
       if (line.contains("(use \"git add/rm")) {
         return true;
       }
-      if (matchEmptyHashLinePattern(line)) {
+      if (Patterns.EMPTY_HASH_LINE.matches(line)) {
         return true;
       }
       return false;

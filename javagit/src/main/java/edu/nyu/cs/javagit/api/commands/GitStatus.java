@@ -14,7 +14,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 /**
  * <code>GitStatus</code> provides an API to status of a git repository.
  */
-public class GitStatus {
+public final class GitStatus {
 
   /**
    * It returns a <code>GitStatusResponse</code> object that contains all the details of the
@@ -28,12 +28,12 @@ public class GitStatus {
    *          List of paths or patterns
    * @return <code>GitStatusResponse</code> object
    * @throws JavaGitException
-   *          Exception thrown if the repositoryPath is null or if options or paths are invalid.
+   *           Exception thrown if the repositoryPath is null or if options or paths are invalid.
    * @throws IOException
-   *          Exception is thrown if any of the IO operations fail.
+   *           Exception is thrown if any of the IO operations fail.
    */
-  public GitStatusResponse status(File repositoryPath, GitStatusOptions options,
-      List<File> paths) throws JavaGitException, IOException {
+  public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths)
+      throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitStatus gitStatus = client.getGitStatusInstance();
@@ -54,12 +54,14 @@ public class GitStatus {
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
    */
-  public GitStatusResponse status(File repositoryPath, List<File> path)
-      throws JavaGitException, IOException {
-    GitStatusOptions options = null;
-    return status(repositoryPath, options, path);
+  public GitStatusResponse status(File repositoryPath, List<File> paths) throws JavaGitException,
+      IOException {
+    CheckUtilities.checkFileValidity(repositoryPath);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.status(repositoryPath, paths);
   }
-  
+
   /**
    * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
    * of &lt;git-status&gt; command. It has no path passed as parameter to the method.
@@ -76,39 +78,42 @@ public class GitStatus {
    */
   public GitStatusResponse status(File repositoryPath, GitStatusOptions options)
       throws JavaGitException, IOException {
-    List<File> paths = null;
-    return status(repositoryPath, options, paths);
-  } 
+    CheckUtilities.checkFileValidity(repositoryPath);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.status(repositoryPath, options);
+  }
 
   /**
    * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
-   * of &lt;git-status&gt; command. Instead of passing a list of paths, this method takes
-   * a <code>String</code> argument to a file-path.
+   * of &lt;git-status&gt; command. Instead of passing a list of paths, this method takes a
+   * <code>String</code> argument to a file-path.
    * 
    * @param repositoryPath
    *          Directory path to the root of the repository.
    * @param options
    *          Options that are passed to &lt;git-status&gt; command.
-   * @param path
+   * @param file
    *          Filename or directory
    * @return <code>GitStatusResponse</code> object
    * @throws JavaGitException
    *           Exception thrown if the repositoryPath is null or if options or paths are invalid.
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
-   */  
-  public GitStatusResponse status(File repositoryPath, GitStatusOptions options, File path)
+   */
+  public GitStatusResponse status(File repositoryPath, GitStatusOptions options, File file)
       throws JavaGitException, IOException {
-    CheckUtilities.checkFileValidity(path);
-    List<File> paths = new ArrayList<File>();
-    paths.add(path);
-    return status(repositoryPath, options, paths);
+    CheckUtilities.checkFileValidity(repositoryPath);
+    CheckUtilities.checkFileValidity(file);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.status(repositoryPath, options, file);
   }
 
   /**
    * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
-   * of &lt;git-status&gt; command. It does not pass any options or file paths. This is the most generic
-   * execution of &lt;git-status&gt; command.
+   * of &lt;git-status&gt; command. It does not pass any options or file paths. This is the most
+   * generic execution of &lt;git-status&gt; command.
    * 
    * @param repositoryPath
    *          Directory path to the root of the repository.
@@ -117,16 +122,18 @@ public class GitStatus {
    *           Exception thrown if the repositoryPath is null or if options or paths are invalid.
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
-   */ 
+   */
   public GitStatusResponse status(File repositoryPath) throws JavaGitException, IOException {
-    List<File> paths = null;
-    GitStatusOptions options = null;
-    return status(repositoryPath, options, paths);
+    CheckUtilities.checkFileValidity(repositoryPath);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.status(repositoryPath);
   }
 
   /**
    * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
-   * of &lt;git-status&gt; command. It is equivalent of executing &lt;git-status&gt; command with '-a' option.
+   * of &lt;git-status&gt; command. It is equivalent of executing &lt;git-status&gt; command with
+   * '-a' option.
    * 
    * @param repositoryPath
    *          Directory path to the root of the repository.
@@ -135,17 +142,18 @@ public class GitStatus {
    *           Exception thrown if the repositoryPath is null or if options or paths are invalid.
    * @throws IOException
    *           Exception is thrown if any of the IO operations fail.
-   */ 
+   */
   public GitStatusResponse statusAll(File repositoryPath) throws JavaGitException, IOException {
-    GitStatusOptions options = new GitStatusOptions();
-    options.setOptAll(true);
-    return status(repositoryPath, options);
+    CheckUtilities.checkFileValidity(repositoryPath);
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    return gitStatus.statusAll(repositoryPath);
   }
   
   /**
    * It returns a <code>GitStatusResonse</code> object that contains all the details of the output
    * of &lt;git-status&gt; command, but filters output for a single file
-   * 
+   *
    * @param repositoryPath
    *          Directory path to the root of the repository.
    * @param path
@@ -161,4 +169,5 @@ public class GitStatus {
     IGitStatus gitStatus = client.getGitStatusInstance();
     return gitStatus.getSingleFileStatus(repositoryPath, null, path);
   }
+
 }

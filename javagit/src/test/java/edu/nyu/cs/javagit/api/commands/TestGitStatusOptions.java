@@ -43,6 +43,51 @@ public class TestGitStatusOptions extends TestCase{
     }
   }
   
+  /**
+   * Test for IllegalArgumentException is thrown when -a and -o options are
+   * used together in a &lt;git-status&gt; command. This time opt-only is set before
+   * opt-all option
+   */
+  @Test
+  public void testAllAndOnlyOptionsTogetherThrowJavaGitException2() {
+    try {
+      options.setOptOnly(true);
+      options.setOptAll(true);
+      fail("IllegalArgumentException not thrown");     
+    } catch ( IllegalArgumentException excpected ) {
+    }
+  }
+  
+  /**
+   * Test for IllegalArgumentException is thrown when all(-a) and include(-i) options are
+   * used together in a &lt;git-status&gt; command. This time opt-include is set before
+   * opt-all option
+   */
+  @Test
+  public void testAllAndOnlyOptionsTogetherThrowJavaGitException3() {
+    try {
+      options.setOptInclude(true);
+      options.setOptAll(true);
+      fail("IllegalArgumentException not thrown");     
+    } catch ( IllegalArgumentException excpected ) {
+    }
+  }
+  
+  /**
+   * Test for IllegalArgumentException is thrown when all(-a) and include(-i) options are
+   * used together in a &lt;git-status&gt; command. This time opt-all is set before
+   * opt-include option
+   */
+  @Test
+  public void testAllAndOnlyOptionsTogetherThrowJavaGitException4() {
+    try {
+      options.setOptAll(true);
+      options.setOptInclude(true);
+      fail("IllegalArgumentException not thrown");     
+    } catch ( IllegalArgumentException excpected ) {
+    }
+  }
+  
   @After
   public void tearDown() throws Exception {
     if ( repositoryDirectory.exists() ) {
