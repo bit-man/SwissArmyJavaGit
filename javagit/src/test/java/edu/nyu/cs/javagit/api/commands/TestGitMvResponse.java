@@ -21,8 +21,9 @@ public class TestGitMvResponse extends TestCase {
   private File repoDirectory;
   private File source;
   private File destination;
-  private GitAdd add;
+  private GitAdd gitAdd;
   private GitMv gitMv;
+  private GitCommit gitCommit;
   
   private File fileOne;
   private File fileTwo;
@@ -38,11 +39,12 @@ public class TestGitMvResponse extends TestCase {
   
   @Before
   protected void setUp() throws IOException, JavaGitException {
-    repoDirectory = FileUtilities.createTempDirectory("GitMvTestResponseRepo");
+    repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
     HelperGitCommands.initRepo(repoDirectory);
 
-    add = new GitAdd();
+    gitAdd = new GitAdd();
     gitMv = new GitMv();
+    gitCommit = new GitCommit();
     
     fileOne = FileUtilities.createFile(repoDirectory, "fileOne", "Testfile#1");
     fileTwo = FileUtilities.createFile(repoDirectory, "fileTwo", "Testfile#2");
@@ -73,11 +75,12 @@ public class TestGitMvResponse extends TestCase {
     filesToAdd.add(subDirOne);
     filesToAdd.add(subDirTwo);
     filesToAdd.add(subDirThree);
-    add.add(repoDirectory, null, filesToAdd);
+    gitAdd.add(repoDirectory, null, filesToAdd);
     
     List<File> addDirToSubDir = new ArrayList<File>();
     addDirToSubDir.add(subDirFour);
-    add.add(subDirTwo, null, addDirToSubDir);
+    gitAdd.add(subDirTwo, null, addDirToSubDir);
+    gitCommit.commit(repoDirectory, "Making the commit");
   }
 
   @After
