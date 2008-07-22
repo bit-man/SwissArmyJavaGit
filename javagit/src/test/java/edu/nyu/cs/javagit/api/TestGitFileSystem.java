@@ -30,7 +30,7 @@ public class TestGitFileSystem extends TestCase {
   
   @Before
   public void setUp() throws JavaGitException, IOException {
-    repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTest");
+    repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTest_dir");
     HelperGitCommands.initRepo(repositoryDirectory);
     dotGit = DotGit.getInstance(repositoryDirectory);
     workingTree = WorkingTree.getInstance(repositoryDirectory);
@@ -58,19 +58,19 @@ public class TestGitFileSystem extends TestCase {
 
     gitFile.add();
     assertEquals("Error. Expecting NEW_TO_COMMIT status for the single file.", Status.NEW_TO_COMMIT, gitFile.getStatus());
- /*   
+    
     gitFile.commit("commit message");
     assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
-    
+   
     FileUtilities.modifyFileContents(gitFile.getFile(), "more data");
     assertEquals("Error. Expecting MODIFIED status for the single file.", Status.MODIFIED, gitFile.getStatus());
-    
+ 
     gitFile.add();
     assertEquals("Error. Expecting MODIFIED_TO_COMMIT status for the single file.", Status.MODIFIED_TO_COMMIT, gitFile.getStatus());
     
     gitFile.commit("commit message");
     assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
-*/
+
   }
   
   
