@@ -46,12 +46,16 @@ public class TestGitAdd extends TestCase {
    */
   @Test
   public void testAddingFilesToRepository() throws IOException, JavaGitException {
-    File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "Sameple Contents");
+    File file1 = new File(repoDirectory.getAbsolutePath() + File.separator + "fileA.txt");
+    file1.createNewFile();
     File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
     if (tmpDir.mkdir()) {
-      File file2 = FileUtilities.createFile(repoDirectory, "dirA/fileB.txt", "Sameple Contents");
+      // File file2 = FileUtilities.createFile(repoDirectory, "dirA/fileB.txt", "Sameple Contents");
+      File file2 = new File(tmpDir.getAbsolutePath() + File.separator + "fileB.txt");
+      file2.createNewFile();
       List<File> paths = new ArrayList<File>();
       paths.add(file1);
+      paths.add(tmpDir);
       paths.add(file2);
       GitAddOptions options = new GitAddOptions();
       options.setVerbose(true);

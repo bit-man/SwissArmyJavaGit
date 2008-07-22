@@ -74,11 +74,11 @@ public class TestCliGitAdd extends TestCase {
     GitAddResponse response = parser.getResponse();
     assertEquals("No of lines in output does not match", 2, response.getFileListSize());
     assertEquals("File name does not match", "eg9", response.get(0).getName());
-    assertEquals("File path provided when adding does not match.", "test-repository/eg9", response
-        .get(0).toString());
+    assertEquals("File path provided when adding does not match.", "test-repository"
+        + File.separator + "eg9", response.get(0).toString());
     assertEquals("File name does not match", "foo", response.get(1).getName());
-    assertEquals("File path provided when adding does not match.", "test-repository/testdir/foo",
-        response.get(1).toString());
+    assertEquals("File path provided when adding does not match.", "test-repository"
+        + File.separator + "testdir" + File.separator + "foo", response.get(1).toString());
   }
 
   /**

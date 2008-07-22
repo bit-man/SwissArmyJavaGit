@@ -43,11 +43,16 @@ public class TestGitStatus extends TestCase {
     gitStatus = new GitStatus();
     options = new GitStatusOptions();
     // Create Few files
-    file1 = FileUtilities.createFile(repositoryDirectory, "foobar01", "Sample Contents");
-    file2 = FileUtilities.createFile(repositoryDirectory, "foobar02", "Sample Contents");
+    file1 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar01");
+    file2 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar02");
+    file1.createNewFile();
+    file2.createNewFile();
     testDir = new File(repositoryDirectory.getAbsolutePath() + File.separator + "testDirectory");
     testDir.mkdir();
-    file3 = FileUtilities.createFile(testDir, "foobar03", "Sample contents of foobar03 under testDir\n");
+    // file3 = FileUtilities.createFile(testDir, "foobar03", "Sample contents of foobar03 under
+    // testDir\n");
+    file3 = new File(testDir.getAbsoluteFile() + File.separator + "foobar03");
+    file3.createNewFile();
   }
 
   /**
@@ -70,6 +75,7 @@ public class TestGitStatus extends TestCase {
    * Second Test for IOException being thrown where Repository directory does not exist and we try
    * to create a file in that directory.
    */
+
   @Test
   public void testIOExceptionThrownForInvalidRepositoryDirectory2() throws JavaGitException {
     repositoryDirectory = new File("/_______non_existing_dir________");
@@ -89,6 +95,7 @@ public class TestGitStatus extends TestCase {
    * @throws JavaGitException
    * @throws IOException
    */
+
   @Test
   public void testBranch() throws JavaGitException, IOException {
     List<File> paths = null;
@@ -104,6 +111,7 @@ public class TestGitStatus extends TestCase {
    * @throws IOException
    * @throws JavaGitException
    */
+
   @Test
   public void testUntrackedNewFiles() throws IOException, JavaGitException {
     List<File> paths = null;
@@ -114,8 +122,8 @@ public class TestGitStatus extends TestCase {
         0).getName());
     assertEquals("Error. Filename does not match.", "foobar02", response.getFileFromUntrackedFiles(
         1).getName());
-    assertEquals("Error. Filename does not match.", "testDirectory", response.getFileFromUntrackedFiles(
-        2).getName());
+    assertEquals("Error. Filename does not match.", "testDirectory", response
+        .getFileFromUntrackedFiles(2).getName());
   }
 
   /**
@@ -129,6 +137,7 @@ public class TestGitStatus extends TestCase {
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
     filesToAdd.add(file2);
+    filesToAdd.add(testDir);
     filesToAdd.add(file3);
     GitAddOptions addOptions = new GitAddOptions();
     gitAdd.add(repositoryDirectory, addOptions, filesToAdd);
@@ -140,8 +149,8 @@ public class TestGitStatus extends TestCase {
         .getFileFromNewFilesToCommit(0).getName());
     assertEquals("Error. Filename does not match", "foobar02", status
         .getFileFromNewFilesToCommit(1).getName());
-    assertEquals("Error. Filename does not match", "testDirectory/foobar03", status
-        .getFileFromNewFilesToCommit(2).toString());
+    assertEquals("Error. Filename does not match", "testDirectory" + File.separator + "foobar03",
+        status.getFileFromNewFilesToCommit(2).toString());
   }
 
   /**
@@ -156,6 +165,7 @@ public class TestGitStatus extends TestCase {
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
     filesToAdd.add(file2);
+    filesToAdd.add(testDir);
     filesToAdd.add(file3);
     GitAddOptions addOptions = new GitAddOptions();
     // Add the files for committing
@@ -170,7 +180,7 @@ public class TestGitStatus extends TestCase {
     GitStatusResponse status = gitStatus.status(repositoryDirectory, options, statusPath);
     int modifiedNotUpdatedFiles = status.getModifiedFilesNotUpdatedSize();
     assertEquals("No of modified but not updated files not equal", 2, modifiedNotUpdatedFiles);
-    if ( file2.delete() ) {
+    if (file2.delete()) {
       status = gitStatus.status(repositoryDirectory, options, statusPath);
       modifiedNotUpdatedFiles = status.getModifiedFilesNotUpdatedSize();
       int deletedFileNotUpdated = status.getDeletedFilesNotUpdatedSize();
