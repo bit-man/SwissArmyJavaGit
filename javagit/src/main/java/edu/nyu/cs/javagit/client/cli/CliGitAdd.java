@@ -135,9 +135,15 @@ public class CliGitAdd implements IGitAdd {
     String repoString = repositoryDirectory.getAbsolutePath();
     if (filePath.startsWith(repoString)) {
       int repoLength = repoString.length();
-      // add 1 to repoLength to handle the path separator
-      String relativePath = filePath.substring(repoLength + 1, filePath.length());
-      return relativePath;
+      //check for root directory scenario
+      if(filePath.length() > repoLength) {
+        // add 1 to repoLength to handle the path separator
+        String relativePath = filePath.substring(repoLength + 1, filePath.length());
+        return relativePath;
+      }
+      else {
+        return new String("");
+      }
     }
     return filePath;
   }

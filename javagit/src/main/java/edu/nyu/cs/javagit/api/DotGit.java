@@ -9,6 +9,7 @@ import java.io.IOException;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 import edu.nyu.cs.javagit.api.commands.GitBranch;
+import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
 import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
 
 /**
@@ -130,7 +131,7 @@ public final class DotGit {
    * @param gitFrom
    *          The .git being cloned
    */
-  public void clone(DotGit gitFrom) {
+  public void gitClone(DotGit gitFrom) {
   }
 
   /**
@@ -141,9 +142,11 @@ public final class DotGit {
    * 
    * @return The new branch
    */
-  public Ref createBranch(String name) {
-    // TODO (ma1683): Implement this method
-    return null;
+  public Ref createBranch(String name) throws IOException, JavaGitException {
+    Ref newBranch = Ref.createBranchRef(name);
+    GitBranch gitBranch = new GitBranch();
+    gitBranch.createBranch(path, newBranch);
+    return newBranch;
   }
 
   /**
@@ -151,11 +154,43 @@ public final class DotGit {
    * 
    * @param branch
    *          The branch to delete
+   * @param forceDelete
+   *          True if force delete option -D should be used, 
+   *          false if -d should be used.
+   * @throws IOException
+   *          Thrown in case of I/O operation failure
+   * @throws JavaGitException
+   *          Thrown when there is an error executing git-branch.
    */
-  public void deleteBranch(Ref branch) {
-    // TODO (ma1683): Implement this method
-    // GitBranch.branch(-d);
+  public void deleteBranch(Ref branch, boolean forceDelete) 
+    throws IOException, JavaGitException {
+    GitBranch gitBranch = new GitBranch();
+    gitBranch.deleteBranch(path, forceDelete, false, branch);
     branch = null;
+  }
+  
+  /**
+   * Deletes a branch
+   * 
+   * @param branchFrom
+   *          The branch to rename
+   * @param nameTo
+   *          new branch name
+   * @param forceRename
+   *          True if force rename option -M should be used. 
+   *          False if -m should be used. 
+   * @return new <code>Ref</code> instance
+   * @throws IOException
+   *          Thrown in case of I/O operation failure
+   * @throws JavaGitException
+   *          Thrown when there is an error executing git-branch.
+   */
+  public Ref renameBranch(Ref branchFrom, String nameTo, boolean forceRename) 
+    throws IOException, JavaGitException {
+    Ref newBranch = Ref.createBranchRef(nameTo);
+    GitBranch gitBranch = new GitBranch();
+    gitBranch.renameBranch(path, forceRename, branchFrom, newBranch);
+    return newBranch;
   }
 
   /**
@@ -165,7 +200,8 @@ public final class DotGit {
    */
   public Iterator<Ref> getBranches() throws IOException, JavaGitException {
     GitBranch gitBranch = new GitBranch();
-    GitBranchResponse response = gitBranch.branch(path, null);
+    GitBranchOptions options = new GitBranchOptions();
+    GitBranchResponse response = gitBranch.branch(path, options);
     return response.getBranchListIterator();
   }
 

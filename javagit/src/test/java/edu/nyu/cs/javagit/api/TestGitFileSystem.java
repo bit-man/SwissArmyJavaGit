@@ -86,21 +86,36 @@ public class TestGitFileSystem extends TestCase {
     //check contents
     List<GitFileSystemObject> children = workingTree.getTree();
     assertEquals("Error. Expecting 2 files.", 2, children.size());
-/*
+
     //attempt to commit (but without anything on the index)
-    workingTree.commit("commit comment");
-    for(int i=0; i<children.size(); ++i) {
-      GitFile gitFile = (GitFile)children.get(i);
-      assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile.getStatus());
+    try {
+      workingTree.commit("commit comment");
+      fail("JavaGitException not thrown");
+    }
+    catch(JavaGitException e) {
     }
 
-    //commit everything
+    //get children
+    GitFile gitFile1 = (GitFile)children.get(0);
+    GitFile gitFile2 = (GitFile)children.get(1);
+
+    //both should be untracked
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile1.getStatus());
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
+
+
+    //stage one file
+    gitFile1.add();
+
+    //commit everything modified
     workingTree.commitAll("commit comment");
-    for(int i=0; i<children.size(); ++i) {
-      GitFile gitFile = (GitFile)children.get(i);
-      assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile.getStatus());
-    }
-    */
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile1.getStatus());
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
+    
+    //commit everything
+    workingTree.addAndCommitAll("commit comment");
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile1.getStatus());
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile2.getStatus());
   }
   
   

@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitAddOptions;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
+import edu.nyu.cs.javagit.api.commands.GitBranch;
+import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
+import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
 import edu.nyu.cs.javagit.api.commands.GitCheckout;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
@@ -110,10 +114,7 @@ public final class WorkingTree {
    * @return response from git add
    */
   public GitAddResponse add() throws IOException, JavaGitException {
-    GitAdd gitAdd = new GitAdd();
-    List<File> paths = new ArrayList<File>();
-    GitAddOptions options = null;
-    return gitAdd.add(path, options, paths);
+    return rootDir.add();
   }
 
   /**
@@ -152,8 +153,8 @@ public final class WorkingTree {
   }
 
   /**
-   * Commits all known and modified objects and all new objects already added to the index to the
-   * repository.
+   * Automatically stage files that have been modified and deleted, but new files you have not 
+   * told git about are not affected
    * 
    * @param comment
    *          Developer's comment about the change
@@ -164,6 +165,22 @@ public final class WorkingTree {
     GitCommit gitCommit = new GitCommit();
     return gitCommit.commitAll(path, comment);
   }
+
+  /**
+   * Stage all files and commit (including untracked)
+   * 
+   * @param comment
+   *          Developer's comment about the change
+   * @return <code>GitCommitResponse</code> object
+   * @throws IOException
+   *          I/O operation fails
+   * @throws JavaGitException
+   *          git command fails
+   */
+  public GitCommitResponse addAndCommitAll(String comment) throws IOException, JavaGitException {
+    return rootDir.commit(comment);
+  }
+
 
   @Override
   public boolean equals(Object obj) {
@@ -180,9 +197,11 @@ public final class WorkingTree {
    * 
    * @return The currently checked-out branch of the working directory.
    */
-  public Branch getCurrentBranch() {
-    // TODO (ma1683): Implement this method
-    return null;
+  public Ref getCurrentBranch() throws IOException, JavaGitException {
+    GitBranch gitBranch = new GitBranch();
+    GitBranchOptions options = new GitBranchOptions();
+    GitBranchResponse response = gitBranch.branch(path, options);
+    return response.getcurrentBranch();
   }
 
   /**
