@@ -201,7 +201,7 @@ public final class WorkingTree {
     GitBranch gitBranch = new GitBranch();
     GitBranchOptions options = new GitBranchOptions();
     GitBranchResponse response = gitBranch.branch(path, options);
-    return response.getcurrentBranch();
+    return response.getCurrentBranch();
   }
 
   /**

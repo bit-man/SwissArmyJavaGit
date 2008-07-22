@@ -269,8 +269,8 @@ public class CliGitBranch implements IGitBranch {
      *          The line of text to process.
      */
     public void parseLine(String line) {
+      ++numLinesParsed;
       if (null != errorMessage) {
-        ++numLinesParsed;
         errorMessage.append(", line" + numLinesParsed + "=[" + line + "]");
         return;
       }
@@ -286,9 +286,9 @@ public class CliGitBranch implements IGitBranch {
 
         if (line.startsWith("Deleted branch")) {
           int indexOfBranch = line.indexOf("branch");
-          String branchName = line.substring(indexOfBranch + 7);
+          String branchName = line.substring(indexOfBranch + 7, line.length()-1);
           response.setResponseType(responseType.MESSAGE);
-          if (0 == numLinesParsed) {
+          if (1 == numLinesParsed) {
             response.addMessages(line.substring(0, indexOfBranch + 6));
           }
           response.addIntoBranchList(Ref.createBranchRef(branchName));

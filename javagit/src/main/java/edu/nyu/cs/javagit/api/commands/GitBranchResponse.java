@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * A response data object for the git-branch command.
@@ -17,12 +18,13 @@ abstract public class GitBranchResponse implements CommandResponse {
   public static enum responseType {
     BRANCH_LIST, MESSAGE, EMPTY
   }
-  
+
   // The list of branches in the response of git-branch.
   protected List<Ref> branchList;
   
+  // The list of branch records, in response of git-branch with verbose option.
   protected List<BranchRecord> listOfBranchRecord;
-
+  
   // String Buffer to store the message after execution of git-branch command.
   protected StringBuffer messages = new StringBuffer();
 
@@ -38,6 +40,40 @@ abstract public class GitBranchResponse implements CommandResponse {
   public GitBranchResponse() {
     branchList = new ArrayList<Ref>();
     listOfBranchRecord = new ArrayList<BranchRecord>();
+  }
+
+  public boolean equals(Object o) {
+    if (!(o instanceof GitBranchResponse)) {
+      return false;
+    }
+
+    GitBranchResponse g = (GitBranchResponse) o;
+
+    if (!CheckUtilities.checkObjectsEqual(getResponseType(), g.getResponseType())) {
+      System.out.println("Not Equal getResponseType");
+      return false;
+    }
+
+    if (!CheckUtilities.checkObjectsEqual(getMessages(), g.getMessages())) {
+      System.out.println("Not Equal getMessages");
+      return false;
+    }
+
+    if (!CheckUtilities.checkObjectsEqual(getCurrentBranch(), g.getCurrentBranch())) {
+      return false;
+    }
+
+    if (!CheckUtilities.checkUnorderedListsEqual(branchList, g.branchList)) {
+      System.out.println("Not Equal branchList");
+      return false;
+    }
+
+    if (!CheckUtilities.checkUnorderedListsEqual(listOfBranchRecord, g.listOfBranchRecord)) {
+      System.out.println("Not Equal listOfBranchRecord");
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -69,8 +105,8 @@ abstract public class GitBranchResponse implements CommandResponse {
 
   /**
    * Gets a message about the git-branch operation that was run.
-   *
-   * @return A message about the git-branch operation that was run. 
+   * 
+   * @return A message about the git-branch operation that was run.
    */
   public String getMessages() {
     return messages.toString();
@@ -81,27 +117,58 @@ abstract public class GitBranchResponse implements CommandResponse {
    * 
    * @return The current branch from the list of branches displayed by git-branch operation.
    */
-  public Ref getcurrentBranch() {
+  public Ref getCurrentBranch() {
     return currentBranch;
+  }
+
+  public int hashCode() {
+    return branchList.hashCode() + listOfBranchRecord.hashCode();
   }
 
   public static class BranchRecord {
     private Ref branch;
-    
+
     // The SHA Refs of a branch in the response of git-branch with -v option.
     private Ref sha1;
-    
+
     // String Buffer to store the comment after execution of git-branch command with -v option.
     private String comment;
-    
+
     // Variable to store the current branch.
     private boolean isCurrentBranch;
-    
+
     public BranchRecord(Ref branch, Ref sha1, String comment, boolean isCurrentBranch) {
       this.branch = branch;
       this.sha1 = sha1;
       this.comment = comment;
       this.isCurrentBranch = isCurrentBranch;
+    }
+
+    public boolean equals(Object o) {
+      if (!(o instanceof BranchRecord)) {
+        return false;
+      }
+
+      BranchRecord c = (BranchRecord) o;
+
+      if (!CheckUtilities.checkObjectsEqual(getBranch(), c.getBranch())) {
+        return false;
+      }
+
+      if (!CheckUtilities.checkObjectsEqual(getSha1(), c.getSha1())) {
+
+        return false;
+      }
+
+      if (!CheckUtilities.checkObjectsEqual(getComment(), c.getComment())) {
+        return false;
+      }
+
+      if (isCurrentBranch() != c.isCurrentBranch()) {
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -130,6 +197,10 @@ abstract public class GitBranchResponse implements CommandResponse {
      */
     public String getComment() {
       return comment;
+    }
+
+    public int hashCode() {
+      return branch.hashCode() + sha1.hashCode() + comment.hashCode();
     }
 
     /**

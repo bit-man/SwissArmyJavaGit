@@ -7,10 +7,9 @@ import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-
-import edu.nyu.cs.javagit.api.commands.GitMv;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
@@ -29,6 +28,7 @@ public class TestGitMv extends TestCase {
   }
 
   //check if exceptions are thrown below for invalid arguments
+  @Test
   public void testGitMvInvalidInput() throws IOException, JavaGitException {
     repoPath = FileUtilities.createTempDirectory("GitMvTestRepo");
     
