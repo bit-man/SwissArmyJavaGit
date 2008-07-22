@@ -58,7 +58,7 @@ public class TestGitFileSystem extends TestCase {
 
     gitFile.add();
     assertEquals("Error. Expecting NEW_TO_COMMIT status for the single file.", Status.NEW_TO_COMMIT, gitFile.getStatus());
-    
+    /*
     gitFile.commit("commit message");
     assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
    
@@ -70,7 +70,7 @@ public class TestGitFileSystem extends TestCase {
     
     gitFile.commit("commit message");
     assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
-
+*/
   }
   
   
