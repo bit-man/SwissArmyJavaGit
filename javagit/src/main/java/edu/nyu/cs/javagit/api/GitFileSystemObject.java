@@ -1,11 +1,11 @@
 package edu.nyu.cs.javagit.api;
 
-// TODO (rs2705): change this to only import the commands we need
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
+import edu.nyu.cs.javagit.api.WorkingTree;
 import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
@@ -14,20 +14,14 @@ import edu.nyu.cs.javagit.api.commands.GitMv;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
 import edu.nyu.cs.javagit.api.commands.GitRm;
 import edu.nyu.cs.javagit.api.commands.GitRmResponse;
-import edu.nyu.cs.javagit.api.commands.GitStatus;
-import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * <code>GitFileSystemObject</code> provides some implementation shared by files and directories
  */
-public abstract class GitFileSystemObject {
 
-  /*
-   * TODO (rs2705): Get rid of the ugly .getPath().getPath() calls in the git command calls here.
-   * We're doing this because, as of right now, they take Strings. But we want them to take GitFile
-   * (or File) objects instead.
-   */
+// TODO (rs2705): Alphabetize the methods in this class
+public abstract class GitFileSystemObject {
 
   public static enum Status {
     // untracked (created but not added to the repository)
@@ -46,8 +40,8 @@ public abstract class GitFileSystemObject {
     IN_REPOSITORY
   }
 
-  protected DotGit dotGit;
   protected File file;
+  protected WorkingTree workingTree;
 
   /**
    * The constructor.
@@ -55,27 +49,9 @@ public abstract class GitFileSystemObject {
    * @param file
    *          underlying <code>java.io.File</code> object
    */
-  public GitFileSystemObject(File file) throws JavaGitException {
+  protected GitFileSystemObject(File file, WorkingTree workingTree) {
     this.file = file;
-
-    // search for .git up the directory tree
-    boolean found = false;
-    File currentParent = file;
-    while (currentParent != null) {
-      if (DotGit.existsInstance(currentParent)) {
-        dotGit = DotGit.getInstance(currentParent);
-        found = true;
-        break;
-      } else {
-        currentParent = currentParent.getParentFile();
-      }
-    }
-
-    // TODO(ma1683): pick proper code
-    if (!found) {
-      String errorMessage = file.getPath() + " is not part of any git repository";
-      throw new JavaGitException(999, errorMessage);
-    }
+    this.workingTree = workingTree;
   }
 
   @Override
@@ -112,19 +88,10 @@ public abstract class GitFileSystemObject {
    * @return parent directory
    */
   public GitDirectory getParent() {
-    if (file.getParentFile() == null) {
-      return null;
-    }
+    // TODO (rs2705): Check to ensure that this parent isn't above the root of our WorkingTree root.
 
-    GitDirectory parent;
-    try {
-      parent = new GitDirectory(file.getParentFile());
-    } catch (JavaGitException e) {
-      // no valid parent
-      return null;
-    }
-
-    return parent;
+    // NOTE: file.getParentFile() returns null if there is no parent.
+    return new GitDirectory(file.getParentFile(), workingTree);
   }
 
   /**
@@ -140,7 +107,7 @@ public abstract class GitFileSystemObject {
     list.add(file);
 
     // run git-add command
-    return gitAdd.add(dotGit.getPath(), null, list);
+    return gitAdd.add(workingTree.getPath(), null, list);
   }
 
   /**
@@ -160,7 +127,7 @@ public abstract class GitFileSystemObject {
     list.add(file);
 
     GitCommit gitCommit = new GitCommit();
-    return gitCommit.commitOnly(dotGit.getPath(), comment, list);
+    return gitCommit.commitOnly(workingTree.getPath(), comment, list);
   }
 
   /**
@@ -177,7 +144,7 @@ public abstract class GitFileSystemObject {
 
     // perform git-mv
     GitMv gitMv = new GitMv();
-    GitMvResponse response = gitMv.mv(dotGit.getPath(), source, dest);
+    GitMvResponse response = gitMv.mv(workingTree.getPath(), source, dest);
 
     // file has changed; update
     file = dest;
@@ -194,7 +161,7 @@ public abstract class GitFileSystemObject {
     GitRm gitRm = new GitRm();
 
     // run git rm command
-    return gitRm.rm(dotGit.getPath(), file);
+    return gitRm.rm(workingTree.getPath(), file);
   }
 
   /**
@@ -240,5 +207,13 @@ public abstract class GitFileSystemObject {
     // GitLog.log(path);
     return null;
   }
-
+  
+  /**
+   * Return the <code>WorkingTree</code> this object is in
+   * 
+   * @return working tree
+   */
+  public WorkingTree getWorkingTree() {
+    return workingTree;
+  }
 }

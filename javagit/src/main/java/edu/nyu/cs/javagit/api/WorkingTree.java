@@ -2,14 +2,10 @@ package edu.nyu.cs.javagit.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import edu.nyu.cs.javagit.api.commands.GitAdd;
-import edu.nyu.cs.javagit.api.commands.GitAddOptions;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 import edu.nyu.cs.javagit.api.commands.GitBranch;
 import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
@@ -35,7 +31,7 @@ public final class WorkingTree {
    * the filesystem to resolve it.
    */
   private final String canonicalPath;
-
+  
   // A git-specific representation of the same place this class is pointing.
   private GitDirectory rootDir;
 
@@ -50,11 +46,7 @@ public final class WorkingTree {
   private WorkingTree(File path, String canonicalPath) {
     this.path = path;
     this.canonicalPath = canonicalPath;
-    // TODO(ma1683): temporary solution
-    try {
-      rootDir = new GitDirectory(path);
-    } catch (JavaGitException e) {
-    }
+    this.rootDir = new GitDirectory(path, this);
   }
 
   /**
@@ -125,8 +117,8 @@ public final class WorkingTree {
    * 
    * @return The new <code>GitDirectory</code> object
    */
-  public GitDirectory addDirectory(String dir) throws JavaGitException {
-    return new GitDirectory(new File(dir));
+  public GitDirectory addDirectory(String dir) {
+    return new GitDirectory(new File(dir), this);
   }
 
   /**
@@ -205,6 +197,26 @@ public final class WorkingTree {
   }
 
   /**
+   * Take a standard <code>File</code> object and return it wrapped in a <code>GitDirectory</code>.
+   * 
+   * @return A new <code>GitDirectory</code> object representing the given <code>File</code>.
+   */
+  public GitDirectory getDirectory(File file) {
+    // TODO (rs2705): Make sure file path is valid
+    return new GitDirectory(file, this);
+  }
+
+  /**
+   * Take a standard <code>File</code object and return it wrapped in a <code>GitFile</code>.
+   * 
+   * @return A new <code>GitFile</code> object representing the given <code>File</code>.
+   */
+  public GitFile getFile(File file) {
+    // TODO (rs2705): Make sure file path is valid
+    return new GitFile(file, this);
+  }
+
+  /**
    * Show commit logs
    * 
    * @return List of commits for the working directory
@@ -233,21 +245,13 @@ public final class WorkingTree {
   }
 
   /**
-   * Gets the directory at the root of the working directory.
-   * 
-   * @return The root directory of the working directory.
-   */
-  public GitDirectory getRootDir() {
-    return rootDir;
-  }
-
-  /**
    * Gets the filesystem tree; equivalent to git-status
    * 
    * @return The list of objects at the root directory
    */
   public List<GitFileSystemObject> getTree() throws IOException {
-    return rootDir.getChildren();
+    // TODO (rs2705): Make this work - will throw NullPointerException
+    return new GitDirectory(path, this).getChildren();
   }
 
   @Override
@@ -275,6 +279,7 @@ public final class WorkingTree {
   public void checkout(Ref ref) throws IOException, JavaGitException {
     GitCheckout gitCheckout = new GitCheckout();
     gitCheckout.checkout(path, null, ref);
+
     /*
      * TODO (rs2705): Figure out why this function is setting this.path. When does the WorkingTree
      * path change?

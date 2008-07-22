@@ -5,6 +5,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import edu.nyu.cs.javagit.api.WorkingTree;
 import edu.nyu.cs.javagit.api.DotGit;
+import edu.nyu.cs.javagit.api.GitFile;
+import edu.nyu.cs.javagit.api.GitDirectory;
 
 /**
  * Test cases for our <code>WorkingTree</code> class.
@@ -43,6 +45,18 @@ public class TestWorkingTree extends TestCase {
 
     // Also check that things are equal a layer deeper
     assertEquals(workingTree, workingTree.getDotGit().getWorkingTree());
+  }
+  
+  @Test
+  public void testWorkingTreeGetFile() {
+    WorkingTree workingTree = WorkingTree.getInstance(TEST_DIRNAME);
+    File file = new File("/path/to/file");
+
+    GitFile gitFile = workingTree.getFile(file);
+    assertEquals(gitFile.getWorkingTree(), workingTree);
+    
+    GitDirectory gitDirectory = workingTree.getDirectory(file);
+    assertEquals(gitDirectory.getWorkingTree(), workingTree);
   }
 
   private static void runEqualityTests(String path1, String path2, boolean accessViaFileObjects,
