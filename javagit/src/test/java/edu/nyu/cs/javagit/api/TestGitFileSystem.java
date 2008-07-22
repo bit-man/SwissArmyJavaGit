@@ -86,7 +86,7 @@ public class TestGitFileSystem extends TestCase {
     //check contents
     List<GitFileSystemObject> children = workingTree.getTree();
     assertEquals("Error. Expecting 2 files.", 2, children.size());
-
+/*
     //attempt to commit (but without anything on the index)
     try {
       workingTree.commit("commit comment");
@@ -116,6 +116,7 @@ public class TestGitFileSystem extends TestCase {
     workingTree.addAndCommitAll("commit comment");
     assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile1.getStatus());
     assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile2.getStatus());
+    */
   }
   
   
