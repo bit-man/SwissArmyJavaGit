@@ -39,8 +39,10 @@ public class TestGitCheckout extends TestCase {
     gitCommit = new GitCommit();
     gitAdd = new GitAdd();
     gitCheckout = new GitCheckout();
-    file1 = FileUtilities.createFile(repositoryDirectory, "foobar01", "Sample Contents");
-    file2 = FileUtilities.createFile(repositoryDirectory, "foobar02", "Sample Contents");
+    file1 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar01");
+    file2 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar02");
+    file1.createNewFile();
+    file2.createNewFile();
     repositoryPath = repositoryDirectory.getAbsolutePath();
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
@@ -89,6 +91,7 @@ public class TestGitCheckout extends TestCase {
     } else {
       fail("File delete failed");
     }
+
   }
 
   /**
@@ -119,8 +122,8 @@ public class TestGitCheckout extends TestCase {
     options.setOptB(branch1);
     Ref branch = Ref.createBranchRef("master");
     gitCheckout.checkout(repositoryDirectory, options, branch);
-    File file3 = FileUtilities.createFile(repositoryDirectory, "foobar03",
-        "Sample Contents foobar03\n");
+    File file3 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar03");
+    file3.createNewFile();
     // add a file to testBranch01
     gitAdd.add(repositoryDirectory, null, file3);
     gitCommit.commit(repositoryDirectory, "Added foobar03 to the repository");
