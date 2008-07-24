@@ -9,7 +9,6 @@
   <version>0.01-SNAPSHOT</version>
   <name>javagit</name>
 
-
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
