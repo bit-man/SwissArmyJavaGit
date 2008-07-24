@@ -1,25 +1,19 @@
 package edu.nyu.cs.javagit.api.commands;
 
+import java.io.File;
+
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
 public class GitMvResponse implements CommandResponse {
 
   // Variable to store the source file/folder/symlink of the response.
-  private String source;
+  protected File source;
 
   // Variable to store the destination file/folder/symlink of the response.
-  private String destination;
+  protected File destination;
 
   // String Buffer to store the comment message after execution of git-mv.
-  private StringBuffer message = new StringBuffer();
-
-  /**
-   * Adds comments from each line of the message received upon successful execution of the git-mv
-   * command, to the message buffer.
-   * 
-   * @param comment
-   */
-  public void addComment(String comment) {
-    message.append(comment);
-  }
+  protected StringBuffer message = new StringBuffer();
 
   /**
    * Gets the comments received upon successful execution of the git-mv command, from the message
@@ -36,18 +30,8 @@ public class GitMvResponse implements CommandResponse {
    * 
    * @return the destination
    */
-  public String getDestination() {
+  public File getDestination() {
     return destination;
-  }
-
-  /**
-   * Sets the destination file/folder/symlink in response to the destination
-   * 
-   * @param destination
-   *          the destination to set
-   */
-  public void setDestination(String destination) {
-    this.destination = destination;
   }
 
   /**
@@ -55,17 +39,33 @@ public class GitMvResponse implements CommandResponse {
    * 
    * @return the source
    */
-  public String getSource() {
+  public File getSource() {
     return source;
   }
+  
+  public boolean equals(Object o) {
+    if (!(o instanceof GitMvResponse)) {
+      return false;
+    }
 
-  /**
-   * Sets the source file/folder/symlink in response object to the source string.
-   * 
-   * @param source
-   *          the source to set
-   */
-  public void setSource(String source) {
-    this.source = source;
+    GitMvResponse g = (GitMvResponse) o;
+
+    if (!CheckUtilities.checkObjectsEqual(getSource(), g.getSource())) {
+      return false;
+    }
+
+    if (!CheckUtilities.checkObjectsEqual(getDestination(), g.getDestination())) {
+      return false;
+    }
+
+    if (!CheckUtilities.checkObjectsEqual(getComment(), g.getComment())) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  public int hashCode() {
+    return source.hashCode() + destination.hashCode() + message.hashCode();
   }
 }

@@ -89,6 +89,7 @@ public class ExceptionMessageMap {
         "000005: An List<?> argument was not specified or is empty but is required.");
     MESSAGE_MAP.put("000006",
         "000006: The int argument is outside the allowable range (start <= index < end).");
+    MESSAGE_MAP.put("000007","000007: The argument should be a directory.");
 
     MESSAGE_MAP.put("000100", "000100: Invalid option combination for git-commit command.");
     MESSAGE_MAP.put("000110", "000110: Invalid option combination for git-add command.");

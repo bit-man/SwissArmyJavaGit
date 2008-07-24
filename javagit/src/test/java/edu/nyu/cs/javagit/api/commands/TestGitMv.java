@@ -2,6 +2,8 @@ package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -14,7 +16,7 @@ import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 public class TestGitMv extends TestCase {
-  //Repository path. Need not be valid.
+  //Repository path.
   private File repoPath;
    
   @Before
@@ -46,12 +48,16 @@ public class TestGitMv extends TestCase {
           ExceptionMessageMap.getMessage("000003") + "  { variableName=[repository path] }", e
               .getMessage());
     }
+    
+    List<File> fileList = new ArrayList<File>();
     try {
-      gitMv.mv(repoPath, null, destination);
+      gitMv.mv(repoPath, fileList, destination);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("000003") + "  { variableName=[source] }", e.getMessage());
+          ExceptionMessageMap.getMessage("000005") + "  { variableName=[sources] }", 
+          e.getMessage());
     }
+    
     try {
       gitMv.mv(repoPath, source, null);
     } catch (Exception e) {
@@ -64,14 +70,16 @@ public class TestGitMv extends TestCase {
       gitMv.mv(repoPath, null, source, destination);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("000003") + "  { variableName=[options] }", e.getMessage());
+          ExceptionMessageMap.getMessage("000003") + "  { variableName=[options] }", 
+          e.getMessage());
     }
     
     try {
       gitMv.mv(repoPath, source, destination);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("424000")+ "fatal: Not a git repository",
+          ExceptionMessageMap.getMessage("424000")+ "  The git-mv error message:  " +
+          		"{ line1=[fatal: Not a git repository] }",
               e.getMessage());
     }
   }

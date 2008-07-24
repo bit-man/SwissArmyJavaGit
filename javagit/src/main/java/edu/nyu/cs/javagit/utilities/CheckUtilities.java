@@ -333,4 +333,21 @@ public class CheckUtilities {
           + "  { variableName=[" + variableName + "] }");
     }
   }
+  
+  /**
+   * Checks a <code>File</code> argument to make sure that it is a directory. If not 
+   * <code>IllegalArgumentException</code> is thrown.
+   * 
+   * @param fileName
+   *          The <code>File</code> to be checked.
+   * @param variableName
+   *          The name of the variable being checked; for use in exception messages.
+   */
+  public static void checkDirectoryArgument(File fileName, String variableName) {
+    checkNullArgument(fileName, variableName);
+    if (!fileName.isDirectory()) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000007")
+          + "  { variableName=[" + variableName + "] }");
+    }
+  }
 }
