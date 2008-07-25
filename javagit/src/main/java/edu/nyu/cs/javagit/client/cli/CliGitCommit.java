@@ -67,9 +67,11 @@ public class CliGitCommit implements IGitCommit {
    * Processes the commit.
    * 
    * @param repository
-   *          The path to the repository to commit against. A non-zero length argument is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to commit with.
    * @param message
@@ -77,9 +79,9 @@ public class CliGitCommit implements IGitCommit {
    *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param paths
-   *          A list paths to folders or files to commit. A non-null and non-empty list is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
+   *          A list of folders and/or files to commit. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>.
    * @return The results from the commit.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -100,7 +102,7 @@ public class CliGitCommit implements IGitCommit {
     List<String> commandLine = buildCommand(options, message, paths);
     GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
 
-    return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository.getAbsolutePath(),
+    return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository.getPath(),
         commandLine, parser);
   }
 
@@ -150,7 +152,7 @@ public class CliGitCommit implements IGitCommit {
     if (null != paths) {
       cmd.add("--");
       for (File f : paths) {
-        cmd.add(f.getAbsolutePath());
+        cmd.add(f.getPath());
       }
     }
 

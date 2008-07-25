@@ -37,8 +37,11 @@ public class GitCommit {
    * in the git repository's index.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param message
    *          The message to attach to the commit. A non-zero length argument is required for this
    *          parameter, otherwise a <code>NullPointerException</code> or
@@ -70,8 +73,11 @@ public class GitCommit {
    * depends on the options specified.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to commit with. If null is passed, a <code>NullPointerException</code>
    *          will be thrown.
@@ -108,8 +114,11 @@ public class GitCommit {
    * depends on the options and paths specified.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to commit with. If null is passed, a <code>NullPointerException</code>
    *          will be thrown.
@@ -118,8 +127,10 @@ public class GitCommit {
    *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param paths
-   *          A list of folders and/or files to commit. A non-null and non-empty list is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of folders and/or files to commit. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the commit.
    * @exception IOException
@@ -150,8 +161,11 @@ public class GitCommit {
    * repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param message
    *          The message to attach to the commit. A non-zero length argument is required for this
    *          parameter, otherwise a <code>NullPointerException</code> or
@@ -183,15 +197,20 @@ public class GitCommit {
    * changes (changes already defined in the index) are ignored.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to commit against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param message
    *          The message to attach to the commit. A non-zero length argument is required for this
    *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param paths
-   *          A list of folders and/or files to commit. A non-null and non-empty list is required
-   *          for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of folders and/or files to commit. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the commit.
    * @exception IOException
