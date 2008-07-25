@@ -33,14 +33,19 @@ public interface IGitRm {
    * Remove files relative to the path within the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to run rm against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to run rm with. If null is passed, a <code>NullPointerException</code>
    *          will be thrown.
    * @param paths
-   *          A list of files to remove. A non-zero length argument is required for this parameter
-   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          A list of files or folders to remove. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -60,11 +65,15 @@ public interface IGitRm {
    * Remove files relative to the path within the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to run rm against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param path
-   *          A single file to remove. If null is passed, a <code>NullPointerException</code> will
-   *          be thrown.
+   *          A single file to remove. The specified path must be relative to the path specified in
+   *          the <code>repository</code> parameter as returned by <code>File.getPath()</code>.
+   *          If null is passed, a <code>NullPointerException</code> will be thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
    *              Examples include:
@@ -82,11 +91,16 @@ public interface IGitRm {
    * Remove files relative to the path within the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to run rm against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list of files to remove. A non-zero length argument is required for this parameter
-   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          A list of files to remove. The paths specified in this list must all be relative to
+   *          the path specified in the <code>repository</code> parameter as returned by
+   *          <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -105,11 +119,16 @@ public interface IGitRm {
    * Remove files relative to the path within the repository but only effect the index.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to run rm against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list of files to remove. A non-zero length argument is required for this parameter
-   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          A list of files to remove. The paths specified in this list must all be relative to
+   *          the path specified in the <code>repository</code> parameter as returned by
+   *          <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -129,11 +148,16 @@ public interface IGitRm {
    * Recursively remove files relative to the path within the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to run rm against. If
-   *          null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list of files to remove. A non-zero length argument is required for this parameter
-   *          and its children, otherwise a <code>NullPointerException</code> or
+   *          A list of files or folders to remove. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.

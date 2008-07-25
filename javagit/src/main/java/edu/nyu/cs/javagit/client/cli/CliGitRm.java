@@ -92,8 +92,7 @@ public class CliGitRm implements IGitRm {
     List<String> cmdline = buildCommandLine(options, path, paths);
 
     GitRmParser parser = new GitRmParser();
-    return (GitRmResponse) ProcessUtilities.runCommand(repository, cmdline,
-        parser);
+    return (GitRmResponse) ProcessUtilities.runCommand(repository, cmdline, parser);
   }
 
   /**
@@ -132,10 +131,10 @@ public class CliGitRm implements IGitRm {
       }
     }
     if (null != path) {
-      cmdline.add(path.getAbsolutePath());
+      cmdline.add(path.getPath());
     } else {
       for (File f : paths) {
-        cmdline.add(f.getAbsolutePath());
+        cmdline.add(f.getPath());
       }
     }
     return cmdline;
