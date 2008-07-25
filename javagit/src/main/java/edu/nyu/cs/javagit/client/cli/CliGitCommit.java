@@ -102,8 +102,7 @@ public class CliGitCommit implements IGitCommit {
     List<String> commandLine = buildCommand(options, message, paths);
     GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
 
-    return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository.getPath(),
-        commandLine, parser);
+    return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository, commandLine, parser);
   }
 
   /**

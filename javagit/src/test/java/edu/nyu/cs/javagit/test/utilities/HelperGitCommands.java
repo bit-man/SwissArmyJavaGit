@@ -47,7 +47,7 @@ public class HelperGitCommands {
 
     cmdLine.add("git-init");
 
-    ProcessUtilities.runCommand(repoDirectory.getAbsolutePath(), cmdLine, new IParser() {
+    ProcessUtilities.runCommand(repoDirectory, cmdLine, new IParser() {
       public CommandResponse getResponse() {
         return null;
       }

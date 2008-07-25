@@ -46,8 +46,8 @@ public class CliGitAdd implements IGitAdd {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitAddParser parser = new GitAddParser();
     List<String> command = buildCommand(repositoryPath, options, paths);
-    GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath
-        .getAbsolutePath(), command, parser);
+    GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath,
+        command, parser);
     if (response.containsError()) {
       int line = response.getError(0).getLineNumber();
       String error = response.getError(0).error();

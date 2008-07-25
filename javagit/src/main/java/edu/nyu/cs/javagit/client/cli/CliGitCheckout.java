@@ -62,8 +62,8 @@ public class CliGitCheckout implements IGitCheckout {
     CheckUtilities.validateArgumentRefType(branch, RefType.BRANCH, "Branch Name");
     List<String> command = buildCommand(options, branch);
     GitCheckoutParser parser = new GitCheckoutParser();
-    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
-        .getAbsolutePath(), command, parser);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
+        command, parser);
     checkForErrorsInResponse(response);
     return response;
   }
@@ -94,8 +94,8 @@ public class CliGitCheckout implements IGitCheckout {
     CheckUtilities.checkNullListArgument(paths, "list of file paths");
     GitCheckoutParser parser = new GitCheckoutParser();
     List<String> command = buildCommand(null, null, paths);
-    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
-        .getAbsolutePath(), command, parser);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
+        command, parser);
     checkForErrorsInResponse(response);
     return response;
   }
@@ -108,8 +108,7 @@ public class CliGitCheckout implements IGitCheckout {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitCheckoutParser parser = new GitCheckoutParser();
     List<String> command = buildCommand(options, branch, paths);
-    return (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(),
-        command, parser);
+    return (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, command, parser);
   }
 
   /**
@@ -122,8 +121,8 @@ public class CliGitCheckout implements IGitCheckout {
     List<File> paths = new ArrayList<File>();
     paths.add(path);
     List<String> command = buildCommand(options, branch, paths);
-    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
-        .getAbsolutePath(), command, parser);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
+        command, parser);
     checkForErrorsInResponse(response);
     return response;
   }
@@ -136,8 +135,8 @@ public class CliGitCheckout implements IGitCheckout {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitCheckoutParser parser = new GitCheckoutParser();
     List<String> command = buildCommand(null, branch, paths);
-    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath
-        .getAbsolutePath(), command, parser);
+    GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
+        command, parser);
     checkForErrorsInResponse(response);
     return response;
   }

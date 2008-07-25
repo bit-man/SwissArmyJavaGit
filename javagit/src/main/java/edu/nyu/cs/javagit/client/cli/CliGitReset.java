@@ -72,8 +72,7 @@ public class CliGitReset implements IGitReset {
     List<String> commandLine = buildCommand(options, paths);
     GitResetParser parser = new GitResetParser(repository.getPath());
 
-    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository.getPath(),
-        commandLine, parser);
+    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository, commandLine, parser);
   }
 
   protected List<String> buildCommand(GitResetOptions options, List<File> paths) {

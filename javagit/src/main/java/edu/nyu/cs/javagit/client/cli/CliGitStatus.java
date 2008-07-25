@@ -72,7 +72,7 @@ public class CliGitStatus implements IGitStatus {
     } else {
       parser = new GitStatusParser();
     }
-    GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(),
+    GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
     handleErrorState(response);
     return response;
@@ -146,7 +146,7 @@ public class CliGitStatus implements IGitStatus {
     List<String> command  = buildCommandLine(options, null);
     GitStatusParser parser = new GitStatusParser(file);
 
-    return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath.getAbsolutePath(), command, parser);
+    return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, command, parser);
   }
 
 

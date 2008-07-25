@@ -135,8 +135,7 @@ public class CliGitBranch implements IGitBranch {
     List<String> commandLine = buildCommand(options, arg1, arg2, branchList);
     GitBranchParser parser = new GitBranchParser();
 
-    return (GitBranchResponseImpl) ProcessUtilities.runCommand(repoPath.getAbsolutePath(), commandLine,
-        parser);
+    return (GitBranchResponseImpl) ProcessUtilities.runCommand(repoPath, commandLine, parser);
   }
 
   /**

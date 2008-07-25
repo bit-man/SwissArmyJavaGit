@@ -127,10 +127,10 @@ public class ProcessUtilities {
    *           Thrown if there are problems with the subprocess.
    * @throws JavaGitException
    */
-  public static CommandResponse runCommand(String workingDirectory, List<String> commandLine,
+  public static CommandResponse runCommand(File workingDirectory, List<String> commandLine,
       IParser parser) throws IOException, JavaGitException {
     ProcessBuilder pb = new ProcessBuilder(commandLine);
-    pb.directory(new File(workingDirectory));
+    pb.directory(workingDirectory);
     pb.redirectErrorStream(true);
 
     Process p = startProcess(pb);
