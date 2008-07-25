@@ -45,8 +45,11 @@ public class GitReset {
    * &quote;git-reset&quote; against the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -71,8 +74,11 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options for a git-reset command. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -102,14 +108,19 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list of paths to folders or files to reset. A non-null and non-empty list is
-   *          required for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of paths to folders or files to reset. The paths specified in this list must
+   *          all be relative to the path specified in the <code>repository</code> parameter as
+   *          returned by <code>File.getPath()</code>. A non-null and non-empty list is required
+   *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
@@ -139,11 +150,16 @@ public class GitReset {
    * Perform a reset on the repository.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
-   *          A list of paths to folders or files to reset. A non-null and non-empty list is
-   *          required for this parameter, otherwise a <code>NullPointerException</code> or
+   *          A list of paths to folders or files to reset. The paths specified in this list must
+   *          all be relative to the path specified in the <code>repository</code> parameter as
+   *          returned by <code>File.getPath()</code>. A non-null and non-empty list is required
+   *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results of the reset.
    * @exception IOException
@@ -171,8 +187,11 @@ public class GitReset {
    * Perform a hard reset on the repository to the specified <code>CommitName</code>.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.
@@ -202,8 +221,11 @@ public class GitReset {
    * Perform a soft reset on the repository to the specified <code>CommitName</code>.
    * 
    * @param repository
-   *          A <code>File</code> instance for the path to the repository to perform reset
-   *          against. If null is passed, a <code>NullPointerException</code> will be thrown.
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to commit against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param commitName
    *          The name of the commit to reset to. If the value is null, a
    *          <code>NullPointerException</code> will be thrown.

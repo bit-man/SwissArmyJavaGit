@@ -70,9 +70,9 @@ public class CliGitReset implements IGitReset {
     CheckUtilities.checkNullArgument(repository, "repository");
 
     List<String> commandLine = buildCommand(options, paths);
-    GitResetParser parser = new GitResetParser(repository.getAbsolutePath());
+    GitResetParser parser = new GitResetParser(repository.getPath());
 
-    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository.getAbsolutePath(),
+    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository.getPath(),
         commandLine, parser);
   }
 
@@ -100,7 +100,7 @@ public class CliGitReset implements IGitReset {
     if (null != paths) {
       cmd.add("--");
       for (File f : paths) {
-        cmd.add(f.getAbsolutePath());
+        cmd.add(f.getPath());
       }
     }
 
