@@ -22,7 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.nyu.cs.javagit.api.commands.GitCheckoutResponse;
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitCheckout;
 import edu.nyu.cs.javagit.client.cli.CliGitCheckout.GitCheckoutParser;
 
@@ -37,16 +37,21 @@ public class TestGitCheckoutResponse extends TestCase {
   }
 
   /**
-   * Test for trying to checkout a non-existent branch from the repository. Here the error flag
-   * should be set and the branch should be null as the given branch does not exist.
+   * Test for confirming that <code>JavaGitException</code> is thrown while trying to checkout a
+   * non-existent branch from the repository. Here the error flag should be set and the branch
+   * should be null as the given branch does not exist.
    */
   @Test
-  public void testGitCheckoutResponseForNonExistingBranch() {
-    parser.parseLine("error: pathspec 'foo03' did not match any file(s) known to git.");
-    GitCheckoutResponse response = parser.getResponse();
-    assertEquals("Error for non-existent branch",
-        "1. error: pathspec 'foo03' did not match any file(s) known to git.", response.getError(0));
-    assertEquals("branch foo03 does not exist", null, response.getBranch());
+  public void testGitCheckoutResponseForNonExistingBranch() throws JavaGitException {
+    GitCheckoutResponse response = null;
+    try {
+      parser.parseLine("error: pathspec 'foo03' did not match any file(s) known to git.");
+      response = parser.getResponse();
+      fail("Failed to throw JavaGitException");
+    } catch (JavaGitException e) {
+      assertEquals("Response object", null, response);
+      assertEquals("Error Code", 406000, e.getCode());
+    }
   }
 
   /**
@@ -54,15 +59,18 @@ public class TestGitCheckoutResponse extends TestCase {
    * non-existent base-branch.
    */
   @Test
-  public void testGitCheckoutResponseForCreatingBranchOnNonExistentBranch() {
-    parser
-        .parseLine("fatal: git checkout: updating paths is incompatible with switching branches/forcing");
-    parser.parseLine("Did you intend to checkout 'foo04' which can not be resolved as commit?");
-    GitCheckoutResponse response = parser.getResponse();
-    assertEquals("Error while creating a new branch based on non-existent branch",
-        "1. fatal: git checkout: updating paths is incompatible with switching branches/forcing",
-        response.getError(0));
-    assertEquals("New branch does not exist", null, response.getNewBranch());
+  public void testGitCheckoutResponseForCreatingBranchOnNonExistentBranch() throws JavaGitException {
+    GitCheckoutResponse response = null;
+    try {
+      parser
+          .parseLine("fatal: git checkout: updating paths is incompatible with switching branches/forcing");
+      parser.parseLine("Did you intend to checkout 'foo04' which can not be resolved as commit?");
+      response = parser.getResponse();
+      fail("Failed to throw JavaGitException - testGitCheckoutResponseForCreatingBranchOnNonExistentBranch()");
+    } catch (JavaGitException e) {
+      assertEquals("Response object", null, response);
+      assertEquals("Error Code", 406000, e.getCode());
+    }
   }
 
   /**
@@ -71,7 +79,7 @@ public class TestGitCheckoutResponse extends TestCase {
    * an already existing another branch.
    */
   @Test
-  public void testGitCheckoutSwitchToBranch() {
+  public void testGitCheckoutSwitchToBranch() throws JavaGitException {
     parser.parseLine("Switched to branch \"foo01\"");
     GitCheckoutResponse response = parser.getResponse();
     assertEquals("Switching to branch foo01", "\"foo01\"", response.getBranch().getName());
@@ -83,10 +91,39 @@ public class TestGitCheckoutResponse extends TestCase {
    * switched to.
    */
   @Test
-  public void testGitCheckoutResponseSwitchToNewBranch() {
+  public void testGitCheckoutResponseSwitchToNewBranch() throws JavaGitException {
     parser.parseLine("Switched to a new branch \"foo02\"");
     GitCheckoutResponse response = parser.getResponse();
     assertEquals("Switching to New branch foo02", "\"foo02\"", response.getNewBranch().getName());
+  }
+
+  /**
+   * Test for checking that <code>JavaGitException</code> is thrown when an invalid switch is
+   * passed to &lt;git-checkout&gt; command. <code>GitCheckoutParser</code> should parse the error
+   * message properly and save it into error object of <code>GitCheckoutResponse</code> object.
+   */
+  @Test
+  public void testGitCheckoutErrorMessageResponse() throws JavaGitException {
+    parser.parseLine("error: unknown switch `v'");
+    parser.parseLine("usage: git checkout [options] <branch>");
+    parser.parseLine("   or: git checkout [options] [<branch>] -- <file>...");
+    parser.parseLine("");
+    parser.parseLine("    -q, --quiet           be quiet");
+    parser.parseLine("    -b <new branch>       branch");
+    parser.parseLine("    -l                    log for new branch");
+    parser.parseLine("    --track               track");
+    parser.parseLine("    -f                    force");
+    parser.parseLine("    -m                    merge");
+
+    GitCheckoutResponse response = null;
+    try {
+      response = parser.getResponse();
+      fail("Failed to throw JavaGitException in : testGitCheckoutErrorMessageResponse()");
+    } catch (JavaGitException e) {
+      assertEquals("Response Object should be NULL", null, response);
+      assertEquals("Error Code", 406000, e.getCode());
+    }
+
   }
 
   /**
@@ -94,7 +131,7 @@ public class TestGitCheckoutResponse extends TestCase {
    * committed to the branch in repository.
    */
   @Test
-  public void testGitCheckoutResponseAddedModifiedDeletedFiles() {
+  public void testGitCheckoutResponseAddedModifiedDeletedFiles() throws JavaGitException {
     parser.parseLine("M foobar01");
     parser.parseLine("M foobar05");
     parser.parseLine("M foobar06");

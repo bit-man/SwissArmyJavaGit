@@ -30,6 +30,7 @@ import edu.nyu.cs.javagit.api.commands.GitCheckoutResponse;
 import edu.nyu.cs.javagit.client.GitCheckoutResponseImpl;
 import edu.nyu.cs.javagit.client.IGitCheckout;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Command-line implementation of the <code>IGitCheckout</code> interface.
@@ -64,7 +65,6 @@ public class CliGitCheckout implements IGitCheckout {
     GitCheckoutParser parser = new GitCheckoutParser();
     GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    checkForErrorsInResponse(response);
     return response;
   }
 
@@ -96,7 +96,6 @@ public class CliGitCheckout implements IGitCheckout {
     List<String> command = buildCommand(null, null, paths);
     GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    checkForErrorsInResponse(response);
     return response;
   }
 
@@ -123,7 +122,6 @@ public class CliGitCheckout implements IGitCheckout {
     List<String> command = buildCommand(options, branch, paths);
     GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    checkForErrorsInResponse(response);
     return response;
   }
 
@@ -137,7 +135,6 @@ public class CliGitCheckout implements IGitCheckout {
     List<String> command = buildCommand(null, branch, paths);
     GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    checkForErrorsInResponse(response);
     return response;
   }
 
@@ -218,13 +215,6 @@ public class CliGitCheckout implements IGitCheckout {
     }
     if (options.optM()) {
       command.add("-m");
-    }
-  }
-
-  //TODO (gsd216) This need to be expanded and cleaned up.
-  private void checkForErrorsInResponse(GitCheckoutResponse response) throws JavaGitException {
-    if (response.error()) {
-      throw new JavaGitException(406000, response.getError(0));
     }
   }
 
@@ -313,7 +303,11 @@ public class CliGitCheckout implements IGitCheckout {
       return filename;
     }
 
-    public GitCheckoutResponse getResponse() {
+    public GitCheckoutResponse getResponse() throws JavaGitException {
+      if (response.error()) {
+        throw new JavaGitException(406000, ExceptionMessageMap.getMessage("406000") + 
+            " - git checkout error message: { " + response.getError() + " }");
+      }
       return response;
     }
   }

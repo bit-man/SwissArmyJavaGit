@@ -85,6 +85,19 @@ public abstract class GitCheckoutResponse implements CommandResponse {
     }
     return null;
   }
+  
+  /**
+   * Builds one error string from all the errors saved from the output of &lt;git-checkout&gt; command.
+   * 
+   * @return <code>String</code> containing all the error messages concatenated together.
+   */
+  public String getError() {
+    StringBuilder buffer = new StringBuilder();
+    for(int i=0; i < errors.size(); i++ ) {
+      buffer.append(getError(i) + " ");
+    }
+    return buffer.toString();
+  }
 
   /**
    * Returns the newly created branch by -b option by &lt;git-checkout&gt;.
