@@ -99,7 +99,7 @@ public class TestCliGitBranch extends TestCase {
       assertTrue("Expected GitBranchResponse not equal to actual GitBranchResponse.", response
           .equals(parser.getResponse()));
     } catch (JavaGitException e) {
-      assertTrue("Getting a GitCommitResponse from a CliGitBranch.GitBranchParser instance threw "
+      assertTrue("Getting a GitBranchResponse from a CliGitBranch.GitBranchParser instance threw "
           + "an exception when it should not have.", false);
     }
   }

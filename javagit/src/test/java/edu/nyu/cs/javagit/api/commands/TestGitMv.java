@@ -29,32 +29,92 @@ import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 public class TestGitMv extends TestCase {
   //Repository path.
-  private File repoPath;
+  private File repoDirectory;
+  private GitCommit commit;
+  private GitAdd add;
+  private GitMv mv;
+  
+  private File source;
+  private File destination;
+  
+  private File fileOne;
+  private File fileTwo;
+  private File fileThree;
+  
+  private File subDirOne;
    
   @Before
-  protected void setUp() {
+  protected void setUp() throws IOException, JavaGitException {
+    repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
+    HelperGitCommands.initRepo(repoDirectory);
+
+    commit = new GitCommit();
+    add = new GitAdd();
+    mv = new GitMv();
+
+    source = FileUtilities.createFile(repoDirectory, "fileA.txt", "Sample Contents");
+    // Add a file to the repo
+    List<File> filesToAdd = new ArrayList<File>();
+    filesToAdd.add(source);
+    add.add(repoDirectory, null, filesToAdd);
+
+    // Call commit
+    commit.commit(repoDirectory, "Making a first test commit");
   }
   
   @After
   protected void tearDown() throws JavaGitException {
     // delete repo directory.
-    FileUtilities.removeDirectoryRecursivelyAndForcefully(repoPath);
+    FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
   }
 
+  @Test
+  public void testRename() throws IOException, JavaGitException {
+    // Calling GitMv
+    destination = new File(repoDirectory.getAbsolutePath(), "fileB.txt");
+    mv.mv(repoDirectory, source, destination);
+  }
+  
+  @Test
+  public void testMove() throws IOException, JavaGitException {
+    // Calling GitMv
+   
+    subDirOne = new File(repoDirectory, "subDirOne");
+    subDirOne.mkdir();
+    fileOne = FileUtilities.createFile(repoDirectory, "fileOne", "Testfile#1");
+    fileTwo = FileUtilities.createFile(repoDirectory, "fileTwo", "Testfile#2");
+    fileThree = FileUtilities.createFile(repoDirectory, "fileThree", "Testfile#3");
+    // Add files to the repository
+    List<File> filesToAdd = new ArrayList<File>();
+    filesToAdd.add(fileOne);
+    filesToAdd.add(fileTwo);
+    filesToAdd.add(fileThree);
+    filesToAdd.add(subDirOne);
+    add.add(repoDirectory, null, filesToAdd);
+    commit.commit(repoDirectory, "Making the commit");
+    
+    List<File> filesToMove = new ArrayList<File>();
+    filesToMove.add(fileOne);
+    filesToMove.add(fileTwo);
+    filesToMove.add(fileThree);
+    destination = subDirOne;
+    mv.mv(repoDirectory, filesToMove, destination);
+  }
+  
   //check if exceptions are thrown below for invalid arguments
   @Test
   public void testGitMvInvalidInput() throws IOException, JavaGitException {
-    repoPath = FileUtilities.createTempDirectory("GitMvTestRepo");
     
     //source file.
-    File source = new File("t2.pl");
+    File source = new File("oldFile");
 
     //destination file.
-    File destination = new File("t3.pl");
+    File destination = new File("newFile");
 
     GitMv gitMv = new GitMv();
     try {
@@ -67,7 +127,7 @@ public class TestGitMv extends TestCase {
     
     List<File> fileList = new ArrayList<File>();
     try {
-      gitMv.mv(repoPath, fileList, destination);
+      gitMv.mv(repoDirectory, fileList, destination);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
           ExceptionMessageMap.getMessage("000005") + "  { variableName=[sources] }", 
@@ -75,7 +135,7 @@ public class TestGitMv extends TestCase {
     }
     
     try {
-      gitMv.mv(repoPath, source, null);
+      gitMv.mv(repoDirectory, source, null);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
           ExceptionMessageMap.getMessage("000003") + "  { variableName=[destination] }", e
@@ -83,13 +143,15 @@ public class TestGitMv extends TestCase {
     }
 
     try {
-      gitMv.mv(repoPath, null, source, destination);
+      gitMv.mv(repoDirectory, null, source, destination);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
           ExceptionMessageMap.getMessage("000003") + "  { variableName=[options] }", 
           e.getMessage());
     }
     
+    File repoPath = new File("repository");
+    repoPath.mkdir();
     try {
       gitMv.mv(repoPath, source, destination);
     } catch (Exception e) {

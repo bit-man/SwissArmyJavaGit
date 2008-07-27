@@ -154,7 +154,7 @@ public class GitMv {
       throws IOException, JavaGitException {
     CheckUtilities.checkNullArgument(repositoryPath, "repository path");
     CheckUtilities.checkNullListArgument(sources, "sources");
-    CheckUtilities.checkNullArgument(destination, "destination");
+    CheckUtilities.checkDirectoryArgument(destination, "destination");
 
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitMv gitMv = client.getGitMvInstance();
