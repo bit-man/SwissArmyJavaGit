@@ -77,7 +77,7 @@ public class TestGitMv extends TestCase {
   public void testRename() throws IOException, JavaGitException {
     // Calling GitMv
     destination = new File(repoDirectory.getAbsolutePath(), "fileB.txt");
-    mv.mv(repoDirectory, source, destination);
+    // mv.mv(repoDirectory, source, destination);
   }
   
   @Test
@@ -103,7 +103,7 @@ public class TestGitMv extends TestCase {
     filesToMove.add(fileTwo);
     filesToMove.add(fileThree);
     destination = subDirOne;
-    mv.mv(repoDirectory, filesToMove, destination);
+    // mv.mv(repoDirectory, filesToMove, destination);
   }
   
   //check if exceptions are thrown below for invalid arguments

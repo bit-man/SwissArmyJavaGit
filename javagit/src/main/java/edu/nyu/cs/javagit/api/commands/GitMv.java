@@ -105,7 +105,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error excecuting git-mv.
+   *              Thrown when there is an error executing git-mv.
    */
   public GitMvResponse mv(File repositoryPath, GitMvOptions options, File source,
       File destination) throws IOException, JavaGitException {
@@ -148,7 +148,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error excecuting git-mv.
+   *              Thrown when there is an error executing git-mv.
    */
   public GitMvResponse mv(File repositoryPath, List<File> sources, File destination) 
       throws IOException, JavaGitException {
