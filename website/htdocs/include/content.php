@@ -104,7 +104,7 @@ function PrintHeader()
       <a href=''>Milestones</a><br />
       <a href=''>TODO list</a><br />
 -->
-      <a href='http://sourceforge.net/docman/display_doc.php?docid=124358&amp;group_id=233450'>FAQ</a><br />
+      <a href='faq.php'>FAQ</a><br />
       <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License</a><br />
    </div>
    <div id="menu_right">

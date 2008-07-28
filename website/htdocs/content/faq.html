@@ -1,0 +1,104 @@
+
+<ol>
+<li> 
+Why would I want to use JavaGit? <br><br>
+
+So that your java application can access, create and modify git repositories 
+with as little work as possible.  Without JavaGit, you will need to write and
+manage forking code yourself, flex your JNI muscle or reimplement git in Java
+yourself.<br><br>
+</li>
+<li>
+Who are the intended users of JavaGit? <br><br>
+
+Java developers who want to access, create or modify git repositories from 
+their own applications. <br><br>
+</li>
+<li>
+Do I still need git installed? <br><br>
+
+Yes.  JavaGit currently uses the command-line git client to interface with 
+git repositories.  There are currently no plans for a pure java git 
+implementation, but we are open to doing such an implementation in the future.
+If this is super important to you, let us know. <br><br>
+</li>
+<li>
+Where can I get the source?<br><br>
+
+The code is in a publicly accessible SVN repository at: <br><br>
+
+&nbsp; &nbsp; $ svn checkout https://subversive.cims.nyu.edu/osp/ <br><br>
+</li>
+<li>
+Isn't using svn to host a git oriented program a bit hypocritical? <br><br>
+
+Yes, it is.  We chose subversion for the time being because some of the tools 
+we are using for JavaGit development (Eclipse, Crucible, Fisheye) do not yet 
+interface with git repsitories.  Our sister project, Gitclipse, is working to 
+fill the Eclipse-Git void.<br><br>
+
+Once these tools work sufficiently well with git, we will move over to using 
+git for our repository. <br><br>
+</li>
+<li>
+Can I use git to access the source code in the mean time? <br><br>
+
+Yes, you can!  Check out the git-svn command; it works very well. <br><br>
+</li>
+<li>
+Is this under active development? <br><br>
+
+Extremely. We have commits on a daily basis, just check the SVN log: <br><br>
+
+&nbsp; &nbsp; $ svn log https://subversive.cims.nyu.edu/osp/javagit <br><br>
+</li>
+<li>
+When will an alpha/beta/stable release be available? <br><br>
+
+We are expecting an alpha release in the next few weeks.  We hope to have a 
+beta release by the end of the summer and a stable release soon thereafter.
+<br><br>
+</li>
+<li>
+Are there Milestones? <br><br>
+
+JavaGitMilestones? <br><br>
+</li>
+<li>
+Why not implement git using java (this way you don't need git installed)? 
+<br><br>
+
+We'd LOVE to, but unfortunately we don't have the time. We are gladly accepting patches. ;-) <br><br>
+</li>
+<li>
+How is JavaGit different from Jgit/Egit? <br><br>
+
+Who/What? <br><br>
+
+No. But seriously now.  JavaGit was conceived of as a complementary project to
+the <a href="http://gitclipse.sourceforge.net">GitClipse</a> projct, an Eclipse
+plugin to provide git support.  It was a logical choice for us to split the 
+project into the user oriented project, Gitclipse, and the developer oriented
+project, JavaGit.  Since the projects are separate, the JavaGit project is free
+to concentrate on providing a top-notch library/API for use in other 
+applications.  <br><br>
+
+Jgit/Egit, on the other hand, appear to be tightly integrated with Jgit
+primarily supporting Egit. <br><br>
+
+Another difference between JavaGit and Jgit/Egit is that the JavaGit team 
+wanted to quickly implement access to git repositories.  This goal lead us to
+start by forking to git itself to provide git functionality.  Knowing that this
+may be a short-term solution, we built JavaGit so that we can easily replace
+the command line interface (CLI) functionality with JNI, pure Java, or some 
+other implementation in the future.  Jgit/Egit only provides a pure Java 
+implementation. <br><br>
+</li>
+<li>
+How can I contribute? <br><br>
+
+Join the conversation on the developer mailing list.  There are lots of things
+to do. <br><br>
+</li>
+</ol>
+
