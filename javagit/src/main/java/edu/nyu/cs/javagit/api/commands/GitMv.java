@@ -33,26 +33,27 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
  */
 public class GitMv {
   /**
-   * Moves the specified source file/symlink/directory to the destination directory. If
-   * destination is non-existent then same as rename.
+   * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
+   * destination is non-existant then same as rename.
    * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
-   * @param options
-   *          The options to git-mv command.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to move/rename against. This argument must represent the absolute path to 
+   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
+   *          is passed, a <code>NullPointerException</code> will be thrown.
    * @param source
    *          The source file/folder/symlink which is to be renamed or moved to a different
-   *          location. A non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          location. It should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
-   *          The destination file/folder/symlink which the source is renamed or moved to. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          The destination file/folder/symlink which the source is renamed or moved to. It 
+   *          should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -62,7 +63,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error executing git-mv.
+   *              Thrown when there is an error excecuting git-mv.
    */
   public GitMvResponse mv(File repositoryPath, File source, File destination)
       throws IOException, JavaGitException {
@@ -76,26 +77,29 @@ public class GitMv {
   }
   
   /**
-   * Moves the specified source file/symlink/directory to the destination directory. If destination
-   * is non-existent then same as rename.
+   * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
+   * destination is non-existant then same as rename.
    * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to move/rename against. This argument must represent the absolute path to 
+   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
+   *          is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to git-mv command.
    * @param source
    *          The source file/folder/symlink which is to be renamed or moved to a different
-   *          location. A non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          location. It should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
-   *          The destination file/folder/symlink which the source is renamed or moved to. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          The destination file/folder/symlink which the source is renamed or moved to. It 
+   *          should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -105,7 +109,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error executing git-mv.
+   *              Thrown when there is an error excecuting git-mv.
    */
   public GitMvResponse mv(File repositoryPath, GitMvOptions options, File source,
       File destination) throws IOException, JavaGitException {
@@ -120,23 +124,25 @@ public class GitMv {
   }
   
   /**
-   * Moves the specified source file/symlink/directory to the destination directory. If destination
-   * is non-existent then same as rename.
+   * Moves the specified source files/symlinks/directories to the destination directory. 
    * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
-   * @param options
-   *          The options to git-mv command.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to move/rename against. This argument must represent the absolute path to 
+   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
+   *          is passed, a <code>NullPointerException</code> will be thrown.
    * @param sources
    *          The <code>List</code> of source file/folder/symlink which are to be moved to a 
-   *          different location. A non-zero length argument is required for this parameter, 
-   *          otherwise a <code>NullPointerException</code> or 
+   *          different location. The paths specified in this list must all be relative to the 
+   *          path specified in the <code>repository</code> parameter as returned by 
+   *          <code>File.getPath()</code>.A non-zero length argument is required for this 
+   *          parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
-   *          The destination folder which the source is moved to. A non-zero length argument is 
+   *          The destination file/folder/symlink which the source is renamed or moved to. It 
+   *          should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.
@@ -162,23 +168,27 @@ public class GitMv {
   }
   
   /**
-   * Moves the specified source file/symlink/directory to the destination directory. If destination
-   * is non-existent then same as rename.
+   * Moves the specified source files/symlinks/directories to the destination directory. 
    * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to move/rename against. This argument must represent the absolute path to 
+   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
+   *          is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to git-mv command.
    * @param sources
    *          The <code>List</code> of source file/folder/symlink which are to be moved to a 
-   *          different location. A non-zero length argument is required for this parameter, 
-   *          otherwise a <code>NullPointerException</code> or 
+   *          different location. The paths specified in this list must all be relative to the 
+   *          path specified in the <code>repository</code> parameter as returned by 
+   *          <code>File.getPath()</code>.A non-zero length argument is required for this 
+   *          parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
-   *          The destination folder which the source is moved to. A non-zero length argument is 
+   *          The destination file/folder/symlink which the source is renamed or moved to. It 
+   *          should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.

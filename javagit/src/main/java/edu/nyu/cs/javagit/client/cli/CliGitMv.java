@@ -63,23 +63,27 @@ public class CliGitMv implements IGitMv {
   /**
    * Exec of git-mv command
    * 
-   * @param repositoryPath
-   *          The path to the repository, to be treated as root folder for git-mv operation. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to move/rename against. This argument must represent the absolute path to 
+   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
+   *          is passed, a <code>NullPointerException</code> will be thrown.
    * @param options
    *          The options to git-mv command.
    * @param source
-   *          The source file/folder/symlink which is to be renamed or moved to a different
-   *          location. A non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          The <code>List</code> of source file/folder/symlink which are to be moved to a 
+   *          different location. The paths specified in this list must all be relative to the 
+   *          path specified in the <code>repository</code> parameter as returned by 
+   *          <code>File.getPath()</code>.A non-zero length argument is required for this 
+   *          parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
-   *          The destination file/folder/symlink which the source is renamed or moved to. A
-   *          non-zero length argument is required for this parameter, otherwise a
-   *          <code>NullPointerException</code> or <code>IllegalArgumentException</code> will be
-   *          thrown.
+   *          The destination file/folder/symlink which the source is renamed or moved to. It 
+   *          should be relative to the path specified in the <code>repository</code> 
+   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
+   *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
@@ -134,9 +138,9 @@ public class CliGitMv implements IGitMv {
       }
     }
     for (File file : source) {
-      cmd.add(file.getAbsolutePath());
+      cmd.add(file.getPath());
     }
-    cmd.add(destination.getAbsolutePath());
+    cmd.add(destination.getPath());
     return cmd;
   }
 

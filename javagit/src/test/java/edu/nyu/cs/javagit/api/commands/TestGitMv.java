@@ -58,13 +58,13 @@ public class TestGitMv extends TestCase {
     mv = new GitMv();
 
     source = FileUtilities.createFile(repoDirectory, "fileA.txt", "Sample Contents");
-    // Add a file to the repo
+    // Add a file to the repository.
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(source);
     add.add(repoDirectory, null, filesToAdd);
 
     // Call commit
-    commit.commit(repoDirectory, "Making a first test commit");
+    commit.commit(repoDirectory, "Committing the source file");
   }
   
   @After
@@ -76,7 +76,7 @@ public class TestGitMv extends TestCase {
   @Test
   public void testRename() throws IOException, JavaGitException {
     // Calling GitMv
-    destination = new File(repoDirectory.getAbsolutePath(), "fileB.txt");
+    destination = new File(repoDirectory, "fileB.txt");
     // mv.mv(repoDirectory, source, destination);
   }
   
@@ -135,6 +135,14 @@ public class TestGitMv extends TestCase {
     }
     
     try {
+      gitMv.mv(repoDirectory, null, fileList, destination);
+    } catch (Exception e) {
+      assertEquals("Should have null pointer exception or illegal argument exception",
+          ExceptionMessageMap.getMessage("000003") + "  { variableName=[options] }", 
+          e.getMessage());
+    }
+    
+    try {
       gitMv.mv(repoDirectory, source, null);
     } catch (Exception e) {
       assertEquals("Should have null pointer exception or illegal argument exception",
@@ -148,17 +156,6 @@ public class TestGitMv extends TestCase {
       assertEquals("Should have null pointer exception or illegal argument exception",
           ExceptionMessageMap.getMessage("000003") + "  { variableName=[options] }", 
           e.getMessage());
-    }
-    
-    File repoPath = new File("repository");
-    repoPath.mkdir();
-    try {
-      gitMv.mv(repoPath, source, destination);
-    } catch (Exception e) {
-      assertEquals("Should have null pointer exception or illegal argument exception",
-          ExceptionMessageMap.getMessage("424000")+ "  The git-mv error message:  " +
-          		"{ line1=[fatal: Not a git repository] }",
-              e.getMessage());
     }
   }
 }

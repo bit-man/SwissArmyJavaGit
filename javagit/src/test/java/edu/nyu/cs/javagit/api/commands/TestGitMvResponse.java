@@ -66,14 +66,13 @@ public class TestGitMvResponse extends TestCase {
     try {
       GitMvResponse response = gitMv.mv(repoDirectory, options, source, 
           destination);
-      assertEquals("a message saying destination exists is expected", 
-          "Warning: destination exists; will overwrite!",response.getComment());
+      assertNull("No response",response);
     } catch (Exception e) {
       assertEquals("Equal", "424001: Error calling git-mv for dry-run.   " +
       		"The git-mv dry-run error message:  { "
-              + "line1=[fatal: destination exists, source="+ source +", destination="+ destination 
-              +"], line2=[Checking rename of '" + fileOne +"' to '" + fileTwo + "'] }", 
-              e.getMessage());
+              + "line1=[fatal: destination exists, source="+ fileOne.getPath() +", destination="+ 
+              fileTwo.getPath() + "], line2=[Checking rename of '" + fileOne.getPath() +"' to '" + 
+              fileTwo.getPath() + "'] }", e.getMessage());
     }
   }
 }
