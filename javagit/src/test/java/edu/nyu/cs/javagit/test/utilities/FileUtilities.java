@@ -107,6 +107,7 @@ public class FileUtilities {
         removeDirectoryRecursivelyAndForcefully(f);
       }
     }
+	System.gc();
     if (!dirOrFile.delete()) {
       throw new JavaGitException(-1, "-1:  Unable to delete file/directory.  { path=["
           + dirOrFile.getAbsolutePath() + "] }");
