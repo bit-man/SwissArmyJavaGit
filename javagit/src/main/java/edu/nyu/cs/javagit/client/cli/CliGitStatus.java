@@ -173,10 +173,9 @@ public class CliGitStatus implements IGitStatus {
 
     if (paths != null) {
       for (File file : paths) {
-        command.add(file.getAbsolutePath());
+        command.add(file.getPath());
       }
     }
-
     return command;
   }
 
@@ -213,7 +212,7 @@ public class CliGitStatus implements IGitStatus {
     }
     if (!options.isOptReadFromLogFileNull()) {
       argsList.add("-F");
-      argsList.add(options.getOptReadFromLogFile().getName());
+      argsList.add(options.getOptReadFromLogFile().getPath());
     }
     if (!options.isAuthorNull()) {
       argsList.add("--author");
@@ -374,7 +373,8 @@ public class CliGitStatus implements IGitStatus {
       return last;
     }
 
-    //TODO: (gsd216) To add annotation here for unit testing
+    //
+
     public String getFilename(String line) {
       String filename = null;
       Scanner scanner = new Scanner(line);
