@@ -30,9 +30,13 @@ import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
 import edu.nyu.cs.javagit.client.IGitStatus;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
+ * 
+ * TODO - Need to parse -v option in a better way. Currently <code>GitStatusResponse</code>
+ * does not save any output related to -v options such as lines containing diffs, or +++ etc.
  */
 public class CliGitStatus implements IGitStatus {
 
@@ -59,7 +63,6 @@ public class CliGitStatus implements IGitStatus {
   /**
    * Implementation of <code>IGitStatus</code> method for getting the status of a list of files
    * 
-   *TODO: (gsd216): Redo JavaGitExceptions
    */
   public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths)
       throws JavaGitException, IOException {
@@ -74,7 +77,6 @@ public class CliGitStatus implements IGitStatus {
     }
     GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    handleErrorState(response);
     return response;
   }
   
@@ -147,14 +149,6 @@ public class CliGitStatus implements IGitStatus {
     GitStatusParser parser = new GitStatusParser(file);
 
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, command, parser);
-  }
-
-
-  //TODO (gsd216): To redo and re-implement the JavaGitException
-  private void handleErrorState(GitStatusResponse response) throws JavaGitException {
-    if( response.errorState() ) {
-      throw new JavaGitException(438000, response.getError(0));
-    }
   }
   
   /**
@@ -250,6 +244,7 @@ public class CliGitStatus implements IGitStatus {
     }
 
     public void parseLine(String line) {
+      //System.out.println(line);
       if (line == null || line.length() == 0) {
         return;
       }
@@ -405,7 +400,11 @@ public class CliGitStatus implements IGitStatus {
       return false;
     }
 
-    public GitStatusResponse getResponse() {
+    public GitStatusResponse getResponse() throws JavaGitException {
+      if( response.errorState() ) {
+        throw new JavaGitException(438000, ExceptionMessageMap.getMessage("438000") + 
+            " - git status error message: { " + response.getError() + " }");
+      }
       return response;
     }
   }

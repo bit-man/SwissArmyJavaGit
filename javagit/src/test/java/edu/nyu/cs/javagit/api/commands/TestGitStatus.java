@@ -19,6 +19,7 @@ package edu.nyu.cs.javagit.api.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -28,12 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.commands.GitAdd;
-import edu.nyu.cs.javagit.api.commands.GitAddOptions;
-import edu.nyu.cs.javagit.api.commands.GitCommit;
-import edu.nyu.cs.javagit.api.commands.GitStatus;
-import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
-import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
+import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
 
@@ -207,10 +203,45 @@ public class TestGitStatus extends TestCase {
     }
   }
 
+  /**
+   * Test for files that are indexed and have been modified but git-add or git-rm command need to be
+   * run to get them ready for committing next time <git-commit> is executed.
+   * 
+   * @throws IOException
+   * @throws JavaGitException
+   */
+  @Test
+  public void testModifiedFiles() throws IOException, JavaGitException {
+    List<File> filesToAdd = new ArrayList<File>();
+    File file4 = new File(testDir.getAbsoluteFile() + File.separator + "foobar04");
+    file4.createNewFile();
+    
+    filesToAdd.add(file1);
+    filesToAdd.add(file2);
+    filesToAdd.add(testDir);
+    filesToAdd.add(file3);
+    filesToAdd.add(file4);
+    
+    GitAddOptions addOptions = new GitAddOptions();
+    // Add the files for committing
+    gitAdd.add(repositoryDirectory, addOptions, filesToAdd);
+    // Commit the added files
+    gitCommit.commit(repositoryDirectory, "Test commit of two files");
+    // modify one of the committed files
+    FileUtilities.modifyFileContents(file3, "Test append text\n");
+    FileUtilities.modifyFileContents(file4, "Another sample text added to foobar03\n");
+    gitAdd.add(repositoryDirectory, addOptions, file3);
+    GitStatusResponse response = gitStatus.status(repositoryDirectory, options);
+    assertEquals(1, response.getModifiedFilesNotUpdatedSize());
+    assertEquals("foobar04", response.getModifiedFilesNotUpdatedIterator().next().getName());
+    assertEquals(1, response.getModifiedFilesToCommitSize());
+    assertEquals("foobar03", response.getModifiedFilesToCommitIterator().next().getName());  
+  }
+
   @After
   public void tearDown() throws Exception {
     if (repositoryDirectory.exists()) {
-      FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
+      //FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
   }
 }

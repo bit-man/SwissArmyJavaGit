@@ -40,6 +40,44 @@ public class TestGitStatusResponse extends TestCase {
     gitStatus = new CliGitStatus();
   }
 
+  /**
+   * Test for JavaGitException is thrown when an invalid switch is passed to 
+   * &lt;git-status&gt; 
+   */
+  @Test
+  public void testInvalidSwitchOptionThrowsException() {
+    GitStatusParser parser = new GitStatusParser();
+    GitStatusResponse response = null;
+    try {
+      parser.parseLine("error: unknown switch `w'");
+      parser.parseLine("usage: git-status [options] [--] <filepattern>...");
+      
+      response = parser.getResponse();
+      fail("Failed to throw JavaGitException for an invalid switch");
+    } catch ( JavaGitException e ) {
+      assertEquals("JavaGitException code", 438000, e.getCode());
+      assertEquals("response object", null, response);
+    }
+  }
+  
+  /**
+   * Test for JavaGitException is thrown if an invalid file name is passed to 
+   * &lt;git-status&gt; command.
+   */
+  @Test
+  public void testInvalidFile() {
+    GitStatusParser parser = new GitStatusParser();
+    GitStatusResponse response = null;
+    parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
+    try {
+      response = parser.getResponse();
+      fail("Failed to throw JavaGitException for an invalid filename");
+    } catch ( JavaGitException e ) {
+      assertEquals("JavaGitException code", 438000, e.getCode());
+      assertEquals("response object", null, response);
+    }
+  }
+  
   @Test
   public void testModifiedFilePattern() {
     String line = "#  modified:   patttrn06";
@@ -85,7 +123,7 @@ public class TestGitStatusResponse extends TestCase {
   }
 
   /**
-   * Test for verifying lines that only contains a hash(#) in them.
+   * Test for verifying pattern for lines that only contains a hash(#) in them.
    */
   public void testEmptyHashLinePattern() {
     String line = "#";
@@ -114,7 +152,7 @@ public class TestGitStatusResponse extends TestCase {
    * Test for verifying the correct branch name in comment in <code>GitStatusResposne</code>
    */
   @Test
-  public void testNothingToCommit() {
+  public void testNothingToCommit() throws JavaGitException {
     GitStatusParser parser = new GitStatusParser();
     parser.parseLine("# On branch master");
     parser.parseLine("nothing to commit (working directory clean)");
@@ -137,7 +175,7 @@ public class TestGitStatusResponse extends TestCase {
    * <code>GitStatusResponse</code> object when <code>GitStatus</code> is run.
    */
   @Test
-  public void testUntrackedFilesAndDircotories() {
+  public void testUntrackedFilesAndDircotories() throws JavaGitException {
     GitStatusParser parser = new GitStatusParser();
 
     parser.parseLine("# On branch master");
@@ -171,7 +209,7 @@ public class TestGitStatusResponse extends TestCase {
    * &lt;git-commit&gt; is run.
    */
   @Test
-  public void testNewlyAddedFiles() {
+  public void testNewlyAddedFiles() throws JavaGitException {
     GitStatusParser parser = new GitStatusParser();
     parser.parseLine("# On branch master");
     parser.parseLine("# Changes to be committed:");
@@ -211,7 +249,7 @@ public class TestGitStatusResponse extends TestCase {
    * modifiedFilesNotUpdated are correct and match.
    */
   @Test
-  public void testModifiedAndDeletedFiles() {
+  public void testModifiedAndDeletedFiles() throws JavaGitException {
     GitStatusParser parser = new GitStatusParser();
 
     parser.parseLine("# On branch master");
