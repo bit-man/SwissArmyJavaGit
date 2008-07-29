@@ -20,6 +20,9 @@ import java.io.File;
 
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
+/**
+ * A response data object for the git-mv command.
+ */
 public class GitMvResponse implements CommandResponse {
 
   // Variable to store the source file/folder/symlink of the response.
@@ -59,6 +62,7 @@ public class GitMvResponse implements CommandResponse {
     return source;
   }
   
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof GitMvResponse)) {
       return false;
@@ -81,7 +85,30 @@ public class GitMvResponse implements CommandResponse {
     return true;
   }
   
+  @Override
   public int hashCode() {
     return source.hashCode() + destination.hashCode() + message.hashCode();
+  }
+  
+  @Override
+  public String toString() {
+    StringBuffer buffer = new StringBuffer();
+    if (null != source) {
+      buffer.append("Source: ");
+      buffer.append(source);
+      buffer.append(" ");
+    }
+    
+    if (null != destination) {
+      buffer.append("Destination: ");
+      buffer.append(destination);
+      buffer.append(" ");
+    }
+    
+    if ((message.length()!=0)) {
+      buffer.append("Message: ");
+      buffer.append(message.toString());
+    }
+    return buffer.toString();
   }
 }

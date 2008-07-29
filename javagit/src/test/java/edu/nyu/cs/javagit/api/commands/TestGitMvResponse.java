@@ -23,6 +23,7 @@ public class TestGitMvResponse extends TestCase {
   private GitAdd gitAdd;
   private GitMv gitMv;
   private GitCommit gitCommit;
+  private GitMvOptions options;
   
   private File fileOne;
   private File fileTwo;
@@ -36,6 +37,7 @@ public class TestGitMvResponse extends TestCase {
     gitAdd = new GitAdd();
     gitMv = new GitMv();
     gitCommit = new GitCommit();
+    options = new GitMvOptions();
     
     fileOne = FileUtilities.createFile(repoDirectory, "fileOne", "Testfile#1");
     fileTwo = FileUtilities.createFile(repoDirectory, "fileTwo", "Testfile#2");
@@ -57,9 +59,6 @@ public class TestGitMvResponse extends TestCase {
 
   @Test
   public void testGitMvInvalidResponse() {
-    //Options to be set for git-mv
-    GitMvOptions options = new GitMvOptions();
-    
     source = fileOne;
     destination = fileTwo;
     options.setOptN(true);
@@ -70,9 +69,34 @@ public class TestGitMvResponse extends TestCase {
     } catch (Exception e) {
       assertEquals("Equal", "424001: Error calling git-mv for dry-run.   " +
       		"The git-mv dry-run error message:  { "
-              + "line1=[fatal: destination exists, source="+ fileOne.getPath() +", destination="+ 
-              fileTwo.getPath() + "], line2=[Checking rename of '" + fileOne.getPath() +"' to '" + 
-              fileTwo.getPath() + "'] }", e.getMessage());
+              + "line1=[fatal: destination exists, source="+ fileOne.getName() +", destination="+ 
+              fileTwo.getName() + "], line2=[Checking rename of '" + fileOne.getName() +"' to '" + 
+              fileTwo.getName() + "'] }", e.getMessage());
+    }
+  }
+  
+  @Test
+  public void testGitMvValidResponse() {
+    source = fileOne;
+    destination = fileTwo;
+    options.setOptN(true);
+    options.setOptF(true);
+    try {
+      GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
+      assertEquals("response", "Source: fileOne Destination: fileTwo Message: Warning: " +
+      		"destination exists; will overwrite!", response.toString());
+    } catch (Exception e) {
+      assertNull("Exception not expected", e);
+    }
+    
+    source = fileOne;
+    destination = new File(repoDirectory, "fileThree");
+    options.setOptN(true);
+    try {
+      GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
+      assertEquals("response", "Source: fileOne Destination: fileThree ", response.toString());
+    } catch (Exception e) {
+      assertNull("Exception not expected", e);
     }
   }
 }

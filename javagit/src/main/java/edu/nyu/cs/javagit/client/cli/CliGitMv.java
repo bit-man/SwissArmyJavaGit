@@ -75,13 +75,13 @@ public class CliGitMv implements IGitMv {
    *          The <code>List</code> of source file/folder/symlink which are to be moved to a 
    *          different location. The paths specified in this list must all be relative to the 
    *          path specified in the <code>repository</code> parameter as returned by 
-   *          <code>File.getPath()</code>.A non-zero length argument is required for this 
+   *          <code>File.getPath()</code>. A non-zero length argument is required for this 
    *          parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param destination
    *          The destination file/folder/symlink which the source is renamed or moved to. It 
    *          should be relative to the path specified in the <code>repository</code> 
-   *          parameter as returned by <code>File.getPath()</code>.A non-zero length argument is 
+   *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
    * @return The results from the git-mv.
@@ -197,7 +197,7 @@ public class CliGitMv implements IGitMv {
       if (line.contains("Warning:")) {
         response.addComment(line);
       }
-      if (line.contains("Adding")) {
+      if (line.contains("Adding") || line.contains("Changed")) {
         response.setDestination(new File(line.substring(11)));
       }
       if (line.contains("Deleting")) {
