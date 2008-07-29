@@ -241,7 +241,7 @@ public class TestGitStatus extends TestCase {
   @After
   public void tearDown() throws Exception {
     if (repositoryDirectory.exists()) {
-      //FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
+      FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
   }
 }
