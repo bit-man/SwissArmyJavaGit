@@ -90,7 +90,7 @@ public class TestGitMvResponse extends TestCase {
     } catch (Exception e) {
       assertNull("Exception not expected", e);
     }
-    */
+    
 
     source = fileOne;
     destination = new File(repoDirectory, "fileThree");
@@ -102,5 +102,6 @@ public class TestGitMvResponse extends TestCase {
     } catch (Exception e) {
       assertNull("Exception not expected", e);
     }
+    */
   }
 }
