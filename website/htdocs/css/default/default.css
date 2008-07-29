@@ -6,11 +6,7 @@ body {
 }
 #document
 {
-   width: 100%;
    height: 100%;
-/*
-   border: thin dashed #000;
-*/
 }
 #center
 {
@@ -19,29 +15,19 @@ body {
    color: #000;
    font-size: 12px;
    background-color: #FFF;
-/*
-   border: thin dashed #000;
-*/
 }
+
 #header {
    width: 100%;
-/*   min-height: 110px; */
    display: block;
    border: none;
-/*
-   border-width: thin;
-*/
    text-align: center;
-/*
-   border: thin dashed #000;
-*/
+   position: relative;
 }
+
 #colorbar {
    margin-left: 5px;
    margin-right: 5px;
-/*
-   border: thin dashed #000;
-*/
 }
 #reference {
    display: block;
@@ -50,29 +36,14 @@ body {
    position: relative;
    border: none;
    text-align: center;
-/*
-   border-width: thin;
-   border: thin dashed #000;
-*/
 }
 
 #fortune {
    text-align: center;
-/*
-   border: thin dashed #000;
-*/
 }
 #logo {
-/*
-   float: right;
-   float: left;
-*/
 }
 #slogan {
-/*
-   float: right;
-   clear: right;
-*/
 }
 #login {
    margin-right: 40px;
@@ -92,119 +63,29 @@ body {
    margin-right:4px;
 }
 
+tr {
+   vertical-align: top;
+}
+
 #menu {
-   margin: 0px 0px 0px 0px;
-   width: 100%;
-   min-width: 600px;
-   display: block;
    position: relative;
-   border: none;
-/*
-   border-width: thin;
-   border: thin dashed #000;
-*/
-}
-#menu_left {
-   float:left;
-/*   background-image: url("/images/green/top_in.gif"); */
-   background-position: right;
-   background-repeat: no-repeat;
-   background-color: #FFF;
-   color: #000;
-   width: 100px; 
-/*   height: 25px; */
-   left: 0px;
-   margin-left: 0px;
-   margin-right: 10px;
-   margin-top: 0px;
-   margin-bottom: 0px;
-   position: relative;
-   display: block;
-   z-index: 1;
-/*
-   border: thin dashed #000;
-*/
    border: thin dashed;
-}
-#menu_right {
-   float:right;
-/*   background-image: url("/images/green/top_out.gif"); */
-   background-position: left;
-   background-repeat: no-repeat;
-   background-color: #FFF;
-   color: #000;
-/*
-   width: 45px;
-   height: 25px;
-*/
-   right: 0px;
-   margin-left: 0px;
-   margin-top: 0px;
-   margin-right: 0px;
-   margin-bottom: 0px;
-   position: relative;
+   margin: 0.5em;
+   padding: 0.5em;
    display: block;
-   z-index: 1;
-/*
-   border: thin dashed #000;
-*/
-}
-#menu_center {
-   background-color: #FFF;
-   color: #000;
-   background-repeat: repeat-x;
-/*
-   width: 100%;
-   min-width: 600px;
-   min-height: 20px;
-   max-height: 20px;
-   height: 20px;
-*/
-   margin-left: 100px;
-   margin-right: 0px;
-   margin-top: 0px;
-   margin-bottom: 0px;
-   text-align: center;
-   position: relative;
-   display: block;
-   z-index: 0;
-/*
-   border: thin dashed #000;
-*/
-}
-#menu_center a{
-   font-size: 14px;
-   color: #000;
-   margin-left: 20px;
-   margin-right: 20px;
-   bottom:5px;
-   text-decoration: none;
 }
 
 #footer {
    margin: 0px 0px 10px 0px;
-   width: 100%;
-   min-width: 600px;
    display: block;
    position: relative;
-/*   left:0;*/
    border: none;
-/*
-   border-width: thin;
-   border: thin dashed #000;
-*/
 }
 #footer_left {
-/*   background-image: url("/images/green/bottom_in.gif"); */
    background-position: right;
    background-repeat: no-repeat;
    background-color: #FFF;
    color: #000;
-/*
-   width: 45px;
-   height: 25px;
-*/
-/*   left: 0px;*/
    margin-left: 0px;
    margin-right: 0px;
    margin-top: 0px;
@@ -213,9 +94,6 @@ body {
    float:left;
    display: block;
    z-index: 1;
-/*
-   border: thin dashed #000;
-*/
 }
 #footer_center {
    background-color: #FFF;
@@ -225,8 +103,6 @@ body {
 /*
    height: 20px;
 */
-   width: 100%;
-   min-width: 400px;
    margin-left: 0px;
    margin-right: 0px;
    margin-top: 0px;
@@ -242,15 +118,10 @@ body {
 }
 #footer_right {
    float: right;
-/*   background-image: url("/images/green/bottom_out.gif"); */
    background-position: left;
    background-repeat: no-repeat;
    background-color: #FFF;
    color: #000;
-/*
-   width: 45px;
-   height: 25px;
-*/
    right: 0px;
    margin-left: 0px;
    margin-top: 0px;
@@ -259,86 +130,23 @@ body {
    position: relative;
    z-index: 1;
    display: block;
-/*
-   border: thin dashed #000;
-*/
 }
 
 
 #main {
    position: relative;
-   left:0;
    margin: 5px 5px 5px 5px;
-   top: 5px;
-   bottom: 5px;
-   width: 100%;
-   height: 100%;
-   min-width: 600px;
    min-height: 300px;
    display: block;
    border: none;
-/*
-   border-width: thin;
-   border: thin dashed #000;
-*/
 }
 
-#main_left {
-/*
-   background-image: url("/images/green/left.gif");
-   background-position: right;
-   background-repeat: repeat-y;
-*/
-/*   background: url("/images/green/left.gif") repeat-y 100% 0; */
-   width: 40px;
-   height: 100%;
-   margin-left: 0px;
-   margin-right: 0px;
-   margin-top: 0px;
-   margin-bottom: 0px;
-/*   position: absolute; */
-   position: relative;
-   left: 0px;
-   top: 0px;
-   border: none;
-/*
-   border-width: thin;
-   border: thin dashed #000;
-*/
-   display: block;
-   z-index: 1;
+#main ol {
+   padding-left: 1em;
 }
 
-#main_right {
-/*   background-image: url("/images/green/right.gif"); */
-   background-repeat: repeat-y;
-   background-position: left;
-   width: 106px;
-   height: 100%;
-   right: 0px;
-   top: 0px;
-/*   position: absolute; */
-   position: relative;
-   display:block;
-/*
-   border: thin dashed #000;
-*/
-}
 #main_spacer {
    margin-top: 20px;
-}
-#main_center {
-   background-color: #fff;
-   padding: 20px;
-   margin-left: 120px;
-   margin-right: 106px;
-   margin-top: 0px;
-   text-align: left;
-   position: relative;
-   display: block;
-/*
-   border: thin dashed #000;
-*/
 }
 .xlarge
 {

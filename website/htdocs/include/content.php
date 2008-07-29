@@ -88,9 +88,12 @@ function PrintHeader()
 <!--END DOCUMENT_HEADER-->
 
 <!--MENU-->
+<div id="main-body">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+<div id="menu-outer">
 <div id="menu">
-   <div id="menu_left">
-      <a href="index.php">Overview</a><br />
+      <a href="/">Overview</a><br />
       <a href='http://sourceforge.net/news/?group_id=233450'>News</a><br />
       <a href='http://sourceforge.net/docman/?group_id=233450'>Documentation</a><br />
       <a href='http://sourceforge.net/tracker/?group_id=233450'>Bug Tracker</a><br />
@@ -106,12 +109,9 @@ function PrintHeader()
 -->
       <a href='faq.php'>FAQ</a><br />
       <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License</a><br />
-   </div>
-   <div id="menu_right">
-   </div>
-   <div id="menu_center">
-   </div>
 </div>
+</div>
+</td>
 <!--END MENU-->
 
 <?php
@@ -121,11 +121,8 @@ function PrintLeft()
 ?>
 
 <!--MAIN-->
+<td>
 <div id="main">
-   <!--L-SIDE-->
-   <div id="main_left">
-   </div>
-   <!--END L-SIDE-->
 <?php
 }
 
@@ -133,12 +130,11 @@ function PrintLeft()
 function PrintRight()
 {
 ?>
-   <!--R-SIDE-->
-   <div id="main_right">
-   </div>
-   <!--END R-SIDE-->
 
-</div>
+</div> <!-- main -->
+</td></tr>
+</table>
+</div> <!-- main-body -->
 <!--END MAIN-->
 
 <?php
@@ -146,23 +142,12 @@ function PrintRight()
 function PrintStartContent()
 {
 ?>
-   <div id="main_center">
-      <!--TOPIC-->
-      <div id="topic">
-<!--
-         <div id="topic_inside">
-            &nbsp;&nbsp;&nbsp;<?php echo($this->pageTitle); ?>&nbsp;&nbsp;&nbsp;
-         </div>
--->
-      </div>
-      <!--END TOPIC-->
 <?php
 }
 
 function PrintEndContent()
 {
 ?>
-   </div>
 <?php
 }
 
