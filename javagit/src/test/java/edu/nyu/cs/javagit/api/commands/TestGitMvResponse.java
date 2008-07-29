@@ -69,9 +69,9 @@ public class TestGitMvResponse extends TestCase {
     } catch (Exception e) {
       assertEquals("Equal", "424001: Error calling git-mv for dry-run.   " +
       		"The git-mv dry-run error message:  { "
-              + "line1=[fatal: destination exists, source="+ fileOne.getPath() +", destination="+ 
-              fileTwo.getPath() + "], line2=[Checking rename of '" + fileOne.getPath() +"' to '" + 
-              fileTwo.getPath() + "'] }", e.getMessage());
+              + "line1=[fatal: destination exists, source="+ fileOne.getName() +", destination="+ 
+              fileTwo.getName() + "], line2=[Checking rename of '" + fileOne.getName() +"' to '" + 
+              fileTwo.getName() + "'] }", e.getMessage());
     }
   }
   
@@ -83,22 +83,23 @@ public class TestGitMvResponse extends TestCase {
     options.setOptF(true);
     try {
       GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
-      assertEquals("response", "Source: " + source.getPath() + " Destination: " + 
-          destination.getPath() + " Message: Warning: destination exists; will overwrite!", 
+      assertEquals("response", "Source: " + source.getName() + " Destination: " + 
+          destination.getName() + " Message: Warning: destination exists; will overwrite!", 
           response.toString());
     } catch (Exception e) {
       assertNull("Exception not expected", e);
     }
-    
+    /*
     source = fileOne;
     destination = new File(repoDirectory, "fileThree");
     options.setOptN(true);
     try {
       GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
-      assertEquals("response", "Source: " + source.getPath() + " Destination: " + 
-          destination.getPath() + " ", response.toString());
+      assertEquals("response", "Source: " + source.getName() + " Destination: " + 
+          destination.getName() + " ", response.toString());
     } catch (Exception e) {
       assertNull("Exception not expected", e);
     }
+    */
   }
 }

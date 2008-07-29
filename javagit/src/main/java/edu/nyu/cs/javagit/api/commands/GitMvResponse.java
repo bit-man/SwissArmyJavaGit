@@ -95,13 +95,13 @@ public class GitMvResponse implements CommandResponse {
     StringBuffer buffer = new StringBuffer();
     if (null != source) {
       buffer.append("Source: ");
-      buffer.append(source);
+      buffer.append(source.getName());
       buffer.append(" ");
     }
     
     if (null != destination) {
       buffer.append("Destination: ");
-      buffer.append(destination);
+      buffer.append(destination.getName());
       buffer.append(" ");
     }
     
