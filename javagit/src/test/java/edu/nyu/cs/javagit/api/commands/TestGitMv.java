@@ -83,7 +83,6 @@ public class TestGitMv extends TestCase {
   @Test
   public void testMove() throws IOException, JavaGitException {
     // Calling GitMv
-   
     subDirOne = new File(repoDirectory, "subDirOne");
     subDirOne.mkdir();
     fileOne = FileUtilities.createFile(repoDirectory, "fileOne", "Testfile#1");
@@ -94,7 +93,7 @@ public class TestGitMv extends TestCase {
     filesToAdd.add(fileOne);
     filesToAdd.add(fileTwo);
     filesToAdd.add(fileThree);
-    filesToAdd.add(subDirOne);
+    filesToAdd.add(new File("subDirOne"));
     add.add(repoDirectory, null, filesToAdd);
     commit.commit(repoDirectory, "Making the commit");
     

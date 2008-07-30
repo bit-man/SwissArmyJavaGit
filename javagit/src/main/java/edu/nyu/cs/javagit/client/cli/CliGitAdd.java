@@ -45,7 +45,8 @@ public class CliGitAdd implements IGitAdd {
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitAddParser parser = new GitAddParser();
-    List<String> command = buildCommand(repositoryPath, options, paths);
+    //List<String> command = buildCommand(repositoryPath, options, paths);
+    List<String> command = buildCommand( repositoryPath, options, sanitizePaths(repositoryPath.getPath(), paths));
     GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
     if (response.containsError()) {
@@ -69,6 +70,23 @@ public class CliGitAdd implements IGitAdd {
     return add( repositoryPath, options, paths);
   }
 
+  // TODO: (gsd216) This is temporary method until GitFileSystem has not been changed
+  // to pass on relative path instead of absolute path to gitAdd
+  private List<File> sanitizePaths(String repoPath, List<File> paths) {
+    List<File> newPaths = new ArrayList<File>();
+    int length = repoPath.length() + 1;
+    for( File file: paths) {
+      if ( file.getPath().startsWith(repoPath + File.separator)) {
+        String filename = file.getPath();
+        String newPath = filename.substring(length, filename.length());
+        newPaths.add( new File( newPath ));
+      } else {
+        newPaths.add(file);
+      }
+    }
+    return newPaths;
+  }
+  
   /**
    * Implementation of &lt;git-add&gt; dry run.
    */
@@ -139,29 +157,10 @@ public class CliGitAdd implements IGitAdd {
     }
     if (paths != null && paths.size() > 0) {
       for (File file : paths) {
-        String absolutePath = file.getAbsolutePath();
-        String extractedRelativePath = getRelativePathFromRepository(repositoryPath, absolutePath);
-        command.add(extractedRelativePath);
+        command.add(file.getPath());
       }
     }
     return command;
-  }
-
-  private String getRelativePathFromRepository(File repositoryDirectory, String filePath) {
-    String repoString = repositoryDirectory.getAbsolutePath();
-    if (filePath.startsWith(repoString)) {
-      int repoLength = repoString.length();
-      //check for root directory scenario
-      if(filePath.length() > repoLength) {
-        // add 1 to repoLength to handle the path separator
-        String relativePath = filePath.substring(repoLength + 1, filePath.length());
-        return relativePath;
-      }
-      else {
-        return new String("");
-      }
-    }
-    return filePath;
   }
 
   /**

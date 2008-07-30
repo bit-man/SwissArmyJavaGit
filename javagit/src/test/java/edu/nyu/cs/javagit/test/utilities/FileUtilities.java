@@ -83,12 +83,12 @@ public class FileUtilities {
    *           If there are problems creating the file or writing the contents to the file.
    */
   public static File createFile(File baseDir, String filePath, String contents) throws IOException {
-    File file = new File(baseDir.getAbsolutePath() + File.separator + filePath);
+    File file = new File(baseDir.getPath() + File.separator + filePath);
     file.createNewFile();
     FileWriter fw = new FileWriter(file);
     fw.write(contents);
     fw.flush();
-    return file;
+    return new File(filePath);
   }
 
   /**
@@ -113,22 +113,27 @@ public class FileUtilities {
           + dirOrFile.getAbsolutePath() + "] }");
     }
   }
-  
+
   /**
    * Append some text to an existing file.
-   * @param file File that will be modified
-   * @param appendText The text that will be appended to the file
-   * @throws FileNotFoundException Exception thrown if the file does not exist.
-   * @throws IOException thrown if the IO operation fails.
+   * 
+   * @param file
+   *          File that will be modified
+   * @param appendText
+   *          The text that will be appended to the file
+   * @throws FileNotFoundException
+   *           Exception thrown if the file does not exist.
+   * @throws IOException
+   *           thrown if the IO operation fails.
    */
-  public static void modifyFileContents(File file, String appendText) 
-    throws FileNotFoundException, IOException {
-    if ( ! file.exists()) {
+  public static void modifyFileContents(File file, String appendText) throws FileNotFoundException,
+      IOException {
+    if (!file.exists()) {
       throw new FileNotFoundException("File does not exist");
     }
     FileWriter fw = new FileWriter(file);
     fw.append(appendText);
     fw.close();
   }
-  
+
 }

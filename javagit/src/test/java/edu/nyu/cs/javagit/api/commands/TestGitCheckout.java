@@ -55,10 +55,8 @@ public class TestGitCheckout extends TestCase {
     gitCommit = new GitCommit();
     gitAdd = new GitAdd();
     gitCheckout = new GitCheckout();
-    file1 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar01");
-    file2 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar02");
-    file1.createNewFile();
-    file2.createNewFile();
+    file1 = FileUtilities.createFile(repositoryDirectory, "foobar01", "Test file foobar01");
+    file2 = FileUtilities.createFile(repositoryDirectory, "foobar02", "Test file foobar02");
     repositoryPath = repositoryDirectory.getAbsolutePath();
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
@@ -94,12 +92,12 @@ public class TestGitCheckout extends TestCase {
   public void testCheckingOutLocalllyDeletedFiles() throws JavaGitException, IOException {
     List<File> filePaths = new ArrayList<File>();
     filePaths.add(new File(repositoryPath + File.separator + "foobar01"));
-    if (file1.delete()) { // locally delete the file
+    if (new File(repositoryPath + File.separator + file1.getPath()).delete()) { // locally delete the file
       // check out the file from the repository after deletion
       GitCheckoutResponse response = gitCheckout.checkout(repositoryDirectory, filePaths);
       File checkedOutFile = new File(repositoryPath + File.separator + "foobar01");
       assertTrue(checkedOutFile.exists());
-      FileUtilities.modifyFileContents(file2, "Test for append to a file");
+      FileUtilities.modifyFileContents(new File(repositoryPath + File.separator + file2.getPath()), "Test for append to a file");
       GitCheckoutOptions options = new GitCheckoutOptions();
       Ref branch = Ref.createBranchRef("master");
       response = gitCheckout.checkout(repositoryDirectory, options, branch);
@@ -117,7 +115,8 @@ public class TestGitCheckout extends TestCase {
    * @param file
    */
   private void assertFileExistsInDirectory(File repositoryDirectory, File file) throws IOException {
-    assertEquals(repositoryDirectory.getAbsolutePath(), file.getParent());
+    //assertEquals(repositoryDirectory.getAbsolutePath(), file.getParent());
+    assertTrue( (new File( repositoryDirectory.getAbsoluteFile() + File.separator + file.getPath()).exists()));
   }
 
   /**
@@ -138,8 +137,7 @@ public class TestGitCheckout extends TestCase {
     options.setOptB(branch1);
     Ref branch = Ref.createBranchRef("master");
     gitCheckout.checkout(repositoryDirectory, options, branch);
-    File file3 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar03");
-    file3.createNewFile();
+    File file3 = FileUtilities.createFile(repositoryDirectory, "foobar03", "New file foobar03");
     // add a file to testBranch01
     gitAdd.add(repositoryDirectory, null, file3);
     gitCommit.commit(repositoryDirectory, "Added foobar03 to the repository");

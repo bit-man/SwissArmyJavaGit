@@ -55,16 +55,11 @@ public class TestGitStatus extends TestCase {
     gitStatus = new GitStatus();
     options = new GitStatusOptions();
     // Create Few files
-    file1 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar01");
-    file2 = new File(repositoryDirectory.getAbsolutePath() + File.separator + "foobar02");
-    file1.createNewFile();
-    file2.createNewFile();
-    testDir = new File(repositoryDirectory.getAbsolutePath() + File.separator + "testDirectory");
+    file1 = FileUtilities.createFile(repositoryDirectory, "foobar01", "Test File1");
+    file2 = FileUtilities.createFile(repositoryDirectory, "foobar02", "Test File2");
+    testDir = new File(repositoryDirectory.getPath() + File.separator + "testDirectory");
     testDir.mkdir();
-    // file3 = FileUtilities.createFile(testDir, "foobar03", "Sample contents of foobar03 under
-    // testDir\n");
-    file3 = new File(testDir.getAbsoluteFile() + File.separator + "foobar03");
-    file3.createNewFile();
+    file3 = FileUtilities.createFile(testDir, "foobar03", "Sample contents of foobar03 under testDir\n");
   }
 
   /**
@@ -74,12 +69,12 @@ public class TestGitStatus extends TestCase {
    */
   @Test
   public void testIOExceptionThrownForInvalidRepositoryDirectory() throws JavaGitException {
-    repositoryDirectory = new File("/_______non_existing_dir_______");
+    File tempRepoDirectory = new File("/_______non_existing_dir_______");
     try {
-      gitStatus.status(repositoryDirectory);
-      fail("IOException not thrown");
+      gitStatus.status(tempRepoDirectory);
+      fail("IOException not thrown for non-existing repoDirectory");
     } catch (IOException expected) {
-
+      FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
   }
 
@@ -90,14 +85,15 @@ public class TestGitStatus extends TestCase {
 
   @Test
   public void testIOExceptionThrownForInvalidRepositoryDirectory2() throws JavaGitException {
-    repositoryDirectory = new File("/_______non_existing_dir________");
+    File tempRepoDirectory = new File("/_______non_existing_dir________");
     try {
       // Create couple of file
-      FileUtilities.createFile(repositoryDirectory, "foobar01", "Sameple Contents");
+      FileUtilities.createFile(tempRepoDirectory, "foobar01", "Sameple Contents");
       List<File> paths = null;
       gitStatus.status(repositoryDirectory, options, paths);
       fail("Failed to throw JavaGitException");
     } catch (IOException expected) {
+      FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
   }
 
@@ -149,8 +145,8 @@ public class TestGitStatus extends TestCase {
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
     filesToAdd.add(file2);
-    filesToAdd.add(testDir);
-    filesToAdd.add(file3);
+    filesToAdd.add(new File("testDirectory"));
+    filesToAdd.add(new File( "testDirectory" + File.separator + file3.getPath()));
     GitAddOptions addOptions = new GitAddOptions();
     gitAdd.add(repositoryDirectory, addOptions, filesToAdd);
     List<File> statusPath = null;
@@ -177,22 +173,22 @@ public class TestGitStatus extends TestCase {
     List<File> filesToAdd = new ArrayList<File>();
     filesToAdd.add(file1);
     filesToAdd.add(file2);
-    filesToAdd.add(testDir);
-    filesToAdd.add(file3);
+    filesToAdd.add(new File("testDirectory"));
+    filesToAdd.add(new File( "testDirectory" + File.separator + file3.getPath()));
     GitAddOptions addOptions = new GitAddOptions();
     // Add the files for committing
     gitAdd.add(repositoryDirectory, addOptions, filesToAdd);
     // Commit the added files
     gitCommit.commit(repositoryDirectory, "Test commit of two files");
     // modify one of the committed files
-    FileUtilities.modifyFileContents(file1, "Test append text\n");
-    FileUtilities.modifyFileContents(file3, "Another sample text added to foobar03\n");
+    FileUtilities.modifyFileContents(new File(repositoryDirectory.getPath() + File.separator + file1.getPath()), "Test append text\n");
+    FileUtilities.modifyFileContents(new File(testDir.getPath() + File.separator + file3.getPath()), "Another sample text added to foobar03\n");
     List<File> statusPath = null;
     // run status to find the modified but not updated files
     GitStatusResponse status = gitStatus.status(repositoryDirectory, options, statusPath);
     int modifiedNotUpdatedFiles = status.getModifiedFilesNotUpdatedSize();
     assertEquals("No of modified but not updated files not equal", 2, modifiedNotUpdatedFiles);
-    if (file2.delete()) {
+    if (new File(repositoryDirectory.getPath() + File.separator + file2.getPath()).delete()) {
       status = gitStatus.status(repositoryDirectory, options, statusPath);
       modifiedNotUpdatedFiles = status.getModifiedFilesNotUpdatedSize();
       int deletedFileNotUpdated = status.getDeletedFilesNotUpdatedSize();
@@ -213,14 +209,18 @@ public class TestGitStatus extends TestCase {
   @Test
   public void testModifiedFiles() throws IOException, JavaGitException {
     List<File> filesToAdd = new ArrayList<File>();
-    File file4 = new File(testDir.getAbsoluteFile() + File.separator + "foobar04");
-    file4.createNewFile();
+    //File file4 = new File(testDir.getAbsoluteFile() + File.separator + "foobar04");
+    //file4.createNewFile();
+    File file4 = FileUtilities.createFile(testDir, "foobar04", "Test File4");
     
     filesToAdd.add(file1);
     filesToAdd.add(file2);
-    filesToAdd.add(testDir);
-    filesToAdd.add(file3);
-    filesToAdd.add(file4);
+    //filesToAdd.add(testDir);
+    //filesToAdd.add(file3);
+    filesToAdd.add(new File("testDirectory"));
+    filesToAdd.add(new File( "testDirectory" + File.separator + file3.getPath()));
+    //filesToAdd.add(file4);
+    filesToAdd.add(new File( "testDirectory" + File.separator + file4.getPath()));
     
     GitAddOptions addOptions = new GitAddOptions();
     // Add the files for committing
@@ -228,9 +228,9 @@ public class TestGitStatus extends TestCase {
     // Commit the added files
     gitCommit.commit(repositoryDirectory, "Test commit of two files");
     // modify one of the committed files
-    FileUtilities.modifyFileContents(file3, "Test append text\n");
-    FileUtilities.modifyFileContents(file4, "Another sample text added to foobar03\n");
-    gitAdd.add(repositoryDirectory, addOptions, file3);
+    FileUtilities.modifyFileContents(new File(testDir.getPath() + File.separator + file3.getPath()), "Test append text\n");
+    FileUtilities.modifyFileContents(new File(testDir.getPath() + File.separator + file4.getPath()), "Another sample text added to foobar03\n");
+    gitAdd.add(repositoryDirectory, addOptions, new File( testDir.getName() + File.separator + file3.getPath()));
     GitStatusResponse response = gitStatus.status(repositoryDirectory, options);
     assertEquals(1, response.getModifiedFilesNotUpdatedSize());
     assertEquals("foobar04", response.getModifiedFilesNotUpdatedIterator().next().getName());
