@@ -65,7 +65,7 @@ public class TestCliGitLog {
 	}
 
 	@After
-	protected void tearDown() throws JavaGitException {
+	public void tearDown() throws JavaGitException {
 		FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
 	}
 
