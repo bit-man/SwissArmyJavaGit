@@ -76,15 +76,16 @@ public class TestGitMv extends TestCase {
   @Test
   public void testRename() throws IOException, JavaGitException {
     // Calling GitMv
-    destination = new File(repoDirectory, "fileB.txt");
-    // mv.mv(repoDirectory, source, destination);
+    destination = new File("fileB.txt");
+    mv.mv(repoDirectory, source, destination);
   }
   
   @Test
   public void testMove() throws IOException, JavaGitException {
     // Calling GitMv
-    subDirOne = new File(repoDirectory, "subDirOne");
+    subDirOne = new File(repoDirectory.getPath() + File.separator + "subDirOne");
     subDirOne.mkdir();
+    subDirOne = new File(subDirOne.getName());
     fileOne = FileUtilities.createFile(repoDirectory, "fileOne", "Testfile#1");
     fileTwo = FileUtilities.createFile(repoDirectory, "fileTwo", "Testfile#2");
     fileThree = FileUtilities.createFile(repoDirectory, "fileThree", "Testfile#3");
@@ -93,7 +94,7 @@ public class TestGitMv extends TestCase {
     filesToAdd.add(fileOne);
     filesToAdd.add(fileTwo);
     filesToAdd.add(fileThree);
-    filesToAdd.add(new File("subDirOne"));
+    filesToAdd.add(subDirOne);
     add.add(repoDirectory, null, filesToAdd);
     commit.commit(repoDirectory, "Making the commit");
     
@@ -102,7 +103,7 @@ public class TestGitMv extends TestCase {
     filesToMove.add(fileTwo);
     filesToMove.add(fileThree);
     destination = subDirOne;
-    // mv.mv(repoDirectory, filesToMove, destination);
+    mv.mv(repoDirectory, filesToMove, destination);
   }
   
   //check if exceptions are thrown below for invalid arguments

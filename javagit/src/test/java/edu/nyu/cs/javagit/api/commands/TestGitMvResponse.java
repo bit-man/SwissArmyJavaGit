@@ -58,7 +58,7 @@ public class TestGitMvResponse extends TestCase {
   }
 
   @Test
-  public void testGitMvInvalidResponse() {
+  public void testGitMvErrorResponse() {
     source = fileOne;
     destination = fileTwo;
     options.setOptN(true);
@@ -77,7 +77,6 @@ public class TestGitMvResponse extends TestCase {
   
   @Test
   public void testGitMvValidResponse() {
-    /*
     source = fileOne;
     destination = fileTwo;
     options.setOptN(true);
@@ -93,7 +92,7 @@ public class TestGitMvResponse extends TestCase {
     
 
     source = fileOne;
-    destination = new File(repoDirectory, "fileThree");
+    destination = new File("fileThree");
     options.setOptN(true);
     try {
       GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
@@ -102,6 +101,5 @@ public class TestGitMvResponse extends TestCase {
     } catch (Exception e) {
       assertNull("Exception not expected", e);
     }
-    */
   }
 }
