@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class TestCliGitLog {
 
 		commit = new GitCommit();
 		add = new GitAdd();
-		
+
 		File testFile = FileUtilities.createFile(repoDirectory, "log.txt", "README");
 		// Add a file to the repo
 		List<File> filesToAdd = new ArrayList<File>();
@@ -62,11 +63,18 @@ public class TestCliGitLog {
 		// Call commit
 		commit.commit(repoDirectory, "Making a first test commit");
 	}
-	
+
+	@After
+	protected void tearDown() throws JavaGitException {
+		FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
+	}
+
 	/**
-	 * Test for NullPointerException thrown if the repository path is null
+	 * 
+	 * Test to verify if git logs is successfully parsing logs
 	 * 
 	 * @throws IOException
+	 * @throws JavaGitException
 	 */
 	@Test
 	public void testGitLogGettingLogs() throws IOException, JavaGitException {
@@ -81,7 +89,6 @@ public class TestCliGitLog {
 
 	}
 
-	//TODO add more tests (apj221) soon
 
 
 }
