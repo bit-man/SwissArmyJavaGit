@@ -59,8 +59,9 @@ public class GitDirectory extends GitFileSystemObject {
 
     // get all of the file system objects currently located under this directory
     for (File memberFile : file.listFiles()) {
-      // check if this file is hidden
-      if (memberFile.isHidden()) {
+      // check if this file is hidden also some times the .git and 
+      //other unix hidden directories are not hidden in Windows
+      if (memberFile.isHidden()||memberFile.getName().startsWith(".")) {
         // ignore (could be .git directory)
         continue;
       }

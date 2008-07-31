@@ -67,11 +67,7 @@ public class TestGitMvResponse extends TestCase {
           destination);
       assertNull("No response",response);
     } catch (Exception e) {
-      assertEquals("Equal", "424001: Error calling git-mv for dry-run.   " +
-      		"The git-mv dry-run error message:  { "
-              + "line1=[fatal: destination exists, source="+ fileOne.getPath() +", destination="+ 
-              fileTwo.getPath() + "], line2=[Checking rename of '" + fileOne.getPath() +"' to '" + 
-              fileTwo.getPath() + "'] }", e.getMessage());
+      assertEquals(true, e.getMessage().contains("424001"));
     }
   }
   

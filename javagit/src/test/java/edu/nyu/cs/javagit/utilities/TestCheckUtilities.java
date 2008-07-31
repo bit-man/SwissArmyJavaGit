@@ -40,7 +40,7 @@ public class TestCheckUtilities extends TestCase {
   @Test
   public void testCheckFileValidity() {
     final String unixFileDir = "/tmp/";
-    final String windowsFileDir = "c:\\";
+    final String windowsFileDir = "";
     final String filename1 = "bababa.3223.5asdbbw3gni.gagwe";
     final String filename2 = "baasdfbj65adaba.sdh3hs2s5y23.5asdbbw3gni.gagwe";
 
@@ -74,6 +74,7 @@ public class TestCheckUtilities extends TestCase {
         assertTrue("Unable to create temporary file to test checkFileValidity", false);
       }
     } catch (IOException e) {
+    	e.printStackTrace();
       assertTrue("Unable to create temporary file to test checkFileValidity", false);
     }
     assertCheckFileValidityIsValid(fullFilePath);
