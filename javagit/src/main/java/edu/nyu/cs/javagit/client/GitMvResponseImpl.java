@@ -27,11 +27,12 @@ import edu.nyu.cs.javagit.api.commands.GitMvResponse;
 public class GitMvResponseImpl extends GitMvResponse {
 
   /**
-   * Adds comments from each line of the message received upon successful execution of the git-mv
-   * command, to the message buffer.
+   * Adds comments from each line of the message, if received, upon successful execution of the 
+   * git-mv command, to the message buffer.
    *  
    * @param comment
-   *          The comment from each line of the message upon successful execution of the git-mv.
+   *          The comment from each line of the message, if received, upon successful execution of 
+   *          the git-mv.
    */
   public void addComment(String comment) {
     message.append(comment);

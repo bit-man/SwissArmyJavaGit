@@ -35,10 +35,12 @@ public class GitMvResponse implements CommandResponse {
   protected StringBuffer message = new StringBuffer();
 
   /**
-   * Gets the comments received upon successful execution of the git-mv command, from the message
-   * buffer.
+   * Gets the comments, if received, upon successful execution of the git-mv command, from the 
+   * message buffer.
    * 
    * @return message
+   *           The comments, if received, upon successful execution of the git-mv command, from the
+   * message buffer.
    */
   public String getComment() {
     return message.toString();

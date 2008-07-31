@@ -54,7 +54,10 @@ public class GitMv {
    *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @return The results from the git-mv.
+   * @return The results from the git-mv. 
+   *           It is expected that GitMv does not notify when a move was successful. This follows 
+   *           the response that git-mv itself gives. If the move/rename fails for any reason, 
+   *           proper exception messages are generated and thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
    *              Examples include:
@@ -100,7 +103,10 @@ public class GitMv {
    *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @return The results from the git-mv.
+   * @return The results from the git-mv. 
+   *           It is expected that GitMv does not notify when a move was successful. This follows 
+   *           the response that git-mv itself gives. If the move/rename fails for any reason, 
+   *           proper exception messages are generated and thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
    *              Examples include:
@@ -145,7 +151,10 @@ public class GitMv {
    *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @return The results from the git-mv.
+   * @return The results from the git-mv. 
+   *           It is expected that GitMv does not notify when a move was successful. This follows 
+   *           the response that git-mv itself gives. If the move/rename fails for any reason, 
+   *           proper exception messages are generated and thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
    *              Examples include:
@@ -192,7 +201,10 @@ public class GitMv {
    *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
    *          required for this parameter, otherwise a <code>NullPointerException</code> or 
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @return The results from the git-mv.
+   * @return The results from the git-mv. 
+   *           It is expected that GitMv does not notify when a move was successful. This follows 
+   *           the response that git-mv itself gives. If the move/rename fails for any reason, 
+   *           proper exception messages are generated and thrown.
    * @exception IOException
    *              There are many reasons for which an <code>IOException</code> may be thrown.
    *              Examples include:
