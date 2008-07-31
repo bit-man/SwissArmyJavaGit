@@ -88,6 +88,7 @@ public class FileUtilities {
     FileWriter fw = new FileWriter(file);
     fw.write(contents);
     fw.flush();
+    fw.close();
     return new File(filePath);
   }
 
@@ -107,7 +108,7 @@ public class FileUtilities {
         removeDirectoryRecursivelyAndForcefully(f);
       }
     }
-	System.gc();
+	//System.gc();
     if (!dirOrFile.delete()) {
       throw new JavaGitException(-1, "-1:  Unable to delete file/directory.  { path=["
           + dirOrFile.getAbsolutePath() + "] }");
