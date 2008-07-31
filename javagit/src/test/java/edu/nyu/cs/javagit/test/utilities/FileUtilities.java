@@ -28,28 +28,6 @@ import edu.nyu.cs.javagit.api.JavaGitException;
  */
 public class FileUtilities {
 
-  // The temp directory to use on unix systems.
-  private static final String UNIX_TMP_DIR = "/tmp/";
-
-  // The temp directory to use on windows systems.
-  private static final String WINDOWS_TMP_DIR = "c:\\";
-
-  // The temp directory for the current running system.
-  private static final String BASE_TMP_DIR;
-
-  /** True if running on windows. False if not running on windows (assuming Unix/Linux/OS X then). */
-  public static final boolean IS_WINDOWS;
-
-  static {
-    if (System.getProperty("os.name").contains("indows")) {
-      IS_WINDOWS = true;
-      BASE_TMP_DIR = WINDOWS_TMP_DIR;
-    } else {
-      IS_WINDOWS = false;
-      BASE_TMP_DIR = UNIX_TMP_DIR;
-    }
-  }
-
   /**
    * Create a temp directory based on the supplied directory base name. The directory will be
    * created under the temp directory for the system running the program.
@@ -59,11 +37,21 @@ public class FileUtilities {
    *          name will be created.
    * @return A <code>File</code> instance representing the created directory.
    */
-  public static File createTempDirectory(String baseDirName) {
+  public static File createTempDirectory(String baseDirName) throws IOException {
+    // Get the system temp directory location.
+    File tmpfile = File.createTempFile("AfileName", "tmp");
+    String absPath = tmpfile.getAbsolutePath();
+    tmpfile.delete();
+    int lastSep = absPath.lastIndexOf(File.separatorChar);
+    String tmpDir = absPath.substring(0, lastSep + 1);
+
+    // System.out.println("Temp Directory: tmpDir=["+ tmpDir + "]");
+
+    // Create a temp directory for the caller
+    File file = new File(tmpDir + baseDirName);
     int num = 0;
-    File file = new File(BASE_TMP_DIR + baseDirName);
     while (!file.mkdir()) {
-      file = new File(BASE_TMP_DIR + baseDirName + Integer.toString(num++));
+      file = new File(tmpDir + baseDirName + Integer.toString(num++));
     }
 
     return file;
@@ -108,7 +96,7 @@ public class FileUtilities {
         removeDirectoryRecursivelyAndForcefully(f);
       }
     }
-	//System.gc();
+    //System.gc();
     if (!dirOrFile.delete()) {
       throw new JavaGitException(-1, "-1:  Unable to delete file/directory.  { path=["
           + dirOrFile.getAbsolutePath() + "] }");
