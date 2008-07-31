@@ -28,39 +28,6 @@ import edu.nyu.cs.javagit.api.commands.GitRmResponse;
  * An interface implementing functionality of the git-rm command.
  */
 public interface IGitRm {
-
-  /**
-   * Remove files relative to the path within the repository.
-   * 
-   * @param repository
-   *          A <code>File</code> instance for the path to the repository root (the parent
-   *          directory of the .git directory) or a sub-directory in the working tree of the
-   *          repository to run rm against. This argument must represent the absolute path to the
-   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
-   *          passed, a <code>NullPointerException</code> will be thrown.
-   * @param options
-   *          The options to run rm with. If null is passed, a <code>NullPointerException</code>
-   *          will be thrown.
-   * @param paths
-   *          A list of files or folders to remove. The paths specified in this list must all be
-   *          relative to the path specified in the <code>repository</code> parameter as returned
-   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
-   *          parameter, otherwise a <code>NullPointerException</code> or
-   *          <code>IllegalArgumentException</code> will be thrown.
-   * @exception IOException
-   *              There are many reasons for which an <code>IOException</code> may be thrown.
-   *              Examples include:
-   *              <ul>
-   *              <li>a directory doesn't exist</li>
-   *              <li>access to a file is denied</li>
-   *              <li>a command is not found on the PATH</li>
-   *              </ul>
-   * @exception JavaGitException
-   *              Thrown when there is an error making the commit.
-   */
-  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
-      throws IOException, JavaGitException;
-
   /**
    * Remove files relative to the path within the repository.
    * 
@@ -96,6 +63,36 @@ public interface IGitRm {
    *          repository to run rm against. This argument must represent the absolute path to the
    *          desired directory as returned by the <code>File.getPath()</code> method. If null is
    *          passed, a <code>NullPointerException</code> will be thrown.
+   * @param options
+   *          The options to run rm with. If null is passed, a <code>NullPointerException</code>
+   *          will be thrown.
+   * @param path
+   *          A single file to remove. The specified path must be relative to the path specified in
+   *          the <code>repository</code> parameter as returned by <code>File.getPath()</code>.
+   *          If null is passed, a <code>NullPointerException</code> will be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rm(java.io.File repository, GitRmOptions options, File path)
+      throws IOException, JavaGitException;
+
+  /**
+   * Remove files relative to the path within the repository.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
    * @param paths
    *          A list of files to remove. The paths specified in this list must all be relative to
    *          the path specified in the <code>repository</code> parameter as returned by
@@ -114,6 +111,38 @@ public interface IGitRm {
    *              Thrown when there is an error making the commit.
    */
   public GitRmResponse rm(File repository, List<File> paths) throws IOException, JavaGitException;
+
+  /**
+   * Remove files relative to the path within the repository.
+   * 
+   * @param repository
+   *          A <code>File</code> instance for the path to the repository root (the parent
+   *          directory of the .git directory) or a sub-directory in the working tree of the
+   *          repository to run rm against. This argument must represent the absolute path to the
+   *          desired directory as returned by the <code>File.getPath()</code> method. If null is
+   *          passed, a <code>NullPointerException</code> will be thrown.
+   * @param options
+   *          The options to run rm with. If null is passed, a <code>NullPointerException</code>
+   *          will be thrown.
+   * @param paths
+   *          A list of files or folders to remove. The paths specified in this list must all be
+   *          relative to the path specified in the <code>repository</code> parameter as returned
+   *          by <code>File.getPath()</code>. A non-null and non-empty list is required for this
+   *          parameter, otherwise a <code>NullPointerException</code> or
+   *          <code>IllegalArgumentException</code> will be thrown.
+   * @exception IOException
+   *              There are many reasons for which an <code>IOException</code> may be thrown.
+   *              Examples include:
+   *              <ul>
+   *              <li>a directory doesn't exist</li>
+   *              <li>access to a file is denied</li>
+   *              <li>a command is not found on the PATH</li>
+   *              </ul>
+   * @exception JavaGitException
+   *              Thrown when there is an error making the commit.
+   */
+  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
+      throws IOException, JavaGitException;
 
   /**
    * Remove files relative to the path within the repository but only effect the index.
@@ -172,5 +201,4 @@ public interface IGitRm {
    */
   public GitRmResponse rmRecursive(File repository, List<File> paths) throws IOException,
       JavaGitException;
-
 }

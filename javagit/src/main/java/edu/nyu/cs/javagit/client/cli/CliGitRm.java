@@ -35,17 +35,22 @@ public class CliGitRm implements IGitRm {
 
   // TODO (jhl388): Add test cases for this class.
 
-  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
-      throws IOException, JavaGitException {
-    return processRm(repository, options, null, paths);
-  }
-
   public GitRmResponse rm(File repository, File path) throws IOException, JavaGitException {
     return processRm(repository, null, path, null);
   }
 
+  public GitRmResponse rm(java.io.File repository, GitRmOptions options, File path)
+      throws IOException, JavaGitException {
+    return processRm(repository, options, path, null);
+  }
+
   public GitRmResponse rm(File repository, List<File> paths) throws IOException, JavaGitException {
     return processRm(repository, null, null, paths);
+  }
+
+  public GitRmResponse rm(File repository, GitRmOptions options, List<File> paths)
+      throws IOException, JavaGitException {
+    return processRm(repository, options, null, paths);
   }
 
   public GitRmResponse rmCached(File repository, List<File> paths) throws IOException,
