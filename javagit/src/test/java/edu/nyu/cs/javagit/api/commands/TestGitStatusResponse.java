@@ -198,7 +198,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   Iterator<File> iter = response.getUntrackedFiles();
+   Iterator<File> iter = response.getUntrackedFiles().iterator();
    assertEquals("FileName", "dir", iter.next().getPath());
    assertEquals("FileName", "fileA", iter.next().getPath());
    assertEquals("FileName", "fileB", iter.next().getPath());
@@ -239,7 +239,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("File Name", "dir"+File.separator+"fileD", iter.next().getPath());
    assertEquals("File Name", "fileA", iter.next().getPath());
 
-   iter = response.getUntrackedFiles();
+   iter = response.getUntrackedFiles().iterator();
    assertEquals("File Name", "fileB", iter.next().getPath());
    assertEquals("File Name", "fileC", iter.next().getPath());
  }
@@ -277,10 +277,10 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of errors", 0, response.getErrorCount());
 
    assertEquals("FileName", "dir"+File.separator+"fileD", response.getNewFilesToCommitIterarator().next().getPath());
-   assertEquals("FileName", "fileC", response.getDeletedFilesToCommitIterator().next().getPath());
-   assertEquals("FileName", "fileA", response.getModifiedFilesNotUpdatedIterator().next()
+   assertEquals("FileName", "fileC", response.getDeletedFilesToCommitIterator().iterator().next().getPath());
+   assertEquals("FileName", "fileA", response.getModifiedFilesNotUpdatedIterator().iterator().next()
        .getPath());
-   assertEquals("FileName", "fileB", response.getDeletedFilesNotUpdatedIterator().next().getPath());
+   assertEquals("FileName", "fileB", response.getDeletedFilesNotUpdatedIterator().iterator().next().getPath());
  }
 
  /**
@@ -314,9 +314,9 @@ public class TestGitStatusResponse extends TestCase {
 
    GitStatusResponse response = parser.getResponse();
    assertEquals(1, response.getModifiedFilesNotUpdatedSize());
-   assertEquals("ModifiedNotStaged.java", response.getModifiedFilesNotUpdatedIterator().next()
+   assertEquals("ModifiedNotStaged.java", response.getModifiedFilesNotUpdatedIterator().iterator().next()
        .getName());
    assertEquals(1, response.getModifiedFilesToCommitSize());
-   assertEquals("Modified.java", response.getModifiedFilesToCommitIterator().next().getName());
+   assertEquals("Modified.java", response.getModifiedFilesToCommitIterator().iterator().next().getName());
  }
 }
