@@ -17,7 +17,6 @@
 package edu.nyu.cs.javagit.api.commands;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.commands.GitAddResponse.ResponseString;

@@ -16,9 +16,6 @@
  */
 package edu.nyu.cs.javagit.api.commands;
 
-import java.io.File;
-import java.util.Date;
-
 public class GitLogOptions {
 
 	// general options
@@ -395,7 +392,7 @@ public class GitLogOptions {
 	public boolean isOptLimitCommitMax() {
 		return optLimitCommitMax;
 	}
-	private void setOptLimitCommitMax(boolean optLimitCommitMax,int optLimitMax) {
+	public void setOptLimitCommitMax(boolean optLimitCommitMax,int optLimitMax) {
 		this.optLimitCommitMax = optLimitCommitMax;
 		setOptLimitMax(optLimitMax);
 	}
