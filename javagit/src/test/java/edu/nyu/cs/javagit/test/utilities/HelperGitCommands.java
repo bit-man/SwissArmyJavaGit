@@ -45,7 +45,8 @@ public class HelperGitCommands {
   public static void initRepo(File repoDirectory) throws IOException, JavaGitException {
     List<String> cmdLine = new ArrayList<String>();
 
-    cmdLine.add("git-init");
+    cmdLine.add("git");
+    cmdLine.add("init");
 
     ProcessUtilities.runCommand(repoDirectory, cmdLine, new IParser() {
       public CommandResponse getResponse() {
