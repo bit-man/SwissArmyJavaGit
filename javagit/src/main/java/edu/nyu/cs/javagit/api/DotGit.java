@@ -186,12 +186,12 @@ public final class DotGit {
   }
   
   /**
-   * Deletes a branch
+   * Renames a branch
    * 
    * @param branchFrom
    *          The branch to rename
    * @param nameTo
-   *          new branch name
+   *          New branch name
    * @param forceRename
    *          True if force rename option -M should be used. 
    *          False if -m should be used. 
