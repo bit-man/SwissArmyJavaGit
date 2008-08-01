@@ -58,7 +58,7 @@ public class TestBranching extends TestCase {
    */
   @Test
   public void testGitApiBranch() throws IOException, JavaGitException {
-/*    //Create a file
+    //Create a file
     FileUtilities.createFile(repositoryDirectory, "file1.txt", "Some data");
 
     //check contents
@@ -121,7 +121,6 @@ public class TestBranching extends TestCase {
       }
     }
     assertEquals("Error. Expecting deleted branch to disappear.", false, found);
-    */
   }
   
   

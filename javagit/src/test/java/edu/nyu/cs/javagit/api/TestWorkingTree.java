@@ -64,9 +64,9 @@ public class TestWorkingTree extends TestCase {
   }
   
   @Test
-  public void testWorkingTreeGetFile() {
+  public void testWorkingTreeGetFile() throws JavaGitException {
     WorkingTree workingTree = WorkingTree.getInstance(TEST_DIRNAME);
-    File file = new File("/path/to/file");
+    File file = new File("file1");
 
     GitFile gitFile = workingTree.getFile(file);
     assertEquals(gitFile.getWorkingTree(), workingTree);

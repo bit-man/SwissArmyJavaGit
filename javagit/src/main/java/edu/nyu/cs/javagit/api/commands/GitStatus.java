@@ -180,7 +180,7 @@ public final class GitStatus {
    *           Exception is thrown if any of the IO operations fail.
    */
   public GitStatusResponse getSingleFileStatus(File repositoryPath, File path) throws JavaGitException, IOException {
-    CheckUtilities.checkFileValidity(path);
+    CheckUtilities.checkFileValidity(repositoryPath);
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitStatus gitStatus = client.getGitStatusInstance();
     return gitStatus.getSingleFileStatus(repositoryPath, null, path);

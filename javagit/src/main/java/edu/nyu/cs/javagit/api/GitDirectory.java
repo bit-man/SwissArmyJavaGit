@@ -35,7 +35,7 @@ public class GitDirectory extends GitFileSystemObject {
    *          The <code>WorkingTree</code> that this directory falls under.
    * 
    */
-  protected GitDirectory(File dir, WorkingTree workingTree) {
+  protected GitDirectory(File dir, WorkingTree workingTree) throws JavaGitException {
     super(dir, workingTree);
   }
   
@@ -54,7 +54,7 @@ public class GitDirectory extends GitFileSystemObject {
    * 
    * @return The children of this directory.
    */
-  public List<GitFileSystemObject> getChildren() throws IOException {
+  public List<GitFileSystemObject> getChildren() throws IOException, JavaGitException {
     List<GitFileSystemObject> children = new ArrayList<GitFileSystemObject>();
 
     // get all of the file system objects currently located under this directory

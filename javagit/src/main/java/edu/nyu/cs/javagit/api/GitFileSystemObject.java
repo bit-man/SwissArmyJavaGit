@@ -56,7 +56,15 @@ public abstract class GitFileSystemObject {
     IN_REPOSITORY
   }
 
+  /**
+   * file path, as specified by the user
+   */
   protected File file;
+  /**
+   * path, relative to working directory; used to pass around data to command API
+   */
+  protected File relativePath;
+
   protected WorkingTree workingTree;
 
   /**
@@ -65,10 +73,44 @@ public abstract class GitFileSystemObject {
    * @param file
    *          underlying <code>java.io.File</code> object
    */
-  protected GitFileSystemObject(File file, WorkingTree workingTree) {
-    this.file = file;
+  protected GitFileSystemObject(File file, WorkingTree workingTree) throws JavaGitException {
     this.workingTree = workingTree;
+    this.file = file;
+    this.relativePath = getRelativePath(file);
   }
+
+  /**
+   * Returns a file, with path relative to git working tree
+   * 
+   * @param in
+   *        input <code>File</code> object
+   * @return
+   *        <code>File</code> object with relative path 
+   * @throws JavaGitException
+   *         input file does not belong to git working tree/ repo
+   */
+  protected File getRelativePath(File in) throws JavaGitException {
+    String path = in.getPath();
+    String absolutePath = in.getAbsolutePath();
+
+    //check if the path is relative or absolute
+    if(path.equals(absolutePath)) {
+      //if absolute, make sure it belongs to working tree
+      String workingTreePath = workingTree.getPath().getAbsolutePath();
+      if(!path.startsWith(workingTreePath)) {
+        throw new JavaGitException(999, "Invalid path :" + path 
+            + ". Does not belong to the git working tree/ repository: " + workingTreePath);
+      }
+
+      //make path relative
+      if(!path.equals(workingTreePath)) {
+        path = path.substring(workingTreePath.length()+1);
+      }
+    }
+    
+    return new File(path);
+  }
+  
 
   @Override
   public boolean equals(Object obj) {
@@ -101,13 +143,22 @@ public abstract class GitFileSystemObject {
   /**
    * Gets parent directory of this <code>GitFileSystemObject</code> object
    * 
-   * @return parent directory
+   * @return parent directory (null if invalid)
+   * 
    */
   public GitDirectory getParent() {
-    // TODO (rs2705): Check to ensure that this parent isn't above the root of our WorkingTree root.
-
     // NOTE: file.getParentFile() returns null if there is no parent.
-    return new GitDirectory(file.getParentFile(), workingTree);
+    if(file.getParentFile() == null) {
+      return null;
+    }
+    
+    try {
+      return new GitDirectory(file.getParentFile(), workingTree);
+    }
+    catch(JavaGitException e) {
+      //invalid git parent
+      return null;
+    }
   }
 
   /**
@@ -120,7 +171,7 @@ public abstract class GitFileSystemObject {
 
     // create a list of filenames and add yourself to it
     List<File> list = new ArrayList<File>();
-    list.add(file);
+    list.add(relativePath);
 
     // run git-add command
     return gitAdd.add(workingTree.getPath(), null, list);
@@ -140,7 +191,7 @@ public abstract class GitFileSystemObject {
 
     // create a list of filenames and add yourself to it
     List<File> list = new ArrayList<File>();
-    list.add(file);
+    list.add(relativePath);
 
     GitCommit gitCommit = new GitCommit();
     return gitCommit.commitOnly(workingTree.getPath(), comment, list);
@@ -155,15 +206,18 @@ public abstract class GitFileSystemObject {
    * @return response from git mv
    */
   public GitMvResponse mv(File dest) throws IOException, JavaGitException {
-    // source; current location
-    File source = file;
+    // source; current location (relative)
+    File source = relativePath;
+    //get relative path for destination
+    File relativeDest = getRelativePath(dest);
 
     // perform git-mv
     GitMv gitMv = new GitMv();
-    GitMvResponse response = gitMv.mv(workingTree.getPath(), source, dest);
+    GitMvResponse response = gitMv.mv(workingTree.getPath(), source, relativeDest);
 
     // file has changed; update
     file = dest;
+    relativePath = relativeDest;
 
     return response;
   }
@@ -177,7 +231,7 @@ public abstract class GitFileSystemObject {
     GitRm gitRm = new GitRm();
 
     // run git rm command
-    return gitRm.rm(workingTree.getPath(), file);
+    return gitRm.rm(workingTree.getPath(), relativePath);
   }
 
   /**
@@ -187,7 +241,6 @@ public abstract class GitFileSystemObject {
    *          Commit id
    */
   public void checkout(String sha1) throws JavaGitException {
-    System.out.println("getting earlier version " + sha1);
     // GitCheckout.checkout(path, sha1);
   }
 

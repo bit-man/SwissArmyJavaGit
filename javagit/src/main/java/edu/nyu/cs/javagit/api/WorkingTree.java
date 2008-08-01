@@ -62,7 +62,12 @@ public final class WorkingTree {
   private WorkingTree(File path, String canonicalPath) {
     this.path = path;
     this.canonicalPath = canonicalPath;
-    this.rootDir = new GitDirectory(path, this);
+    try {
+      this.rootDir = new GitDirectory(path, this);
+    }
+    catch(JavaGitException e) {
+      //that is really impossible
+    }
   }
 
   /**
@@ -132,8 +137,11 @@ public final class WorkingTree {
    *          name of the directory
    * 
    * @return The new <code>GitDirectory</code> object
+   * 
+   * @throws JavaGitException
+   *         File path specified does not belong to git repo/ working tree
    */
-  public GitDirectory addDirectory(String dir) {
+  public GitDirectory addDirectory(String dir) throws JavaGitException {
     return new GitDirectory(new File(dir), this);
   }
 
@@ -216,9 +224,11 @@ public final class WorkingTree {
    * Take a standard <code>File</code> object and return it wrapped in a <code>GitDirectory</code>.
    * 
    * @return A new <code>GitDirectory</code> object representing the given <code>File</code>.
+   * 
+   * @throws JavaGitException
+   *         File path specified does not belong to git repo/ working tree
    */
-  public GitDirectory getDirectory(File file) {
-    // TODO (rs2705): Make sure file path is valid
+  public GitDirectory getDirectory(File file) throws JavaGitException {
     return new GitDirectory(file, this);
   }
 
@@ -226,9 +236,11 @@ public final class WorkingTree {
    * Take a standard <code>File</code object and return it wrapped in a <code>GitFile</code>.
    * 
    * @return A new <code>GitFile</code> object representing the given <code>File</code>.
+   * 
+   * @throws JavaGitException
+   *         File path specified does not belong to git repo/ working tree
    */
-  public GitFile getFile(File file) {
-    // TODO (rs2705): Make sure file path is valid
+  public GitFile getFile(File file) throws JavaGitException {
     return new GitFile(file, this);
   }
 
@@ -264,8 +276,11 @@ public final class WorkingTree {
    * Gets the filesystem tree; equivalent to git-status
    * 
    * @return The list of objects at the root directory
+   * 
+   * @throws JavaGitException
+   *         File path specified does not belong to git repo/ working tree
    */
-  public List<GitFileSystemObject> getTree() throws IOException {
+  public List<GitFileSystemObject> getTree() throws IOException, JavaGitException {
     // TODO (rs2705): Make this work - will throw NullPointerException
     return new GitDirectory(path, this).getChildren();
   }

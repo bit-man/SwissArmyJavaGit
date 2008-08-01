@@ -41,7 +41,7 @@ public class GitFile extends GitFileSystemObject {
    * 
 >>>>>>> .merge-right.r482
    */
-  protected GitFile(File file, WorkingTree workingTree) {
+  protected GitFile(File file, WorkingTree workingTree) throws JavaGitException {
     super(file, workingTree);
   }
   
@@ -63,7 +63,7 @@ public class GitFile extends GitFileSystemObject {
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();
     // run git-status command
-    GitStatusResponse response = gitStatus.getSingleFileStatus(workingTree.getPath(), file);
+    GitStatusResponse response = gitStatus.getSingleFileStatus(workingTree.getPath(), relativePath);
 
     /*
      * TODO: quote from Michael Schidlowsky: "this block of if statements is a little smelly... I'd
