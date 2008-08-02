@@ -287,6 +287,10 @@ public final class JavaGitConfiguration {
         }
       }
     }
+
+    public void processExitCode(int code) {
+    }
+    
   }
 
   /*
