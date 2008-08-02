@@ -76,27 +76,29 @@ public abstract class GitFileSystemObject {
   protected GitFileSystemObject(File file, WorkingTree workingTree) throws JavaGitException {
     this.workingTree = workingTree;
     this.file = file;
-    this.relativePath = getRelativePath(file);
+    this.relativePath = getRelativePath(file, workingTree.getPath());
   }
 
   /**
    * Returns a file, with path relative to git working tree
    * 
    * @param in
-   *        input <code>File</code> object
+   *          input <code>File</code> object
+   *        repositoryPath
+   *          path to git repository
    * @return
    *        <code>File</code> object with relative path 
    * @throws JavaGitException
    *         input file does not belong to git working tree/ repo
    */
-  protected File getRelativePath(File in) throws JavaGitException {
+  public static File getRelativePath(File in, File repositoryPath) throws JavaGitException {
     String path = in.getPath();
     String absolutePath = in.getAbsolutePath();
 
     //check if the path is relative or absolute
     if(path.equals(absolutePath)) {
       //if absolute, make sure it belongs to working tree
-      String workingTreePath = workingTree.getPath().getAbsolutePath();
+      String workingTreePath = repositoryPath.getAbsolutePath();
       if(!path.startsWith(workingTreePath)) {
         throw new JavaGitException(999, "Invalid path :" + path 
             + ". Does not belong to the git working tree/ repository: " + workingTreePath);
@@ -209,7 +211,7 @@ public abstract class GitFileSystemObject {
     // source; current location (relative)
     File source = relativePath;
     //get relative path for destination
-    File relativeDest = getRelativePath(dest);
+    File relativeDest = getRelativePath(dest, workingTree.getPath());
 
     // perform git-mv
     GitMv gitMv = new GitMv();

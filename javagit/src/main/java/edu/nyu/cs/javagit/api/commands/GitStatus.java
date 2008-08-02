@@ -26,6 +26,8 @@ import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitStatus;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.api.GitFileSystemObject;
+import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
 
 /**
  * <code>GitStatus</code> provides an API to status of a git repository.
@@ -186,4 +188,58 @@ public final class GitStatus {
     return gitStatus.getSingleFileStatus(repositoryPath, null, path);
   }
 
+  /**
+   * It returns a <code>GitFileSystemObject.Status</code> for a single file
+   *
+   * @param repositoryPath
+   *          Directory path to the root of the repository.
+   * @param path
+   * @return <code>GitFileSystemObject.Status</code>
+   * @throws JavaGitException
+   *           Exception thrown if the repositoryPath is null
+   * @throws IOException
+   *           Exception is thrown if any of the IO operations fail.
+   */
+  public GitFileSystemObject.Status getFileStatus(File repositoryPath, File path) throws JavaGitException, IOException {
+    //check validity of a repository path
+    CheckUtilities.checkFileValidity(repositoryPath);
+    //get command argument file (relative to repository path); this will perform basic path check
+    File argumentFile = GitFileSystemObject.getRelativePath(path, repositoryPath);
+
+    //run git status
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitStatus gitStatus = client.getGitStatusInstance();
+    GitStatusResponse response = gitStatus.getSingleFileStatus(repositoryPath, null, argumentFile);
+
+    /*
+     * TODO: quote from Michael Schidlowsky: "this block of if statements is a little smelly... I'd
+     * prefer to see something like return response.asStatus()...
+     */
+    if (response.getUntrackedFilesSize() > 0) {
+      return Status.UNTRACKED;
+    }
+
+    if (response.getNewFilesToCommitSize() > 0) {
+      return Status.NEW_TO_COMMIT;
+    }
+
+    if (response.getDeletedFilesNotUpdatedSize() > 0) {
+      return Status.DELETED;
+    }
+
+    if (response.getDeletedFilesToCommitSize() > 0) {
+      return Status.DELETED_TO_COMMIT;
+    }
+
+    if (response.getModifiedFilesNotUpdatedSize() > 0) {
+      return Status.MODIFIED;
+    }
+
+    if (response.getModifiedFilesToCommitSize() > 0) {
+      return Status.MODIFIED_TO_COMMIT;
+    }
+
+    // default
+    return Status.IN_REPOSITORY;
+  }
 }

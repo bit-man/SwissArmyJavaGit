@@ -63,37 +63,7 @@ public class GitFile extends GitFileSystemObject {
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();
     // run git-status command
-    GitStatusResponse response = gitStatus.getSingleFileStatus(workingTree.getPath(), relativePath);
-
-    /*
-     * TODO: quote from Michael Schidlowsky: "this block of if statements is a little smelly... I'd
-     * prefer to see something like return response.asStatus()...
-     */
-    if (response.getUntrackedFilesSize() > 0) {
-      return Status.UNTRACKED;
-    }
-
-    if (response.getNewFilesToCommitSize() > 0) {
-      return Status.NEW_TO_COMMIT;
-    }
-
-    if (response.getDeletedFilesNotUpdatedSize() > 0) {
-      return Status.DELETED;
-    }
-
-    if (response.getDeletedFilesToCommitSize() > 0) {
-      return Status.DELETED_TO_COMMIT;
-    }
-
-    if (response.getModifiedFilesNotUpdatedSize() > 0) {
-      return Status.MODIFIED;
-    }
-
-    if (response.getModifiedFilesToCommitSize() > 0) {
-      return Status.MODIFIED_TO_COMMIT;
-    }
-
-    // default
-    return Status.IN_REPOSITORY;
+    return gitStatus.getFileStatus(workingTree.getPath(), relativePath);
   }
+
 }
