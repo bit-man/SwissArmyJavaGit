@@ -20,7 +20,10 @@ import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 
 /**
- * <code>IParser</code> is an interface for parsing a git command line output stream.
+ * <code>IParser</code> is an interface for parsing a git command line output stream. See how
+ * implementations of <code>IParser</code> are used in <code>ProcessUtilities</code>.
+ * 
+ * @see ProcessUtilities
  */
 public interface IParser {
 
