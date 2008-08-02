@@ -1,0 +1,96 @@
+<div>
+
+<h2> JavaGit Style Guide </h2>
+
+<p>
+All JavaGit code must conform to the following Java Style Guide.  For items 
+not covered in this document, see 
+<a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Sun's 
+Code Conventions for the Java Programming Language</a>.
+</p>
+
+<p>
+An Ecplise formatter definintion file that (nearly) matches this policy can 
+be acquired at:  
+<a href="https://subversive.cims.nyu.edu/osp/tools/trunk/Eclipse_Formatter-OSP_Conventions.xml">
+https://subversive.cims.nyu.edu/osp/tools/trunk/Eclipse_Formatter-OSP_Conventions.xml
+</a>.  See below for how to install it.
+</p>
+
+<h3>Indentation</h3>
+<ul>
+<li> Lines cannot exceed 100 characters </li>
+<li> 
+  <span class="bold">NO TABS.</span> Indentation must be 2 spaces except
+  when continuing an expression or declaration from a previous line, in 
+  which case 4 spaces should be used.
+</li>
+</ul>
+
+<h3> Comments </h3>
+<ul>
+<li>
+  <span class="bold">All</span> files must include javadocs, including unit 
+  tests
+</li>
+<li>
+  Multi-line comments should use /* ... */, while single line comments should 
+  use //
+</li>
+<li>
+  Do not use trailing comments.  To comment a line of code place the comment 
+  immediately above the line.
+</li>
+</ul>
+
+<h3> Declarations </h3>
+<ul>
+<li>
+  Use one declaration per line, and use the standard Java naming conventions.
+  <ul>
+  <li> 
+    Link to the Sun <a href="http://java.sun.com/docs/codeconv">standards</a>
+  </li>
+  </ul>
+</li>
+<li> Class level declarations belong at the top of the class definition. </li>
+</ul>
+
+
+<h3> Exceptions </h3>
+<ul>
+<li>
+  Never catch Exception or RuntimeException.  Always catch the most specific 
+  type of exception thrown and handle the exception properly.
+</li>
+</ul>
+
+<h3> Whitespace </h3>
+<ul>
+<li>
+  Avoid ascii art.  This includes lining up method arguments that exceed a 
+  single line, indenting the right side of declaration assignment operators 
+  to make them all line up, and any other use of whitespace that does not 
+  indicate a semantic change.  Using indentation to indicate a that code is 
+  within a code block (and within a certain scope) is required, of course.
+</li>
+<li> Avoid extra blank lines unless it improves readability. </li>
+</ul>
+
+<h3> Format Configs </h3>
+
+Eclipse
+<ol>
+<li> Right click on project in package explorer, select "Properties" </li>
+<li> expand "Java Code Style" </li>
+<li> select "Formatter"</li>
+<li> check "Enable project specific settings" </li>
+<li> 
+  import 
+  <a href="https://subversive.cims.nyu.edu/osp/tools/trunk/Eclipse_Formatter-OSP_Conventions.xml">
+    eclipse format configuration file
+  </a>
+</li>
+</ol>
+
+</div>

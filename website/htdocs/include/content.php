@@ -119,6 +119,11 @@ function PrintHeader()
 -->
       <a href='http://www.cs.nyu.edu/~jhl388/javagit/cc-builds/'>Continuous Builds</a><br />
       <a href='http://sourceforge.net/tracker/?group_id=233450'>Bug Tracker</a><br />
+      <br />
+
+      <span class="bold">Project Management</span><br />
+      <a href='contributors.php'>Contributors</a><br />
+      <a href='devpolicies.php'>Dev Policies</a><br />
 <!--
       <a href=''>Milestones</a><br />
       <a href=''>TODO list</a><br />
