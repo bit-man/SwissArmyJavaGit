@@ -95,11 +95,18 @@ function PrintHeader()
 <div id="menu">
       <a href="/">Overview</a><br />
       <a href='http://sourceforge.net/news/?group_id=233450'>News</a><br />
-      <a href='http://sourceforge.net/docman/?group_id=233450'>Documentation</a><br />
+<!--
+      <a href=''>Download</a><br />
+-->
+      <br />
+
+      <span class="bold">Documentation</span><br />
+      <a href='faq.php'>FAQ</a><br />
+
+      <br />
       <a href='http://sourceforge.net/tracker/?group_id=233450'>Bug Tracker</a><br />
       <a href='http://sourceforge.net/mail/?group_id=233450'>Mailing Lists</a><br />
 <!--
-      <a href=''>Download</a><br />
       <a href=''>Install</a><br />
 -->
       <a href='http://sourceforge.net/svn/?group_id=233450'>Source Code</a><br />
@@ -107,7 +114,6 @@ function PrintHeader()
       <a href=''>Milestones</a><br />
       <a href=''>TODO list</a><br />
 -->
-      <a href='faq.php'>FAQ</a><br />
       <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License</a><br />
 </div>
 </div>
