@@ -185,9 +185,7 @@ public class CliGitMv implements IGitMv {
           response = new GitMvResponseImpl();
         }
         // This is to parse the output when -n or -f options were given
-        if (null != line) {
-          parseLineForSuccess(line);
-        }
+        parseLineForSuccess(line);
       }
     }
 

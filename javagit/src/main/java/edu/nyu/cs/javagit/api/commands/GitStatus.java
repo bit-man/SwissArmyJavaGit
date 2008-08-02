@@ -18,7 +18,6 @@ package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.JavaGitException;

@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.nyu.cs.javagit.api.commands.GitStatus;
-import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 
 /**
  * <code>GitFile</code> a file object in a git working tree.

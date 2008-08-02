@@ -19,17 +19,14 @@ package edu.nyu.cs.javagit.api.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
 
