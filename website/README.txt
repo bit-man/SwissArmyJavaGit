@@ -3,10 +3,11 @@
       TABLE OF CONTENTS
 
    I. SUMMARY
-  II. EDITING CONTENT
- III. EDITING THE MENU
-  IV. ADDING CONTENT
-   V. EDITING THE STYLE SHEET
+  II. MAKING CHANGES
+ III. EDITING CONTENT
+  IV. EDITING THE MENU
+   V. ADDING CONTENT
+  VI. EDITING THE STYLE SHEET
 
 I.    SUMMARY
 
@@ -16,8 +17,27 @@ I.    SUMMARY
 
       The code for the template system is released under the GPL v2.0 license.
 
+II.   MAKING CHANGES
 
-II.   EDITING CONTENT
+      To make changes to the website:
+
+      1. Check the website code out from the repository to a local sandbox
+      2. Make your changes in your local sandbox
+      3. Test locally if you have apache and php set up
+      4. sftp or scp your changed files up to the website.  For example:
+
+            ~/sandbox/javagit/website/htdocs$ scp faq.php USERNAME@shell.sf.net:/home/groups/j/ja/javagit/htdocs
+
+      5. Make sure the uploaded files have the following settings:
+
+            $ chmod -R ugo+r /home/groups/j/ja/javagit/htdocs
+            $ chmod -R ug+w /home/groups/j/ja/javagit/htdocs
+            $ find /home/groups/j/ja/javagit/htdocs -type d -exec chmod ugo+rx {} \;
+            $ find /home/groups/j/ja/javagit/htdocs -type d -exec chmod ug+w {} \;
+            $ chgrp -R javagit /home/groups/j/ja/javagit/htdocs
+            
+
+III.  EDITING CONTENT
 
       Content for each page is located in 
 
@@ -26,14 +46,14 @@ II.   EDITING CONTENT
       Just edit it like standard [x]html.
 
 
-III.  EDITING THE MENU
+IV.   EDITING THE MENU
 
       Menu hasn't been pulled into it's seperate content section, so you need 
       to edit "htdocs/include/content.php" and search for the "--MENU--" 
       section in the document.  Just edit the html.
 
 
-IV.   ADDING CONTENT
+V.    ADDING CONTENT
 
       1. Copy the 'htdocs/index.php' file
       2. Change the '$page_id' to a unique name with no special characters or
@@ -45,7 +65,7 @@ IV.   ADDING CONTENT
          PAGE_ID is the string you used for $page_id.
 
 
-V.    EDITING THE STYLE SHEET
+VI.   EDITING THE STYLE SHEET
 
       Unless new themes are added, just edit 'htdocs/css/default/default.css'
 
