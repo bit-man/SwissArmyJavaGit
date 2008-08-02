@@ -93,28 +93,36 @@ function PrintHeader()
 <tr><td>
 <div id="menu-outer">
 <div id="menu">
-      <a href="/">Overview</a><br />
+      <span class="bold">JavaGit</span></br>
+      <a href="/">Welcome</a><br />
+      <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License (LGPL)</a><br />
       <a href='http://sourceforge.net/news/?group_id=233450'>News</a><br />
-<!--
-      <a href=''>Download</a><br />
--->
       <br />
 
       <span class="bold">Documentation</span><br />
-      <a href='faq.php'>FAQ</a><br />
-
-      <br />
-      <a href='http://sourceforge.net/tracker/?group_id=233450'>Bug Tracker</a><br />
-      <a href='http://sourceforge.net/mail/?group_id=233450'>Mailing Lists</a><br />
 <!--
       <a href=''>Install</a><br />
 -->
+      <a href='faq.php'>FAQ</a><br />
+      <br />
+
+<!--
+      <span class="bold">Download</span><br />
+      <a href=''>Releases</a><br />
+      <br />
+-->
+
+      <span class="bold">Contributing</span><br />
+      <a href='http://sourceforge.net/mail/?group_id=233450'>Mailing Lists</a><br />
+<!--
       <a href='http://sourceforge.net/svn/?group_id=233450'>Source Code</a><br />
+-->
+      <a href='http://www.cs.nyu.edu/~jhl388/javagit/cc-builds/'>Continuous Builds</a><br />
+      <a href='http://sourceforge.net/tracker/?group_id=233450'>Bug Tracker</a><br />
 <!--
       <a href=''>Milestones</a><br />
       <a href=''>TODO list</a><br />
 -->
-      <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License</a><br />
 </div>
 </div>
 </td>
