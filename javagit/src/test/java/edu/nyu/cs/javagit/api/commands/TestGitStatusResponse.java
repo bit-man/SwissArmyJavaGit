@@ -284,6 +284,28 @@ public class TestGitStatusResponse extends TestCase {
  }
 
  /**
+  * Test for verifying renamed files that will be committed next time git commit command is run.
+  * @throws IOException
+  * @throws JavaGitException
+  */
+ @Test
+ public void testRenamedFilesToCommitFromCommandOutput() throws IOException, JavaGitException {
+	GitStatusParser parser = new GitStatusParser();
+	parser.parseLine("# On branch master");
+	parser.parseLine("# Changes to be committed:");
+	parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
+	parser.parseLine("#");
+	parser.parseLine("#       renamed:    file2 -> file1");
+	parser.parseLine("#       renamed:    file5 -> file6");
+	parser.parseLine("#");	
+	GitStatusResponse response = parser.getResponse();
+	Iterable<File> renamedFiles = response.getRenamedFilesToCommitIterator();
+	assertEquals("Renamed File name does not match", "file1", renamedFiles.iterator().next().getPath());
+	assertEquals("Renamed File name does not match", "file6", renamedFiles.iterator().next().getPath());
+	assertEquals("No. of renamed files", 2, response.getRenamedFilesToCommitSize());
+ }
+ 
+ /**
   * Test for verifying that modified staged and un-staged files are parsed properly by
   * <code>GitStatusParser</code>
   */
@@ -319,4 +341,5 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals(1, response.getModifiedFilesToCommitSize());
    assertEquals("Modified.java", response.getModifiedFilesToCommitIterator().iterator().next().getName());
  }
+ 
 }

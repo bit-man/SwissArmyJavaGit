@@ -52,6 +52,10 @@ public abstract class GitStatusResponse implements CommandResponse {
    */
   protected final List<File> modifiedFilesNotUpdated;
   /**
+   * List of files that are in git-repository and have been renamed to some other filename.
+   */  
+  protected final List<File> renamedFilesToCommit;
+  /**
    * List of new files that have been created locally and have not been added to repository by
    * &lt;git-add&gt; command yet.
    */
@@ -76,6 +80,7 @@ public abstract class GitStatusResponse implements CommandResponse {
     modifiedFilesToCommit = new ArrayList<File>();
     deletedFilesNotUpdated = new ArrayList<File>();
     modifiedFilesNotUpdated = new ArrayList<File>();
+    renamedFilesToCommit = new ArrayList<File>();
     untrackedFiles = new ArrayList<File>();
     errors = new ArrayList<ErrorDetails>();
   }
@@ -159,6 +164,18 @@ public abstract class GitStatusResponse implements CommandResponse {
     CheckUtilities.checkIntIndexInListRange(untrackedFiles, index);
     return untrackedFiles.get(index);
   }
+  
+  /**
+   * Returns the file at the specified index in the list of renamed files.
+   * 
+   * @param index
+   *          Index in the list must be positive and less than the number of new files to commit
+   * @return the name of the file
+   */ 
+  public File getFileFromRenamedFiles(int index) {
+	    CheckUtilities.checkIntIndexInListRange(renamedFilesToCommit, index);
+	    return renamedFilesToCommit.get(index);	  
+  }
 
   /**
    * Creates a copy of newFilesToCommit list and returns the iterator to this new list of files that
@@ -211,6 +228,16 @@ public abstract class GitStatusResponse implements CommandResponse {
     return ( new IterableIterator<File>(fileIterator));
   }
 
+  /**
+   * Creates a copy of renamedFiles list and returns the <code>Iterable</code> to this new list.
+   * 
+   * @return Iterable to the new list created.
+   */
+  public Iterable<File> getRenamedFilesToCommitIterator() {
+    Iterator<File> fileIterator = new ArrayList<File>(renamedFilesToCommit).iterator();
+    return ( new IterableIterator<File>(fileIterator));
+  }
+  
   /**
    * Creates a copy of untrackedFiles list and returns the <code>Iterable</code> to this new list.
    * 
@@ -266,6 +293,15 @@ public abstract class GitStatusResponse implements CommandResponse {
     return modifiedFilesNotUpdated.size();
   }
 
+  /**
+   * Returns the size of renamedFiles list.
+   * 
+   * @return size of the list.
+   */
+  public int getRenamedFilesToCommitSize() {
+    return renamedFilesToCommit.size();
+  }
+  
   /**
    * Returns the size of untrackedFiles list.
    * 

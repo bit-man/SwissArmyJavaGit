@@ -112,7 +112,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
   }
 
   /**
-   * Adds a file to the list of files that are ready to be committed next time &lt;git-commit&gt;
+   * Adds a file to the list of new files that are ready to be committed next time &lt;git-commit&gt;
    * command is run.
    * 
    * @param file
@@ -121,6 +121,17 @@ public class GitStatusResponseImpl extends GitStatusResponse {
   public void addToNewFilesToCommit(File file) {
     newFilesToCommit.add(file);
   }
+  
+  /**
+   * Adds a file to the list of renamed files that are ready to be committed next time &lt;git-commit&gt;
+   * command is run.
+   * 
+   * @param file
+   *          <code>File</code> to be added to the list.
+   */
+  public void addToRenamedFilesToCommit(File file) {
+    renamedFilesToCommit.add(file);
+  }  
 
   /**
    * Adds a file to list of files that have been added locally but not yet added to the index.

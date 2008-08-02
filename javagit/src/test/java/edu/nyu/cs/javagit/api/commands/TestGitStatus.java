@@ -23,6 +23,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -262,11 +263,12 @@ public class TestGitStatus extends TestCase {
     }
   }
 
+  */
   @After
   public void tearDown() throws Exception {
     if (repositoryDirectory.exists()) {
       FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
   }
-  */
+
 }

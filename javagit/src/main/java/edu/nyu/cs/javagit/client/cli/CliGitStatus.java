@@ -45,8 +45,11 @@ public class CliGitStatus implements IGitStatus {
    * Patterns for matching lines for deleted files, modified files, new files and empty lines.
    */
   public static enum Patterns {
-    DELETED("^#\\s+deleted:\\s+.*"), MODIFIED("^#\\s+modified:\\s+.*"), NEW_FILE(
-        "^#\\s+new file:\\s+.*"), EMPTY_HASH_LINE("^#\\s*$");
+    DELETED("^#\\s+deleted:\\s+.*"), 
+    MODIFIED("^#\\s+modified:\\s+.*"), 
+    NEW_FILE("^#\\s+new file:\\s+.*"), 
+    EMPTY_HASH_LINE("^#\\s*$"),
+    RENAMED("^#\\s+renamed:\\s+.*");
 
     String pattern;
 
@@ -321,6 +324,12 @@ public class CliGitStatus implements IGitStatus {
           return;
         addUntrackedFile(untrackedFile);
       }
+      if ( Patterns.RENAMED.matches(line)) {
+    	String renamedFile = getFilename(line);
+    	if ((inputFile != null) && (!renamedFile.matches(inputFile.getName())))
+          return;
+    	addRenamedFileToCommit(renamedFile);
+      }
     }
 
     private boolean isError(String line) {
@@ -361,6 +370,10 @@ public class CliGitStatus implements IGitStatus {
       }
     }
 
+    private void addRenamedFileToCommit(String renamedFile) {
+      response.addToRenamedFilesToCommit(new File(renamedFile));	
+    }
+    
     private void addUntrackedFile(String filename) {
       response.addToUntrackedFiles(new File(filename));
     }
