@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
@@ -164,7 +165,7 @@ public class CliGitStatus implements IGitStatus {
   private List<String> buildCommandLine(GitStatusOptions options, List<File> paths) {
     List<String> command = new ArrayList<String>();
 
-    command.add("git");
+    command.add(JavaGitConfiguration.getGitCommand());
     command.add("status");
 
     if (options != null) {

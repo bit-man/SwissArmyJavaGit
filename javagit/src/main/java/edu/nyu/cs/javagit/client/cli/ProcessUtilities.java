@@ -130,7 +130,11 @@ public class ProcessUtilities {
   public static CommandResponse runCommand(File workingDirectory, List<String> commandLine,
       IParser parser) throws IOException, JavaGitException {
     ProcessBuilder pb = new ProcessBuilder(commandLine);
-    pb.directory(workingDirectory);
+    
+    if (workingDirectory != null) {
+      pb.directory(workingDirectory);
+    }
+
     pb.redirectErrorStream(true);
 
     Process p = startProcess(pb);

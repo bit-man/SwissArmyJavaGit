@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCommitOptions;
@@ -119,7 +120,7 @@ public class CliGitCommit implements IGitCommit {
     // TODO (jhl388): Add a unit test for this method (CliGitCommit.buildCommand()).
 
     List<String> cmd = new ArrayList<String>();
-    cmd.add("git");
+    cmd.add(JavaGitConfiguration.getGitCommand());
     cmd.add("commit");
 
     if (null != options) {

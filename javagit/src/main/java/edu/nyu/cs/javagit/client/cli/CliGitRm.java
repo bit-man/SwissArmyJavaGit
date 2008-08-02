@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitRmOptions;
 import edu.nyu.cs.javagit.api.commands.GitRmResponse;
@@ -115,7 +116,7 @@ public class CliGitRm implements IGitRm {
   private List<String> buildCommandLine(GitRmOptions options, File path, List<File> paths) {
     List<String> cmdline = new ArrayList<String>();
 
-    cmdline.add("git");
+    cmdline.add(JavaGitConfiguration.getGitCommand());
     cmdline.add("rm");
 
     if (null != options) {

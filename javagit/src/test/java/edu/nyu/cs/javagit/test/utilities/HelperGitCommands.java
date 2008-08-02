@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.client.cli.IParser;
@@ -45,7 +46,7 @@ public class HelperGitCommands {
   public static void initRepo(File repoDirectory) throws IOException, JavaGitException {
     List<String> cmdLine = new ArrayList<String>();
 
-    cmdLine.add("git");
+    cmdLine.add(JavaGitConfiguration.getGitCommand());
     cmdLine.add("init");
 
     ProcessUtilities.runCommand(repoDirectory, cmdLine, new IParser() {

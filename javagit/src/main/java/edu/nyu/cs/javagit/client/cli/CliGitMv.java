@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitMvOptions;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
@@ -125,7 +126,7 @@ public class CliGitMv implements IGitMv {
   protected List<String> buildCommand(GitMvOptions options, List<File> source, File destination) {
     List<String> cmd = new ArrayList<String>();
 
-    cmd.add("git");
+    cmd.add(JavaGitConfiguration.getGitCommand());
     cmd.add("mv");
 
     if (null != options) {

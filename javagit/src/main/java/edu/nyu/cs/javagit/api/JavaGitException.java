@@ -51,6 +51,7 @@ public class JavaGitException extends Exception {
    */
   public JavaGitException(int code, String message, Throwable cause) {
     super(message, cause);
+    this.code = code;
   }
 
   /**

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.api.commands.GitLogOptions;
@@ -77,7 +78,7 @@ public class CliGitLog implements IGitLog{
 	 */
 	private List<String> buildCommand(File repositoryPath, GitLogOptions options) {
 		List<String> command = new ArrayList<String>();
-		command.add("git");
+		command.add(JavaGitConfiguration.getGitCommand());
 		command.add("log");
 		if(options!=null){
 			//General Options

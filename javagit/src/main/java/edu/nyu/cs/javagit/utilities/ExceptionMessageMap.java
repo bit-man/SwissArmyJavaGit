@@ -112,11 +112,14 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("000120", "000120: Invalid option combination for git-branch command.");
 
     MESSAGE_MAP.put("020001", "020001: File or path does not exist.");
+    MESSAGE_MAP.put("020002", "020002: File or path is not a directory.");
 
     MESSAGE_MAP.put("020100", "020100: Unable to start sub-process.");
     MESSAGE_MAP.put("020101", "020101: Error reading input from the sub-process.");
     
     MESSAGE_MAP.put("100000", "100000: Incorrect refType type.");
+    MESSAGE_MAP.put("100001", "100001: Error retrieving git version.");
+    MESSAGE_MAP.put("100002", "100002: Invalid path to git specified.");
 
     MESSAGE_MAP.put("410000", "410000: Error calling git-commit.");
 
@@ -135,7 +138,6 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("406000", "406000: Error calling git-checkout");
 
     MESSAGE_MAP.put("438000", "438000: Error calling git-status");
-
   }
 
   /**

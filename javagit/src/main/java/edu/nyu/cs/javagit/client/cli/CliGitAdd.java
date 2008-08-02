@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitAddOptions;
 import edu.nyu.cs.javagit.api.commands.GitAddResponse;
@@ -133,7 +134,7 @@ public class CliGitAdd implements IGitAdd {
 
   private List<String> buildCommand(File repositoryPath, GitAddOptions options, List<File> paths) {
     List<String> command = new ArrayList<String>();
-    command.add("git");
+    command.add(JavaGitConfiguration.getGitCommand());
     command.add("add");
     if (options != null) {
       if (options.dryRun()) {

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.Ref.RefType;
@@ -153,7 +154,7 @@ public class CliGitCheckout implements IGitCheckout {
   private List<String> buildCommand(GitCheckoutOptions options, Ref treeIsh, List<File> paths)
       throws JavaGitException {
     List<String> command = new ArrayList<String>();
-    command.add("git");
+    command.add(JavaGitConfiguration.getGitCommand());
     command.add("checkout");
     // Process options
     if (options != null) {
@@ -176,7 +177,7 @@ public class CliGitCheckout implements IGitCheckout {
 
   private List<String> buildCommand(GitCheckoutOptions options, Ref branch) throws JavaGitException {
     List<String> command = new ArrayList<String>();
-    command.add("git");
+    command.add(JavaGitConfiguration.getGitCommand());
     command.add("checkout");
     if (options != null) {
       processOptions(command, options);

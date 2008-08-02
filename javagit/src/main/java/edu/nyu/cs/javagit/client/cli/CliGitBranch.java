@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
@@ -157,7 +158,7 @@ public class CliGitBranch implements IGitBranch {
       List<Ref> branchList) {
     List<String> cmd = new ArrayList<String>();
 
-    cmd.add("git");
+    cmd.add(JavaGitConfiguration.getGitCommand());
     cmd.add("branch");
 
     if (null != options) {
