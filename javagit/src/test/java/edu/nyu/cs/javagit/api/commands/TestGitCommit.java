@@ -81,12 +81,23 @@ public class TestGitCommit extends TestCase {
 
     // Add a file to the repo
     List<File> filesToAdd = new ArrayList<File>();
-    //filesToAdd.add(new File("fileA.txt"));
+    // filesToAdd.add(new File("fileA.txt"));
     filesToAdd.add(testFile);
     add.add(repoDirectory, null, filesToAdd);
 
     // Call commit
-    commit.commit(repoDirectory, "Making a first test commit");
+    GitCommitResponse resp = commit.commit(repoDirectory, "Making a first test commit");
+    resp.getFilesChanged();
+    assertEquals("Short comment not as expected", resp.getCommitShortComment(),
+        "Making a first test commit");
+    assertEquals("", resp.getFilesChanged(), 1);
+    assertEquals("", resp.getLinesDeleted(), 0);
+    assertEquals("", resp.getLinesInserted(), 1);
+    // Can't assert the short hash because it changes with the date.
+    // assertEquals("", resp.getCommitShortHashName(), "5f8e2d7");
+
+    // TODO (jhl388): check number of each file type
+    // TODO (jhl388): check the files themselves.
   }
 
   @Test
@@ -174,13 +185,13 @@ public class TestGitCommit extends TestCase {
   private void assertCommitAllNPEThrown(File repoPath, String message, String expectedMessage) {
     try {
       commit.commitAll(repoPath, message);
-      assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
+      fail("No NullPointerException thrown when one was expected.  Error!");
     } catch (NullPointerException e) {
       assertEquals("The message from the caught NPE is not what was expected!", expectedMessage, e
           .getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -188,14 +199,14 @@ public class TestGitCommit extends TestCase {
       String expectedMessage) {
     try {
       commit.commitAll(repoPath, message);
-      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+      fail("No IllegalArgumentException thrown when one was expected.  Error!");
     } catch (IllegalArgumentException e) {
       assertEquals(
           "The message from the caught IllegalArgumentException is not what was expected!",
           expectedMessage, e.getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -203,13 +214,13 @@ public class TestGitCommit extends TestCase {
       String message, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message);
-      assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
+      fail("No NullPointerException thrown when one was expected.  Error!");
     } catch (NullPointerException e) {
       assertEquals("The message from the caught NPE is not what was expected!", expectedMessage, e
           .getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -217,14 +228,14 @@ public class TestGitCommit extends TestCase {
       GitCommitOptions options, String message, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message);
-      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+      fail("No IllegalArgumentException thrown when one was expected.  Error!");
     } catch (IllegalArgumentException e) {
       assertEquals(
           "The message from the caught IllegalArgumentException is not what was expected!",
           expectedMessage, e.getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -232,13 +243,13 @@ public class TestGitCommit extends TestCase {
       String message, List<File> paths, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message, paths);
-      assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
+      fail("No NullPointerException thrown when one was expected.  Error!");
     } catch (NullPointerException e) {
       assertEquals("The message from the caught NPE is not what was expected!", expectedMessage, e
           .getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -246,27 +257,27 @@ public class TestGitCommit extends TestCase {
       GitCommitOptions options, String message, List<File> paths, String expectedMessage) {
     try {
       commit.commit(repoPath, options, message, paths);
-      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+      fail("No IllegalArgumentException thrown when one was expected.  Error!");
     } catch (IllegalArgumentException e) {
       assertEquals(
           "The message from the caught IllegalArgumentException is not what was expected!",
           expectedMessage, e.getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
   private void assertCommitNPEThrown(File repoPath, String message, String expectedMessage) {
     try {
       commit.commit(repoPath, message);
-      assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
+      fail("No NullPointerException thrown when one was expected.  Error!");
     } catch (NullPointerException e) {
       assertEquals("The message from the caught NPE is not what was expected!", expectedMessage, e
           .getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -274,14 +285,14 @@ public class TestGitCommit extends TestCase {
       String expectedMessage) {
     try {
       commit.commit(repoPath, message);
-      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+      fail("No IllegalArgumentException thrown when one was expected.  Error!");
     } catch (IllegalArgumentException e) {
       assertEquals(
           "The message from the caught IllegalArgumentException is not what was expected!",
           expectedMessage, e.getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -289,13 +300,13 @@ public class TestGitCommit extends TestCase {
       String expectedMessage) {
     try {
       commit.commitOnly(repoPath, message, paths);
-      assertTrue("No NullPointerException thrown when one was expected.  Error!", false);
+      fail("No NullPointerException thrown when one was expected.  Error!");
     } catch (NullPointerException e) {
       assertEquals("The message from the caught NPE is not what was expected!", expectedMessage, e
           .getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
@@ -303,14 +314,14 @@ public class TestGitCommit extends TestCase {
       List<File> paths, String expectedMessage) {
     try {
       commit.commitOnly(repoPath, message, paths);
-      assertTrue("No IllegalArgumentException thrown when one was expected.  Error!", false);
+      fail("No IllegalArgumentException thrown when one was expected.  Error!");
     } catch (IllegalArgumentException e) {
       assertEquals(
           "The message from the caught IllegalArgumentException is not what was expected!",
           expectedMessage, e.getMessage());
     } catch (Throwable e) {
       e.printStackTrace();
-      assertTrue("Caught Throwable when none was expected.  Error!", false);
+      fail("Caught Throwable when none was expected.  Error!");
     }
   }
 
