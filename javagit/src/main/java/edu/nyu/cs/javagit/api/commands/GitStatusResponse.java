@@ -166,61 +166,57 @@ public abstract class GitStatusResponse implements CommandResponse {
    * 
    * @return Iterator to the copy of the the original list.
    */
-  public Iterator<File> getNewFilesToCommitIterarator() {
-    return (new ArrayList<File>(newFilesToCommit)).iterator();
+  public Iterable<File> getNewFilesToCommitIterarator() {
+    Iterator<File> fileIterator = new ArrayList<File>(newFilesToCommit).iterator();
+    return ( new IterableIterator<File>(fileIterator));
   }
 
   /**
-   * Creates a copy of deletedFilesToCommit list and returns the iterator to this new list.
+   * Creates a copy of deletedFilesToCommit list and returns the <code>Iterable</code> to this new list.
    * 
-   * @return Iterator to the new list created.
+   * @return Iterable to the new list created.
    */
   public Iterable<File> getDeletedFilesToCommitIterator() {
-    //return (new ArrayList<File>(deletedFilesToCommit).iterator());
 	Iterator<File> fileIterator = new ArrayList<File>(deletedFilesToCommit).iterator();
 	return ( new IterableIterator<File>(fileIterator));
   }
 
   /**
-   * Creates a copy of modifiedFilesToComit list and returns the iterator to this new list.
+   * Creates a copy of modifiedFilesToComit list and returns the <code>Iterable</code> to this new list.
    * 
-   * @return Iterator to the new list created.
+   * @return Iterable to the new list created.
    */
   public Iterable<File> getModifiedFilesToCommitIterator() {
-    //return (new ArrayList<File>(modifiedFilesToCommit).iterator());
 	  Iterator<File> fileIterator = new ArrayList<File>(modifiedFilesToCommit).iterator();
 	  return ( new IterableIterator<File>(fileIterator));
   }
 
   /**
-   * Creates a copy of deletedFilesNotUpdated list and returns the iterator to this new list.
+   * Creates a copy of deletedFilesNotUpdated list and returns the <code>Iterable</code> to this new list.
    * 
-   * @return Iterator to the new list created.
+   * @return Iterable to the new list created.
    */
   public Iterable<File> getDeletedFilesNotUpdatedIterator() {
-    //return (new ArrayList<File>(deletedFilesNotUpdated).iterator());
     Iterator<File> fileIterator = new ArrayList<File>(deletedFilesNotUpdated).iterator();
     return ( new IterableIterator<File>(fileIterator));
   }
 
   /**
-   * Creates a copy of modifiedFilesNotUpdated list and returns the iterator to this new list.
+   * Creates a copy of modifiedFilesNotUpdated list and returns the <code>Iterable</code> to this new list.
    * 
-   * @return Iterator to the new list created.
+   * @return Iterable to the new list created.
    */
   public Iterable<File> getModifiedFilesNotUpdatedIterator() {
-    //return (new ArrayList<File>(modifiedFilesNotUpdated).iterator());
     Iterator<File> fileIterator = new ArrayList<File>(modifiedFilesNotUpdated).iterator();
     return ( new IterableIterator<File>(fileIterator));
   }
 
   /**
-   * Creates a copy of untrackedFiles list and returns the iterator to this new list.
+   * Creates a copy of untrackedFiles list and returns the <code>Iterable</code> to this new list.
    * 
-   * @return Iterator to the new list created.
+   * @return Iterable to the new list created.
    */
   public Iterable<File> getUntrackedFiles() {
-    //return (new ArrayList<File>(untrackedFiles).iterator());
     Iterator<File> fileIterator = new ArrayList<File>(untrackedFiles).iterator();
     return ( new IterableIterator<File>(fileIterator));
   }
@@ -343,7 +339,7 @@ public abstract class GitStatusResponse implements CommandResponse {
     return (errors.size() > 0);
   }
 
-  public class ErrorDetails {
+  public static class ErrorDetails {
     final int lineNumber;
     final String error;
 
@@ -358,7 +354,7 @@ public abstract class GitStatusResponse implements CommandResponse {
    *
    * @param <File>
    */
-  public class IterableIterator<T> implements Iterable<T> {
+  public static class IterableIterator<T> implements Iterable<T> {
 
 	private Iterator<T> iterator;
 	public IterableIterator(Iterator<T> iterator) {

@@ -235,7 +235,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   Iterator<File> iter = response.getNewFilesToCommitIterarator();
+   Iterator<File> iter = response.getNewFilesToCommitIterarator().iterator();
    assertEquals("File Name", "dir"+File.separator+"fileD", iter.next().getPath());
    assertEquals("File Name", "fileA", iter.next().getPath());
 
@@ -276,7 +276,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 1, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   assertEquals("FileName", "dir"+File.separator+"fileD", response.getNewFilesToCommitIterarator().next().getPath());
+   assertEquals("FileName", "dir"+File.separator+"fileD", response.getNewFilesToCommitIterarator().iterator().next().getPath());
    assertEquals("FileName", "fileC", response.getDeletedFilesToCommitIterator().iterator().next().getPath());
    assertEquals("FileName", "fileA", response.getModifiedFilesNotUpdatedIterator().iterator().next()
        .getPath());
