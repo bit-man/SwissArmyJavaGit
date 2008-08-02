@@ -200,6 +200,20 @@ public class TestGitStatus extends TestCase {
   }
 
   /**
+   * Test for getSingleFileStatus
+   * 
+   * @throws JavaGitException
+   *         IOException
+   */
+  @Test
+  public void testSingelFileStatus() throws JavaGitException, IOException {
+    File file = FileUtilities.createFile(repositoryDirectory, "single_file_test", "Test File1");
+    GitStatusResponse response = gitStatus.getSingleFileStatus(repositoryDirectory, file);
+    assertEquals("File should be untracked.", 1, response.getUntrackedFilesSize());
+  }
+
+
+  /**
    * Test for files that are indexed and have been modified but git-add or git-rm command need to be
    * run to get them ready for committing next time <git-commit> is executed.
    * 
