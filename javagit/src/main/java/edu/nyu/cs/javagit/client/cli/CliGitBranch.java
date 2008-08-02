@@ -345,6 +345,9 @@ public class CliGitBranch implements IGitBranch {
       }
     }
 
+    public void processExitCode(int code) {
+    }
+    
     /**
      * Throws appropriate <code>JavaGitException</code> for an error case or returns the 
      * <code>GitBranchResponse</code> object to the upper layer.

@@ -209,6 +209,9 @@ public class CliGitMv implements IGitMv {
       }
     }
 
+    public void processExitCode(int code) {
+    }
+    
     /**
      * Gets a <code>GitMvResponse</code> object containing the information from the git-mv
      * response text parsed by this IParser instance. It is expected that GitMv does not notify 

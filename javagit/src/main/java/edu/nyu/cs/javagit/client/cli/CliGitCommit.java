@@ -358,6 +358,9 @@ public class CliGitCommit implements IGitCommit {
       }
     }
 
+    public void processExitCode(int code) {
+    }
+    
     /**
      * Gets a <code>GitCommitResponse</code> object containing the information from the commit
      * response text parsed by this IParser instance.

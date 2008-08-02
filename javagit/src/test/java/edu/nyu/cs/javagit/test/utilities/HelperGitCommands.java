@@ -54,6 +54,9 @@ public class HelperGitCommands {
         return null;
       }
 
+      public void processExitCode(int code) {
+      }
+      
       public void parseLine(String line) {
       }
     });

@@ -265,9 +265,12 @@ public class CliGitLog implements IGitLog{
 			return this.response;
 		}
 
-		/**
+    public void processExitCode(int code) {
+    }
+
+    /**
 		 *  Parses a line at a time from the commandline execution output of git log
-		 */
+		 */    		
 		public void parseLine(String line) {
 			if(line.length() == 0){
 				return;

@@ -175,7 +175,10 @@ public class CliGitReset implements IGitReset {
       ++numLinesParsed;
     }
 
-    /**
+    public void processExitCode(int code) {
+    }
+    
+   /**
      * Gets a <code>GitResetResponseImpl</code> object containing the information from the reset
      * response text parsed by this IParser instance.
      * 

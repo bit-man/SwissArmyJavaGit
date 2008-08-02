@@ -90,7 +90,7 @@ public class ProcessUtilities {
    *          The process to wait for and destroy.
    * @return The exit value of the process. By convention, 0 indicates normal termination.
    */
-  public static int waitForAndDestroyProcess(Process p) {
+  public static int waitForAndDestroyProcess(Process p, IParser parser) {
     /*
      * I'm not sure this is the best way to handle waiting for a process to complete. -- jhl388
      * 06.14.2008
@@ -98,6 +98,7 @@ public class ProcessUtilities {
     while (true) {
       try {
         int i = p.waitFor();
+        parser.processExitCode(p.exitValue());
         p.destroy();
         return i;
       } catch (InterruptedException e) {
@@ -139,7 +140,7 @@ public class ProcessUtilities {
 
     Process p = startProcess(pb);
     getProcessOutput(p, parser);
-    waitForAndDestroyProcess(p);
+    waitForAndDestroyProcess(p, parser);
 
     return parser.getResponse();
   }

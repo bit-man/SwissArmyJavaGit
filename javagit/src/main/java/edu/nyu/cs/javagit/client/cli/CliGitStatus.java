@@ -401,6 +401,9 @@ public class CliGitStatus implements IGitStatus {
       return false;
     }
 
+    public void processExitCode(int code) {
+    }
+    
     public GitStatusResponse getResponse() throws JavaGitException {
       if( response.errorState() ) {
         throw new JavaGitException(438000, ExceptionMessageMap.getMessage("438000") + 

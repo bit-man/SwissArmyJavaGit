@@ -304,6 +304,9 @@ public class CliGitCheckout implements IGitCheckout {
       return filename;
     }
 
+    public void processExitCode(int code) {
+    }
+    
     public GitCheckoutResponse getResponse() throws JavaGitException {
       if (response.error()) {
         throw new JavaGitException(406000, ExceptionMessageMap.getMessage("406000") + 

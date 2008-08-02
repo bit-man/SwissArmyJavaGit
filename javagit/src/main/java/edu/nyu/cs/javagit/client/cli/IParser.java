@@ -33,6 +33,15 @@ public interface IParser {
   public void parseLine(String line);
 
   /**
+   * Takes the process exit code so it can provide the most information possible to the user about
+   * how the process ends.
+   * 
+   * @param code
+   *          The exit code of the process that was run.
+   */
+  public void processExitCode(int code);
+
+  /**
    * Gets the response for the command for which the parser is implemented.
    * 
    * @return The response for the command for which the parser is implemented.

@@ -257,6 +257,9 @@ public class CliGitAdd implements IGitAdd {
       return false;
     }
 
+    public void processExitCode(int code) {
+    }
+    
     public GitAddResponse getResponse() {
       return response;
     }

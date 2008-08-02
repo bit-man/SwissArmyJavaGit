@@ -177,7 +177,10 @@ public class CliGitRm implements IGitRm {
       }
     }
 
-    public GitRmResponse getResponse() throws JavaGitException {
+    public void processExitCode(int code) {
+    }
+    
+   public GitRmResponse getResponse() throws JavaGitException {
       if (null != errorMsg) {
         throw new JavaGitException(434000, ExceptionMessageMap.getMessage("434000") + "  { "
             + errorMsg.toString() + " }");
