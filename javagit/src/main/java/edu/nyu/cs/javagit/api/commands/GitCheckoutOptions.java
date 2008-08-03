@@ -19,6 +19,7 @@ package edu.nyu.cs.javagit.api.commands;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.Ref.RefType;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Class for managing options for &lt;git-checkout&gt; command.
@@ -26,61 +27,55 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 public class GitCheckoutOptions {
 
   /**
-   * Create a new branch named &lt;new_branch&gt; and start it at &lt;branch&gt;. if &lt;optB&gt; is
-   * null then -b option is not specified.
+   * Option for creating a new branch with the name provided.
    */
-  Ref optB;
+  private Ref optB;
 
   /**
    * Quiet, suppress feedback messages.
    */
-  boolean optQ;
+  private boolean optQ;
 
   /**
    * Proceed even if the index or the working tree differs from HEAD. This is used to throw away
    * local changes.
    */
-  boolean optF;
+  private boolean optF;
 
   /**
-   * When creating a new branch, set up configuration so that <code>git-pull</code> will
-   * automatically retrieve data from the start point, which must be a branch. Use this if you
-   * always pull from the same upstream branch into the new branch, and if you don't want to use
-   * "git pull &lt;repository&gt; &lt;refspec&gt;" explicitly. This behavior is the default when the
-   * start point is a remote branch.
+   * Track options for setting configuration so that &lt;git-pull&gt; retrieves data automatically
+   * from starting point.
    */
-  boolean optTrack;
+  private boolean optTrack;
   /**
-   * Ignore the branch.autosetupmerge configuration variable.
+   * Set this option to ignore the branch.autosetupmerge.
    */
-  boolean optNoTrack;
+  private boolean optNoTrack;
   /**
-   * Create the new branch's reflog. This activates recording of all changes made to the branch ref,
-   * enabling use of date based sha1 expressions such as "&lt;branchname&gt;@{yesterday}".
+   * Create the new branch's reflog. It also enables use of date based sha1 expressions.
    */
-  boolean optL;
+  private boolean optL;
   /**
-   * If you have local modifications to one or more files that are different between the current
-   * branch and the branch to which you are switching, the command refuses to switch branches in
-   * order to preserve your modifications in context.However, with this option, a three-way merge
-   * between the current branch, your working tree contents, and the new branch is done, and you
-   * will be on the new branch.
+   * Use this option, if merging need to be done between the current branch, working tree contents,
+   * and the new branch. Also, brings you to the new branch.
    */
-  boolean optM;
+  private boolean optM;
 
   /**
    * Sets the name of the new branch that need to be created from the base branch.
    * 
-   * @param Name
-   *          of the new branch.
+   * @param newBranch
+   *          New branch of type <code>Ref</code> that will be created by &lt;git-checkout&gt;.
    */
-  public void setOptB(Ref newBranchName) {
-    CheckUtilities.validateArgumentRefType(newBranchName, RefType.BRANCH, "New Branch Name");
-    optB = newBranchName;
+  public void setOptB(Ref newBranch) {
+    CheckUtilities.validateArgumentRefType(newBranch, RefType.BRANCH, "New Branch Name");
+    optB = newBranch;
   }
 
   /**
-   * @return Returns the name of the new branch.
+   * Gets the <code>Ref</code> of type branch that is created by &lt;git-checkout&gt; command.
+   * 
+   * @return Returns the new branch of type <code>Ref</code>.
    */
   public Ref getOptB() {
     return optB;
@@ -108,7 +103,8 @@ public class GitCheckoutOptions {
   /**
    * Gets the value of force option.
    * 
-   * @return true if force is set, or false.
+   * @return true 
+   *          If force is set, or false.
    */
   public boolean optF() {
     return optF;
@@ -118,7 +114,7 @@ public class GitCheckoutOptions {
    * Sets the value of force option
    * 
    * @param true
-   *          if force should be set, else false.
+   *          If force should be set, else false.
    */
   public void setOptF(boolean optF) {
     this.optF = optF;
@@ -127,7 +123,8 @@ public class GitCheckoutOptions {
   /**
    * Gets the value value of track option.
    * 
-   * @return true if track option is set, else false.
+   * @return true 
+   *          If track option is set, else false.
    */
   public boolean optTrack() {
     return optTrack;
@@ -137,9 +134,13 @@ public class GitCheckoutOptions {
    * Sets the track option.
    * 
    * @param true
-   *          if the track option should be set, else false.
+   *          If the track option should be set, else false.
    */
   public void setOptTrack(boolean optTrack) {
+    if ( optNoTrack ) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000130")
+          + "  The \"track\" option can not be set when the \"noTrack\" option is set.");
+    }
     this.optTrack = optTrack;
   }
 
@@ -156,16 +157,21 @@ public class GitCheckoutOptions {
    * Sets the noTrack option.
    * 
    * @param true
-   *          if noTrack options need to be set, else false.
+   *          If noTrack options need to be set, else false.
    */
   public void setOptNoTrack(boolean optNoTrack) {
+    if ( optTrack ) {
+      throw new IllegalArgumentException(ExceptionMessageMap.getMessage("000130")
+          + "  The \"noTrack\" option can not be set when the \"Track\" option is set.");
+    }
     this.optNoTrack = optNoTrack;
   }
 
   /**
    * Gets the reflog option for the new branch.
    * 
-   * @return
+   * @return true
+   *        If refLog option need to be set, else false.
    */
   public boolean optL() {
     return optL;
@@ -175,7 +181,7 @@ public class GitCheckoutOptions {
    * Sets the reflog option for the newbranch.
    * 
    * @param true
-   *          if reflog option should be set, else false.
+   *          If reflog option should be set, else false.
    */
   public void setOptL(boolean optL) {
     this.optL = optL;
@@ -184,7 +190,8 @@ public class GitCheckoutOptions {
   /**
    * Gets the merge option
    * 
-   * @return true if merge option to be used, else false
+   * @return true 
+   *        If merge option to be used, else false
    */
   public boolean optM() {
     return optM;
@@ -194,7 +201,7 @@ public class GitCheckoutOptions {
    * Sets the merge option.
    * 
    * @param true
-   *          if merge need to be used, else false.
+   *          If merge need to be used, else false.
    */
   public void setOptM(boolean optM) {
     this.optM = optM;

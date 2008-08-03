@@ -28,17 +28,6 @@ import edu.nyu.cs.javagit.api.commands.GitCheckoutResponse;
 public class GitCheckoutResponseImpl extends GitCheckoutResponse {
 
   /**
-   * Sets the error parsed from the execution of &lt;git-checkout&gt; command.
-   * 
-   * @param error
-   *          error string
-   */
-  public void setError(int lineNumber, String error) {
-    ErrorDetails errorDetails = new ErrorDetails( lineNumber, error );
-    errors.add(errorDetails);
-  }
-
-  /**
    * Sets the new branch name that is created by &lt;git-checkout&gt using -b option
    * 
    * @param newBranch
@@ -92,4 +81,3 @@ public class GitCheckoutResponseImpl extends GitCheckoutResponse {
   }
 
 }
-

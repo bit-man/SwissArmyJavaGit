@@ -27,6 +27,7 @@ import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitCheckout;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * <code>GitCheckout</code> provides an interface for checking out files from a particular branch
@@ -47,13 +48,13 @@ public final class GitCheckout {
    *          name of the branch that will be checked out OR if creating a new branch then the
    *          starting for the new branch will be this branch.
    * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @throws JavaGitException thrown if -
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
-   *           <li>if options provided are incorrect.
+   *           <li>if options provided are incorrect.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException 
+   *          thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -74,14 +75,14 @@ public final class GitCheckout {
    * @param repositoryPath
    *          path to the Git repository.
    * @param paths
-   *          <code>List</code> of file paths that are to be checked out.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   *          List of file paths that are to be checked out.
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException 
+   *           thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -142,14 +143,15 @@ public final class GitCheckout {
    *          <code>Ref</code> branch-name from where the file will be checked out
    * @param paths
    *          <code>List</code> of file paths that are to be checked out.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException
+   *           thrown if -
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if options provided are incorrect</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException
+   *           Thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -175,23 +177,28 @@ public final class GitCheckout {
    * @param paths
    *          <code>List</code> of file paths that are to be checked out.
    * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @throws JavaGitException 
+   *           Thrown if -
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException
+   *           Thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
    *           </ul>
    */
-  public GitCheckoutResponse checkout(File repositoryPath, Ref treeIsh, List<File> paths)
+  public GitCheckoutResponse checkout(File repositoryPath, Ref ref, List<File> paths)
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
+    if ( ref != null && ( ref.getRefType() != RefType.BRANCH && ref.getRefType() != RefType.SHA1) ) {
+      throw new JavaGitException(100000, ExceptionMessageMap.getMessage("100000")
+          + " RefType passed: " + ref.getRefType());
+    }
     CheckUtilities.checkNullListArgument(paths, "List of files");
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitCheckout gitCheckout = client.getGitCheckoutInstance();
-    return gitCheckout.checkout(repositoryPath, treeIsh, paths);
+    return gitCheckout.checkout(repositoryPath, ref, paths);
   }
 }

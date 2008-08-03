@@ -43,14 +43,14 @@ public interface IGitCheckout {
    *          checkout based on this base branch.
    * @param paths
    *          <code>List</code> of files that are specifically to be checked out.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if options passed are not correct.</li>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws <code>IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -72,14 +72,14 @@ public interface IGitCheckout {
    *          checkout based on this base branch.
    * @param file
    *          Single file that need to be checked out from the git repository
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if options passed are not correct.</li>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws <code>IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -99,15 +99,14 @@ public interface IGitCheckout {
    * @param branch
    *          Name of the base branch that need to be checked out or if the new branch is being
    *          checkout based on this base branch.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse< object
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if options passed are not correct.</li>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -122,14 +121,13 @@ public interface IGitCheckout {
    * 
    * @param repositoryPath
    *          path to the root of the repository
-   * @throws <code>JavaGitException</code> thrown if -
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if options passed are not correct.</li>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -144,14 +142,13 @@ public interface IGitCheckout {
    *          path to the root of the repository
    * @param branch
    *          name of the base branch that need to be checked out
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -168,14 +165,13 @@ public interface IGitCheckout {
    *          path to the root of the repository
    * @param paths
    *          list of file paths or directory that need to be checked out from git repository.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <ul>
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>
@@ -193,13 +189,12 @@ public interface IGitCheckout {
    *          RefType object
    * @param paths
    *          List of files to be checked out.
-   * @return <code>GitCheckoutResponse</code> object
-   * @throws <code>JavaGitException</code> thrown if -
+   * @return GitCheckoutResponse object
+   * @throws JavaGitException thrown if -
    *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
    *           <li>if processBuilder not able to run the command.</li>
    *           </ul>
-   * @throws </code>
-   *           IOException</code> thrown if -
+   * @throws IOException thrown if -
    *           <ul>
    *           <li>paths given do not have proper permissions.</li>
    *           <li>paths given do not exist at all.</li>

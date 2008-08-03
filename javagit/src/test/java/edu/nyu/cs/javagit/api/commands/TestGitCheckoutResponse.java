@@ -32,8 +32,8 @@ public class TestGitCheckoutResponse extends TestCase {
 
   @Before
   public void setUp() throws Exception {
-    CliGitCheckout gitCheckout = new CliGitCheckout();
-    parser = gitCheckout.new GitCheckoutParser();
+    //CliGitCheckout gitCheckout = new CliGitCheckout();
+    parser = new CliGitCheckout.GitCheckoutParser();
   }
 
   /**
