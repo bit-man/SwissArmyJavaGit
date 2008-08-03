@@ -1,0 +1,139 @@
+
+<div>
+
+<h2><em>Java</em>Git Cookbook Examples</h2>
+The usage of javaGit library can be broadly divided into to two parts 
+<ol>
+  <li><em>java</em>Git Object API </li>
+   <li> <em>java</em>Git Command API.</li>
+</ol>
+<strong><em>java</em>Git Object API</strong>
+<ul>
+    <li><a href="#a">Setting up the javagit Library</a>.</li>
+    <li><a href="#b">Initializing a new project</a>.</li>
+    <li><a href="#c">Difference between the DotGit and WorkingTree Object.</a></li>
+    <li><a href="#d">Adding files to the repository.</a></li>
+    <li><a href="#e">Commiting files</a></li>
+    <li><a href="#f">Managing branches</a></li>
+    <li><a href="#g">Switching between branches</a></li>
+    <li><a href="#h">Retrieving git logs</a></li>
+</ul>
+
+<strong><em>java</em>Git Command API</strong>
+<ul>
+  <li><a href="#i">How to use <em>java</em>Git Commands</a></li>
+  </ul>
+
+<hr/>
+
+<h2><strong>Setting up the javagit Library.
+  <a name="a" id="a"></a></strong></h2>
+<p>If you have multiple versions of git or the git binary is not on your system path, then its always a good idea to setup the git binary to be used by javaGit.</p>
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin:20px">JavaGitConfiguration.setGitPath(&quot;/usr/bin/&quot;);
+System.out.println(JavaGitConfiguration.getGitVersion()); //1.5.1</pre>
+</div>
+</div>
+<h2><strong></br>
+    </br>
+  Initializing a new project.
+  <a name="b" id="b"></a></strong>
+</h2>
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">//Create a new directory to be used as a git repository or point to an exisiting directory.<br />repositoryDirectory = FileUtilities.createTempDirectory(&quot;Demo_gitRepository&quot;);<br />		<br />//Initialize the repository ,similar to git init<br />HelperGitCommands.initRepo(repositoryDirectory);
+</pre>
+</div>
+</div>
+</br></br>
+<h2><strong>Difference between the DotGit and WorkingTree Object.</strong></h2>
+  DotGit represents the root of the git repository.<br />
+  WorkingTree ,represents the current working branch.<br />
+
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">repositoryDirectory = new File(&quot;/path/to/your_repo_directory&quot;)<br />
+//get the instance of the dotGit Object<br />dotGit = DotGit.getInstance(repositoryDirectory);<br /><br />//get the current working tree from the git repository<br />WorkingTree wt = dotGit.getWorkingTree();</pre>
+</div>
+</div>
+</br>
+</br>
+<h2><strong>Adding files to the repository. <a name="d" id="d"></a></strong> <br />
+</h2>
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">GitAddResponse ar = wt.add();<br /></pre>
+</div>
+</div>
+</br>
+</br>
+<h2><strong>Commiting files <a name="e" id="e"></a></strong></h2> 
+  Git manages content and not files, so it is important to do an add before commiting files after modifying them.
+
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">File file = FileUtilities.createFile(repositoryDirectory, &quot;README&quot;, &quot;First file in the git repository&quot;);
+WorkingTree wt = dotGit.getWorkingTree();
+//add modified content<br />wt.add();<br />wt.commit(&quot;First commit to the git repository&quot;);</pre>
+</div>
+</div>
+</br></br>
+<h2><strong>Managing branches
+  <a name="f" id="f"></a></strong>
+</h2>
+<div class="content"></div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">//Getting the current working branch
+Ref master = wt.getCurrentBranch();<br />
+//Print the name of the current branch
+System.out.println(&quot;Current branch is :&quot;+ wt.getCurrentBranch().getName());//Current branch is :master<br /><br />//Creating a new branch 
+Ref experimental = dotGit.createBranch(&quot;experimental&quot;);
+<br />//Change current working branch to the newly created branch
+wt.checkout(experimental);<br /><br />//Deleting a branch
+wt.checkout(master);
+dotGit.deleteBranch(experimental, true);<br /></pre>
+</div>
+</div>
+</br></br>
+<h2><strong>Retrieving git logs
+  <a name="h" id="h"></a></strong>
+</h2>
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px">//print commit messages of the git repository
+
+for (Commit c : dotGit.getLog() ){<br />	System.out.println(c.getMessage());<br />}<br /><br />//print commit messages of the current branch<br />for (Commit c : dotGit.getLog() ){<br />	System.out.println(c.getMessage());<br />}</pre>
+</div>
+</div>
+</br>
+</br>
+<h2><strong>How to use javaGit Commands <a name="i" id="i"></a></strong></h2> 
+  All the javaGit Commands are implemented in a uniform manner. Below is an example using the Git Status Command API to get the number of untracked files in the repo.
+
+<div class="content">   
+
+</div>
+<div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC"><br />
+  <pre style="margin-left:20px">//Create a new file<br />
+file1 = FileUtilities.createFile(repositoryDirectory, &quot;foobar&quot;, &quot;Newly created file&quot;);
+<br />//Use the GitStatus Command API to get number of untracked files.<br />gitStatus = new GitStatus();<br />options = new GitStatusOptions();
+GitStatusResponse response = gitStatus.status(repositoryDirectory, options);
+int noOfUntrackedFiles = response.getUntrackedFilesSize();</pre>
+</div>
+</div>
+</br></br>
+
+</div>
