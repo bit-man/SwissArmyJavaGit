@@ -124,12 +124,14 @@ public class TestGitStatus extends TestCase {
     GitStatusResponse response = gitStatus.status(repositoryDirectory, options, paths);
     int noOfUntrackedFiles = response.getUntrackedFilesSize();
     assertEquals("Error.No of untracked files does not Match.", 3, noOfUntrackedFiles);
-    assertEquals("Error. Filename does not match.", "foobar01", response.getFileFromUntrackedFiles(
-        0).getName());
-    assertEquals("Error. Filename does not match.", "foobar02", response.getFileFromUntrackedFiles(
-        1).getName());
-    assertEquals("Error. Filename does not match.", "testDirectory", response
-        .getFileFromUntrackedFiles(2).getName());
+    System.out.println(response.getFileFromUntrackedFiles(0).getName());
+    System.out.println(response.getFileFromUntrackedFiles(0).getPath());
+    assertEquals("Error. Filename does not match.", "foobar01", 
+        response.getFileFromUntrackedFiles(0).getName());
+    assertEquals("Error. Filename does not match.", "foobar02", 
+        response.getFileFromUntrackedFiles(1).getName());
+    assertEquals("Error. Filename does not match.", "testDirectory", 
+        response.getFileFromUntrackedFiles(2).getName());
   }
 
   /**
@@ -155,7 +157,8 @@ public class TestGitStatus extends TestCase {
         .getFileFromNewFilesToCommit(0).getName());
     assertEquals("Error. Filename does not match", "foobar02", status
         .getFileFromNewFilesToCommit(1).getName());
-    assertEquals("Error. Filename does not match", "testDirectory" + File.separator + "foobar03",
+    assertEquals("Error. Filename does not match", repositoryDirectory.getAbsolutePath() + 
+        File.separator + "testDirectory" + File.separator + "foobar03",
         status.getFileFromNewFilesToCommit(2).toString());
   }
 

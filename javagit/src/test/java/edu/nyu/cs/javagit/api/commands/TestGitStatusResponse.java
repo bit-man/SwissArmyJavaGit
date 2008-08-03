@@ -29,15 +29,19 @@ import org.junit.Test;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
 
 public class TestGitStatusResponse extends TestCase {
 
  GitStatusParser parser;
  CliGitStatus gitStatus;
+ private String repositoryDirectory;
 
  @Before
  public void setUp() throws Exception {
-   parser = new GitStatusParser();
+   repositoryDirectory = new String("GitStatusResponseTestRepository" + File.separator);
+   parser = new GitStatusParser(repositoryDirectory);
    gitStatus = new CliGitStatus();
  }
 
@@ -47,7 +51,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testInvalidSwitchOptionThrowsException() {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
    GitStatusResponse response = null;
    try {
      parser.parseLine("error: unknown switch `w'");
@@ -67,7 +71,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testInvalidFile() {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
    GitStatusResponse response = null;
    parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
    try {
@@ -154,7 +158,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testNothingToCommit() throws JavaGitException {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
    parser.parseLine("# On branch master");
    parser.parseLine("nothing to commit (working directory clean)");
 
@@ -177,7 +181,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testUntrackedFilesAndDircotories() throws JavaGitException {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
    parser.parseLine("# On branch master");
    parser.parseLine("# Untracked files:");
@@ -199,10 +203,10 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of errors", 0, response.getErrorCount());
 
    Iterator<File> iter = response.getUntrackedFiles().iterator();
-   assertEquals("FileName", "dir", iter.next().getPath());
-   assertEquals("FileName", "fileA", iter.next().getPath());
-   assertEquals("FileName", "fileB", iter.next().getPath());
-   assertEquals("FileName", "fileC", iter.next().getPath());
+   assertEquals("FileName", repositoryDirectory + "dir", iter.next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileA", iter.next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileB", iter.next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileC", iter.next().getPath());
  }
 
  /**
@@ -211,7 +215,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testNewlyAddedFiles() throws JavaGitException {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
    parser.parseLine("# On branch master");
    parser.parseLine("# Changes to be committed:");
    parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
@@ -236,12 +240,13 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of errors", 0, response.getErrorCount());
 
    Iterator<File> iter = response.getNewFilesToCommitIterarator().iterator();
-   assertEquals("File Name", "dir"+File.separator+"fileD", iter.next().getPath());
-   assertEquals("File Name", "fileA", iter.next().getPath());
+   assertEquals("File Name", repositoryDirectory + "dir"+File.separator+"fileD", 
+       iter.next().getPath());
+   assertEquals("File Name", repositoryDirectory + "fileA", iter.next().getPath());
 
    iter = response.getUntrackedFiles().iterator();
-   assertEquals("File Name", "fileB", iter.next().getPath());
-   assertEquals("File Name", "fileC", iter.next().getPath());
+   assertEquals("File Name", repositoryDirectory + "fileB", iter.next().getPath());
+   assertEquals("File Name", repositoryDirectory + "fileC", iter.next().getPath());
  }
 
  /**
@@ -251,7 +256,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testModifiedAndDeletedFiles() throws JavaGitException {
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
    parser.parseLine("# On branch master");
    parser.parseLine("# Changes to be committed:");
@@ -276,11 +281,14 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 1, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   assertEquals("FileName", "dir"+File.separator+"fileD", response.getNewFilesToCommitIterarator().iterator().next().getPath());
-   assertEquals("FileName", "fileC", response.getDeletedFilesToCommitIterator().iterator().next().getPath());
-   assertEquals("FileName", "fileA", response.getModifiedFilesNotUpdatedIterator().iterator().next()
-       .getPath());
-   assertEquals("FileName", "fileB", response.getDeletedFilesNotUpdatedIterator().iterator().next().getPath());
+   assertEquals("FileName", repositoryDirectory + "dir"+File.separator+"fileD", 
+       response.getNewFilesToCommitIterarator().iterator().next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileC", 
+       response.getDeletedFilesToCommitIterator().iterator().next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileA", 
+       response.getModifiedFilesNotUpdatedIterator().iterator().next().getPath());
+   assertEquals("FileName", repositoryDirectory + "fileB", 
+       response.getDeletedFilesNotUpdatedIterator().iterator().next().getPath());
  }
 
  /**
@@ -290,7 +298,7 @@ public class TestGitStatusResponse extends TestCase {
   */
  @Test
  public void testRenamedFilesToCommitFromCommandOutput() throws IOException, JavaGitException {
-	GitStatusParser parser = new GitStatusParser();
+	GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 	parser.parseLine("# On branch master");
 	parser.parseLine("# Changes to be committed:");
 	parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
@@ -300,8 +308,10 @@ public class TestGitStatusResponse extends TestCase {
 	parser.parseLine("#");	
 	GitStatusResponse response = parser.getResponse();
 	Iterable<File> renamedFiles = response.getRenamedFilesToCommitIterator();
-	assertEquals("Renamed File name does not match", "file1", renamedFiles.iterator().next().getPath());
-	assertEquals("Renamed File name does not match", "file6", renamedFiles.iterator().next().getPath());
+	assertEquals("Renamed File name does not match", repositoryDirectory + "file1", 
+	    renamedFiles.iterator().next().getPath());
+	assertEquals("Renamed File name does not match", repositoryDirectory + "file6", 
+	    renamedFiles.iterator().next().getPath());
 	assertEquals("No. of renamed files", 2, response.getRenamedFilesToCommitSize());
  }
  
@@ -312,7 +322,7 @@ public class TestGitStatusResponse extends TestCase {
  @Test
  public void testModifiedFilesFromCommandOutput() throws IOException, JavaGitException {
 
-   GitStatusParser parser = new GitStatusParser();
+   GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
    parser.parseLine("# On branch master");
    parser.parseLine("# Changes to be committed:");

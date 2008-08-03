@@ -75,9 +75,9 @@ public class CliGitStatus implements IGitStatus {
     List<String> command = buildCommandLine(options, paths);
     GitStatusParser parser;
     if (inputFile != null) {
-      parser = new GitStatusParser(inputFile);
+      parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator, inputFile);
     } else {
-      parser = new GitStatusParser();
+      parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator);
     }
     GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
@@ -150,7 +150,8 @@ public class CliGitStatus implements IGitStatus {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
     List<String> command  = buildCommandLine(options, null);
-    GitStatusParser parser = new GitStatusParser(file);
+    GitStatusParser parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator,
+        file);
 
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, command, parser);
   }
@@ -234,13 +235,18 @@ public class CliGitStatus implements IGitStatus {
     private int lineNum;
     private GitStatusResponseImpl response;
     private File inputFile = null;
+    
+    // The working directory for the command that was run.
+    private String workingDirectory;
 
-    public GitStatusParser() {
+    public GitStatusParser(String workingDirectory) {
+      this.workingDirectory = workingDirectory;
       lineNum = 0;
       response = new GitStatusResponseImpl();
     }
 
-    public GitStatusParser(File in) {
+    public GitStatusParser(String workingDirectory, File in) {
+      this.workingDirectory = workingDirectory;
       inputFile = in;
       lineNum = 0;
       response = new GitStatusResponseImpl();
@@ -341,11 +347,11 @@ public class CliGitStatus implements IGitStatus {
     }
 
     private void addNewFile(String filename) {
-      response.addToNewFilesToCommit(new File(filename));
+      response.addToNewFilesToCommit(new File(workingDirectory + filename));
     }
 
     private void addDeletedFile(String filename) {
-      File file = new File(filename);
+      File file = new File(workingDirectory + filename);
       switch (outputState) {
       case FILES_TO_COMMIT:
         response.addToDeletedFilesToCommit(file);
@@ -358,7 +364,7 @@ public class CliGitStatus implements IGitStatus {
     }
 
     private void addModifiedFile(String filename) {
-      File file = new File(filename);
+      File file = new File(workingDirectory + filename);
       switch (outputState) {
       case FILES_TO_COMMIT:
         response.addToModifiedFilesToCommit(file);
@@ -371,11 +377,11 @@ public class CliGitStatus implements IGitStatus {
     }
 
     private void addRenamedFileToCommit(String renamedFile) {
-      response.addToRenamedFilesToCommit(new File(renamedFile));	
+      response.addToRenamedFilesToCommit(new File(workingDirectory + renamedFile));	
     }
     
     private void addUntrackedFile(String filename) {
-      response.addToUntrackedFiles(new File(filename));
+      response.addToUntrackedFiles(new File(workingDirectory + filename));
     }
 
     private String getBranch(String line) {
