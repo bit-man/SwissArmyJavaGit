@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 
+import edu.nyu.cs.javagit.api.commands.GitLog;
+import edu.nyu.cs.javagit.api.commands.GitLogOptions;
+import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
+
 /**
  * <code>GitDirectory</code> represents a directory object in a git working tree.
  */
@@ -76,4 +80,28 @@ public class GitDirectory extends GitFileSystemObject {
 
     return children;
   }
+  
+	/**
+	 * Show commit logs
+	 * 
+	 * @return List of commits for the working directory
+	 * @throws IOException 
+	 * @throws JavaGitException 
+	 */
+	public List<Commit> getLog() throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();
+		return gitLog.log(this.file);
+	}
+
+	/**
+	 * 
+	 * @param options	Options to the git log command
+	 * @return	List of commits for the working directory
+	 * @throws JavaGitException
+	 * @throws IOException
+	 */
+	public List<Commit> getLog(GitLogOptions options) throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();		
+		return gitLog.log(this.file,options);
+	}
 }

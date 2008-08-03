@@ -27,6 +27,9 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.api.commands.GitBranch;
 import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
 import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
+import edu.nyu.cs.javagit.api.commands.GitLog;
+import edu.nyu.cs.javagit.api.commands.GitLogOptions;
+import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
 
 /**
  * The <code>DotGit</code> represents the .git directory.
@@ -301,5 +304,29 @@ public final class DotGit {
    */
   public void push(DotGit gitTo) {
   }
+
+	/**
+	 * Show commit logs
+	 * 
+	 * @return List of commits for the working directory
+	 * @throws IOException 
+	 * @throws JavaGitException 
+	 */
+	public List<Commit> getLog() throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();
+		return gitLog.log(this.getPath());
+	}
+
+	/**
+	 * 
+	 * @param options	Options to the git log command
+	 * @return	List of commits for the working directory
+	 * @throws JavaGitException
+	 * @throws IOException
+	 */
+	public List<Commit> getLog(GitLogOptions options) throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();		
+		return gitLog.log(this.getPath(),options);
+	}
 
 }

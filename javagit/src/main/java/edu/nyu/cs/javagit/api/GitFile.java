@@ -18,8 +18,12 @@ package edu.nyu.cs.javagit.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import edu.nyu.cs.javagit.api.commands.GitLog;
+import edu.nyu.cs.javagit.api.commands.GitLogOptions;
 import edu.nyu.cs.javagit.api.commands.GitStatus;
+import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
 
 /**
  * <code>GitFile</code> a file object in a git working tree.
@@ -28,17 +32,11 @@ public class GitFile extends GitFileSystemObject {
   /**
    * The constructor. Both arguments are required (i.e. cannot be null).
    * 
-<<<<<<< .working
    * @param file
    *          underlying <code>java.io.File</code> object
-=======
-   * @param dir
-   *          The underlying {@link java.io.File} object that we want to augment with git
-   *          functionality.
    * @param workingTree
    *          The <code>WorkingTree</code> that this file falls under.
    * 
->>>>>>> .merge-right.r482
    */
   protected GitFile(File file, WorkingTree workingTree) throws JavaGitException {
     super(file, workingTree);
@@ -64,5 +62,32 @@ public class GitFile extends GitFileSystemObject {
     // run git-status command
     return gitStatus.getFileStatus(workingTree.getPath(), relativePath);
   }
+
+  /**
+	 * Show commit logs
+	 * 
+	 * @return List of commits for the working directory
+	 * @throws IOException 
+	 * @throws JavaGitException 
+	 */
+	public List<Commit> getLog() throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();
+		GitLogOptions options = new GitLogOptions();
+		options.setOptRelative(true,this.relativePath.toString());
+		return gitLog.log(this.file);
+	}
+
+	/**
+	 * 
+	 * @param options	Options to the git log command
+	 * @return	List of commits for the working directory
+	 * @throws JavaGitException
+	 * @throws IOException
+	 */
+	public List<Commit> getLog(GitLogOptions options) throws JavaGitException, IOException {
+		GitLog gitLog = new GitLog();		
+		options.setOptRelative(true,this.relativePath.toString());
+		return gitLog.log(this.file,options);
+	}
 
 }
