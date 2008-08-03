@@ -111,6 +111,7 @@ public class GitLogResponse implements CommandResponse {
 			//reset variables for future commits.
 			this.files = null;
 			this.mergeDetails = null;
+			this.message = null;
 		}
 	}
 	/**
