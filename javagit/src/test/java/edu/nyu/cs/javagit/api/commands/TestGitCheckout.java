@@ -148,7 +148,7 @@ public class TestGitCheckout extends TestCase {
    File file3 = new File( repositoryDirectory.getPath() + File.separator + "foobar03");
    file3.createNewFile();
    // add a file to testBranch01
-   gitAdd.add(repositoryDirectory, null, file3);
+   gitAdd.add(repositoryDirectory, null, new File("foobar03"));
    gitCommit.commit(repositoryDirectory, "Added foobar03 to the repository");
    assertFileExistsInDirectory(repositoryDirectory, new File("foobar03"));
    Ref master = Ref.createBranchRef("master");

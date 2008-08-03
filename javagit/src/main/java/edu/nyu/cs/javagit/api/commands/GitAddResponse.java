@@ -47,8 +47,6 @@ public abstract class GitAddResponse implements CommandResponse {
    */
   protected boolean noOutput;
 
-  protected List<ResponseString> errors;
-
   protected List<ResponseString> comments;
 
   protected boolean dryRun;
@@ -58,7 +56,6 @@ public abstract class GitAddResponse implements CommandResponse {
    */
   public GitAddResponse() {
     filePathsList = new ArrayList<File>();
-    errors = new ArrayList<ResponseString>();
     comments = new ArrayList<ResponseString>();
     noOutput = true;
     dryRun = false;
@@ -88,19 +85,6 @@ public abstract class GitAddResponse implements CommandResponse {
     return dryRun;
   }
 
-  public boolean containsError() {
-    return (errors.size() > 0);
-  }
-
-  public ResponseString getError(int index) {
-    CheckUtilities.checkIntInRange(index, 0, errors.size());
-    return (errors.get(index));
-  }
-
-  public int numberOfErrors() {
-    return errors.size();
-  }
-
   public boolean comment() {
     return (comments.size() > 0);
   }
@@ -123,20 +107,20 @@ public abstract class GitAddResponse implements CommandResponse {
    * <ul>
    */
   public static class ResponseString {
-    final String error;
+    final String comment;
     final int lineNumber;
 
-    public ResponseString(int lineNumber, String error) {
+    public ResponseString(int lineNumber, String comment) {
       this.lineNumber = lineNumber;
-      this.error = error;
+      this.comment = comment;
     }
 
     public int getLineNumber() {
       return lineNumber;
     }
 
-    public String error() {
-      return error;
+    public String comment() {
+      return comment;
     }
 
   }

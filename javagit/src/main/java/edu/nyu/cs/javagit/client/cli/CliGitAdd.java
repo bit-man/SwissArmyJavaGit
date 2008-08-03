@@ -29,6 +29,7 @@ import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 import edu.nyu.cs.javagit.client.GitAddResponseImpl;
 import edu.nyu.cs.javagit.client.IGitAdd;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
 /**
  * Command-line implementation of the <code>IGitAdd</code> interface.
@@ -46,21 +47,10 @@ public class CliGitAdd implements IGitAdd {
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitAddParser parser = new GitAddParser();
-    // List<String> command = buildCommand(repositoryPath, options, paths);
-    // TODO (gsd216) - remove the line below and un-comment the above line once GitFileSystemObject
-    // is fixed for
-    // newer API related to relative paths.
-    List<String> command = buildCommand(repositoryPath, options, sanitizePaths(repositoryPath
-        .getPath(), paths));
-
+    List<String> command = buildCommand(repositoryPath, options, paths);
     GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-
-    if (response.containsError()) {
-      int line = response.getError(0).getLineNumber();
-      String error = response.getError(0).error();
-      throw new JavaGitException(401001, "Line " + line + ", " + error);
-    }
+    
     if (options != null) {
       addDryRun(options, response);
     }
@@ -193,10 +183,12 @@ public class CliGitAdd implements IGitAdd {
    * Parser class that implements <code>IParser</code> for implementing a parser for
    * &lt;git-add&gt; output.
    */
-  public class GitAddParser implements IParser {
+  public static class GitAddParser implements IParser {
 
     private int lineNum;
     private GitAddResponseImpl response;
+    private boolean error = false;
+    private List<Error> errorList;
 
     public GitAddParser() {
       lineNum = 0;
@@ -208,8 +200,10 @@ public class CliGitAdd implements IGitAdd {
         return;
       }
       lineNum++;
-      if (isError(line))
-        response.setError(lineNum, line);
+      if (isError(line)) {
+        error = true;
+        errorList.add( new Error(lineNum, line) );
+      }
       else if (isComment(line))
         response.setComment(lineNum, line);
       else
@@ -218,6 +212,9 @@ public class CliGitAdd implements IGitAdd {
 
     private boolean isError(String line) {
       if (line.trim().startsWith("fatal") || line.trim().startsWith("error")) {
+        if ( errorList == null ) {
+          errorList = new ArrayList<Error>();
+        }
         return true;
       }
       return false;
@@ -285,8 +282,44 @@ public class CliGitAdd implements IGitAdd {
     public void processExitCode(int code) {
     }
 
-    public GitAddResponse getResponse() {
+    public GitAddResponse getResponse() throws JavaGitException {
+      if (error) {
+        throw new JavaGitException(401000, ExceptionMessageMap.getMessage("401000") + 
+            " - git add error message: { " + getError() + " }");
+      }
       return response;
+    }
+    
+    /**
+     * Retrieves all the errors in the error list and concatenate them together in one string.
+     * @return
+     */
+    private String getError() {
+      StringBuffer buf = new StringBuffer();
+      for( int i=0; i < errorList.size(); i++ ) {
+        buf.append("Line " + errorList.get(i).lineNum + ". " + errorList.get(i).getErrorString());
+        if ( i < errorList.size() -1 ) {
+          buf.append(" ");
+        }
+      }
+      return buf.toString();
+    }
+    
+    /**
+     * Class for storing error details from the &lt;git-add&gt; output.
+     *
+     */
+    private static class Error {
+      final int lineNum;
+      final String errorStr;
+      Error(int lineNum, String errorStr) {
+        this.lineNum = lineNum;
+        this.errorStr = errorStr;
+      }
+      
+      public String getErrorString() {
+        return errorStr;
+      }
     }
   }
 }

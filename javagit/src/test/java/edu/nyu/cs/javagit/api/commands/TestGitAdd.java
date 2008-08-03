@@ -90,12 +90,12 @@ public class TestGitAdd extends TestCase {
   @Test
   public void testAddingOneFileToRepository() throws IOException, JavaGitException {
     File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "This is file fileA.txt");
-    File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
+    File tmpDir = new File(repoDirectory.getPath() + File.separator + "dirA");
     if (tmpDir.mkdir()) {
       File file2 = FileUtilities.createFile(repoDirectory, "dirA" + File.separator + "fileB.txt",
           "Sample Contents fileB.txt");
       gitAdd.add(repoDirectory, file1);
-      gitAdd.add(repoDirectory, tmpDir);
+      gitAdd.add(repoDirectory, new File("dirA"));
       gitAdd.add(repoDirectory, file2);
       GitStatusResponse statusResponse = gitStatus.status(repoDirectory);
       assertEquals("File to commit", 2, statusResponse.getNewFilesToCommitSize());

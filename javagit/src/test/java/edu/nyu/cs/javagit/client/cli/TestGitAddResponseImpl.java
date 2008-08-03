@@ -34,7 +34,7 @@ public class TestGitAddResponseImpl extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
     gitAdd = new CliGitAdd();
-    parser = gitAdd.new GitAddParser();
+    parser = new CliGitAdd.GitAddParser();
   }
 
   @Test

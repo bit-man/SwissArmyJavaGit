@@ -38,20 +38,6 @@ public class GitAddResponseImpl extends GitAddResponse {
   }
 
   /**
-   * Adds the error string generated to <code>List</code> containing all the errors that were
-   * generated at the output.
-   * 
-   * @param lineNumber
-   *          Output line number at which error string appeared.
-   * @param errorString
-   *          <code>String</code> with error message.
-   */
-  public void setError(int lineNumber, String errorString) {
-    ResponseString error = new ResponseString(lineNumber, errorString);
-    errors.add(error);
-  }
-
-  /**
    * Sets the flag if dry run flag need to be used
    * 
    * @param dryRun
