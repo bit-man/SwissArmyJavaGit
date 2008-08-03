@@ -239,7 +239,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   Iterator<File> iter = response.getNewFilesToCommitIterarator().iterator();
+   Iterator<File> iter = response.getNewFilesToCommit().iterator();
    assertEquals("File Name", repositoryDirectory + "dir"+File.separator+"fileD", 
        iter.next().getPath());
    assertEquals("File Name", repositoryDirectory + "fileA", iter.next().getPath());
@@ -282,13 +282,13 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of errors", 0, response.getErrorCount());
 
    assertEquals("FileName", repositoryDirectory + "dir"+File.separator+"fileD", 
-       response.getNewFilesToCommitIterarator().iterator().next().getPath());
+       response.getNewFilesToCommit().iterator().next().getPath());
    assertEquals("FileName", repositoryDirectory + "fileC", 
-       response.getDeletedFilesToCommitIterator().iterator().next().getPath());
+       response.getDeletedFilesToCommit().iterator().next().getPath());
    assertEquals("FileName", repositoryDirectory + "fileA", 
-       response.getModifiedFilesNotUpdatedIterator().iterator().next().getPath());
+       response.getModifiedFilesNotUpdated().iterator().next().getPath());
    assertEquals("FileName", repositoryDirectory + "fileB", 
-       response.getDeletedFilesNotUpdatedIterator().iterator().next().getPath());
+       response.getDeletedFilesNotUpdated().iterator().next().getPath());
  }
 
  /**
@@ -307,7 +307,7 @@ public class TestGitStatusResponse extends TestCase {
 	parser.parseLine("#       renamed:    file5 -> file6");
 	parser.parseLine("#");	
 	GitStatusResponse response = parser.getResponse();
-	Iterable<File> renamedFiles = response.getRenamedFilesToCommitIterator();
+	Iterable<File> renamedFiles = response.getRenamedFilesToCommit();
 	assertEquals("Renamed File name does not match", repositoryDirectory + "file1", 
 	    renamedFiles.iterator().next().getPath());
 	assertEquals("Renamed File name does not match", repositoryDirectory + "file6", 
@@ -346,10 +346,10 @@ public class TestGitStatusResponse extends TestCase {
 
    GitStatusResponse response = parser.getResponse();
    assertEquals(1, response.getModifiedFilesNotUpdatedSize());
-   assertEquals("ModifiedNotStaged.java", response.getModifiedFilesNotUpdatedIterator().iterator().next()
+   assertEquals("ModifiedNotStaged.java", response.getModifiedFilesNotUpdated().iterator().next()
        .getName());
    assertEquals(1, response.getModifiedFilesToCommitSize());
-   assertEquals("Modified.java", response.getModifiedFilesToCommitIterator().iterator().next().getName());
+   assertEquals("Modified.java", response.getModifiedFilesToCommit().iterator().next().getName());
  }
  
 }
