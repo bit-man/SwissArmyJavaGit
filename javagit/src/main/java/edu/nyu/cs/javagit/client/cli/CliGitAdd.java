@@ -47,9 +47,13 @@ public class CliGitAdd implements IGitAdd {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitAddParser parser = new GitAddParser();
     //List<String> command = buildCommand(repositoryPath, options, paths);
+    // TODO (gsd216) - remove the line below and un-comment the above line once GitFileSystemObject is fixed for
+    // newer API related to relative paths.
     List<String> command = buildCommand( repositoryPath, options, sanitizePaths(repositoryPath.getPath(), paths));
+    
     GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
+    
     if (response.containsError()) {
       int line = response.getError(0).getLineNumber();
       String error = response.getError(0).error();
@@ -59,6 +63,24 @@ public class CliGitAdd implements IGitAdd {
       addDryRun(options, response);
     }
     return (GitAddResponse) response;
+  }
+  
+  /**
+   * Adds a list of files with no GitAddOptions.
+   */
+  public GitAddResponse add(File repositoryPath, List<File> files) throws JavaGitException, IOException {
+    GitAddOptions options = null;
+    return add( repositoryPath, options, files);
+  }
+  
+  /**
+   * Adds one file to the index with no GitAddOptions.
+   */
+  public GitAddResponse add(File repositoryPath, File file) throws JavaGitException, IOException {
+    List<File> filePaths = new ArrayList<File>();
+    filePaths.add(file);
+    GitAddOptions options = null;
+    return add( repositoryPath, options, filePaths);
   }
   
   /**

@@ -39,11 +39,9 @@ public interface IGitAdd {
    * @param paths
    *          <code>List</code> of file paths that are going to be added to the index.
    * @return <code>GitAddResponse</code> object.
-   * @throws <code>JavaGitException</code>
-   *           Thrown when there is an error while running the add command.
-   * @throws <code>IOException</code>
-   *           There are many reasons for which an <code>IOException</code> may be thrown.
-   *           Examples include:
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
    *           <ul>
    *           <li>a directory doesn't exist</li>
    *           <li>access to a file is denied</li>
@@ -63,8 +61,7 @@ public interface IGitAdd {
    * @param <code>File</code>
    *          <code>File</code> to be added to the index.
    * @return <code>GitAddResponse</code> object.
-   * @throws <code>JavaGitException</code>
-   *           Thrown when there is an error while running the add command.
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
    * @throws IOException
    *           There are many reasons for which an <code>IOException</code> may be thrown.
    *           Examples include:
@@ -73,10 +70,10 @@ public interface IGitAdd {
    *           <li>access to a file is denied</li>
    *           <li>a command is not found on the PATH</li>
    *           </ul>
-   */ 
+   */
   public GitAddResponse add(File repositoryPath, GitAddOptions options, File file)
-  throws JavaGitException, IOException;
-  
+      throws JavaGitException, IOException;
+
   /**
    * Dry run for adding a list of files to the index.
    * 
@@ -129,11 +126,9 @@ public interface IGitAdd {
    * @param paths
    *          <code>List</code> of file paths that are going to be added to the index.
    * @return <code>GitAddResponse</code> object.
-   * @throws <code>JavaGitException</code>
-   *           Thrown when there is an error while running the add command.
-   * @throws <code>IOException</code>
-   *           There are many reasons for which an <code>IOException</code> may be thrown.
-   *           Examples include:
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
    *           <ul>
    *           <li>a directory doesn't exist</li>
    *           <li>access to a file is denied</li>
@@ -142,5 +137,44 @@ public interface IGitAdd {
    */
   public GitAddResponse addWithForce(File repositoryPath, List<File> paths)
       throws JavaGitException, IOException;
+
+  /**
+   * Adds a file to the index with no options set.
+   * 
+   * @param repositoryPath
+   *          File path pointing to the root of the repository.
+   * @param file
+   *          <code>File</code> will added to the index.
+   * @return <code>GitAddResponse</code> object.
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
+   *           <ul>
+   *           <li>a directory doesn't exist</li>
+   *           <li>access to a file is denied</li>
+   *           <li>a command is not found on the PATH</li>
+   *           </ul>
+   */
+  public GitAddResponse add(File repositoryPath, File file) throws JavaGitException, IOException;
+
+  /**
+   * Adds list of files to the index with no options set.
+   * 
+   * @param repositoryPath
+   *          File path pointing to the root of the repository
+   * @param paths
+   *          <code>List</code> of file paths that are going to be added to the index.
+   * @return <code>GitAddResponse</code> object.
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
+   *           <ul>
+   *           <li>a directory doesn't exist</li>
+   *           <li>access to a file is denied</li>
+   *           <li>a command is not found on the PATH</li>
+   *           </ul>
+   */
+  public GitAddResponse add(File repositoryPath, List<File> paths) throws JavaGitException,
+      IOException;
 
 }

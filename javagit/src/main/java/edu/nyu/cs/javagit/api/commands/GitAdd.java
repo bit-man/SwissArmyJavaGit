@@ -1,20 +1,4 @@
-/*
- * ====================================================================
- * Copyright (c) 2008 JavaGit Project.  All rights reserved.
- *
- * This software is licensed using the GNU LGPL v2.1 license.  A copy
- * of the license is included with the distribution of this source
- * code in the LICENSE.txt file.  The text of the license can also
- * be obtained at:
- *
- *   http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
- *
- * For more information on the JavaGit project, see:
- *
- *   http://www.javagit.com
- * ====================================================================
- */
-package edu.nyu.cs.javagit.api.commands;
+ package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -169,6 +153,55 @@ public final class GitAdd {
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitAdd gitAdd = client.getGitAddInstance();
     return gitAdd.add(repositoryPath, options, file);
+  }
+  
+  /**
+   * Adds list of files to the index.
+   * 
+   * @param repositoryPath
+   *          File path pointing to the root of the repository.
+   * @param file
+   *          <code>File</code> will added to the index.
+   * @return <code>GitAddResponse</code> object.
+   * @throws <code>JavaGitException</code>
+   *           Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code>
+   *           There are many reasons for which an <code>IOException</code> may be thrown.
+   *           Examples include:
+   *           <ul>
+   *           <li>a directory doesn't exist</li>
+   *           <li>access to a file is denied</li>
+   *           <li>a command is not found on the PATH</li>
+   *           </ul>
+   */
+  public GitAddResponse add(File repositoryPath, File file) throws IOException, JavaGitException {
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitAdd gitAdd = client.getGitAddInstance();
+    return gitAdd.add(repositoryPath, file);    
+  }
+  
+  /**
+   * Adds list of files to the index with no options set.
+   * 
+   * @param repositoryPath
+   *          File path pointing to the root of the repository
+   * @param paths
+   *          <code>List</code> of file paths that are going to be added to the index.
+   * @return <code>GitAddResponse</code> object.
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
+   *           <ul>
+   *           <li>a directory doesn't exist</li>
+   *           <li>access to a file is denied</li>
+   *           <li>a command is not found on the PATH</li>
+   *           </ul>
+   */
+  public GitAddResponse add(File repositoryPath, List<File> paths) throws JavaGitException,
+      IOException {
+    IClient client = ClientManager.getInstance().getPreferredClient();
+    IGitAdd gitAdd = client.getGitAddInstance();
+    return gitAdd.add(repositoryPath, paths);     
   }
 
 }

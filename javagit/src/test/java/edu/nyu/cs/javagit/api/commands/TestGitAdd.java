@@ -38,6 +38,7 @@ public class TestGitAdd extends TestCase {
 
   File repoDirectory;
   GitAdd gitAdd;
+  GitStatus gitStatus;
 
   @Before
   public void setUp() throws Exception {
@@ -45,6 +46,7 @@ public class TestGitAdd extends TestCase {
     HelperGitCommands.initRepo(repoDirectory);
 
     gitAdd = new GitAdd();
+    gitStatus = new GitStatus();
   }
 
   /**
@@ -79,6 +81,52 @@ public class TestGitAdd extends TestCase {
     }
   }
 
+  /**
+   * Test to add one file at a time to the repository with no options provided.
+   * @throws IOException
+   * @throws JavaGitException
+   */
+  @Test
+  public void testAddingOneFileToRepository() throws IOException, JavaGitException {
+    File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "This is file fileA.txt");
+    File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
+    if (tmpDir.mkdir()) {
+      File file2 = FileUtilities.createFile( repoDirectory, "dirA"+File.separator+"fileB.txt", "Sample Contents fileB.txt");
+      gitAdd.add(repoDirectory, file1);
+      gitAdd.add(repoDirectory, tmpDir);
+      gitAdd.add(repoDirectory, file2);
+      GitStatusResponse statusResponse = gitStatus.status(repoDirectory);
+      assertEquals("File to commit", 2, statusResponse.getNewFilesToCommitSize());
+    } else {
+      fail("Failed to add files to repository");
+      throw new IOException("Unable to create directory: " + tmpDir);
+    }
+  }
+  
+  /**
+   * Test for adding multiple files to add to repository with no options provided.
+   * @throws IOException
+   * @throws JavaGitException
+   */
+  @Test
+  public void testAddingFilesToRepositoryWithNoOptions() throws IOException, JavaGitException {
+    File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "This is file fileA.txt");
+    File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
+    if (tmpDir.mkdir()) {
+      File file2 = FileUtilities.createFile( repoDirectory, "dirA"+File.separator+"fileB.txt", "Sample Contents fileB.txt");
+      List<File> paths = new ArrayList<File>();
+      paths.add(file1);
+      paths.add(new File("dirA"));
+      paths.add(file2);
+      gitAdd.add(repoDirectory, paths);
+      GitStatusResponse statusResponse = gitStatus.status(repoDirectory);
+      assertEquals("File to commit", 2, statusResponse.getNewFilesToCommitSize());
+    } else {
+      fail("Failed to add files to repository");
+      throw new IOException("Unable to create directory: " + tmpDir);
+    }
+  }
+  
   @After
   public void tearDown() throws Exception {
     if (repoDirectory.exists()) {
