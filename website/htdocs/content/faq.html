@@ -3,10 +3,54 @@
 
 <h2>JavaGit FAQ</h2>
 
+<h3><a href="#gq">General Questions</a></h3>
+<ol>
+<li><a href="#gq-1">Why would I want to use JavaGit?</a></li>
+<li><a href="#gq-2">Who are the intended users of JavaGit?</a></li>
+<li><a href="#gq-3">Do I still need git instaled?</a></li>
+<li><a href="#gq-4">Where can I get the source?</a></li>
+<li>
+  <a href="#gq-5">
+  Isn't using Subversion to host a git-oriented program a bit hypocritical?
+  </a>
+</li>
+<li>
+  <a href="#gq-6">
+  Can I use git to access the source code in the mean time?
+  </a>
+</li>
+<li><a href="#gq-7">Is JavaGit under active development?</a></li>
+<li>
+  <a href="#gq-8">
+  When will an alpha/beta/stable release be available?
+  </a>
+</li>
+<li>
+  <a href="#gq-9">
+  Why not implement git using java (this way you don't need git installed)?
+  </a>
+</li>
+<li><a href="#gq-10">How is JavaGit different from Jgit/Egit?</a></li>
+<li><a href="#gq-11">How can I contribute?</a></li>
+</ol>
+
+<h3><a href="#ts">Trouble Shooting</a></h3>
+<ol>
+<li>
+  <a href="#ts-1">
+  I've just installed git for the first time on this computer and I am getting
+  this wierd error:  "Your name cannot be determined from your system services".
+  How can I fix it? 
+  </a>
+</li>
+</ol>
+
+<a name="gq"></a> 
 <h3>General Questions</h3>
 
 <ol>
-<li> 
+<li>
+<a name="gq-1"></a> 
 Why would I want to use JavaGit? <br><br>
 
 So that your java application can access, create and modify git repositories 
@@ -15,12 +59,14 @@ manage forking code yourself, flex your JNI muscle or reimplement git in Java
 yourself.<br><br>
 </li>
 <li>
+<a name="gq-2"></a> 
 Who are the intended users of JavaGit? <br><br>
 
 Java developers who want to access, create or modify git repositories from 
 their own applications. <br><br>
 </li>
 <li>
+<a name="gq-3"></a> 
 Do I still need git installed? <br><br>
 
 Yes.  JavaGit currently uses the command-line git client to interface with 
@@ -29,6 +75,7 @@ implementation, but we are open to doing such an implementation in the future.
 If this is super important to you, let us know. <br><br>
 </li>
 <li>
+<a name="gq-4"></a> 
 Where can I get the source?<br><br>
 
 The code is in a publicly accessible SVN repository at: <br><br>
@@ -36,7 +83,9 @@ The code is in a publicly accessible SVN repository at: <br><br>
 &nbsp; &nbsp; $ svn checkout https://subversive.cims.nyu.edu/osp/ <br><br>
 </li>
 <li>
-Isn't using svn to host a git oriented program a bit hypocritical? <br><br>
+<a name="gq-5"></a> 
+Isn't using Subversion to host a git oriented program a bit hypocritical? 
+<br><br>
 
 Yes, it is.  We chose subversion for the time being because some of the tools 
 we are using for JavaGit development (Eclipse, Crucible, Fisheye) do not yet 
@@ -47,36 +96,46 @@ Once these tools work sufficiently well with git, we will move over to using
 git for our repository. <br><br>
 </li>
 <li>
+<a name="gq-6"></a> 
 Can I use git to access the source code in the mean time? <br><br>
 
 Yes, you can!  Check out the git-svn command; it works very well. <br><br>
 </li>
 <li>
-Is this under active development? <br><br>
+<a name="gq-7"></a> 
+Is JavaGit under active development? <br><br>
 
 Extremely. We have commits on a daily basis, just check the SVN log: <br><br>
 
 &nbsp; &nbsp; $ svn log https://subversive.cims.nyu.edu/osp/javagit <br><br>
 </li>
 <li>
+<a name="gq-8"></a> 
 When will an alpha/beta/stable release be available? <br><br>
 
 We are expecting an alpha release in the next few weeks.  We hope to have a 
 beta release by the end of the summer and a stable release soon thereafter.
 <br><br>
 </li>
+
+<!--
 <li>
+<a name="gq-9"></a> 
 Are there Milestones? <br><br>
 
 JavaGitMilestones? <br><br>
 </li>
+-->
+
 <li>
+<a name="gq-9"></a> 
 Why not implement git using java (this way you don't need git installed)? 
 <br><br>
 
 We'd LOVE to, but unfortunately we don't have the time. We are gladly accepting patches. ;-) <br><br>
 </li>
 <li>
+<a name="gq-10"></a> 
 How is JavaGit different from Jgit/Egit? <br><br>
 
 Who/What? <br><br>
@@ -101,11 +160,38 @@ other implementation in the future.  Jgit/Egit only provides a pure Java
 implementation. <br><br>
 </li>
 <li>
+<a name="gq-11"></a> 
 How can I contribute? <br><br>
 
-Join the conversation on the developer mailing list.  There are lots of things
-to do. <br><br>
+Join the conversation on the developer mailing list.  If there is something you
+want to work on, let us know.  If you want to work on the project but don't
+know where to start, introduce yourself and the team can help you find
+something to work on.  There are lots of things to do. <br><br>
 </li>
 </ol>
 
+<a name="ts"></a> 
+<h3>Trouble Shooting</h3>
+
+<ol>
+<li>
+<a name="ts-1"></a> 
+I've just installed git for the first time on this computer and I am getting
+this wierd error:  "Your name cannot be determined from your system services".
+How can I fix it? <br><br>
+
+This is happening because your global username and email address have not been
+set up yet.  To set your default username and email adderess, run the following
+git commands (be sure you use your information in place of the example
+information):
+<br><br>
+
+&nbsp; &nbsp; git config --global user.email "you@example.com" <br>
+&nbsp; &nbsp; git config --global user.name "Your Name"
+<br><br>
+
+If you prefer to set your identity only in the current repository, omit the 
+'--global' option from the above commands.
+<br><br>
+</li>
 </div>
