@@ -48,7 +48,7 @@ public abstract class GitAddResponse implements CommandResponse {
   protected boolean noOutput;
 
   protected List<ResponseString> errors;
-  
+
   protected List<ResponseString> comments;
 
   protected boolean dryRun;
@@ -89,54 +89,55 @@ public abstract class GitAddResponse implements CommandResponse {
   }
 
   public boolean containsError() {
-    return ( errors.size() > 0 );
+    return (errors.size() > 0);
   }
-  
+
   public ResponseString getError(int index) {
     CheckUtilities.checkIntInRange(index, 0, errors.size());
-    return ( errors.get(index) );
+    return (errors.get(index));
   }
-  
+
   public int numberOfErrors() {
     return errors.size();
   }
-  
+
   public boolean comment() {
-    return ( comments.size() > 0 );
+    return (comments.size() > 0);
   }
-  
+
   public int nubmerOfComments() {
     return comments.size();
   }
-  
+
   public ResponseString getComment(int index) {
     CheckUtilities.checkIntInRange(index, 0, comments.size());
-    return ( comments.get(index) );
+    return (comments.get(index));
   }
 
   /**
-   * For saving errors, warnings and comments related information
-   * in the response object. Currently it has only two fields -
+   * For saving errors, warnings and comments related information in the response object. Currently
+   * it has only two fields -
    * <ul>
-   *  <li>Error, warning or general comment string</li>
-   *  <li>Line number where the string appeared in output</li>
+   * <li>Error, warning or general comment string</li>
+   * <li>Line number where the string appeared in output</li>
    * <ul>
    */
   public static class ResponseString {
     final String error;
     final int lineNumber;
-    public ResponseString(int lineNumber, String error ) {
+
+    public ResponseString(int lineNumber, String error) {
       this.lineNumber = lineNumber;
       this.error = error;
     }
-    
+
     public int getLineNumber() {
       return lineNumber;
     }
-    
+
     public String error() {
       return error;
     }
-    
+
   }
 }

@@ -1,4 +1,4 @@
- package edu.nyu.cs.javagit.api.commands;
+package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,12 @@ public final class GitAdd {
    *              <li>filenames assigned do not exist</li>
    *              <li>files or repository path does not have access rights</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Exception thrown
+   *              <ul>
+   *              <li>if the repositoryPath is null.</li>
+   *              <li>if the &lt;git-add&gt; command generates error.</li>
+   *              </ul>
    */
   public GitAddResponse add(File repositoryPath, GitAddOptions options, List<File> paths)
       throws IOException, JavaGitException {
@@ -62,6 +68,12 @@ public final class GitAdd {
    *              <li>filenames assigned do not exist</li>
    *              <li>files or repository path does not have access rights</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Exception thrown
+   *              <ul>
+   *              <li>if the repositoryPath is null.</li>
+   *              <li>if the &lt;git-add&gt; command generates error.</li>
+   *              </ul>
    */
   public GitAddResponse addVerbose(File repositoryPath, List<File> paths) throws IOException,
       JavaGitException {
@@ -87,6 +99,12 @@ public final class GitAdd {
    *              <li>repositoryPath is not valid</li>
    *              <li>filenames assigned do not exist</li>
    *              <li>files or repository path does not have access rights</li>
+   *              </ul
+   * @exception JavaGitException
+   *              Exception thrown
+   *              <ul>
+   *              <li>if the repositoryPath is null.</li>
+   *              <li>if the &lt;git-add&gt; command generates error.</li>
    *              </ul>
    */
   public GitAddResponse addWithForce(File repositoryPath, List<File> paths) throws IOException,
@@ -113,6 +131,12 @@ public final class GitAdd {
    *              <li>filenames assigned do not exist</li>
    *              <li>files or repository path does not have access rights</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Exception thrown
+   *              <ul>
+   *              <li>if the repositoryPath is null.</li>
+   *              <li>if the &lt;git-add&gt; command generates error.</li>
+   *              </ul>
    */
   public GitAddResponse addDryRun(File repositoryPath, List<File> paths) throws IOException,
       JavaGitException {
@@ -120,7 +144,7 @@ public final class GitAdd {
     IGitAdd gitAdd = client.getGitAddInstance();
     return gitAdd.addDryRun(repositoryPath, paths);
   }
-  
+
   /**
    * This command adds the current content of new or modified file to the index, thus staging that
    * content for inclusion in the next commit.
@@ -134,21 +158,28 @@ public final class GitAdd {
    * @param file
    *          <code>File</code> to be added to the index.
    * @return <code>GitAddResponse</code> object.
-   * @exception </code>IOException</code>
-   *              There are many reasons for which an <code>IOException</code> may be thrown if -
+   * @exception </code>
+   *              IOException</code> There are many reasons for which an <code>IOException</code>
+   *              may be thrown if -
    *              <ul>
    *              <li>repositoryPath is not valid</li>
    *              <li>filenames assigned do not exist</li>
    *              <li>files or repository path does not have access rights</li>
    *              </ul>
+   * @exception JavaGitException
+   *              Exception thrown
+   *              <ul>
+   *              <li>if the repositoryPath is null.</li>
+   *              <li>if the &lt;git-add&gt; command generates error.</li>
+   *              </ul>
    */
   public GitAddResponse add(File repositoryPath, GitAddOptions options, File file)
-  throws IOException, JavaGitException {
+      throws IOException, JavaGitException {
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitAdd gitAdd = client.getGitAddInstance();
     return gitAdd.add(repositoryPath, options, file);
   }
-  
+
   /**
    * Adds list of files to the index.
    * 
@@ -157,11 +188,9 @@ public final class GitAdd {
    * @param file
    *          <code>File</code> will added to the index.
    * @return <code>GitAddResponse</code> object.
-   * @throws <code>JavaGitException</code>
-   *           Thrown when there is an error while running the add command.
-   * @throws <code>IOException</code>
-   *           There are many reasons for which an <code>IOException</code> may be thrown.
-   *           Examples include:
+   * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.
+   * @throws <code>IOException</code> There are many reasons for which an <code>IOException</code>
+   *           may be thrown. Examples include:
    *           <ul>
    *           <li>a directory doesn't exist</li>
    *           <li>access to a file is denied</li>
@@ -171,9 +200,9 @@ public final class GitAdd {
   public GitAddResponse add(File repositoryPath, File file) throws IOException, JavaGitException {
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitAdd gitAdd = client.getGitAddInstance();
-    return gitAdd.add(repositoryPath, file);    
+    return gitAdd.add(repositoryPath, file);
   }
-  
+
   /**
    * Adds list of files to the index with no options set.
    * 
@@ -195,7 +224,7 @@ public final class GitAdd {
       IOException {
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitAdd gitAdd = client.getGitAddInstance();
-    return gitAdd.add(repositoryPath, paths);     
+    return gitAdd.add(repositoryPath, paths);
   }
 
 }

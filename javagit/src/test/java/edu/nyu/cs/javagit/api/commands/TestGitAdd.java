@@ -83,6 +83,7 @@ public class TestGitAdd extends TestCase {
 
   /**
    * Test to add one file at a time to the repository with no options provided.
+   * 
    * @throws IOException
    * @throws JavaGitException
    */
@@ -91,7 +92,8 @@ public class TestGitAdd extends TestCase {
     File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "This is file fileA.txt");
     File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
     if (tmpDir.mkdir()) {
-      File file2 = FileUtilities.createFile( repoDirectory, "dirA"+File.separator+"fileB.txt", "Sample Contents fileB.txt");
+      File file2 = FileUtilities.createFile(repoDirectory, "dirA" + File.separator + "fileB.txt",
+          "Sample Contents fileB.txt");
       gitAdd.add(repoDirectory, file1);
       gitAdd.add(repoDirectory, tmpDir);
       gitAdd.add(repoDirectory, file2);
@@ -102,9 +104,10 @@ public class TestGitAdd extends TestCase {
       throw new IOException("Unable to create directory: " + tmpDir);
     }
   }
-  
+
   /**
    * Test for adding multiple files to add to repository with no options provided.
+   * 
    * @throws IOException
    * @throws JavaGitException
    */
@@ -113,7 +116,8 @@ public class TestGitAdd extends TestCase {
     File file1 = FileUtilities.createFile(repoDirectory, "fileA.txt", "This is file fileA.txt");
     File tmpDir = new File(repoDirectory.getAbsolutePath() + File.separator + "dirA");
     if (tmpDir.mkdir()) {
-      File file2 = FileUtilities.createFile( repoDirectory, "dirA"+File.separator+"fileB.txt", "Sample Contents fileB.txt");
+      File file2 = FileUtilities.createFile(repoDirectory, "dirA" + File.separator + "fileB.txt",
+          "Sample Contents fileB.txt");
       List<File> paths = new ArrayList<File>();
       paths.add(file1);
       paths.add(new File("dirA"));
@@ -126,7 +130,7 @@ public class TestGitAdd extends TestCase {
       throw new IOException("Unable to create directory: " + tmpDir);
     }
   }
-  
+
   @After
   public void tearDown() throws Exception {
     if (repoDirectory.exists()) {

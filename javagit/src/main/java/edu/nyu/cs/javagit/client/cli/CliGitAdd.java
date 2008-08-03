@@ -46,14 +46,16 @@ public class CliGitAdd implements IGitAdd {
       throws JavaGitException, IOException {
     CheckUtilities.checkFileValidity(repositoryPath);
     GitAddParser parser = new GitAddParser();
-    //List<String> command = buildCommand(repositoryPath, options, paths);
-    // TODO (gsd216) - remove the line below and un-comment the above line once GitFileSystemObject is fixed for
+    // List<String> command = buildCommand(repositoryPath, options, paths);
+    // TODO (gsd216) - remove the line below and un-comment the above line once GitFileSystemObject
+    // is fixed for
     // newer API related to relative paths.
-    List<String> command = buildCommand( repositoryPath, options, sanitizePaths(repositoryPath.getPath(), paths));
-    
+    List<String> command = buildCommand(repositoryPath, options, sanitizePaths(repositoryPath
+        .getPath(), paths));
+
     GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
-    
+
     if (response.containsError()) {
       int line = response.getError(0).getLineNumber();
       String error = response.getError(0).error();
@@ -64,15 +66,16 @@ public class CliGitAdd implements IGitAdd {
     }
     return (GitAddResponse) response;
   }
-  
+
   /**
    * Adds a list of files with no GitAddOptions.
    */
-  public GitAddResponse add(File repositoryPath, List<File> files) throws JavaGitException, IOException {
+  public GitAddResponse add(File repositoryPath, List<File> files) throws JavaGitException,
+      IOException {
     GitAddOptions options = null;
-    return add( repositoryPath, options, files);
+    return add(repositoryPath, options, files);
   }
-  
+
   /**
    * Adds one file to the index with no GitAddOptions.
    */
@@ -80,17 +83,17 @@ public class CliGitAdd implements IGitAdd {
     List<File> filePaths = new ArrayList<File>();
     filePaths.add(file);
     GitAddOptions options = null;
-    return add( repositoryPath, options, filePaths);
+    return add(repositoryPath, options, filePaths);
   }
-  
+
   /**
    * Implementations of &lt;git-add&gt; with options and one file to be added to index.
    */
   public GitAddResponse add(File repositoryPath, GitAddOptions options, File file)
-  throws JavaGitException, IOException {
+      throws JavaGitException, IOException {
     List<File> paths = new ArrayList<File>();
     paths.add(file);
-    return add( repositoryPath, options, paths);
+    return add(repositoryPath, options, paths);
   }
 
   // TODO: (gsd216) This is temporary method until GitFileSystem has not been changed
@@ -98,18 +101,18 @@ public class CliGitAdd implements IGitAdd {
   private List<File> sanitizePaths(String repoPath, List<File> paths) {
     List<File> newPaths = new ArrayList<File>();
     int length = repoPath.length() + 1;
-    for( File file: paths) {
-      if ( file.getPath().startsWith(repoPath + File.separator)) {
+    for (File file : paths) {
+      if (file.getPath().startsWith(repoPath + File.separator)) {
         String filename = file.getPath();
         String newPath = filename.substring(length, filename.length());
-        newPaths.add( new File( newPath ));
+        newPaths.add(new File(newPath));
       } else {
         newPaths.add(file);
       }
     }
     return newPaths;
   }
-  
+
   /**
    * Implementation of &lt;git-add&gt; dry run.
    */
@@ -281,7 +284,7 @@ public class CliGitAdd implements IGitAdd {
 
     public void processExitCode(int code) {
     }
-    
+
     public GitAddResponse getResponse() {
       return response;
     }
