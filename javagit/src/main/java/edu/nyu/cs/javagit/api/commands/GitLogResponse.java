@@ -19,7 +19,6 @@ package edu.nyu.cs.javagit.api.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.nyu.cs.javagit.api.commands.GitAddResponse.ResponseString;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
@@ -347,5 +346,21 @@ public class GitLogResponse implements CommandResponse {
 		}
 	}
 	
-
+  public static class ResponseString {
+    final String error;
+         final int lineNumber;
+     
+    public ResponseString(int lineNumber, String error) {
+      this.lineNumber = lineNumber;
+      this.error = error;
+    }
+     
+     public int getLineNumber() {
+       return lineNumber;
+     }
+     
+    public String error() {
+      return error;
+    }
+  }
 }
