@@ -124,8 +124,6 @@ public class TestGitStatus extends TestCase {
     GitStatusResponse response = gitStatus.status(repositoryDirectory, options, paths);
     int noOfUntrackedFiles = response.getUntrackedFilesSize();
     assertEquals("Error.No of untracked files does not Match.", 3, noOfUntrackedFiles);
-    System.out.println(response.getFileFromUntrackedFiles(0).getName());
-    System.out.println(response.getFileFromUntrackedFiles(0).getPath());
     assertEquals("Error. Filename does not match.", "foobar01", 
         response.getFileFromUntrackedFiles(0).getName());
     assertEquals("Error. Filename does not match.", "foobar02", 
