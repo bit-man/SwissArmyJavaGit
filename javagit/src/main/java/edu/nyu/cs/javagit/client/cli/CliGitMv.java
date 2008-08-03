@@ -64,7 +64,7 @@ public class CliGitMv implements IGitMv {
   /**
    * Exec of git-mv command
    * 
-   * @param repository
+   * @param repoPath
    *          A <code>File</code> instance for the path to the repository root (the parent
    *          directory of the .git directory) or a sub-directory in the working tree of the
    *          repository to move/rename against. This argument must represent the absolute path to 

@@ -162,9 +162,6 @@ public final class GitBranch {
    * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository. If null is passed, 
    *          a <code>NullPointerException</code> will be thrown.
-   * @param options
-   *          The options for a git-branch command. If the value is null, a
-   *          <code>NullPointerException</code> will be thrown.
    * @param forceRename
    *          True if force rename option -M should be used. False if -m should be used.
    * @param newName
@@ -198,10 +195,7 @@ public final class GitBranch {
    * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository. If null is passed, 
    *          a <code>NullPointerException</code> will be thrown.
-   * @param options
-   *          The options for a git-branch command. If the value is null, a
-   *          <code>NullPointerException</code> will be thrown.
-   * @param forceMove
+   * @param forceRename
    *          True if force rename option -M should be used. False if -m should be used.
    * @param oldName
    *          When renaming a branch to a different name, this is the old branch name. 

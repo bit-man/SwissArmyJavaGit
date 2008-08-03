@@ -106,7 +106,7 @@ public class CliGitBranch implements IGitBranch {
   /**
    * Process the git-branch command, to show/delete/create/rename branches.
    * 
-   * @param repositoryPath
+   * @param repoPath
    *          A <code>File</code> instance for the path to the repository. If null is passed, a
    *          <code>NullPointerException</code> will be thrown.
    * @param options

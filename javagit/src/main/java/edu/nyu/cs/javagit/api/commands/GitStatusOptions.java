@@ -65,6 +65,7 @@ public final class GitStatusOptions {
    * Returns true if verbose(-v) option is passed to &lt;git-status&gt; command.
    * 
    * @return
+   *           True if verbose(-v) option is passed to &lt;git-status&gt; command.
    */
   public boolean isOptVerbose() {
     return optVerbose;
@@ -83,6 +84,7 @@ public final class GitStatusOptions {
    * Returns true if read from log file(-F) is null.
    * 
    * @return
+   *          True if read from log file(-F) is null.
    */
   public boolean isOptReadFromLogFileNull() {
     return optReadFromLogFile == null;
@@ -91,8 +93,8 @@ public final class GitStatusOptions {
   /**
    * Sets the readFromLogFile option, if we are reading logs from a file.
    * 
-   * @param File
-   *          for reading log.
+   * @param optReadFromLogFile
+   *          <code>File</code> for reading log.
    */
   public void setOptReadFromLogFile(File optReadFromLogFile) {
     this.optReadFromLogFile = optReadFromLogFile;
@@ -255,10 +257,12 @@ public final class GitStatusOptions {
   }
 
   /**
-   * Returns true if allow empty options is set. This option should be set if it's ok to record an empty
-   * change.
+   * Returns true if allow empty options is set. This option should be set if it's okay to record 
+   * an empty change.
    * 
    * @return
+   *           True if allow empty options is set. This option should be set if it's okay to record
+   *           an empty change.
    */
   public boolean isOptAllowEmpty() {
     return optAllowEmpty;

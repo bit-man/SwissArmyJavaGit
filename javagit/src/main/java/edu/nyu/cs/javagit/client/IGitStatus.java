@@ -36,7 +36,8 @@ public interface IGitStatus {
    * 
    * @param repositoryPath
    *          Path to the root of the repository
-   * @param <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
+   * @param options
+   *          <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
    * @param paths
    *          <code>List</code> of files or file-pattern
    * @return <code>GitStatusResponse</code> Response object returned by &lt;git-status&gt;
@@ -60,8 +61,9 @@ public interface IGitStatus {
    * 
    * @param repositoryPath
    *          Path to the root of the repository
-   * @param <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
-   * @param File
+   * @param options
+   *          <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
+   * @param file
    *          <code>File</code> whose status need to be checked.
    * @return <code>GitStatusResponse</code> Response object returned by &lt;git-status&gt;
    *         command.
@@ -84,7 +86,8 @@ public interface IGitStatus {
    * 
    * @param repositoryPath
    *          Path to the root of the repository
-   * @param <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
+   * @param options
+   *          <code>GitStatusOptions</code> Options passed to &lt;git-status&gt; command
    * @return <code>GitStatusResponse</code> Response object returned by &lt;git-status&gt;
    *         command.
    * @throws <code>JavaGitException</code> Thrown when there is an error while running the

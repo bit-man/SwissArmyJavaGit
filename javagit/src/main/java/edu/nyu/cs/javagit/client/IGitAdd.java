@@ -58,7 +58,7 @@ public interface IGitAdd {
    *          File path pointing to the root of the repository
    * @param options
    *          Object containing all the options that need to be passed to &lt;git-add&gt; command.
-   * @param <code>File</code>
+   * @param file
    *          <code>File</code> to be added to the index.
    * @return <code>GitAddResponse</code> object.
    * @throws <code>JavaGitException</code> Thrown when there is an error while running the add command.

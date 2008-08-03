@@ -36,7 +36,7 @@ public class GitMv {
    * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
    * destination is non-existant then same as rename.
    * 
-   * @param repository
+   * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
    *          directory of the .git directory) or a sub-directory in the working tree of the
    *          repository to move/rename against. This argument must represent the absolute path to 
@@ -83,7 +83,7 @@ public class GitMv {
    * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
    * destination is non-existant then same as rename.
    * 
-   * @param repository
+   * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
    *          directory of the .git directory) or a sub-directory in the working tree of the
    *          repository to move/rename against. This argument must represent the absolute path to 
@@ -132,7 +132,7 @@ public class GitMv {
   /**
    * Moves the specified source files/symlinks/directories to the destination directory. 
    * 
-   * @param repository
+   * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
    *          directory of the .git directory) or a sub-directory in the working tree of the
    *          repository to move/rename against. This argument must represent the absolute path to 
@@ -180,7 +180,7 @@ public class GitMv {
   /**
    * Moves the specified source files/symlinks/directories to the destination directory. 
    * 
-   * @param repository
+   * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
    *          directory of the .git directory) or a sub-directory in the working tree of the
    *          repository to move/rename against. This argument must represent the absolute path to 

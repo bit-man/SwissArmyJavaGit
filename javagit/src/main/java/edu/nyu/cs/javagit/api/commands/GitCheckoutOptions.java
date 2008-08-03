@@ -93,8 +93,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the Quiet option
    * 
-   * @param true
-   *          if quiet option should be set.
+   * @param optQ
+   *          True if quiet option should be set, false otherwise.
    */
   public void setOptQ(boolean optQ) {
     this.optQ = optQ;
@@ -113,8 +113,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the value of force option
    * 
-   * @param true
-   *          If force should be set, else false.
+   * @param optF
+   *          True if force should be set, false otherwise.
    */
   public void setOptF(boolean optF) {
     this.optF = optF;
@@ -133,8 +133,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the track option.
    * 
-   * @param true
-   *          If the track option should be set, else false.
+   * @param optTrack
+   *          True if the track option should be set, else false.
    */
   public void setOptTrack(boolean optTrack) {
     if ( optNoTrack ) {
@@ -156,8 +156,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the noTrack option.
    * 
-   * @param true
-   *          If noTrack options need to be set, else false.
+   * @param optNoTrack
+   *          True if noTrack options need to be set, else false.
    */
   public void setOptNoTrack(boolean optNoTrack) {
     if ( optTrack ) {
@@ -180,8 +180,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the reflog option for the newbranch.
    * 
-   * @param true
-   *          If reflog option should be set, else false.
+   * @param optL
+   *          True if reflog option should be set, else false.
    */
   public void setOptL(boolean optL) {
     this.optL = optL;
@@ -200,8 +200,8 @@ public class GitCheckoutOptions {
   /**
    * Sets the merge option.
    * 
-   * @param true
-   *          If merge need to be used, else false.
+   * @param optM
+   *          True if merge need to be used, else false.
    */
   public void setOptM(boolean optM) {
     this.optM = optM;

@@ -55,7 +55,7 @@ public class GitFile extends GitFileSystemObject {
   /**
    * Show object's status in the working directory
    * 
-   * @return {@link status} (untracked, changed but not updated, etc)
+   * @return Object's status in the working directory (untracked, changed but not updated, etc).
    */
   public Status getStatus() throws IOException, JavaGitException {
     GitStatus gitStatus = new GitStatus();

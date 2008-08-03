@@ -79,7 +79,7 @@ public class GitMvOptions {
   /**
    * Set the dry-run option.
    * 
-   * @param optK
+   * @param optN
    *          True to set the -n option, false to reset it.
    */
   public void setOptN(boolean optN) {

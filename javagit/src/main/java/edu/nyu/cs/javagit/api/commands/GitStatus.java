@@ -63,7 +63,7 @@ public final class GitStatus {
    * 
    * @param repositoryPath
    *          Directory path to the root of the repository.
-   * @param path
+   * @param paths
    *          List of paths or file patterns.
    * @return <code>GitStatusResponse</code> object
    * @throws JavaGitException

@@ -171,16 +171,16 @@ public final class GitCheckout {
    * Checks out files from the repository when a tree-ish object is given as the reference.
    * 
    * @param repositoryPath
-   *          path to the Git repository.
-   * @param treeIsh
-   *          a branch, or sha1
+   *          Path to the Git repository.
+   * @param ref
+   *          A branch, or sha1 object.
    * @param paths
    *          <code>List</code> of file paths that are to be checked out.
    * @return <code>GitCheckoutResponse</code> object
    * @throws JavaGitException 
    *           Thrown if -
-   *           <li>if the output for &lt;git-checkout&gt; command generated an error.</li>
-   *           <li>if processBuilder not able to run the command.</li>
+   *           <li>the output for &lt;git-checkout&gt; command generated an error.</li>
+   *           <li>processBuilder not able to run the command.</li>
    *           </ul>
    * @throws IOException
    *           Thrown if -

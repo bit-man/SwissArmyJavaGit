@@ -387,8 +387,6 @@ public abstract class GitStatusResponse implements CommandResponse {
   
   /**
    * An inner class for converting an iterator to iterable object.
-   *
-   * @param <File>
    */
   public static class IterableIterator<T> implements Iterable<T> {
 

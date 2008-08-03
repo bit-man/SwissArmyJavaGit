@@ -31,8 +31,6 @@ public class MergeOptions {
   /**
    * The constructor.
    * 
-   * @param m
-   *          Message for the commit
    * @param s
    *          Merge strategy; see enum list
    */

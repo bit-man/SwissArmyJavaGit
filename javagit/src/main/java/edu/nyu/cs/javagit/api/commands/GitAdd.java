@@ -52,8 +52,6 @@ public final class GitAdd {
    *          The path to the repository to commit against. A non-zero length argument is required
    *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @param options
-   *          <code>GitAddOptions</code> that are passed to the &lt;git-add&gt; command.
    * @param paths
    *          <code>List</code> of file paths that will be added to the index.
    * @return results <code>GitAddResponse</code> from the add command.
@@ -80,8 +78,6 @@ public final class GitAdd {
    *          The path to the repository to commit against. A non-zero length argument is required
    *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @param options
-   *          <code>GitAddOptions</code> that are passed to the &lt;git-add&gt; command.
    * @param paths
    *          <code>List</code> of file paths that will be added to the index.
    * @return results <code>GitAddResponse</code> from the add command.
@@ -107,8 +103,6 @@ public final class GitAdd {
    *          The path to the repository to commit against. A non-zero length argument is required
    *          for this parameter, otherwise a <code>NullPointerException</code> or
    *          <code>IllegalArgumentException</code> will be thrown.
-   * @param options
-   *          <code>GitAddOptions</code> that are passed to the &lt;git-add&gt; command.
    * @param paths
    *          <code>List</code> of file paths that will be added to the index.
    * @return results <code>GitAddResponse</code> from the add command.
@@ -137,7 +131,7 @@ public final class GitAdd {
    *          <code>IllegalArgumentException</code> will be thrown.
    * @param options
    *          <code>GitAddOptions</code> that are passed to the &lt;git-add&gt; command.
-   * @param paths
+   * @param file
    *          <code>File</code> to be added to the index.
    * @return <code>GitAddResponse</code> object.
    * @exception </code>IOException</code>

@@ -128,9 +128,9 @@ public class GitLogResponse implements CommandResponse {
 		this.files.add(commitFile);
 	}
 	/**
-	 * 
-	 * @param index Returns the index of error.
-	 * @return
+	 * @param index 
+	 *          Returns the index of error.
+	 * @return The index of error.
 	 */
 	public ResponseString getError(int index) {
 		CheckUtilities.checkIntInRange(index, 0, errors.size());

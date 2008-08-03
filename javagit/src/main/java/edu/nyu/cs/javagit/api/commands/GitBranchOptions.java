@@ -310,7 +310,7 @@ public class GitBranchOptions {
   /**
    * Checks if the --contains option should be used and sets it to the commit Ref.
    * 
-   * @param optContains 
+   * @param commit 
    *          Commit Ref if the --contains option should be used, null otherwise.
    */
   public void setOptContains(Ref commit) {

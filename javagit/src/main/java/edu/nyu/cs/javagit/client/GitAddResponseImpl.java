@@ -71,8 +71,8 @@ public class GitAddResponseImpl extends GitAddResponse {
   /**
    * Adds a file and action to the list.
    * 
-   * @param action
-   * @param filePath
+   * @param file
+   *          Files to be added to the <code>List</code>.
    */
   public void add(File file) {
     filePathsList.add(file);

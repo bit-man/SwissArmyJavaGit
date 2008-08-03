@@ -34,9 +34,6 @@ public final class Commit {
   /**
    * Get a <code>Commit</code> instance for the specified HEAD commit offset.
    * 
-   * @param commitOffset
-   *          See {@link edu.nyu.cs.javagit.api.Ref} for information on acceptable values of
-   *          <code>commitOffset</code>.
    * @return The <code>Commit</code>.
    */
   public static Commit getHeadCommit() {

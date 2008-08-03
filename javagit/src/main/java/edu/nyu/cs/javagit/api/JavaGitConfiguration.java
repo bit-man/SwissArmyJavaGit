@@ -138,7 +138,7 @@ public final class JavaGitConfiguration {
   /**
    * Returns the version number of the underlying git binaries. If this method is called and we
    * don't know the version yet, it tries to figure it out. (The version gets set if
-   * {@link setGitPath} was previously called.)
+   * setGitPath() was previously called.)
    * 
    * @return The git version <code>String</code>.
    */
