@@ -105,6 +105,12 @@ function PrintHeader()
       </a><br />
       <br />
 
+      <span class="bold">Download</span><br />
+      <a href='http://sourceforge.net/project/platformdownload.php?group_id=233450'>
+        Releases
+      </a><br />
+      <br />
+
       <span class="bold">Documentation</span><br />
 <!--
       <a href=''>Install</a><br />
