@@ -96,7 +96,7 @@ function PrintHeader()
       <span class="bold">JavaGit</span></br>
       <a href="/">Welcome</a><br />
       <a href='http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html'>License (LGPL)</a><br />
-      <a href='http://sourceforge.net/news/?group_id=233450'>News</a><br />
+      <a href='news.php'>News</a><br />
       <br />
 
       <span class="bold">Download</span><br />
