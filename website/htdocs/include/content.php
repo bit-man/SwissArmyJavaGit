@@ -103,7 +103,8 @@ function PrintHeader()
 <!--
       <a href=''>Install</a><br />
 -->
-      <a href='faq.php'>FAQ</a><br />
+      <a href='cookbook.php'>CookBook Examples</a><br />
+	  <a href='faq.php'>FAQ</a><br />
       <br />
 
 <!--
