@@ -28,7 +28,7 @@ public final class JavaGitVersion {
 
   static final private int revision = 0;
 
-  static final private boolean isSnapshot = true;
+  static final private boolean isSnapshot = false;
 
   /**
    * Gets the major version number.
