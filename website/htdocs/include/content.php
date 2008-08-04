@@ -99,19 +99,20 @@ function PrintHeader()
       <a href='http://sourceforge.net/news/?group_id=233450'>News</a><br />
       <br />
 
+      <span class="bold">Download</span><br />
+      <a href='http://sourceforge.net/project/platformdownload.php?group_id=233450'>
+        Releases
+      </a><br />
+      <br />
+
       <span class="bold">Documentation</span><br />
 <!--
       <a href=''>Install</a><br />
 -->
-      <a href='cookbook.php'>CookBook Examples</a><br />
+      <a href='cookbook.php'>CookBook</a><br />
+	  <a href='javadoc.php'>JavaDocs</a><br />
 	  <a href='faq.php'>FAQ</a><br />
       <br />
-
-<!--
-      <span class="bold">Download</span><br />
-      <a href=''>Releases</a><br />
-      <br />
--->
 
       <span class="bold">Contributing</span><br />
       <a href='http://sourceforge.net/mail/?group_id=233450'>Mailing Lists</a><br />
