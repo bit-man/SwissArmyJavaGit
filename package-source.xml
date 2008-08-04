@@ -1,0 +1,31 @@
+<!--
+  This build script generates a zip of the source.
+
+  Q: Why use this script instead of 'mvn source:jar'?
+  A: This script generates a zip file with the entire javagit source tree
+     including the main source, the test source and the maven pom file.  The
+     'mvn source:jar' command generates a jar file containing only the main
+     source.  For distribution of the project source, it is preferable to
+     provide an easy means of building the source for those who download it.
+-->
+<project name="package-source" default="package-source">  
+
+  <property name="project.dir"        location="javagit"/>
+  <property name="build.dir"        location="${project.dir}/target"/>
+
+  <target name="package-source">  
+    <delete dir="dist"/>
+    <mkdir dir="dist"/>
+
+    <!-- Zip the source. -->
+    <zip destfile="dist/javagit-source.zip">
+      <zipfileset 
+          dir="${project.dir}/" 
+          prefix="javagit" 
+          excludes="target/**,antBuilderOutput.log"
+          />
+    </zip>
+
+  </target>   
+
+</project>
