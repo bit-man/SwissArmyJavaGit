@@ -177,7 +177,7 @@ function PrintContent()
    global $PATH;
    $lines = GetLinesFromFile($PATH."/content/".$this->pageID.".html");
    foreach($lines as $value) {
-      echo("$value\n");
+      echo("$value");
    }
 }
 
