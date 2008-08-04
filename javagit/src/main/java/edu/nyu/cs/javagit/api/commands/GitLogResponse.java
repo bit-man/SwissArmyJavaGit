@@ -37,7 +37,10 @@ public class GitLogResponse implements CommandResponse {
 	private List<CommitFile> files = null;
 	private String author = null;
 	
-	
+	/**
+	 * 
+	 * @return true is the response object contain an error
+	 */
 	public boolean containsError() {
 		return ( errors.size() > 0 );
 	}
@@ -152,7 +155,7 @@ public class GitLogResponse implements CommandResponse {
 	 * A data structure which  holds information about each commit.
 	 *
 	 */
-	public class Commit{
+	public static class Commit{
 		
 		String sha = null;
 		List<String> mergeDetails = null; 
@@ -306,13 +309,27 @@ public class GitLogResponse implements CommandResponse {
 				this.linesDeleted = 0;
 			}
 		}
+		
+		/**
+		 * 
+		 * @return The number of lines deleted for a paticular commit.
+		 */
 		public int getLinesDeleted() {
 			return this.linesDeleted;
 		}
-
+		
+		/**
+		 * 
+		 * @return @return The number of lines inserted for a particular commit.
+		 */
 		public int getLinesInserted() {
 			return this.linesInserted;
 		}
+		
+		/**
+		 * 
+		 * @return The number of files changed in a particular commit.
+		 */
 		public int getFilesChanged() {
 			return this.filesChanged;
 		}
@@ -323,7 +340,7 @@ public class GitLogResponse implements CommandResponse {
 	 * This class hold information about a file affected by a commit 
 	 *
 	 */
-	public class CommitFile{
+	public static  class CommitFile{
 
 		String filename = null;
 		int linesAdded = 0;

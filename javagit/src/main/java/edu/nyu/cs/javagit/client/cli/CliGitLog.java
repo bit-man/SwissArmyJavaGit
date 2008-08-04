@@ -117,56 +117,56 @@ public class CliGitLog implements IGitLog{
 			 * 	List all logs on the relative path.
 			 */
 			if (options.isOptRelative()) {
-				command.add("--relative="+options.getOptRelativePath().toString());
+				command.add("--relative="+options.getOptRelativePath());
 			}
 
 			/**
 			 * 	List all logs since specified date.
 			 */
 			if (options.isOptLimitCommitSince()) {
-				command.add("--since="+ options.getOptLimitSince().toString());
+				command.add("--since="+ options.getOptLimitSince());
 			}
 
 			/**
 			 * 	List all logs after specified date.
 			 */
 			if (options.isOptLimitCommitAfter()) {
-				command.add("--after="+ options.getOptLimitAfter().toString());
+				command.add("--after="+ options.getOptLimitAfter());
 			}
 
 			/**
 			 * 	List all logs after specified date.
 			 */
 			if (options.isOptLimitCommitUntil()) {
-				command.add("--until="+ options.getOptLimitUntil().toString());
+				command.add("--until="+ options.getOptLimitUntil());
 			}
 
 			/**
 			 * 	List all logs before specified date.
 			 */
 			if (options.isOptLimitCommitBefore()) {
-				command.add("--before="+ options.getOptLimitBefore().toString());
+				command.add("--before="+ options.getOptLimitBefore());
 			}
 
 			/**
 			 * 	List all logs by an author
 			 */
 			if (options.isOptLimitAuthor()) {
-				command.add("--author="+ options.getOptAuthor().toString());
+				command.add("--author="+ options.getOptAuthor());
 			}
 
 			/**
 			 * 	List all logs by an author/committer header pattern.
 			 */
 			if (options.isOptLimitCommitterPattern()) {
-				command.add("--committer="+ options.getOptLimitPattern().toString());
+				command.add("--committer="+ options.getOptLimitPattern());
 			}
 
 			/**
 			 * 	List all logs by matching to a grep pattern.
 			 */
 			if (options.isOptLimitGrep()) {
-				command.add("--grep="+ options.getOptLimitGrepPattern().toString());
+				command.add("--grep="+ options.getOptLimitGrepPattern());
 			}
 			/**
 			 * 	Match regular expressions with out  regard to letters case.
