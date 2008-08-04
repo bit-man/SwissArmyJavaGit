@@ -141,6 +141,11 @@ abstract public class GitBranchResponse implements CommandResponse {
     return branchList.hashCode() + listOfBranchRecord.hashCode();
   }
 
+  /**
+   * A record containing branch, its head SHA1, and the comment of the commit on head. A list of
+   * this object is returned as a part of <code>BranchResponse</code> object when verbose option 
+   * is set.
+   */
   public static class BranchRecord {
     private Ref branch;
 
