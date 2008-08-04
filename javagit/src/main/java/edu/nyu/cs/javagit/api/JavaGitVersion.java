@@ -24,11 +24,11 @@ public final class JavaGitVersion {
 
   static final private int major = 0;
 
-  static final private int minor = 1;
+  static final private int minor = 2;
 
   static final private int revision = 0;
 
-  static final private boolean isSnapshot = false;
+  static final private boolean isSnapshot = true;
 
   /**
    * Gets the major version number.
