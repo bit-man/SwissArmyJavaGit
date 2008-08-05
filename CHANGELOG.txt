@@ -6,8 +6,8 @@ Version 0.1.0
   releases prior to this release, the entire API has changed from nothing
   into itself.  The initial functionality that is available is:
 
-    An object API representing the git repository, working tree and other
-    git concepts:
+    1) An object API representing the git repository, working tree and other
+       git concepts:
 
       - DotGit (represents the repository directory, .git)
       - WorkingTree (represents the working tree)
@@ -15,7 +15,7 @@ Version 0.1.0
       - GitFile (represents a file in the git working tree)
       - GitDirectory (represents a directory in the git working tree)
 
-    Commands implemented and available:
+    2) Commands implemented and available:
 
       - GitAdd
       - GitBranch
@@ -27,11 +27,11 @@ Version 0.1.0
       - GitRm
       - GitStatus
 
-    In this initial implementation, JavaGit uses the command line git client
-    to provide git functionality.  Configuration may be needed to indicate
-    where the git binaries are located.  The "JavaGitConfiguration" class 
-    provides the ability to set the location of the git binaries if they are
-    not on the system's PATH.
+    3) In this initial implementation, JavaGit uses the command line git client
+       to provide git functionality.  Configuration may be needed to indicate
+       where the git binaries are located.  The "JavaGitConfiguration" class 
+       provides the ability to set the location of the git binaries if they are
+       not on the system's PATH.
     
 
 
