@@ -65,7 +65,7 @@ public class TestCliGitInit {
 		response = gitInit.init(repoDirectory, options);
 		
 		if(!response.isReinitialized()){
-			fail("Failed to initialize git repository");
+			fail("Failed to reinitialize git repository");
 		}
 	}
 }

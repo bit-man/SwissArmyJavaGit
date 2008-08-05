@@ -96,11 +96,11 @@ public class CliGitInit implements IGitInit {
 				return;
 			}
 			//initialized
-			if (line.startsWith("Initialized")){
+			if (line.contains("Initialized")){
 				response.setInitialized(true);
 			}
-			//reinitialized (optional)
-			else if (line.startsWith("Reinitialized")){
+			//reinitialized 
+			else if (line.contains("Reinitialized")){
 				response.setReinitialized(true);
 			}
 		}
