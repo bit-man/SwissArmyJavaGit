@@ -49,23 +49,5 @@ public class TestCliGitInit {
 		}
 	}
 
-	/**
-	 * 
-	 * Test to verify if git logs is successfully parsing logs
-	 * 
-	 * @throws IOException
-	 * @throws JavaGitException
-	 */
-	@Test
-	public void testGitReInitaliaze() throws IOException, JavaGitException {
 
-		CliGitInit gitInit = new CliGitInit();
-		GitInitOptions options = new GitInitOptions();
-		GitInitResponse response = gitInit.init(repoDirectory, options);
-		response = gitInit.init(repoDirectory, options);
-		
-		if(!response.isReinitialized()){
-			fail("Failed to reinitialize git repository");
-		}
-	}
 }
