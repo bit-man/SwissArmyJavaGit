@@ -109,7 +109,7 @@ WorkingTree wt = dotGit.getWorkingTree();
 File workingTreePath = new File("/path/to/working/tree");
 WorkingTree wt = WorkingTree.getInstance(workingTreePath);
 
-GitFile file = new GitFile("path/relative/to/workingtree/root.txt", wt);
+GitFile file = wt.getFile(new File("path/relative/to/workingtree/root.txt"));
 
 GitAddResponse ar = wt.add();
 </pre>
