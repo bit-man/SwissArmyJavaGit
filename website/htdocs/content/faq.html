@@ -136,28 +136,18 @@ We'd LOVE to, but unfortunately we don't have the time. We are gladly accepting 
 </li>
 <li>
 <a name="gq-10"></a> 
-How is JavaGit different from Jgit/Egit? <br><br>
+How is JavaGit different from <a href="http://repo.or.cz/w/egit.git">JGit/EGit</a>? <br><br>
 
-Who/What? <br><br>
+JGit is a pure Java implementation of a git client, developed in tandem with EGit, an <a href="http://www.eclipse.org/">Eclipse</a> plugin for git.  While JGit is mature, full-featured, and flexible, it does have a few drawbacks:<br><br>
 
-No. But seriously now.  JavaGit was conceived of as a complementary project to
-the <a href="http://gitclipse.sourceforge.net">GitClipse</a> projct, an Eclipse
-plugin to provide git support.  It was a logical choice for us to split the 
-project into the user oriented project, Gitclipse, and the developer oriented
-project, JavaGit.  Since the projects are separate, the JavaGit project is free
-to concentrate on providing a top-notch library/API for use in other 
-applications.  <br><br>
+1. Documentation for JGit is sparse.  For a developer, using it for a project would mean spending time combing through JGit source; ideally, we wanted an API where a .jar, the JavaDocs, and an introductory HOWTO would be sufficient.<br><br>
 
-Jgit/Egit, on the other hand, appear to be tightly integrated with Jgit
-primarily supporting Egit. <br><br>
+2. It's bound to a pure Java implementation of git functionality.  We aimed for an architecture where, if we should later want to hook into native git C (using <a href="http://en.wikipedia.org/wiki/Java_Native_Interface">JNI</a> or some other Java/C bridge), or even provide pure Java implementations, we could do so with no public-facing API impact.<br><br>
 
-Another difference between JavaGit and Jgit/Egit is that the JavaGit team 
-wanted to quickly implement access to git repositories.  This goal lead us to
-start by forking to git itself to provide git functionality.  Knowing that this
-may be a short-term solution, we built JavaGit so that we can easily replace
-the command line interface (CLI) functionality with JNI, pure Java, or some 
-other implementation in the future.  Jgit/Egit only provides a pure Java 
-implementation. <br><br>
+3. JGit is tied on some level to EGit.  We'd like to provide a library that's designed to stand on its own from day one.<br><br>
+
+After some consideration, we decided to create our own git API, intended to address the above concerns.  We're not trying to take away from JGit - it's far more feature-rich than JavaGit at present.  But competition is a good thing, and we hope to bridge that feature gap.<br><br>
+
 </li>
 <li>
 <a name="gq-11"></a> 
