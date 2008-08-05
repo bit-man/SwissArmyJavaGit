@@ -18,12 +18,13 @@
 
 <ul>
     <li><a href="#a">Setting up the JavaGit Library</a></li>
-   <!-- <li><a href="#b">Initializing a new project</a></li> -->
+   <li><a href="#b">Initializing a new project</a></li>
     <li><a href="#c">DotGit versus WorkingTree </a></li>
     <li><a href="#d">Adding files to the repository</a></li>
     <li><a href="#e">Commiting files</a></li>
     <li><a href="#f">Managing branches</a></li>
     <li><a href="#h">Retrieving git logs</a></li>
+	<li><a href="#j">Complete Example</a></li>
 </ul>
 
 <strong>JavaGit Command API</strong>
@@ -55,7 +56,7 @@ System.out.println(JavaGitConfiguration.getGitVersion());
 </div>
 </div>
 
-<!--
+
 <h2>
   <a name="b" id="b"></a>
   <strong>Initializing a new project.</strong>
@@ -63,15 +64,17 @@ System.out.println(JavaGitConfiguration.getGitVersion());
 <div class="listingblock" style="margin-left:20px"><div class="content" style="background:#CCCCCC">
 <pre style="margin-left:20px">
 // Create a new directory to be used as a git repository or point to an exisiting directory.
-repositoryDirectory = FileUtilities.createTempDirectory(&quot;Demo_gitRepository&quot;);
+File repositoryDirectory = new File("/path/to/your_repo_directory");
 
-// Initialize the repository ,similar to git init
-HelperGitCommands.initRepo(repositoryDirectory);
+//get the instance of the dotGit Object
+dotGit = DotGit.getInstance(repositoryDirectory);
+
+//Initialize the repository ,similar to git init
+dotGit.init();
 </pre>
 </div>
 </div>
 </br></br>
--->
 
 <h2>
   <a name="c"></a>
@@ -195,6 +198,18 @@ DotGit dotGit = DotGit.getInstance(repositoryDirectory);
 for (Commit c : dotGit.getLog()) {
     System.out.println(c.getMessage());
 }
+</pre>
+</div>
+</div>
+
+<h2>
+  <a name="j" id="j"></a>
+  <strong>Complete example</strong>
+</h2>
+<div class="listingblock" style="margin-left:20px">
+<div class="content" style="background:#CCCCCC">
+<pre style="margin-left:20px; padding:8px 0;">
+Example : <A HREF="../code_samples/JavaGitDemo.java">JavaGitDemo.java</A>
 </pre>
 </div>
 </div>
