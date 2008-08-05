@@ -23,6 +23,7 @@ import edu.nyu.cs.javagit.client.IGitCheckout;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.client.IGitDiff;
 import edu.nyu.cs.javagit.client.IGitGrep;
+import edu.nyu.cs.javagit.client.IGitInit;
 import edu.nyu.cs.javagit.client.IGitLog;
 import edu.nyu.cs.javagit.client.IGitMv;
 import edu.nyu.cs.javagit.client.IGitReset;
@@ -86,6 +87,11 @@ public class CliClient implements IClient {
 
   public IGitCheckout getGitCheckoutInstance() {
     return new CliGitCheckout();
+  }
+
+  public IGitInit getGitInitInstance() {
+		
+	return new CliGitInit();
   }
 
 }

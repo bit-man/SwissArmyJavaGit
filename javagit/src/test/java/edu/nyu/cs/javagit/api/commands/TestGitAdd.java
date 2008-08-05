@@ -43,8 +43,8 @@ public class TestGitAdd extends TestCase {
   @Before
   public void setUp() throws Exception {
     repoDirectory = FileUtilities.createTempDirectory("GitCommitTestRepo");
-    HelperGitCommands.initRepo(repoDirectory);
-
+    GitInit gitInit = new GitInit();
+    gitInit.init(repoDirectory);
     gitAdd = new GitAdd();
     gitStatus = new GitStatus();
   }

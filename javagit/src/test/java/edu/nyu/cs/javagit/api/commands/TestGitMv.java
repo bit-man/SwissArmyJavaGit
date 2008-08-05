@@ -51,8 +51,8 @@ public class TestGitMv extends TestCase {
   @Before
   protected void setUp() throws IOException, JavaGitException {
     repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
-    HelperGitCommands.initRepo(repoDirectory);
-
+    GitInit gitInit = new GitInit();
+    gitInit.init(repoDirectory);
     commit = new GitCommit();
     add = new GitAdd();
     mv = new GitMv();

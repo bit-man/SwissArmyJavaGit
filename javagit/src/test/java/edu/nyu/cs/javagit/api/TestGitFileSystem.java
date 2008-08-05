@@ -31,6 +31,7 @@ import edu.nyu.cs.javagit.api.DotGit;
 import edu.nyu.cs.javagit.api.WorkingTree;
 import edu.nyu.cs.javagit.api.GitFileSystemObject;
 import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
+import edu.nyu.cs.javagit.api.commands.GitInit;
 import edu.nyu.cs.javagit.api.GitFile;
 //import edu.nyu.cs.javagit.api.GitDirectory;
 
@@ -47,7 +48,8 @@ public class TestGitFileSystem extends TestCase {
   @Before
   public void setUp() throws JavaGitException, IOException {
     repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTest_dir");
-    HelperGitCommands.initRepo(repositoryDirectory);
+    GitInit gitInit = new GitInit();
+    gitInit.init(repositoryDirectory);
     dotGit = DotGit.getInstance(repositoryDirectory);
     workingTree = WorkingTree.getInstance(repositoryDirectory);
   }

@@ -35,7 +35,6 @@ public class TestRef extends TestCase {
     // Checking HEAD
     assertEquals("Expected RefType of HEAD.", Ref.HEAD.getRefType(), Ref.RefType.HEAD);
     assertEquals(Ref.HEAD.getHeadOffset(), 0);
-    assertEquals(Ref.HEAD.getName(), null);
 
     // Checking HEAD_1
     assertEquals("Expected RefType of HEAD.", Ref.HEAD_1.getRefType(), Ref.RefType.HEAD);

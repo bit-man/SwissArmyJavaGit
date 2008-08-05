@@ -166,7 +166,7 @@ public class CliGitLog implements IGitLog{
 			 * 	List all logs by matching to a grep pattern.
 			 */
 			if (options.isOptLimitGrep()) {
-				command.add("--grep="+ options.getOptLimitGrepPattern());
+				command.add("--grep="+ options.getOptLimitGrepPattern().toString());
 			}
 			/**
 			 * 	Match regular expressions with out  regard to letters case.
@@ -265,8 +265,6 @@ public class CliGitLog implements IGitLog{
 			return this.response;
 		}
 
-    public void processExitCode(int code) {
-    }
 
     /**
 		 *  Parses a line at a time from the commandline execution output of git log
@@ -341,5 +339,11 @@ public class CliGitLog implements IGitLog{
 				}
 			}
 		}
+
+
+	public void processExitCode(int code) {
+		// TODO Auto-generated method stub
+		
+	}
 	}
 }

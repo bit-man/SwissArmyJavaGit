@@ -37,7 +37,8 @@ public class TestGitStatusOptions extends TestCase{
   @Before
   public void setUp() throws Exception {
     repositoryDirectory = FileUtilities.createTempDirectory("GitStatusTestRepository");
-    HelperGitCommands.initRepo(repositoryDirectory);
+    GitInit gitInit = new GitInit();
+    gitInit.init(repositoryDirectory);
     options = new GitStatusOptions();
   }
   

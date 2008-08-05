@@ -52,8 +52,8 @@ public class TestGitBranch extends TestCase {
   @Before
   protected void setUp() throws IOException, JavaGitException {
     repoDirectory = FileUtilities.createTempDirectory("GitBranchTestRepo");
-    HelperGitCommands.initRepo(repoDirectory);
-
+    GitInit gitInit = new GitInit();
+    gitInit.init(repoDirectory);
     commit = new GitCommit();
     add = new GitAdd();
     branch = new GitBranch();

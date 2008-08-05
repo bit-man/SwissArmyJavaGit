@@ -47,7 +47,8 @@ public class TestGitStatus extends TestCase {
   @Before
   public void setUp() throws JavaGitException, IOException {
     repositoryDirectory = FileUtilities.createTempDirectory("GitStatusTestRepository");
-    HelperGitCommands.initRepo(repositoryDirectory);
+    GitInit gitInit = new GitInit();
+    gitInit.init(repositoryDirectory);
     gitCommit = new GitCommit();
     gitAdd = new GitAdd();
     gitStatus = new GitStatus();

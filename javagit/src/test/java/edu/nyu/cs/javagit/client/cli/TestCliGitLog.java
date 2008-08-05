@@ -30,6 +30,7 @@ import org.junit.Test;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
+import edu.nyu.cs.javagit.api.commands.GitInit;
 import edu.nyu.cs.javagit.api.commands.GitLogOptions;
 import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
 import edu.nyu.cs.javagit.client.cli.CliGitLog;
@@ -45,8 +46,8 @@ public class TestCliGitLog {
 	@Before
 	public void setUp() throws IOException, JavaGitException {
 		repoDirectory = FileUtilities.createTempDirectory("GitLogTestRepo");
-		HelperGitCommands.initRepo(repoDirectory);
-
+	    GitInit gitInit = new GitInit();
+	    gitInit.init(repoDirectory);
 		commit = new GitCommit();
 		add = new GitAdd();
 

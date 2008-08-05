@@ -136,6 +136,8 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("420001", "420001: Error calling git log");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-reset.");
+    
+    MESSAGE_MAP.put("418000", "418000: Error calling git init.");
 
     MESSAGE_MAP.put("434000", "434000: Error calling git-rm.");
 

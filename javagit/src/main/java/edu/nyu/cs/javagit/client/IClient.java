@@ -108,8 +108,16 @@ public interface IClient {
   /**
    * Gets an instance of <code>IGitCheckout</code>
    * 
-   * @return An instance of <code>IGitCheckou</code>
+   * @return An instance of <code>IGitCheckout</code>
    */
   public IGitCheckout getGitCheckoutInstance();
+  
+  /**
+   * Gets an instance of <code>IGitInit</code>
+   * 
+   * @return An instance of <code>IGitInit</code>
+   */
+  public IGitInit getGitInitInstance();
+
 
 }

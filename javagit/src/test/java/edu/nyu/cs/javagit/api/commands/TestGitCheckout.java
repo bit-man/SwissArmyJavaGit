@@ -45,7 +45,8 @@ public class TestGitCheckout extends TestCase {
  @Before
  public void setUp() throws Exception {
    repositoryDirectory = FileUtilities.createTempDirectory("GitCheckoutTestRepository");
-   HelperGitCommands.initRepo(repositoryDirectory);
+   GitInit gitInit = new GitInit();
+   gitInit.init(repositoryDirectory);
    gitCommit = new GitCommit();
    gitAdd = new GitAdd();
    gitCheckout = new GitCheckout();

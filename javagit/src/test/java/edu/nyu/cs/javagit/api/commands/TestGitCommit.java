@@ -60,8 +60,8 @@ public class TestGitCommit extends TestCase {
   @Before
   protected void setUp() throws IOException, JavaGitException {
     repoDirectory = FileUtilities.createTempDirectory("GitCommitTestRepo");
-    HelperGitCommands.initRepo(repoDirectory);
-
+    GitInit gitInit = new GitInit();
+    gitInit.init(repoDirectory);
     commit = new GitCommit();
     add = new GitAdd();
 
