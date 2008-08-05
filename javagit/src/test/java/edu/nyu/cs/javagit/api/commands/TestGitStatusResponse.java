@@ -29,8 +29,7 @@ import org.junit.Test;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
-import edu.nyu.cs.javagit.test.utilities.HelperGitCommands;
+
 
 public class TestGitStatusResponse extends TestCase {
 
@@ -240,7 +239,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of errors", 0, response.getErrorCount());
 
    Iterator<File> iter = response.getNewFilesToCommit().iterator();
-   assertEquals("File Name", repositoryDirectory + "dir"+File.separator+"fileD", 
+   assertEquals("File Name", repositoryDirectory + "dir" + File.separator + "fileD", 
        iter.next().getPath());
    assertEquals("File Name", repositoryDirectory + "fileA", iter.next().getPath());
 
@@ -281,7 +280,7 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals("No. of modifiedFilesNotUpdated", 1, response.getModifiedFilesNotUpdatedSize());
    assertEquals("No. of errors", 0, response.getErrorCount());
 
-   assertEquals("FileName", repositoryDirectory + "dir"+File.separator+"fileD", 
+   assertEquals("FileName", repositoryDirectory + "dir" + File.separator + "fileD", 
        response.getNewFilesToCommit().iterator().next().getPath());
    assertEquals("FileName", repositoryDirectory + "fileC", 
        response.getDeletedFilesToCommit().iterator().next().getPath());

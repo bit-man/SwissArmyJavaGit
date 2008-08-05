@@ -156,7 +156,7 @@ public class TestGitStatus extends TestCase {
         .getFileFromNewFilesToCommit(0).getName());
     assertEquals("Error. Filename does not match", "foobar02", status
         .getFileFromNewFilesToCommit(1).getName());
-    assertEquals("Error. Filename does not match", repositoryDirectory.getAbsolutePath() + 
+    assertEquals("Error. Filename does not match", repositoryDirectory.getPath() + 
         File.separator + "testDirectory" + File.separator + "foobar03",
         status.getFileFromNewFilesToCommit(2).toString());
   }

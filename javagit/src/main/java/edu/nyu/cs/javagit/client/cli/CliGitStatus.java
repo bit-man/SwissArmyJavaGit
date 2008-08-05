@@ -75,9 +75,9 @@ public class CliGitStatus implements IGitStatus {
     List<String> command = buildCommandLine(options, paths);
     GitStatusParser parser;
     if (inputFile != null) {
-      parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator, inputFile);
+      parser = new GitStatusParser(repositoryPath.getPath() + File.separator, inputFile);
     } else {
-      parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator);
+      parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
     }
     GitStatusResponse response = (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath,
         command, parser);
@@ -150,7 +150,7 @@ public class CliGitStatus implements IGitStatus {
     CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
     CheckUtilities.checkFileValidity(repositoryPath);
     List<String> command  = buildCommandLine(options, null);
-    GitStatusParser parser = new GitStatusParser(repositoryPath.getAbsolutePath() + File.separator,
+    GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator,
         file);
 
     return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, command, parser);
