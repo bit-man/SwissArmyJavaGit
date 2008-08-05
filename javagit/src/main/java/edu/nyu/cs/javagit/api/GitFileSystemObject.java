@@ -173,12 +173,17 @@ public abstract class GitFileSystemObject {
 
     // create a list of filenames and add yourself to it
     List<File> list = new ArrayList<File>();
+    File relativeFilePath;
     if(relativePath.isDirectory()){
     	for(File f : relativePath.listFiles()){
-    		list.add(f);
+    		if(!f.isHidden() && !f.getName().startsWith(".")){
+    			relativeFilePath = this.getRelativePath(f, this.getWorkingTree().getPath());
+    			list.add(relativeFilePath );
+    		}
     	}
     }
     else{
+    	
     	list.add(relativePath);
     }
     // run git-add command
