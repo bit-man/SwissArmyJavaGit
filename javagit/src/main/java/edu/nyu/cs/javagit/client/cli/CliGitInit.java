@@ -100,7 +100,7 @@ public class CliGitInit implements IGitInit {
 				response.setInitialized(true);
 			}
 			//reinitialized 
-			else if (line.contains("Reinitialized")){
+			else if (line.contains("Reinitialized") || line.contains("Initialized")){
 				response.setReinitialized(true);
 			}
 		}
