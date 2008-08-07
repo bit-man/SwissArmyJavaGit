@@ -102,10 +102,6 @@ public class CliGitMv implements IGitMv {
   public GitMvResponseImpl mvProcess(File repoPath, GitMvOptions options, List<File> source,
       File destination) throws IOException, JavaGitException {
 
-    CheckUtilities.checkNullArgument(repoPath, "repository path");
-    CheckUtilities.checkNullListArgument(source, "source");
-    CheckUtilities.checkNullArgument(destination, "destination");
-
     List<String> commandLine = buildCommand(options, source, destination);
     GitMvParser parser = new GitMvParser();
 

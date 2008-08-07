@@ -34,7 +34,7 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 public class GitMv {
   /**
    * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
-   * destination is non-existant then same as rename.
+   * destination is non-existent then same as rename.
    * 
    * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
@@ -66,7 +66,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error excecuting git-mv.
+   *              Thrown when there is an error executing git-mv.
    */
   public GitMvResponse mv(File repositoryPath, File source, File destination)
       throws IOException, JavaGitException {
@@ -81,7 +81,7 @@ public class GitMv {
   
   /**
    * Moves the specified source file/symlink/directory to the destination file/symlink/directory. If
-   * destination is non-existant then same as rename.
+   * destination is non-existent then same as rename.
    * 
    * @param repositoryPath
    *          A <code>File</code> instance for the path to the repository root (the parent
@@ -115,7 +115,7 @@ public class GitMv {
    *              <li>a command is not found on the PATH</li>
    *              </ul>
    * @exception JavaGitException
-   *              Thrown when there is an error excecuting git-mv.
+   *              Thrown when there is an error executing git-mv.
    */
   public GitMvResponse mv(File repositoryPath, GitMvOptions options, File source,
       File destination) throws IOException, JavaGitException {
