@@ -242,14 +242,14 @@ public class CliGitStatus implements IGitStatus {
     public GitStatusParser(String workingDirectory) {
       this.workingDirectory = workingDirectory;
       lineNum = 0;
-      response = new GitStatusResponseImpl();
+      response = new GitStatusResponseImpl(workingDirectory);
     }
 
     public GitStatusParser(String workingDirectory, File in) {
       this.workingDirectory = workingDirectory;
       inputFile = in;
       lineNum = 0;
-      response = new GitStatusResponseImpl();
+      response = new GitStatusResponseImpl(workingDirectory);
     }
 
     public void parseLine(String line) {

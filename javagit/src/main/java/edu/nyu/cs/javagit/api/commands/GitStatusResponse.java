@@ -20,9 +20,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
+import edu.nyu.cs.javagit.api.GitFileSystemObject;
+import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
 
 /**
  * A response data object for &lt;git-status&gt; command
@@ -79,7 +84,27 @@ public abstract class GitStatusResponse implements CommandResponse {
    */
   protected List<ErrorDetails> errors;
 
-  public GitStatusResponse() {
+  /**
+   * <code>File</code> file representing repository
+   */
+  protected File repository;
+
+  /**
+   * path to the repository (absolute)
+   */
+  String repositoryPath;
+
+  /**
+   * Mapping of file to its status 
+   */
+  protected Map<File, GitFileSystemObject.Status> fileToStatus;
+
+  
+  public GitStatusResponse(String repositoryPath) {
+    this.repositoryPath = repositoryPath;
+    this.repository = new File(repositoryPath);
+    fileToStatus = new HashMap<File, GitFileSystemObject.Status>();
+
     newFilesToCommit = new ArrayList<File>();
     deletedFilesToCommit = new ArrayList<File>();
     modifiedFilesToCommit = new ArrayList<File>();
@@ -327,6 +352,29 @@ public abstract class GitStatusResponse implements CommandResponse {
    */
   public Ref getBranch() {
     return branch;
+  }
+
+  /**
+   * 
+   * @param file
+   *         <code>File</code> object
+   * @return
+   *         status of the file
+   * @throws JavaGitException
+   *         if file is not part of the repository
+   */
+  public Status getFileStatus(File file) throws JavaGitException {
+    //get command argument file (relative to repository path); this will perform basic path check
+    File relativeFile = GitFileSystemObject.getRelativePath(file, repository);
+
+    File argumentFile = new File(repositoryPath + relativeFile.getPath());
+    // first check the map
+    if(fileToStatus.containsKey(argumentFile)) {
+      return fileToStatus.get(argumentFile);
+    }
+
+    // default
+    return Status.IN_REPOSITORY;
   }
 
   /**

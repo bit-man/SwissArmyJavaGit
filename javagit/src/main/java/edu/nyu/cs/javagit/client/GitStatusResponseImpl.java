@@ -20,6 +20,7 @@ import java.io.File;
 
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
+import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
 
 /**
  * Implementation of a <code>GitStatusResponse</code>. This class adds functionality to set
@@ -30,8 +31,8 @@ public class GitStatusResponseImpl extends GitStatusResponse {
   /**
    * Constructor
    */
-  public GitStatusResponseImpl() {
-    super();
+  public GitStatusResponseImpl(String repositoryPath) {
+    super(repositoryPath);
   }
 
   /**
@@ -77,6 +78,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToDeletedFilesToCommit(File file) {
     deletedFilesToCommit.add(file);
+    fileToStatus.put(file, Status.DELETED_TO_COMMIT);
   }
 
   /**
@@ -88,6 +90,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToDeletedFilesNotUpdated(File file) {
     deletedFilesNotUpdated.add(file);
+    fileToStatus.put(file, Status.DELETED);
   }
 
   /**
@@ -99,6 +102,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToModifiedFilesToCommit(File file) {
     modifiedFilesToCommit.add(file);
+    fileToStatus.put(file, Status.MODIFIED_TO_COMMIT);
   }
 
   /**
@@ -109,6 +113,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToModifiedFilesNotUpdated(File file) {
     modifiedFilesNotUpdated.add(file);
+    fileToStatus.put(file, Status.MODIFIED);
   }
 
   /**
@@ -120,6 +125,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToNewFilesToCommit(File file) {
     newFilesToCommit.add(file);
+    fileToStatus.put(file, Status.NEW_TO_COMMIT);
   }
   
   /**
@@ -131,6 +137,7 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToRenamedFilesToCommit(File file) {
     renamedFilesToCommit.add(file);
+    fileToStatus.put(file, Status.RENAMED_TO_COMMIT);
   }  
 
   /**
@@ -141,5 +148,6 @@ public class GitStatusResponseImpl extends GitStatusResponse {
    */
   public void addToUntrackedFiles(File file) {
     untrackedFiles.add(file);
+    fileToStatus.put(file, Status.UNTRACKED);
   }
 }

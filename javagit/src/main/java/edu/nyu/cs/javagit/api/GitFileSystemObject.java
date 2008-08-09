@@ -52,6 +52,8 @@ public abstract class GitFileSystemObject {
     MODIFIED,
     // changed and added to the index
     MODIFIED_TO_COMMIT,
+    // renamed, waiting to commit
+    RENAMED_TO_COMMIT,
     // in repository
     IN_REPOSITORY
   }

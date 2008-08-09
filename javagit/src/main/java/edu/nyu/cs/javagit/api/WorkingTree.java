@@ -29,6 +29,8 @@ import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
 import edu.nyu.cs.javagit.api.commands.GitCheckout;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
+import edu.nyu.cs.javagit.api.commands.GitStatus;
+import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
@@ -317,4 +319,20 @@ public final class WorkingTree {
      */
     // this.path = branch.getBranchRoot().getPath();
   }
+  
+
+  /**
+   * Gets the status of all files in the working directory
+   * 
+   * @return <code>GitStatusResponse</code> object
+   * @throws IOException
+   *         Exception is thrown if any of the IO operations fail.
+   * @throws JavaGitException
+   *         Exception thrown if the repositoryPath is null
+   */
+  public GitStatusResponse getStatus() throws IOException, JavaGitException {
+    GitStatus gitStatus = new GitStatus();
+    return gitStatus.status(path);
+  }
+
 }

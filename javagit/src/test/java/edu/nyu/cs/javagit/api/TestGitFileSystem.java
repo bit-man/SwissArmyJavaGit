@@ -32,6 +32,7 @@ import edu.nyu.cs.javagit.api.WorkingTree;
 import edu.nyu.cs.javagit.api.GitFileSystemObject;
 import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
 import edu.nyu.cs.javagit.api.commands.GitInit;
+import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.api.GitFile;
 //import edu.nyu.cs.javagit.api.GitDirectory;
 
@@ -123,21 +124,51 @@ public class TestGitFileSystem extends TestCase {
     assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile1.getStatus());
     assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
 
+    //another way to see the same thing
+    File file1 = new File("file1");
+    File file2 = new File("file2");
+    GitStatusResponse statusResponse = workingTree.getStatus();
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, 
+        statusResponse.getFileStatus(file1));
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, 
+        statusResponse.getFileStatus(file2));
 
     //stage one file
     gitFile1.add();
 
-    //commit everything modified
+    //check status
+    assertEquals("Error. Expecting .NEW_TO_COMMIT.", Status.NEW_TO_COMMIT, gitFile1.getStatus());
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
+    //alternative way
+    statusResponse = workingTree.getStatus();
+    assertEquals("Error. Expecting NEW_TO_COMMIT.", Status.NEW_TO_COMMIT, 
+        statusResponse.getFileStatus(file1));
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, 
+        statusResponse.getFileStatus(file2));
+
+    //commit everything added to the index
     workingTree.commitAll("commit comment");
+    //check status
     assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile1.getStatus());
     assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
+    //alternative way
+    statusResponse = workingTree.getStatus();
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, 
+        statusResponse.getFileStatus(file1));
+    assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, 
+        statusResponse.getFileStatus(file2));
     
     //commit everything
-    /*
     workingTree.addAndCommitAll("commit comment");
+    //check status
     assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile1.getStatus());
     assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, gitFile2.getStatus());
-*/
+    //alternative way
+    statusResponse = workingTree.getStatus();
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, 
+        statusResponse.getFileStatus(file1));
+    assertEquals("Error. Expecting IN_REPOSITORY.", Status.IN_REPOSITORY, 
+        statusResponse.getFileStatus(file2));
   }
   
   

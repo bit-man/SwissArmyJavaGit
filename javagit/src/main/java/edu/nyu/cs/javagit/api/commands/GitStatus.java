@@ -202,18 +202,18 @@ public final class GitStatus {
   public GitFileSystemObject.Status getFileStatus(File repositoryPath, File path) throws JavaGitException, IOException {
     //check validity of a repository path
     CheckUtilities.checkFileValidity(repositoryPath);
-    //get command argument file (relative to repository path); this will perform basic path check
-    File argumentFile = GitFileSystemObject.getRelativePath(path, repositoryPath);
 
     //run git status
     IClient client = ClientManager.getInstance().getPreferredClient();
     IGitStatus gitStatus = client.getGitStatusInstance();
-    GitStatusResponse response = gitStatus.getSingleFileStatus(repositoryPath, null, argumentFile);
+    GitStatusResponse response = gitStatus.status(repositoryPath);
 
+    return response.getFileStatus(path);
     /*
      * TODO: quote from Michael Schidlowsky: "this block of if statements is a little smelly... I'd
      * prefer to see something like return response.asStatus()...
      */
+    /*
     if (response.getUntrackedFilesSize() > 0) {
       return Status.UNTRACKED;
     }
@@ -240,5 +240,6 @@ public final class GitStatus {
 
     // default
     return Status.IN_REPOSITORY;
+    */
   }
 }
