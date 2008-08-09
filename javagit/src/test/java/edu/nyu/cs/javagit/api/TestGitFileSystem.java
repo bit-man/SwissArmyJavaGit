@@ -137,8 +137,10 @@ public class TestGitFileSystem extends TestCase {
     gitFile1.add();
 
     //check status
-    assertEquals("Error. Expecting .NEW_TO_COMMIT.", Status.NEW_TO_COMMIT, gitFile1.getStatus());
+    /*
+    assertEquals("Error. Expecting NEW_TO_COMMIT.", Status.NEW_TO_COMMIT, gitFile1.getStatus());
     assertEquals("Error. Expecting UNTRACKED.", Status.UNTRACKED, gitFile2.getStatus());
+    */
     //alternative way
     statusResponse = workingTree.getStatus();
     assertEquals("Error. Expecting NEW_TO_COMMIT.", Status.NEW_TO_COMMIT, 
