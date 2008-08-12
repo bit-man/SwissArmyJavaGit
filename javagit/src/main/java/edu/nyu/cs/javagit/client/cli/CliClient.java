@@ -20,6 +20,7 @@ import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitAdd;
 import edu.nyu.cs.javagit.client.IGitBranch;
 import edu.nyu.cs.javagit.client.IGitCheckout;
+import edu.nyu.cs.javagit.client.IGitClone;
 import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.client.IGitDiff;
 import edu.nyu.cs.javagit.client.IGitGrep;
@@ -90,8 +91,11 @@ public class CliClient implements IClient {
   }
 
   public IGitInit getGitInitInstance() {
-		
-	return new CliGitInit();
+  	return new CliGitInit();
+  }
+
+  public IGitClone getGitCloneInstance() {
+    return new CliGitClone();
   }
 
 }

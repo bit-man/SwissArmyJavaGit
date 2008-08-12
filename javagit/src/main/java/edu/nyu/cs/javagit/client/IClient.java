@@ -118,6 +118,13 @@ public interface IClient {
    * @return An instance of <code>IGitInit</code>
    */
   public IGitInit getGitInitInstance();
+  
+  /**
+   * Gets an instance of <code>IGitClone</code>
+   * 
+   * @return An instance of <code>IGitClone</code>
+   */
+  public IGitClone getGitCloneInstance();
 
 
 }
