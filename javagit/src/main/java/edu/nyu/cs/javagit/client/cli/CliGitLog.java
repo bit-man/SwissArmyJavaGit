@@ -238,6 +238,11 @@ public class CliGitLog implements IGitLog{
 				command.add("-n");
 				command.add(String.valueOf(options.getOptLimitMax()));
 			}
+			
+			// Skips the specified number of commit messages
+			if (options.isOptLimitCommitSkip()) {
+			  command.add("--skip=" + options.getOptLimitSkip());
+			}
 		}
 
 		return command;

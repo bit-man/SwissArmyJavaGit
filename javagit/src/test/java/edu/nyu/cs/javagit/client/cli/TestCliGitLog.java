@@ -206,7 +206,7 @@ public class TestCliGitLog {
 		options.setOptFileDetails(true);
 		options.setOptLimitCommitSkip(true, 1);
 		List<Commit> log = gitLog.log(repoDirectory, options);
-		if(log.get(0).getMessage().contains("Making a Second test commit")){
+		if(log.get(0).getMessage().contains("Making a first test commit")){
 			
 		}
 		else{
