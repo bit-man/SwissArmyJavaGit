@@ -288,7 +288,7 @@ public class CliGitStatus implements IGitStatus {
         response.setStatusOutputComment(line);
         return;
       }
-      if (line.contains("Changes to be committed")) {
+      if (line.contains("Changes to be committed") || line.contains("Changes not staged for commit") ) {
         outputState = State.FILES_TO_COMMIT;
         return;
       } else if (line.contains("Changed but not updated")) {

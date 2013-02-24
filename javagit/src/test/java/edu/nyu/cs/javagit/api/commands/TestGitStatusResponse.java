@@ -20,7 +20,9 @@ package edu.nyu.cs.javagit.api.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
+import edu.nyu.cs.javagit.test.utilities.JavaHelper;
 import junit.framework.TestCase;
 
 import org.junit.Before;
@@ -350,5 +352,26 @@ public class TestGitStatusResponse extends TestCase {
    assertEquals(1, response.getModifiedFilesToCommitSize());
    assertEquals("Modified.java", response.getModifiedFilesToCommit().iterator().next().getName());
  }
- 
+
+    @Test
+    public void testChangesNotStaged4Commit() throws JavaGitException {
+        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
+
+        parser.parseLine("# On branch master ");
+        parser.parseLine("# Changes not staged for commit:");
+        parser.parseLine("#   (use \"git add <file>...\" to update what will be committed)");
+        parser.parseLine("#   (use \"git checkout -- <file>...\" to discard changes in working directory)");
+        parser.parseLine("#");
+        parser.parseLine("#	modified:   file1");
+        parser.parseLine("#	modified:   file2");
+        parser.parseLine("#	modified:   file3");
+
+        GitStatusResponse response = parser.getResponse();
+        assertEquals("Wrong number of untracked files", 3, response.getModifiedFilesToCommitSize());
+
+        List<File> files = JavaHelper.copyIterator(response.getModifiedFilesToCommit());
+        assertTrue("file1 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file1")));
+        assertTrue("file2 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file2")));
+        assertTrue("file3 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file3")));
+    }
 }
