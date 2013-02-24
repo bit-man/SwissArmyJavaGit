@@ -2,13 +2,23 @@
 
       TABLE OF CONTENTS
 
-   I. BUILDING JAVAGIT
-  II. USING JAVAGIT IN YOUR PROJECT
- III. DEVELOPING JAVAGIT WITH ECLIPSE
-  IV. ADDING SOURCES FOR DEPENDENCIES
+   I. WELCOME
+  II. BUILDING JAVAGIT
+ III. USING JAVAGIT IN YOUR PROJECT
+  IV. DEVELOPING JAVAGIT WITH ECLIPSE
+   V. ADDING SOURCES FOR DEPENDENCIES
 
 
-I.    BUILDING JAVAGIT
+I.    WELCOME
+
+      JavaGit is a Java API that provides access to git repositories.
+      Our goal is to provide a library with an easy-to-use API that is
+      intuitive for developers new to git and developers who are veteran
+      git users.
+
+      This is a fork from original JavaGit located at http://javagit.sourceforge.net/
+
+II.   BUILDING JAVAGIT
 
       JavaGit is built using Maven 2.  The steps to get started with building 
       the source is:
@@ -24,7 +34,7 @@ I.    BUILDING JAVAGIT
          directory.
 
 
-II.   USING JAVAGIT IN YOUR PROJECT
+III.  USING JAVAGIT IN YOUR PROJECT
 
       JavaGit is currently only available in source form.  To use JavaGit in
       developing your application, you will need to check the source out of 
@@ -110,7 +120,7 @@ II.   USING JAVAGIT IN YOUR PROJECT
        f. You are now ready to develop with JavaGit.
 
 
-III.  DEVELOPING JAVAGIT WITH ECLIPSE
+IV.   DEVELOPING JAVAGIT WITH ECLIPSE
 
       After you have completed part I, 
 
@@ -146,7 +156,7 @@ III.  DEVELOPING JAVAGIT WITH ECLIPSE
       5. Start developing.
 
 
-IV.   ADDING SOURCES FOR DEPENDENCIES
+V.    ADDING SOURCES FOR DEPENDENCIES
 
       When developing in Eclipse, it is often desireable to see the sources for
       the library dependencies of the project being worked on.  To download the
