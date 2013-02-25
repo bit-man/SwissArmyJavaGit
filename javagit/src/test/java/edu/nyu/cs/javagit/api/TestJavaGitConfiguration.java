@@ -1,10 +1,12 @@
 package edu.nyu.cs.javagit.api;
 
+import edu.nyu.cs.javagit.test.utilities.TestErrorException;
+import edu.nyu.cs.javagit.test.utilities.TestProperty;
 import junit.framework.TestCase;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
-import edu.nyu.cs.javagit.api.JavaGitConfiguration;
+
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 
 /**
@@ -98,4 +100,14 @@ public class TestJavaGitConfiguration extends TestCase {
           + e.getClass().getName());
     }
   }
+
+    public void testPathSeparator_issue2() throws TestErrorException {
+        try {
+            JavaGitConfiguration.setGitPath(TestProperty.GIT_PATH.asString());
+            JavaGitConfiguration.getGitVersion();
+        } catch (Exception e) {
+            throw new TestErrorException("May be you forgot to set property " + TestProperty.GIT_PATH.getName()
+                                       + "to a valid Git path ( value : '" + TestProperty.GIT_PATH.asString() + "' )", e);
+        }
+    }
 }
