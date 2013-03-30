@@ -21,9 +21,9 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:https://subversive.cims.nyu.edu/osp/javagit/trunk/javagit</connection>
-    <developerConnection>scm:svn:https://subversive.cims.nyu.edu/osp/javagit/trunk/javagit</developerConnection>
-    <url>https://subversive.cims.nyu.edu/osp</url>
+    <connection>scm:git:https://github.com/bit-man/javagit.git</connection>
+    <developerConnection>scm:git:https://github.com/bit-man/javagit.git</developerConnection>
+    <url>https://github.com/bit-man/javagit</url>
   </scm>
 
   <build>
