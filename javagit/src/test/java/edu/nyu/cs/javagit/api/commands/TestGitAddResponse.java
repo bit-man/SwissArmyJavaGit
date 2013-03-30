@@ -16,24 +16,13 @@
  */
 package edu.nyu.cs.javagit.api.commands;
 
-import java.io.IOException;
-
-import junit.framework.TestCase;
-
-import org.junit.Before;
+import edu.nyu.cs.javagit.TestBase;
 import org.junit.Test;
 
-import edu.nyu.cs.javagit.api.JavaGitException;
+public class TestGitAddResponse extends TestBase {
 
-public class TestGitAddResponse extends TestCase {
-
-  @Before
-  protected void setUp() throws IOException, JavaGitException, Exception {
-    super.setUp();
-  }
-  
-  @Test
-  public void testVoidTest() {
-    assertTrue(true);
-  }
+    @Test
+    public void testVoidTest() {
+        assertTrue(true);
+    }
 }
