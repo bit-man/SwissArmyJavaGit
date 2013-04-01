@@ -19,6 +19,7 @@ package edu.nyu.cs.javagit.api.commands;
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.client.cli.CliGitCheckout;
 import edu.nyu.cs.javagit.utilities.FileUtilities;
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class TestGitCheckout extends TestBase {
 
+    public static final String TEST_BRANCH = "testBranch";
     private File repositoryDirectory;
     private String repositoryPath;
     private GitCommit gitCommit;
@@ -72,11 +74,12 @@ public class TestGitCheckout extends TestBase {
     @Test
     public void testCreatingNewBranchFromMaster() throws IOException, JavaGitException {
         GitCheckoutOptions options = new GitCheckoutOptions();
-        options.setOptB(Ref.createBranchRef("testBranch"));
+        options.setOptB(Ref.createBranchRef(TEST_BRANCH));
         Ref branch = Ref.createBranchRef("master");
         GitCheckoutResponse response = gitCheckout.checkout(repositoryDirectory, options, branch);
-        assertEquals("New Branch created should be created with name- testBranch", "\"testBranch\"",
-                response.getNewBranch().getName());
+        String branchName = response.getNewBranch().getName();
+        String branchNameNoQuotes = branchName.substring(1, branchName.length() - 1);
+        assertEquals("Wrong name for new branch, ", TEST_BRANCH, branchNameNoQuotes);
     }
 
     /**
@@ -112,6 +115,31 @@ public class TestGitCheckout extends TestBase {
             e.printStackTrace();
         }
 
+    }
+
+    public void testGitCheckoutParserSwitchToBranchQuotes() throws JavaGitException {
+        CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
+        gitCheckoutParser.parseLine("Switched to branch \"branch1\"");
+        assertEquals("\"branch1\"", gitCheckoutParser.getResponse().getBranch().getName());
+    }
+
+    public void testGitCheckoutParserSwitchToBranchSingleQuotes() throws JavaGitException {
+        CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
+        gitCheckoutParser.parseLine("Switched to branch 'branch1'");
+        assertEquals("'branch1'", gitCheckoutParser.getResponse().getBranch().getName());
+    }
+
+
+    public void testGitCheckoutParserSwitchToNewBranchQuotes() throws JavaGitException {
+        CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
+        gitCheckoutParser.parseLine("Switched to a new branch \"branch1\"");
+        assertEquals("\"branch1\"", gitCheckoutParser.getResponse().getNewBranch().getName());
+    }
+
+    public void testGitCheckoutParserSwitchToNewBranchSingleQuotes() throws JavaGitException {
+        CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
+        gitCheckoutParser.parseLine("Switched to a new branch 'branch1'");
+        assertEquals("'branch1'", gitCheckoutParser.getResponse().getNewBranch().getName());
     }
 
     /**
