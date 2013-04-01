@@ -18,7 +18,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.utilities.FileUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +73,21 @@ public class TestGitAdd extends TestBase {
             throw new IOException("Unable to create directory: " + tmpDir);
         }
     }
+
+    /***
+     @Test public void testAddFileWithSpace() throws IOException, JavaGitException {
+     File file1 = FileUtilities.createFile(repoDirectory, "file 1.txt", "This is file file 1.txt");
+     List<File> paths = new ArrayList<File>();
+     paths.add(file1);
+
+     GitAddOptions options = new GitAddOptions();
+     options.setVerbose(true);
+     GitAddResponse response = gitAdd.add(repoDirectory, options, paths);
+
+     assertEquals("Number of files added is incorrect", 1, response.getFileListSize());
+     assertEquals("Files added is incorrect", file1, response.get(1));
+     }
+     ***/
 
     /**
      * Test to add one file at a time to the repository with no options provided.

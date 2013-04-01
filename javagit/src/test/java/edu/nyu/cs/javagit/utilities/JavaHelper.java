@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.test.utilities;
+package edu.nyu.cs.javagit.utilities;
 
 import java.util.ArrayList;
 import java.util.Iterator;

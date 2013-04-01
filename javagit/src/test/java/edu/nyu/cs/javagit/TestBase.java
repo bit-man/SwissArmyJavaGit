@@ -2,7 +2,7 @@ package edu.nyu.cs.javagit;
 
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.test.utilities.TestProperty;
+import edu.nyu.cs.javagit.utilities.TestProperty;
 import junit.framework.TestCase;
 import org.junit.Before;
 

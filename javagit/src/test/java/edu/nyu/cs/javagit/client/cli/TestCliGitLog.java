@@ -23,7 +23,7 @@ import edu.nyu.cs.javagit.api.commands.GitCommit;
 import edu.nyu.cs.javagit.api.commands.GitInit;
 import edu.nyu.cs.javagit.api.commands.GitLogOptions;
 import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.utilities.FileUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

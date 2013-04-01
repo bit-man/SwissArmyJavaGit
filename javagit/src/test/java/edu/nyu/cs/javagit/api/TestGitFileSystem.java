@@ -20,7 +20,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.GitFileSystemObject.Status;
 import edu.nyu.cs.javagit.api.commands.GitInit;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.utilities.FileUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

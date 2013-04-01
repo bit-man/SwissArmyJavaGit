@@ -21,7 +21,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
-import edu.nyu.cs.javagit.test.utilities.JavaHelper;
+import edu.nyu.cs.javagit.utilities.JavaHelper;
 import org.junit.Before;
 import org.junit.Test;
 

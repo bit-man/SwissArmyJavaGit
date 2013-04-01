@@ -1,9 +1,9 @@
 package edu.nyu.cs.javagit.api;
 
 import edu.nyu.cs.javagit.TestBase;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.TestErrorException;
-import edu.nyu.cs.javagit.test.utilities.TestProperty;
+import edu.nyu.cs.javagit.utilities.FileUtilities;
+import edu.nyu.cs.javagit.utilities.TestProperty;
 import org.junit.Test;
 
 import java.io.File;

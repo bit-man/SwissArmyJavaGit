@@ -18,7 +18,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.test.utilities.FileUtilities;
+import edu.nyu.cs.javagit.utilities.FileUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,18 +76,17 @@ public class TestGitCommit extends TestBase {
 
         // Add a file to the repo
         List<File> filesToAdd = new ArrayList<File>();
-        // filesToAdd.add(new File("fileA.txt"));
         filesToAdd.add(testFile);
         add.add(repoDirectory, null, filesToAdd);
 
         // Call commit
         GitCommitResponse resp = commit.commit(repoDirectory, "Making a first test commit");
-        resp.getFilesChanged();
+
         assertEquals("Short comment not as expected", resp.getCommitShortComment(),
                 "Making a first test commit");
-        assertEquals("", resp.getFilesChanged(), 1);
-        assertEquals("", resp.getLinesDeleted(), 0);
-        assertEquals("", resp.getLinesInserted(), 1);
+        assertEquals("", 1, resp.getFilesChanged());
+        assertEquals("", 0, resp.getLinesDeleted());
+        assertEquals("", 1, resp.getLinesInserted());
         // Can't assert the short hash because it changes with the date.
         // assertEquals("", resp.getCommitShortHashName(), "5f8e2d7");
 

@@ -1,6 +1,4 @@
-package edu.nyu.cs.javagit.test.utilities;
-
-import java.io.File;
+package edu.nyu.cs.javagit.utilities;
 
 /**
  * Description : Properties to adapt test to different environments
@@ -8,7 +6,7 @@ import java.io.File;
  * Time: 9:06 PM
  */
 public enum TestProperty {
-    GIT_PATH("javagit.test.gitpath","/usr/bin");
+    GIT_PATH("javagit.test.gitpath", "/usr/bin");
 
     private final String value;
     private final String property;

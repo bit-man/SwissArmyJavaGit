@@ -47,6 +47,7 @@ public class TestCliGitCommit extends TestBase {
         response.setLinesDeleted("1");
         assertResponsesEqual(parser, response);
 
+        // ToDo : move to a new test
         // Test an initial commit.
         parser = gitcommit.new GitCommitParser("");
         parser.parseLine("Created initial commit 21efdb4: initial commit");
@@ -77,6 +78,7 @@ public class TestCliGitCommit extends TestBase {
                         "100644");
         assertResponsesEqual(parser, response);
 
+        // ToDo : move to a new test
         // Test a commit response with added, removed, copied and renamed files.
         parser = gitcommit.new GitCommitParser("");
         parser.parseLine("Created commit ab238dd: renaming and copying files for commit tests.");
@@ -110,6 +112,32 @@ public class TestCliGitCommit extends TestBase {
 
     }
 
+    public void testGitCommitParserValidInputWithBranchName() throws JavaGitException {
+
+        final String SHORT_COMMENT = "new commit";
+        final String BRANCH_NAME = "newBranch";
+        final String HASH = "654a3fc";
+
+        CliGitCommit gitcommit = new CliGitCommit();
+
+        // Test commit with first line using branch name in it
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", BRANCH_NAME);
+        parser.parseLine("[" + BRANCH_NAME + " " + HASH + "] " + SHORT_COMMENT);
+        assertEquals(1, parser.getNumLinesParsed());
+        assertEquals(SHORT_COMMENT, parser.getResponse().getCommitShortComment());
+        assertEquals(HASH, parser.getResponse().getCommitShortHashName().getName());
+
+        parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
+        assertEquals(2, parser.getNumLinesParsed());
+
+        GitCommitResponseImpl response = new GitCommitResponseImpl(Ref.createSha1Ref(HASH),
+                SHORT_COMMENT);
+        response.setFilesChanged("1");
+        response.setLinesInserted("6");
+        response.setLinesDeleted("1");
+        assertResponsesEqual(parser, response);
+    }
+
     private void assertResponsesEqual(CliGitCommit.GitCommitParser parser,
                                       GitCommitResponseImpl response) {
         try {
@@ -126,7 +154,7 @@ public class TestCliGitCommit extends TestBase {
         CliGitCommit gitcommit = new CliGitCommit();
 
         // Test a spelling mistake
-        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("");
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", "branch name doesn't care");
         parser.parseLine("Created commi c18c00f: a change to test committing");
         assertEquals(1, parser.getNumLinesParsed());
         parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
@@ -138,7 +166,7 @@ public class TestCliGitCommit extends TestBase {
                         + "line2=[ 1 files changed, 6 insertions(+), 1 deletions(-)] }", 410000);
 
         // Test a spelling mistake
-        parser = gitcommit.new GitCommitParser("");
+        parser = gitcommit.new GitCommitParser("", "branch name doesn't care");
         parser.parseLine("Error Committing:  some random error");
         assertEquals(1, parser.getNumLinesParsed());
 
