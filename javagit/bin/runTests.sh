@@ -6,7 +6,7 @@ __reportBaseFolder="${__javaGitHome}/target/test-reports"
 
 for __gitVersion in `ls ${__baseFolder}`; do
     echo ">>>>>>>>>> Running test for GIT version ${__gitVersion}"
-    mvn test -Djavagit.test.gitpath="${__baseFolder}/${__gitVersion}/bin"
+    mvn surefire-report:report -Djavagit.test.gitpath="${__baseFolder}/${__gitVersion}/bin"
 
     __reportFolder=${__reportBaseFolder}/${__gitVersion}
     rm -Rf ${__reportFolder}
