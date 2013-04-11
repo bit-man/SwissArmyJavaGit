@@ -1,8 +1,8 @@
 #!/bin/bash
 
 __PGM=`basename $0`
-__baseFolder="$HOME/sw/git"
-
+__gitRepoHome="$HOME/sw/git/git-github"
+__installFolderBase="$HOME/git/"
 __gitVersion=""
 
 function showMsg() {
@@ -17,28 +17,31 @@ function showHelp() {
     cat <<EOH
 
     usage:
-        $__PGM --version gitVersion  [--base folderPath]
+        $__PGM --version gitVersion  [--repo repositoryPath]
+             [--version-list]
 
-    version : GIT version to install
-    base : base folder for GIT source code
-           (default : ${__baseFolder})
+    version : GIT version to install (e.g. v1.7.0)
+    repo : base folder for GIT source code
+           (default : ${__gitRepoHome})
+    version-list : list available GIT versions available into repositoryPath 
 
 EOH
 }
 
 function checkFolders() {
-    if [[ ! -d ${__baseFolder} ]]; then
-        showError "Can't find base folder ${__baseFolder}"
+    if [[ ! -d ${__gitRepoHome} ]]; then
+        showError "Can't find GIT repository folder ${__baseFolder}"
         exit -2
-    fi
-
-    if [[ ! -d ${__gitFolder} ]]; then
-        showError "Can't find GIT folder ${__gitFolder}"
-        exit -3
     fi
 }
 
 function checkArgs() {
+	if [[ ${__list} -eq 1 ]]; then
+		cd  ${__gitRepoHome}
+		git tag -l
+		exit 0
+	fi
+	
     if [[  "${__gitVersion}" == "" ]]; then
         showError "No GIT version"
         showHelp
@@ -50,12 +53,15 @@ while [[ ! -z $1 ]]; do
     if [[ "$1" == "--version" ]]; then
         shift
         __gitVersion=$1
-    elif [[ "$1" == "--base" ]]; then
+    elif [[ "$1" == "--repo" ]]; then
         shift
-        __baseFolder=$1
+        __gitRepoHome=$1
+    elif [[ "$1" == "--version-list" ]]; then
+    	shift
+        __list=1
     else
-       showErr "Unknown option $1"
-       usage
+       showError "Unknown option $1"
+       showHelp
        exit -1
     fi
     shift
@@ -63,11 +69,9 @@ done
 
 
 checkArgs
-
-__gitFolder="${__baseFolder}/git-${__gitVersion}"
-__installfolder="$HOME/git/git-${__gitVersion}"
 checkFolders
 
-mkdir -p  ${__installfolder}
-cd ${__gitFolder}
-make prefix=${__installfolder} install
+__installfolder="${__installFolderBase}/git-${__gitVersion}"
+mkdir -p  ${__installfolder} && \
+	cd ${__gitRepoHome} && \
+	make prefix=${__installfolder} install
