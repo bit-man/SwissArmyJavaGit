@@ -5,6 +5,7 @@ import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.utilities.TestProperty;
 import junit.framework.TestCase;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
  * Date: 3/30/13
  * Time: 2:14 AM
  */
+@Ignore
 public class TestBase extends TestCase {
 
     @Before
