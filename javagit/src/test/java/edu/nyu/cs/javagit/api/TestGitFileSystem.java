@@ -76,6 +76,8 @@ public class TestGitFileSystem extends TestBase {
         assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
 
         FileUtilities.modifyFileContents(gitFile.getFile(), "more data");
+
+        // ToDo compare versions an depending on it assert against MODIFIED and MODIFIED_TO_COMMIT (use GitVersion)
         assertEquals("Error. Expecting MODIFIED status for the single file.", Status.MODIFIED, gitFile.getStatus());
 
         gitFile.add();

@@ -29,7 +29,7 @@ public final class JavaGitConfiguration {
   /*
    * The version string fpr the locally-installed git binaries.
    */
-  private static String gitVersion = null;
+  private static GitVersion gitVersion = null;
 
   /**
    * Constructor - private because this is an all-static class.
@@ -39,26 +39,27 @@ public final class JavaGitConfiguration {
   }
 
   /**
+   * Sets the {@link #gitVersion} field.
+   * <br/>
    * This function gets called in one of two ways:
-   * 
-   * 1) When client code sets the path to the git binaries explicitly by calling {@link setGitPath},
+   * <br/>
+   * 1) When client code sets the path to the git binaries explicitly by calling {@link #setGitPath(java.io.File)},
    * this function is used to determine if the path is usable or not. In this case, the
    * <code>File</code> path argument will be the new path to the git binaries.
-   * 
-   * 2) When client code calls {@link getGitVersion} and the path has not been set explicitly, we
+   * <br/>
+   * 2) When client code calls {@link #getGitVersion()} and the path has not been set explicitly, we
    * call this function to figure out the version. In this case, the <code>File</code> path
    * argument will be null.
-   * 
-   * 
+   *
+   *
    * @param path
    *          <code>File</code> object representing the directory containing the git binaries. If
    *          null, the previously-set path is used (if any). It must contain either an absolute
    *          path, or a valid path relative to the current working directory.
-   * @return The git version string.
    * @throws JavaGitException
    *           Thrown if git is not found at the provided path.
    */
-  private static String determineGitVersion(File path) throws JavaGitException {
+  private static void determineGitVersion(File path) throws JavaGitException {
 
     /*
      * If they already set the path explicitly, or are in the process of doing so (via the path
@@ -86,21 +87,19 @@ public final class JavaGitConfiguration {
     commandLine.add("--version");
 
     // Now run the actual git version command.
-    GitVersionResponse response;
     try {
       // We're passing in a working directory of null, which is "don't care" to runCommand
-      response = (GitVersionResponse) ProcessUtilities.runCommand(null, commandLine,
+      gitVersion = (GitVersion) ProcessUtilities.runCommand(null, commandLine,
           new GitVersionParser());
     } catch (Exception e) {
       throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
     }
 
-    String version = response.getVersion();
+    String version = gitVersion.toString();
     if (!(isValidVersionString(version))) {
       throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
     }
 
-    return version;
   }
 
   /**
@@ -143,13 +142,18 @@ public final class JavaGitConfiguration {
    * @return The git version <code>String</code>.
    */
   public static String getGitVersion() throws JavaGitException {
-    // If the version hasn't been found yet, let's do some lazy initialization here.
-    if (gitVersion == null) {
-      gitVersion = determineGitVersion(gitPath);
-    }
-
-    return gitVersion;
+      return getGitVersionObject().toString();
   }
+
+
+    public static GitVersion getGitVersionObject() throws JavaGitException {
+        // If the version hasn't been found yet, let's do some lazy initialization here.
+        if (gitVersion == null) {
+            determineGitVersion(gitPath);
+        }
+
+        return gitVersion;
+    }
 
   /**
    * Judge the validity of a given git version string. This can be difficult to do, as there seems
@@ -210,7 +214,7 @@ public final class JavaGitConfiguration {
     }
 
     try {
-      gitVersion = determineGitVersion(path);
+       determineGitVersion(path);
     } catch (Exception e) {
       // The path that was passed in doesn't work. Catch any errors and throw this one instead.
       throw new JavaGitException(100002, ExceptionMessageMap.getMessage("100002") + " { path=["
@@ -260,7 +264,7 @@ public final class JavaGitConfiguration {
     private boolean sawLine = false;
 
     /**
-     * Returns the <code>GitVersionResponse</code> object that's essentially just a wrapper around
+     * Returns the <code>GitVersion</code> object that's essentially just a wrapper around
      * the git version number.
      * 
      * @return The response object containing the version number.
@@ -269,7 +273,7 @@ public final class JavaGitConfiguration {
       if (!(parsedCorrectly)) {
         throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
       }
-      return new GitVersionResponse(version);
+      return new GitVersion(version);
     }
 
     /**
@@ -293,32 +297,4 @@ public final class JavaGitConfiguration {
     
   }
 
-  /*
-   * The response object to wrap around the output of <code>git --version</code>.
-   * 
-   * TODO (rs2705): Write unit tests for this class.
-   */
-  private static class GitVersionResponse implements CommandResponse {
-    // The version of git that gets passed into our constructor.
-    private String version;
-
-    /**
-     * Constructor. Simply takes a version string and stores it.
-     * 
-     * @param version
-     *          The version of git being used.
-     */
-    public GitVersionResponse(String version) {
-      this.version = version;
-    }
-
-    /**
-     * Gets the version of git being used in <code>String</code> format.
-     * 
-     * @return The git version string.
-     */
-    public String getVersion() {
-      return version;
-    }
-  }
 }

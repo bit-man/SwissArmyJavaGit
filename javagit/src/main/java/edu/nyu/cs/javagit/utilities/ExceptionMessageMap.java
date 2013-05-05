@@ -64,6 +64,7 @@ import java.util.Map;
  * <li>436-437 -- git-show specific JavaGit exceptions</li>
  * <li>438-439 -- git-status specific JavaGit exceptions</li>
  * <li>440-441 -- git-tag specific JavaGit exceptions</li>
+ * <li>442-443 -- git-version specific JavaGit exceptions</li>
  * </ul>
  * </li>
  * </ul>
@@ -130,13 +131,13 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("404000", "404000: Error calling git-branch. ");
 
     MESSAGE_MAP.put("424000", "424000: Error calling git-mv. ");
-    
+
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv for dry-run. ");
-    
+
     MESSAGE_MAP.put("420001", "420001: Error calling git log");
 
     MESSAGE_MAP.put("432000", "432000: Error calling git-reset.");
-    
+
     MESSAGE_MAP.put("418000", "418000: Error calling git init.");
 
     MESSAGE_MAP.put("434000", "434000: Error calling git-rm.");
@@ -145,6 +146,11 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("406001", "406001: Error not a treeIsh RefType");
 
     MESSAGE_MAP.put("438000", "438000: Error calling git-status");
+
+    MESSAGE_MAP.put("442001", "442001: No git, or wrong, major version number.");
+    MESSAGE_MAP.put("442002", "442002: No git, or wrong, minor version number.");
+    MESSAGE_MAP.put("442003", "442003: No git, or wrong, major release version number.");
+    MESSAGE_MAP.put("442004", "442004: Wrong minor release version number.");
   }
 
   /**
