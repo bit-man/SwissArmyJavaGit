@@ -65,26 +65,29 @@ public class TestGitFileSystem extends TestBase {
         assertEquals("Error. Expecting instance of GitFile.", GitFile.class, currentFile.getClass());
 
         GitFile gitFile = (GitFile) currentFile;
-        assertEquals("Error. Expecting UNTRACKED status for the single file.", Status.UNTRACKED, gitFile.getStatus());
+        assertEquals("Error. Status for single file,", Status.UNTRACKED, gitFile.getStatus());
 
         gitFile.add();
-        assertEquals("Error. Expecting NEW_TO_COMMIT status for the single file.", Status.NEW_TO_COMMIT, gitFile.getStatus());
+        assertEquals("Error. Status for single file,", Status.NEW_TO_COMMIT, gitFile.getStatus());
 
         workingTree.getFile(new File("x"));
 
         gitFile.commit("commit message");
-        assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
+        assertEquals("Error. Status for single file,", Status.IN_REPOSITORY, gitFile.getStatus());
 
         FileUtilities.modifyFileContents(gitFile.getFile(), "more data");
 
-        // ToDo compare versions an depending on it assert against MODIFIED and MODIFIED_TO_COMMIT (use GitVersion)
-        assertEquals("Error. Expecting MODIFIED status for the single file.", Status.MODIFIED, gitFile.getStatus());
+        // ToDo (bit-man) find the right version where MODIFIED_TO_COMMIT is expected
+        if (JavaGitConfiguration.getGitVersionObject().compareTo(new GitVersion("1.7.6")) == GitVersion.LATER)
+            assertEquals("Error. Status for single file,", Status.MODIFIED_TO_COMMIT, gitFile.getStatus());
+        else
+            assertEquals("Error.SStatus for single file,", Status.MODIFIED, gitFile.getStatus());
 
         gitFile.add();
-        assertEquals("Error. Expecting MODIFIED_TO_COMMIT status for the single file.", Status.MODIFIED_TO_COMMIT, gitFile.getStatus());
+        assertEquals("Error, Status for single file,", Status.MODIFIED_TO_COMMIT, gitFile.getStatus());
 
         gitFile.commit("commit message");
-        assertEquals("Error. Expecting IN_REPOSITORY status for the single file.", Status.IN_REPOSITORY, gitFile.getStatus());
+        assertEquals("Error. Status for single file,", Status.IN_REPOSITORY, gitFile.getStatus());
 
     }
 
