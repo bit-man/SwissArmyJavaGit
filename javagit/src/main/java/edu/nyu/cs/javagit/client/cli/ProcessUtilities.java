@@ -20,9 +20,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.*;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.JavaGitProperty;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
@@ -31,11 +34,43 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class ProcessUtilities {
 
-  // TODO (jhl): add unit tests for this class.
+    private final static Logger LOGGER = Logger.getLogger("javagit.commands");
+
+    static {
+
+        LOGGER.setUseParentHandlers(false);   // Don't output to console
+        if (!JavaGitProperty.LOG_COMMANDS_DISABLE.getPropValueBoolean())
+            initLogger();
+
+    }
+
+    private static void initLogger() {
+        try {
+            FileHandler fileHandler = new FileHandler(JavaGitProperty.LOG_COMMANDS_PATH.getPropValueString(),
+                                                      JavaGitProperty.LOG_COMMANDS_APPEND.getPropValueBoolean());
+            fileHandler.setFormatter(new JustThisFormatter());
+
+            LOGGER.addHandler(fileHandler);
+            LOGGER.setLevel(Level.INFO);
+
+            if (JavaGitProperty.LOG_COMMANDS_APPEND.getPropValueBoolean())
+                LOGGER.info("------------------------ new JavaGit run (" + new Date() + ")");
+
+        } catch (IOException e) {
+            if (JavaGitProperty.LOG_COMMANDS_FAIL_ON_INIT.getPropValueBoolean()) {
+                System.out.println("JavaGit ERROR: error while generating log");
+                System.exit(-1);
+            } else {
+                System.out.println("JavaGit WARNING: error while generating log. Commands won't be logged");
+            }
+        }
+    }
+
+    // TODO (jhl): add unit tests for this class.
 
   /**
    * Start a process.
-   * 
+   *
    * @param pb
    *          The <code>ProcessBuilder</code> to use to start the process.
    * @return The started process.
@@ -55,7 +90,7 @@ public class ProcessUtilities {
 
   /**
    * Reads the output from the process and prints it to stdout.
-   * 
+   *
    * @param p
    *          The process from which to read the output.
    * @exception IOException
@@ -85,7 +120,7 @@ public class ProcessUtilities {
 
   /**
    * Waits for a process to terminate and then destroys it.
-   * 
+   *
    * @param p
    *          The process to wait for and destroy.
    * @return The exit value of the process. By convention, 0 indicates normal termination.
@@ -116,7 +151,7 @@ public class ProcessUtilities {
   /**
    * Runs the command specified in the command line with the specified working directory. The
    * IParser is used to parse the response given by the command line.
-   * 
+   *
    * @param workingDirectory
    *          The working directory in with which to start the process.
    * @param commandLine
@@ -131,12 +166,13 @@ public class ProcessUtilities {
   public static CommandResponse runCommand(File workingDirectory, List<String> commandLine,
       IParser parser) throws IOException, JavaGitException {
     ProcessBuilder pb = new ProcessBuilder(commandLine);
-    
+
     if (workingDirectory != null) {
       pb.directory(workingDirectory);
     }
 
     pb.redirectErrorStream(true);
+      LOGGER.info(asString(commandLine));
 
     Process p = startProcess(pb);
     getProcessOutput(p, parser);
@@ -145,4 +181,18 @@ public class ProcessUtilities {
     return parser.getResponse();
   }
 
+    private static String asString(List<String> commandLine) {
+        String s = "";
+        for (String cmd : commandLine)
+            s += ( s.equals("") ?  "" : " ") + cmd;
+
+        return s;
+    }
+
+    private static class JustThisFormatter extends Formatter {
+        @Override
+        public String format(LogRecord record) {
+            return record.getMessage() + "\n";
+        }
+    }
 }
