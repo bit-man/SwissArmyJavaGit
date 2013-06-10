@@ -153,6 +153,16 @@ public class TestGitStatusResponse extends TestBase {
         assertEquals("testDir1/foobar04", parser.getFilename(line));
     }
 
+
+    @Test
+    public void testGetFilenameWithBlanks() {
+        String line = "# deleted:    foobar 03";
+        assertEquals("foobar 03", parser.getFilename(line));
+        line = "#  new file:   foobar 04";
+        assertEquals("foobar 04", parser.getFilename(line));
+        line = "#  new file:   testDir1/foobar 04";
+        assertEquals("testDir1/foobar 04", parser.getFilename(line));
+    }
     /**
      * Test for verifying the correct branch name in comment in <code>GitStatusResposne</code>
      */

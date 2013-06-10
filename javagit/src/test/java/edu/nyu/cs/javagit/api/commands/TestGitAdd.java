@@ -113,6 +113,16 @@ public class TestGitAdd extends TestBase {
         }
     }
 
+
+    @Test
+    public void testAddingOneFileToRepositoryBlanksInPath() throws IOException, JavaGitException {
+        File file1 = FileUtilities.createFile(repoDirectory, "file A.txt", "This is file fileA.txt");
+        gitAdd.add(repoDirectory, file1);
+        GitStatusResponse statusResponse = gitStatus.status(repoDirectory);
+        assertEquals("File to commit", 1, statusResponse.getNewFilesToCommitSize());
+        assertEquals("Wrong path, ", repoDirectory.getAbsolutePath() + File.separator + "file A.txt",statusResponse.getNewFilesToCommit().iterator().next().getAbsolutePath() );
+    }
+
     /**
      * Test for adding multiple files to add to repository with no options provided.
      *

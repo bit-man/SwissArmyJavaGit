@@ -395,13 +395,36 @@ public class CliGitStatus implements IGitStatus {
 
     //
 
-    public String getFilename(String line) {
-      String filename = null;
-      Scanner scanner = new Scanner(line);
-      while (scanner.hasNext()) {
-        filename = scanner.next();
-      }
-      return filename;
+      public String getFilename(String line) {
+          String filename = "";
+          boolean checkForColon = line.contains(":") && line.contains("#");
+
+          Scanner scanner = new Scanner(line);
+          boolean startFileName = false;
+          while (scanner.hasNext() && !startFileName) {
+              String s = scanner.next();
+              // If line contains only # then no deleted: new file: or other comment ending in : mark the file name start
+              if (checkForColon)
+                  startFileName = s.endsWith(":");
+              else
+                  startFileName = s.endsWith("#");
+          }
+
+          boolean continueFilename = true;
+          while (scanner.hasNext() && continueFilename) {
+              String s = scanner.next();
+              if (s.equals("->")) {
+                  filename = line.substring( line.indexOf("->") + 2 ).trim();
+                  continueFilename = false;
+              } else {
+                  String separator = filename == "" ? "" : " ";
+                  filename += separator + s;
+                  continueFilename = true;
+              }
+
+          }
+
+          return filename;
     }
 
     private boolean ignoreOutput(String line) {
