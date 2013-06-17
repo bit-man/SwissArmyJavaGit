@@ -1,4 +1,6 @@
-Welcome to the Swiss Army JavaGit project.
+---
+title: Welcome to the Swiss Army JavaGit project.
+---
 
 JavaGit is a Java API that provides access to git repositories. Our goal is to
 provide a library with an easy-to-use API that is intuitive for developers new
