@@ -8,7 +8,7 @@ provide a library with an easy-to-use API that is intuitive for developers new
 to git and developers who are veteran git users.
 
 If you are in need of a Java library to help access git repositories, please
-take a look at our documentation and [FAQ](faq). We appreicate feedback;
+take a look at our documentation and [FAQ](faq.html). We appreicate feedback;
 if you have something to ask, have a feature that is critical to your
 application, or want to help out, please post a request
 to the [bug tracker](https://github.com/bit-man/SwissArmyJavaGit/issues).
