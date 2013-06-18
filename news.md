@@ -5,7 +5,9 @@ title: News
 
 ### JavaGit Releases Version 0.2.0
 
-Tester wanted, mainly for OS X and Windows (other platforms are also welcome).
+#### June 18th, 2013
+
+Testerd wanted, mainly for OS X and Windows (other platforms are also welcome).
 Please [contact me](https://github.com/bit-man) 
 
 ### JavaGit Releases Version 0.1.0 Alpha
