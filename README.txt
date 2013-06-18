@@ -11,7 +11,8 @@
 
 I.    WELCOME
 
-      JavaGit is a Java API that provides access to git repositories.
+      Swiss Army JavaGit (http://bit-man.github.io/SwissArmyJavaGit/) is a
+      Java API that provides access to git repositories.
       Our goal is to provide a library with an easy-to-use API that is
       intuitive for developers new to git and developers who are veteran
       git users.
