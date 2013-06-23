@@ -160,7 +160,7 @@ public class CliGitCheckout implements IGitCheckout {
      * @param options <code>GitCheckoutOptions</code> options passed to the &lt;git-checkout&gt; command.
      * @param treeIsh either a branch type or sha1 type object
      * @param paths   List of files that are to be checked out
-     * @return
+     * @return Command to be executed as a list of String
      * @throws JavaGitException
      */
     private List<String> buildCommand(GitCheckoutOptions options, Ref treeIsh, List<File> paths)

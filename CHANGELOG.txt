@@ -1,5 +1,21 @@
                              JavaGit Change Log
 
+Version 0.2.0
+
+  - GitInit, GitClone, GitVersion added
+  - JavaGit demo code
+  - Added a new functionality to GitStatusResponse to allow for better way to access status for one or more files
+  - Making the optLimitSkip option work for GitLog
+  - Executed git commands saved to a log file
+  
+  Bug Fixing
+  
+  - issue #1: NPE on Changes not staged for commit
+  - issue #2 : Wrong path separator
+  - issue #4 : File path containing spaces fails to add
+  - checkout : on newer git version branch name is enclosed in single quotes
+  - Test fixing and enhancements
+  
 Version 0.1.0
 
   This is the initial release of JavaGit.  Since there have been no public

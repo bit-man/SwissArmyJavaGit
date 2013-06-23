@@ -162,7 +162,7 @@ public final class JavaGitConfiguration {
    * the version string.
    * 
    * @param version
-   * @return
+   * @return true if the version passed as argument is valid
    */
   private static boolean isValidVersionString(String version) {
     /*

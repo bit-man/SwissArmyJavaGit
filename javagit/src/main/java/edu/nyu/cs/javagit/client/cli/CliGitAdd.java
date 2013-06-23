@@ -275,7 +275,7 @@ public class CliGitAdd implements IGitAdd {
         /**
          * Retrieves all the errors in the error list and concatenate them together in one string.
          *
-         * @return
+         * @return  concatenation of errors
          */
         private String getError() {
             StringBuffer buf = new StringBuffer();

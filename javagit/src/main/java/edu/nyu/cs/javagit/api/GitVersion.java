@@ -180,7 +180,7 @@ public class GitVersion implements CommandResponse, Comparable<GitVersion> {
      * for none of GitVersion objects
      *
      * @param that
-     * @return
+     * @return  SAME if both are equal, LATER if that is previous to this or PREVIOUS otherwise
      */
     private int compareToReleaseMinor(GitVersion that) {
         if (this.containsReleaseMinor() && that.containsReleaseMinor())
@@ -204,7 +204,7 @@ public class GitVersion implements CommandResponse, Comparable<GitVersion> {
      * e.g. v1.8.0-rc0 is previous to v1.8.0
      *
      * @param that
-     * @return
+     * @return SAME if both are equal, LATER if that is previous to this or PREVIOUS otherwise
      */
     private int compareToTag(GitVersion that) {
         if (this.containsTag() && that.containsTag())
