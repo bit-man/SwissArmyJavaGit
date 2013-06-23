@@ -153,10 +153,8 @@ a commit.
 
     
     
-    Example : [JavaGitDemo.java](code_samples/JavaGitDemo.java)
-    
-
-  
+    Example : [JavaGitDemo.java](https://github.com/bit-man/SwissArmyJavaGit/blob/master/javagit/samples/JavaGitDemo.java)
+              
 
 * * *
 

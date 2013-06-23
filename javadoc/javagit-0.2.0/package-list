@@ -1,0 +1,5 @@
+edu.nyu.cs.javagit
+edu.nyu.cs.javagit.api
+edu.nyu.cs.javagit.api.commands
+edu.nyu.cs.javagit.client
+edu.nyu.cs.javagit.client.cli
