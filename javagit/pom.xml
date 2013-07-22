@@ -2,15 +2,40 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>javagit</groupId>
+    <groupId>io.github.bit-man</groupId>
     <artifactId>javagit</artifactId>
     <packaging>jar</packaging>
     <version>0.2.0-SNAPSHOT</version>
-    <name>javagit</name>
+    <name>Swiss Army Java Git</name>
+    <description>Swiss Army JavaGit is a Java API that provides access to git repositories</description>
+    <url>http://bit-man.github.io/SwissArmyJavaGit/</url>
+    <licenses>
+        <license>
+            <name>GNU LGPL v2.1</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
+    <scm>
+        <connection>scm:git:https://github.com/bit-man/SwissArmyJavaGit.git</connection>
+        <developerConnection>scm:git:https://github.com/bit-man/SwissArmyJavaGit.git</developerConnection>
+        <url>https://github.com/bit-man/SwissArmyJavaGit.git</url>
+    </scm>
 
-    <url>http://maven.apache.org</url>
+    <developers>
+        <developer>
+            <name>Víctor A. Rodríguez</name>
+        </developer>
+    </developers>    
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -20,11 +45,6 @@
         </dependency>
     </dependencies>
 
-    <scm>
-        <connection>scm:git:https://github.com/bit-man/javagit.git</connection>
-        <developerConnection>scm:git:https://github.com/bit-man/javagit.git</developerConnection>
-        <url>https://github.com/bit-man/javagit</url>
-    </scm>
 
     <build>
         <pluginManagement>
