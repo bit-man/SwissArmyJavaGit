@@ -10,7 +10,7 @@
     <groupId>io.github.bit-man</groupId>
     <artifactId>javagit</artifactId>
     <packaging>jar</packaging>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
     <name>Swiss Army Java Git</name>
     <description>Swiss Army JavaGit is a Java API that provides access to git repositories</description>
     <url>http://bit-man.github.io/SwissArmyJavaGit/</url>
