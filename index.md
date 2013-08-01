@@ -16,6 +16,7 @@ to the [bug tracker](https://github.com/bit-man/SwissArmyJavaGit/issues).
 ### Get the Code
 
   * `git clone https://github.com/bit-man/SwissArmyJavaGit.git`
+  * Get it from [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cjavagit)
 
 ### Requirements
 

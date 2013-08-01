@@ -9,13 +9,9 @@ title: FAQ
   2. Who are the intended users of JavaGit?
   3. Do I still need git instaled?
   4. Where can I get the source?
-  5. Isn't using Subversion to host a git-oriented program a bit hypocritical? 
-  6. Can I use git to access the source code in the mean time? 
-  7. Is JavaGit under active development?
-  8. When will an alpha/beta/stable release be available? 
-  9. Why not implement git using java (this way you don't need git installed)? 
-  10. How is JavaGit different from Jgit/Egit?
-  11. How can I contribute?
+  5. Why not implement git using java (this way you don't need git installed)? 
+  6. How is JavaGit different from Jgit/Egit?
+  7. How can I contribute?
 
 ### Trouble Shooting
 
@@ -50,58 +46,19 @@ super important to you, let us know.
 
   4. Where can I get the source?  
   
-The code is in a publicly accessible SVN repository at:
+The code is in a publicly accessible GIT repository :
 
-  
-&nbsp_place_holder; &nbsp_place_holder; $ svn checkout
-https://subversive.cims.nyu.edu/osp/
-
+    git clone https://github.com/bit-man/SwissArmyJavaGit.git
   
 
-  5. Isn't using Subversion to host a git oriented program a bit hypocritical?   
-  
-Yes, it is. We chose subversion for the time being because some of the tools
-we are using for JavaGit development (Eclipse, Crucible, Fisheye) do not yet
-interface with git repsitories. Our sister project, Gitclipse, is working to
-fill the Eclipse-Git void.
-
-  
-Once these tools work sufficiently well with git, we will move over to using
-git for our repository.
-
-  
-
-  6. Can I use git to access the source code in the mean time?   
-  
-Yes, you can! Check out the git-svn command; it works very well.
-
-  
-
-  7. Is JavaGit under active development?   
-  
-Extremely. We have commits on a daily basis, just check the SVN log:
-
-  
-&nbsp_place_holder; &nbsp_place_holder; $ svn log
-https://subversive.cims.nyu.edu/osp/javagit
-
-  
-
-  8. When will an alpha/beta/stable release be available?   
-  
-We are expecting an alpha release in the next few weeks. We hope to have a
-beta release by the end of the summer and a stable release soon thereafter.
-
-  
-
-  9. Why not implement git using java (this way you don't need git installed)?   
+  5. Why not implement git using java (this way you don't need git installed)?   
   
 We'd LOVE to, but unfortunately we don't have the time. We are gladly
 accepting patches. ;-)
 
   
 
-  10. How is JavaGit different from [JGit/EGit](http://repo.or.cz/w/egit.git)?   
+  6. How is JavaGit different from [JGit/EGit](http://repo.or.cz/w/egit.git)?   
   
 JGit is a pure Java implementation of a git client, developed in tandem with
 EGit, an [Eclipse](http://www.eclipse.org/) plugin for git. While JGit is
@@ -131,10 +88,11 @@ and we hope to bridge that feature gap.
 
   
 
-  11. How can I contribute?   
+  7. How can I contribute?   
   
-Join the conversation on the developer mailing list. If there is something you
-want to work on, let us know. If you want to work on the project but don't
+Join the conversation on the [developer mailing list](https://groups.google.com/forum/#!forum/swiss-army-java-git). 
+If there is something you want to work on, let us know.  
+If you want to work on the project but don't
 know where to start, introduce yourself and the team can help you find
 something to work on. There are lots of things to do.
 
@@ -150,11 +108,8 @@ git commands (be sure you use your information in place of the example
 information):
 
   
-&nbsp_place_holder; &nbsp_place_holder; git config --global user.email
-"you@example.com"
-
-&nbsp_place_holder; &nbsp_place_holder; git config --global user.name "Your
-Name"
+    git config --global user.email "you@example.com"
+    git config --global user.name "Your Name"
 
   
 If you prefer to set your identity only in the current repository, omit the '

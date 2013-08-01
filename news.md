@@ -5,9 +5,15 @@ title: News
 
 ### JavaGit Releases Version 0.2.0
 
-#### June 18th, 2013
+#### July 22, 2013
 
-Testerd wanted, mainly for OS X and Windows (other platforms are also welcome).
+Releas 0.2.0 hits the road !
+Now also available at 
+[Maven Central Repository](http://search.maven.org/#artifactdetails%7Cio.github.bit-man%7Cjavagit%7C0.2.0%7Cjar) 
+
+#### June 18, 2013
+
+Testers wanted, mainly for OS X and Windows (other platforms are also welcome).
 Please [contact me](https://github.com/bit-man) 
 
 ### JavaGit Releases Version 0.1.0 Alpha
