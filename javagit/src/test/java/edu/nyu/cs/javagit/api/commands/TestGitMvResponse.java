@@ -70,7 +70,7 @@ public class TestGitMvResponse extends TestBase {
     }
 
     @Test
-    public void testGitMvValidResponse() {
+    public void testGitMvValidResponseForceAndDyrRun() {
         source = fileOne;
         destination = fileTwo;
         options.setOptN(true);
@@ -78,8 +78,7 @@ public class TestGitMvResponse extends TestBase {
         try {
             GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
             assertEquals("response", "Source: " + source.getPath() + " Destination: " +
-                    destination.getPath() + " Message: Warning: destination exists; will overwrite!",
-                    response.toString());
+                    destination.getPath() + " ", response.toString() );
         } catch (Exception e) {
             assertNull("Exception not expected", e);
         }
@@ -88,6 +87,33 @@ public class TestGitMvResponse extends TestBase {
         source = fileOne;
         destination = new File("fileThree");
         options.setOptN(true);
+        try {
+            GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
+            assertEquals("response", "Source: " + source.getPath() + " Destination: " +
+                    destination.getPath() + " ", response.toString());
+        } catch (Exception e) {
+            assertNull("Exception not expected", e);
+        }
+    }
+
+    @Test
+    public void testGitMvValidResponseDryRun() throws IOException {
+        source = fileOne;
+        destination = fileTwo;
+        options.setOptN(true);
+        options.setOptF(false);
+        try {
+            GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
+            fail("JavaGitException should be thrown");
+        } catch (JavaGitException e) {
+            // well done private !
+        }
+
+
+        source = fileOne;
+        destination = new File("fileThree");
+        options.setOptN(true);
+        options.setOptF(false);
         try {
             GitMvResponse response = gitMv.mv(repoDirectory, options, source, destination);
             assertEquals("response", "Source: " + source.getPath() + " Destination: " +

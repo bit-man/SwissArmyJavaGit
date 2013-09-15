@@ -29,6 +29,7 @@ import edu.nyu.cs.javagit.client.GitMvResponseImpl;
 import edu.nyu.cs.javagit.client.IGitMv;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+import edu.nyu.cs.javagit.utilities.StringUtilities;
 
 /**
  * Command-line implementation of the <code>IGitMv</code> interface.
@@ -192,15 +193,21 @@ public class CliGitMv implements IGitMv {
      *          The line of text to process.
      */
     public void parseLineForSuccess(String line) {
-      if (line.contains("Warning:")) {
-        response.addComment(line);
-      }
-      if (line.contains("Adding") || line.contains("Changed")) {
-        response.setDestination(new File(line.substring(11)));
-      }
-      if (line.contains("Deleting")) {
-        response.setSource(new File(line.substring(11)));
-      }
+        if (line.contains("Warning:")) {
+            response.addComment(line);
+        }
+        if (line.contains("Adding") || line.contains("Changed")) {
+            response.setDestination(new File(line.substring(11)));
+        }
+        if (line.contains("Deleting")) {
+            response.setSource(new File(line.substring(11)));
+        }
+        // Renaming fileOne to fileThree
+        if (line.startsWith("Renaming")) {
+            String[] split = line.split(" ");
+            response.setSource(new File(split[1]));
+            response.setDestination(new File(split[3]));
+        }
     }
 
     public void processExitCode(int code) {

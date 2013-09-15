@@ -24,4 +24,25 @@ public final class StringUtilities {
 
         return pos;
     }
+
+    /**
+     * Searches for quoted strings in a string
+     * @param line
+     * @param n
+     * @return The Nth quoted string
+     */
+    public static String getNQuotedElement(String line, int n){
+        int firstQuote  = indexOfNQuote(line, 2 * n - 1);
+        int secondQuote = line.indexOf("'", firstQuote + 1);
+        String elem = line.substring(firstQuote + 1, secondQuote);
+        return elem;
+
+    }
+
+    private static int indexOfNQuote(String line, int n) {
+        int ix = 0;
+        for ( int i = n; i > 0; i--)
+             ix = line.indexOf("'", ix ) + 1;
+        return ix - 1;
+    }
 }

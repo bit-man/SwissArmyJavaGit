@@ -18,4 +18,11 @@ public class TestStringUtilities extends TestCase {
         assertEquals(-1, StringUtilities.indexOfLeft(str, 6, ' '));
     }
 
+    @Test
+    public void testgetNQuotedElement() {
+        String line = "zzz 'a'  xxxx 'b' ";
+        assertEquals("a", StringUtilities.getNQuotedElement(line, 1));
+        assertEquals("b", StringUtilities.getNQuotedElement(line, 2));
+    }
+
 }
