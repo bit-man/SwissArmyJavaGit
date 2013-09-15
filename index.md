@@ -26,7 +26,8 @@ We have tested JavaGit on the following environments:
   * OS X with git version 1.5.5+
   * Linux with git version 1.5.5+
 
-Look at JavaGit news, [we are looking for help](news.html) on testing for different environments
+Also earlier version can be supported, but they are on a best effort basis. Look at 
+JavaGit news, [we are looking for help](news.html) on testing for different environments
   
 ### Our License
 
