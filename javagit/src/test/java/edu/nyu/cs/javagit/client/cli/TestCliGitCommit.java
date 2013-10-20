@@ -60,8 +60,7 @@ public class TestCliGitCommit extends TestBase {
         assertEquals(4, parser.getNumLinesParsed());
         parser.parseLine(" create mode 100644 svnClientAdapter/readme.txt");
         assertEquals(5, parser.getNumLinesParsed());
-        parser
-                .parseLine(" create mode 100644 svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java");
+        parser.parseLine(" create mode 100644 svnClientAdapter/src/main/org/tigris/subversion/svnclientadapter/commandline/parser/SvnActionRE.java");
         assertEquals(6, parser.getNumLinesParsed());
 
         response = new GitCommitResponseImpl(Ref.createSha1Ref("21efdb4"), "initial commit");
@@ -136,6 +135,22 @@ public class TestCliGitCommit extends TestBase {
         response.setLinesInserted("6");
         response.setLinesDeleted("1");
         assertResponsesEqual(parser, response);
+    }
+
+    public void testDashPlusNumber() throws JavaGitException {
+        CliGitCommit gitcommit = new CliGitCommit();
+
+
+        final String BRANCH_NAME = "master";
+        final String HASH = "b971db3";
+        final String SHORT_COMMENT = "JIRA-1234 - Checkpoint: fixed more bugs";
+
+        // Test commit with first line using branch name in it
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", BRANCH_NAME);
+        parser.parseLine("[" + BRANCH_NAME + " (root-commit) " + HASH + "] " + SHORT_COMMENT);
+        assertEquals(1, parser.getNumLinesParsed());
+        assertEquals(SHORT_COMMENT, parser.getResponse().getCommitShortComment());
+        assertEquals(HASH, parser.getResponse().getCommitShortHashName().getName());
     }
 
     private void assertResponsesEqual(CliGitCommit.GitCommitParser parser,
