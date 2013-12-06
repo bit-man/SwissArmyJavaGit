@@ -65,7 +65,7 @@ III.  USING JAVAGIT IN YOUR PROJECT
          The JavaGit jar file should now be installed in your local Maven 2 
          repository.  On Unix systems this is:
 
-           ~/.m2/repository/javagit/javagit
+           ~/.m2/repository/io/github/bit-man/javagit/
 
          On Windows this is probably:
 
@@ -74,11 +74,12 @@ III.  USING JAVAGIT IN YOUR PROJECT
       d. If you are using Maven 2 as your project build tool, add JavaGit as a
          dependency:
 
-           <dependency>
-             <groupId>javagit</groupId>
-             <artifactId>javagit</artifactId>
-             <version>0.01-SNAPSHOT</version>
-           </dependency>
+               <dependency>
+                    <groupId>io.github.bit-man</groupId>
+                    <artifactId>javagit</artifactId>
+                    <version>0.2.0</version>
+                </dependency>
+
 
          If you are using ant, add the JavaGit jar file to your build path.
 
