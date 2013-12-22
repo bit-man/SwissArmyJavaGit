@@ -31,6 +31,8 @@
     <developers>
         <developer>
             <name>Víctor A. Rodríguez</name>
+            <email>victor@bit-man.com.ar</email>
+            <url>http://the-dailynerd.blogspot.com/</url>
         </developer>
     </developers>    
     
@@ -87,6 +89,15 @@
                 <configuration>
                     <showSuccess>true</showSuccess>
                     <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
