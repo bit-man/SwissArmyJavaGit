@@ -26,6 +26,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 public class TestGitCheckoutResponse extends TestBase {
 
     GitCheckoutParser parser;
@@ -148,10 +151,6 @@ public class TestGitCheckoutResponse extends TestBase {
         assertEquals("First location - deletedFileslist", "foobar03", response.getDeletedFile(0)
                 .getName());
         assertEquals("First location - addedFilesList", "foobar02", response.getAddedFile(0).getName());
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
 }

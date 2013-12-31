@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Implements test cases for for GitBranch.
  */
@@ -46,6 +49,7 @@ public class TestGitBranch extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitBranchTestRepo");
+        getDeletor().add(repoDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repoDirectory);
         commit = new GitCommit();
@@ -61,12 +65,6 @@ public class TestGitBranch extends TestBase {
 
         // Call commit
         commit.commit(repoDirectory, "Making a first test commit");
-    }
-
-    @After
-    protected void tearDown() throws JavaGitException {
-        // delete repo dir
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
     }
 
     @Test

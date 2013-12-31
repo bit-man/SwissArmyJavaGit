@@ -4,8 +4,11 @@ __baseFolder="$HOME/git"
 __javaGitHome=`dirname $0`/../
 __reportBaseFolder="${__javaGitHome}/target/test-reports"
 
+mvn clean package -DskipTests
+[[ $? -ne 0 ]] && exit -1
+
 for __gitVersion in `ls ${__baseFolder}`; do
-	
+
 	echo ">>>>>>>>>>"
     echo ">>>>>>>>>> Running test for GIT version ${__gitVersion}"
     echo ">>>>>>>>>>"

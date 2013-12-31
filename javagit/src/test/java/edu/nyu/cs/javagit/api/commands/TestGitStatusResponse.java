@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import static junit.framework.Assert.*;
+
 
 public class TestGitStatusResponse extends TestBase {
 

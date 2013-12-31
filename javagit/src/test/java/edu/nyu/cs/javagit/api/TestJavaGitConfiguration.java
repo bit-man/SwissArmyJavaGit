@@ -9,6 +9,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 /**
  * Test cases for our <code>WorkingTree</code> class.
  */

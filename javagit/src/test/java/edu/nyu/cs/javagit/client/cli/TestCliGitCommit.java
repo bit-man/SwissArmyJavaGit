@@ -24,6 +24,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Tests the <code>CliGitCommit</code> class, including <code>CliGitCommit.GitCommitParser</code>.
  */

@@ -5,6 +5,11 @@ import edu.nyu.cs.javagit.api.GitVersion;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertFalse;
+
 public class TestGitVersion extends TestBase {
 
 

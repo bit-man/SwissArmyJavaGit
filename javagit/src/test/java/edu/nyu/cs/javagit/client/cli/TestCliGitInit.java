@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.fail;
+
 public class TestCliGitInit extends TestBase {
     private File repoDirectory;
     private GitCommit commit;
@@ -23,11 +25,7 @@ public class TestCliGitInit extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitLogTestRepo");
-    }
-
-    @After
-    public void tearDown() throws JavaGitException {
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
+        getDeletor().add(repoDirectory);
     }
 
     /**

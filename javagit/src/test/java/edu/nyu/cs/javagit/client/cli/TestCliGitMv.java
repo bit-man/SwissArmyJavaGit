@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 public class TestCliGitMv extends TestBase {
     private CliGitMv cliGitMv;
 

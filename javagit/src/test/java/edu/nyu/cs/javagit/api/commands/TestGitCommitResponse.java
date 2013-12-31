@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Test class for testing the <code>GitCommitResponse</code> object.
  */

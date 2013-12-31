@@ -27,6 +27,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static junit.framework.Assert.fail;
+
 public class TestGitStatusOptions extends TestBase {
 
     GitStatusOptions options;
@@ -37,6 +39,7 @@ public class TestGitStatusOptions extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("GitStatusTestRepository");
+        getDeletor().add(repositoryDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repositoryDirectory);
         options = new GitStatusOptions();
@@ -101,11 +104,5 @@ public class TestGitStatusOptions extends TestBase {
         }
     }
 
-    @After
-    public void tearDown() throws Exception {
-        if (repositoryDirectory.exists()) {
-            FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
-        }
-    }
 
 }

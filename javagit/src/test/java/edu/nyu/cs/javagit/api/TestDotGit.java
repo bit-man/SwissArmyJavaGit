@@ -21,6 +21,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /**
  * Test cases for our <code>DotGit</code> class.
  */

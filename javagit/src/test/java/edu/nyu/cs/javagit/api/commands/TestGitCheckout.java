@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.*;
+
 public class TestGitCheckout extends TestBase {
 
     public static final String TEST_BRANCH = "testBranch";
@@ -45,6 +47,7 @@ public class TestGitCheckout extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("GitCheckoutTestRepository");
+        getDeletor().add(repositoryDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repositoryDirectory);
         gitCommit = new GitCommit();
@@ -189,11 +192,6 @@ public class TestGitCheckout extends TestBase {
         // checking out foobar03 file from branch - testBranch01
         gitCheckout.checkout(repositoryDirectory, null, branch1, file3);
         assertFileExistsInDirectory(repositoryDirectory, new File("foobar03"));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
     }
 
 }

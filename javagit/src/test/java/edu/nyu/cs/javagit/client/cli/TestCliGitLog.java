@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.fail;
+
 
 public class TestCliGitLog extends TestBase {
     private File repoDirectory;
@@ -43,6 +45,7 @@ public class TestCliGitLog extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitLogTestRepo");
+        getDeletor().add(repoDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repoDirectory);
         commit = new GitCommit();
@@ -66,10 +69,6 @@ public class TestCliGitLog extends TestBase {
         commit.commit(repoDirectory, "Making a Second test commit");
     }
 
-    @After
-    public void tearDown() throws JavaGitException {
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
-    }
 
     /**
      * Test to verify if git logs is successfully parsing logs

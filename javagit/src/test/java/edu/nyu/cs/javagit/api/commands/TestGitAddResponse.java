@@ -19,6 +19,8 @@ package edu.nyu.cs.javagit.api.commands;
 import edu.nyu.cs.javagit.TestBase;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertTrue;
+
 public class TestGitAddResponse extends TestBase {
 
     @Test

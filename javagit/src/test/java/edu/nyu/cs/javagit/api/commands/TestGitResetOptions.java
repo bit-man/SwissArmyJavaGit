@@ -20,6 +20,9 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.Ref;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Tests the <code>GitResetOptions</code> class.
  */

@@ -24,6 +24,9 @@ import edu.nyu.cs.javagit.api.commands.GitBranchResponse.responseType;
 import edu.nyu.cs.javagit.client.GitBranchResponseImpl;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 public class TestCliGitBranch extends TestBase {
     private CliGitBranch cliGitBranch;
 

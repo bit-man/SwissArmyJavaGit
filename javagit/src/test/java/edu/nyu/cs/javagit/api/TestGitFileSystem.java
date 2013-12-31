@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 //import edu.nyu.cs.javagit.api.GitDirectory;
 
 
@@ -42,6 +45,7 @@ public class TestGitFileSystem extends TestBase {
     public void setUp() throws JavaGitException, IOException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("GitFileSystemTest_dir");
+        getDeletor().add(repositoryDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repositoryDirectory);
         dotGit = DotGit.getInstance(repositoryDirectory);
@@ -173,12 +177,5 @@ public class TestGitFileSystem extends TestBase {
 */
     }
 
-
-    @After
-    public void tearDown() throws Exception {
-        if (repositoryDirectory.exists()) {
-            FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
-        }
-    }
 
 }

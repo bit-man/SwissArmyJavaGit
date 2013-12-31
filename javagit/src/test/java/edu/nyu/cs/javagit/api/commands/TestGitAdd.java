@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 public class TestGitAdd extends TestBase {
 
     File repoDirectory;
@@ -38,6 +41,7 @@ public class TestGitAdd extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitCommitTestRepo");
+        getDeletor().add(repoDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repoDirectory);
         gitAdd = new GitAdd();
@@ -146,13 +150,6 @@ public class TestGitAdd extends TestBase {
         } else {
             fail("Failed to add files to repository");
             throw new IOException("Unable to create directory: " + tmpDir);
-        }
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        if (repoDirectory.exists()) {
-            FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
         }
     }
 

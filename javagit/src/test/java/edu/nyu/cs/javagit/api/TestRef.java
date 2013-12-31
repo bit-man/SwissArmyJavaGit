@@ -19,6 +19,9 @@ package edu.nyu.cs.javagit.api;
 import edu.nyu.cs.javagit.TestBase;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Test case for the <code>Ref</code> data object.
  */

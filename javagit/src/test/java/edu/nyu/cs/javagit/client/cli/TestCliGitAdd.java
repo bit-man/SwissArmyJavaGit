@@ -27,6 +27,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
+
 public class TestCliGitAdd extends TestBase {
 
 
@@ -56,16 +60,11 @@ public class TestCliGitAdd extends TestBase {
      */
     @Test(expected = IOException.class)
     public void testGitAddIOExceptionThrown() throws IOException, JavaGitException {
-        try {
-            CliGitAdd gitAdd = new CliGitAdd();
-            GitAddOptions options = null;
-            List<File> fileNames = new ArrayList<File>();
-            fileNames.add(new File("testFile"));
-            gitAdd.add(new File("repo/path/should/not/exist"), options, fileNames);
-        } catch (IOException e) {
-            return;
-        }
-        fail("IOException not thrown");
+        CliGitAdd gitAdd = new CliGitAdd();
+        GitAddOptions options = null;
+        List<File> fileNames = new ArrayList<File>();
+        fileNames.add(new File("testFile"));
+        gitAdd.add(new File("repo/path/should/not/exist"), options, fileNames);
     }
 
     /**

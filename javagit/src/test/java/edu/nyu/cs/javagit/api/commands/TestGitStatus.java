@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 public class TestGitStatus extends TestBase {
 
     private File repositoryDirectory;
@@ -47,6 +50,7 @@ public class TestGitStatus extends TestBase {
     public void setUp() throws JavaGitException, IOException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("GitStatusTestRepository");
+        getDeletor().add(repositoryDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repositoryDirectory);
         gitCommit = new GitCommit();
@@ -275,11 +279,5 @@ public class TestGitStatus extends TestBase {
      * }
      * }
      */
-    @After
-    public void tearDown() throws Exception {
-        if (repositoryDirectory.exists()) {
-            FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
-        }
-    }
 
 }

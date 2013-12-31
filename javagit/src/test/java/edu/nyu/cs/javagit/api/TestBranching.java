@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
 
 public class TestBranching extends TestBase {
 
@@ -39,6 +41,7 @@ public class TestBranching extends TestBase {
     public void setUp() throws JavaGitException, IOException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("TestGitBranching_dir");
+        getDeletor().add(repositoryDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repositoryDirectory);
         dotGit = DotGit.getInstance(repositoryDirectory);
@@ -114,14 +117,6 @@ public class TestBranching extends TestBase {
             }
         }
         assertEquals("Error. Expecting deleted branch to disappear.", false, found);
-    }
-
-
-    @After
-    public void tearDown() throws Exception {
-        if (repositoryDirectory.exists()) {
-            FileUtilities.removeDirectoryRecursivelyAndForcefully(repositoryDirectory);
-        }
     }
 
 }

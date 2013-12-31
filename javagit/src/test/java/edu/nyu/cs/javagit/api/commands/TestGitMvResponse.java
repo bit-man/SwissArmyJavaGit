@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
+
 
 public class TestGitMvResponse extends TestBase {
     private File repoDirectory;
@@ -30,6 +34,7 @@ public class TestGitMvResponse extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitMvTestRepo");
+        getDeletor().add(repoDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repoDirectory);
         gitAdd = new GitAdd();
@@ -47,12 +52,6 @@ public class TestGitMvResponse extends TestBase {
 
         gitAdd.add(repoDirectory, null, filesToAdd);
         gitCommit.commit(repoDirectory, "Making the commit");
-    }
-
-    @After
-    protected void tearDown() throws JavaGitException {
-        // delete repo directory
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
     }
 
     @Test

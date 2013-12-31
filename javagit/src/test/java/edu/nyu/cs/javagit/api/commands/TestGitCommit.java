@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 /**
  * Implements test cases for for GitCommit.
  */
@@ -55,6 +58,7 @@ public class TestGitCommit extends TestBase {
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repoDirectory = FileUtilities.createTempDirectory("GitCommitTestRepo");
+        getDeletor().add(repoDirectory);
         GitInit gitInit = new GitInit();
         gitInit.init(repoDirectory);
         commit = new GitCommit();
@@ -64,11 +68,6 @@ public class TestGitCommit extends TestBase {
         paths = new ArrayList<File>();
     }
 
-    @After
-    protected void tearDown() throws JavaGitException {
-        // delete repo dir
-        FileUtilities.removeDirectoryRecursivelyAndForcefully(repoDirectory);
-    }
 
     @Test
     public void testCommit() throws IOException, JavaGitException {
