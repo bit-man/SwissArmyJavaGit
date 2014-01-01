@@ -179,6 +179,10 @@ public class GitFetchOptions extends OptionsBase {
         return optionArgs;
     }
 
+    public boolean isMultiple() {
+        return getMultiple();
+    }
+
     public enum RecurseSubmodules  {
         YES("yes"),
         ON_DEMAND("on-demand"),

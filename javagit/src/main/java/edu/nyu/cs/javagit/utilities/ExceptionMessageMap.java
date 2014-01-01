@@ -130,7 +130,10 @@ public class ExceptionMessageMap {
 
     MESSAGE_MAP.put("404000", "404000: Error calling git-branch. ");
 
-      MESSAGE_MAP.put("408000", "408000: Error calling git-clone. ");
+    MESSAGE_MAP.put("408000", "408000: Error calling git-clone. ");
+
+    MESSAGE_MAP.put("414000", "414000: Error calling git-fetch. ");
+    MESSAGE_MAP.put("414001", "414001: multiple flag not set. ");
 
     MESSAGE_MAP.put("424000", "424000: Error calling git-mv. ");
 

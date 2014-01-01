@@ -126,5 +126,10 @@ public interface IClient {
    */
   public IGitClone getGitCloneInstance();
 
-
+    /**
+     * Gets an instance of <code>IGitFetch</code>
+     *
+     * @return An instance of <code>IGitFetch</code>
+     */
+  public IGitFetch getGitFetchInstance();
 }

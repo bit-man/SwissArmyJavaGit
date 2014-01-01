@@ -172,7 +172,7 @@ public class ProcessUtilities {
     }
 
     pb.redirectErrorStream(true);
-      LOGGER.info(asString(commandLine));
+    LOGGER.info(asString(commandLine));
 
     Process p = startProcess(pb);
     getProcessOutput(p, parser);
