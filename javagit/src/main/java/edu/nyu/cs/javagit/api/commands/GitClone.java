@@ -18,6 +18,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
@@ -54,7 +55,7 @@ public final class GitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, URL repository) throws IOException,
-      JavaGitException {
+          JavaGitException, URISyntaxException {
     CheckUtilities.checkNullArgument(workingDirectoryPath, "working directory path");
     CheckUtilities.checkNullArgument(repository, "repository");
 
@@ -90,7 +91,7 @@ public final class GitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, GitCloneOptions options, URL repository)
-      throws IOException, JavaGitException {
+          throws IOException, JavaGitException, URISyntaxException {
     CheckUtilities.checkNullArgument(workingDirectoryPath, "working directory path");
     CheckUtilities.checkNullArgument(options, "options");
     CheckUtilities.checkNullArgument(repository, "repository");
@@ -126,7 +127,7 @@ public final class GitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, URL repository, File directory)
-      throws IOException, JavaGitException {
+          throws IOException, JavaGitException, URISyntaxException {
     CheckUtilities.checkNullArgument(workingDirectoryPath, "working directory path");
     CheckUtilities.checkNullArgument(repository, "repository");
     CheckUtilities.checkNullArgument(directory, "directory");
@@ -165,7 +166,7 @@ public final class GitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, GitCloneOptions options, URL repository,
-      File directory) throws IOException, JavaGitException {
+      File directory) throws IOException, JavaGitException, URISyntaxException {
     CheckUtilities.checkNullArgument(workingDirectoryPath, "working directory path");
     CheckUtilities.checkNullArgument(options, "options");
     CheckUtilities.checkNullArgument(repository, "repository");

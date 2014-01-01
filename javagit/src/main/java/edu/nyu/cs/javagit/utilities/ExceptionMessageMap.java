@@ -130,6 +130,8 @@ public class ExceptionMessageMap {
 
     MESSAGE_MAP.put("404000", "404000: Error calling git-branch. ");
 
+      MESSAGE_MAP.put("408000", "408000: Error calling git-clone. ");
+
     MESSAGE_MAP.put("424000", "424000: Error calling git-mv. ");
 
     MESSAGE_MAP.put("424001", "424001: Error calling git-mv for dry-run. ");

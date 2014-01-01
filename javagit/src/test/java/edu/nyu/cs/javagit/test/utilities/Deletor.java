@@ -8,9 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Description : TOOL DESCRIPTION HERE !!!
- * Date: 12/31/13
- * Time: 8:12 PM
+ * File deletion utility
  */
 public class Deletor {
 

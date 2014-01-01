@@ -18,6 +18,7 @@ package edu.nyu.cs.javagit.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
@@ -52,7 +53,7 @@ public interface IGitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, URL repository) throws IOException,
-      JavaGitException;
+          JavaGitException, URISyntaxException;
 
   /**
    * Clones a git repository with specified options in default directory i.e. the directory name
@@ -81,7 +82,7 @@ public interface IGitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, GitCloneOptions options, URL repository)
-      throws IOException, JavaGitException;
+          throws IOException, JavaGitException, URISyntaxException;
 
   /**
    * Clones a git repository into given directory, without any option.
@@ -109,7 +110,7 @@ public interface IGitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, URL repository, File directory)
-      throws IOException, JavaGitException;
+          throws IOException, JavaGitException, URISyntaxException;
 
   /**
    * Clones a git repository into given directory, with the specified options.
@@ -140,5 +141,5 @@ public interface IGitClone {
    *           Thrown when there is an error executing git-clone.
    */
   public GitCloneResponse clone(File workingDirectoryPath, GitCloneOptions options, URL repository,
-      File directory) throws IOException, JavaGitException;
+      File directory) throws IOException, JavaGitException, URISyntaxException;
 }

@@ -114,4 +114,18 @@ public class FileUtilities {
         fw.close();
     }
 
+
+    public static File getNonExistingTempFolder() {
+        return getNonExistingFolder(new File( System.getProperty("java.io.tmpdir")) );
+    }
+
+    public static File getNonExistingFolder(File basefolder) {
+        File ret = null;
+        do {
+
+          ret = new File(basefolder, "javagit" + Long.toString(System.nanoTime()));
+        } while( ret.exists());
+
+       return ret;
+    }
 }
