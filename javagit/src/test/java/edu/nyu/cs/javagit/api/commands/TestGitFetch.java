@@ -42,7 +42,7 @@ public class TestGitFetch
 
         addFileToRepository("uno");
 
-        GitFetchResponse fetchResponse = new GitFetch().fetch(cloneFolder, repoPath, new GitFetchOptions());
+        GitFetchResponse fetchResponse = new GitFetch().fetch(cloneFolder, repoPath.toURI().toURL(), new GitFetchOptions());
         assertEquals(3, fetchResponse.getObjectsTransfered());
         assertTrue(fetchResponse.getSourceNews().containsKey(repoPath.getAbsolutePath()));
 

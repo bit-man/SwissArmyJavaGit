@@ -20,14 +20,14 @@ import java.util.*;
  */
 public class CliGitFetch implements IGitFetch {
     @Override
-    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options) throws JavaGitException, IOException {
-        List<String> commandLine = buildCommand(options, repoPath);
+    public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options) throws JavaGitException, IOException {
+        List<String> commandLine = buildCommand(options, repoPath.getPath(), null, (String) null);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
-    private List<String> buildCommand(GitFetchOptions options, File repoPath) {
+    private List<String> buildCommand(GitFetchOptions options, String repoPath, Ref ref, Set<String> groups) {
         // Avoids issues on stderr redirection to stdout
         // (http://stackoverflow.com/questions/4062862/git-stderr-output-cant-pipe)
         if ( ! options.getProgress())
@@ -36,33 +36,52 @@ public class CliGitFetch implements IGitFetch {
         final List<String> cmd = options.getOptionArgs();
         cmd.add(0, JavaGitConfiguration.getGitCommand());
         cmd.add(1, "fetch");
-        cmd.add( cmd.size(), repoPath.getAbsolutePath() );
+        cmd.add( cmd.size(), repoPath );
+
+        if (ref != null)
+            cmd.add( cmd.size(), ref.toString());
+
+        for( String g : groups )
+            cmd.add( cmd.size(), g);
+
         return cmd;
     }
 
     @Override
-    public GitFetchResponse fetch(File repoPath, GitFetchOptions options, URL repository) throws JavaGitException {
-        return null;
+    public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options, URL repository, Ref ref) throws JavaGitException, IOException {
+        List<String> commandLine = buildCommand(options, repoPath.getPath(), ref, (String) null);
+        GitFetchParser parser = new GitFetchParser();
+
+        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
     @Override
-    public GitFetchResponse fetch(File repoPath, GitFetchOptions options, URL repository, Ref ref) throws JavaGitException {
-        return null;
+    public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options, String group) throws JavaGitException, IOException {
+        List<String> commandLine = buildCommand(options, repoPath.toString(), null, group);
+        GitFetchParser parser = new GitFetchParser();
+
+        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
+    }
+
+    private List<String> buildCommand(GitFetchOptions options, String repoPath, Ref ref, String group) {
+        Set<String> groups = new HashSet<String>();
+
+        if ( group != null )
+            groups.add(group);
+        return buildCommand(options, repoPath, ref, groups);
     }
 
     @Override
-    public GitFetchResponse fetch(File repoPath, GitFetchOptions options, String group) throws JavaGitException {
-        return null;
-    }
-
-    @Override
-    public GitFetchResponse fetch(File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
-            throws JavaGitException {
+    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
+            throws JavaGitException, IOException {
 
         if ( ! options.isMultiple() )
-            throw new JavaGitException(414, ExceptionMessageMap.getMessage("414001"));
+            throw new JavaGitException(414001, ExceptionMessageMap.getMessage("414001"));
 
-        return null;
+        List<String> commandLine = buildCommand(options, repoPath.toString(), null, group);
+        GitFetchParser parser = new GitFetchParser();
+
+        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
     private class GitFetchParser
