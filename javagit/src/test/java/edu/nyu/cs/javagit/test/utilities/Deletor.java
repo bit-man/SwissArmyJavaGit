@@ -1,7 +1,6 @@
 package edu.nyu.cs.javagit.test.utilities;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.utilities.FileUtilities;
 
 import java.io.File;
 import java.util.HashSet;

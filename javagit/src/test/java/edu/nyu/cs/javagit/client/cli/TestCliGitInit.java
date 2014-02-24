@@ -6,8 +6,7 @@ import edu.nyu.cs.javagit.api.commands.GitAdd;
 import edu.nyu.cs.javagit.api.commands.GitCommit;
 import edu.nyu.cs.javagit.api.commands.GitInitOptions;
 import edu.nyu.cs.javagit.api.commands.GitInitResponse;
-import edu.nyu.cs.javagit.utilities.FileUtilities;
-import org.junit.After;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
 

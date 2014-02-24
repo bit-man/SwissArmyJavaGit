@@ -4,7 +4,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitClone;
 import edu.nyu.cs.javagit.api.commands.GitInit;
-import edu.nyu.cs.javagit.utilities.FileUtilities;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,5 +1,7 @@
 package edu.nyu.cs.javagit.utilities;
 
+import java.net.URL;
+
 /**
  * Description : String utilities
  * Date: 3/31/13
@@ -73,5 +75,10 @@ public final class StringUtilities {
     public static String obtainElement(int n, String line, char c) {
         final String[] split = line.split( String.valueOf(c) );
         return split[n];
+    }
+
+
+    public static String convertToGitURL(URL repoPath) {
+        return (repoPath.getProtocol().equals("file")) ? repoPath.getPath() : repoPath.toString();
     }
 }

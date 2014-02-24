@@ -2,7 +2,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.utilities.FileUtilities;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,6 +46,9 @@ public class TestGitFetch
         assertEquals(3, fetchResponse.getObjectsTransfered());
         assertTrue(fetchResponse.getSourceNews().containsKey(repoPath.getAbsolutePath()));
 
+        // No new objects
+        fetchResponse = new GitFetch().fetch(cloneFolder, repoPath.toURI().toURL(), new GitFetchOptions());
+        assertEquals(0, fetchResponse.getObjectsTransfered());
     }
 
     private File addFileToRepository(String filePath) throws IOException, JavaGitException {

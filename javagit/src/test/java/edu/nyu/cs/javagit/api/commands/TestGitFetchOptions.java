@@ -1,8 +1,6 @@
 package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.TestBase;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,6 +14,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
+ * Git Fetch options testing
  * Created by bit-man on 12/21/13.
  */
 public class TestGitFetchOptions
@@ -38,21 +37,21 @@ public class TestGitFetchOptions
     }
 
     @Test
-    public void testRecurseSubmodles() {
+    public void testRecurseSubModules() {
         assertEquals(GitFetchOptions.RecurseSubmodules.YES, options.getRecurseSubmodules()) ;
         options.setRecurseSubmodules(GitFetchOptions.RecurseSubmodules.NO);
         assertEquals(GitFetchOptions.RecurseSubmodules.NO, options.getRecurseSubmodules()) ;
     }
 
     @Test
-    public void testRecurseSubmodlesDefault() {
+    public void testRecurseSubModulesDefault() {
         assertEquals(GitFetchOptions.RecurseSubmodulesDefault.YES, options.getRecurseSubmodulesDefault()) ;
         options.setRecurseSubmodulesDefault(GitFetchOptions.RecurseSubmodulesDefault.ON_DEMAND);
         assertEquals(GitFetchOptions.RecurseSubmodulesDefault.ON_DEMAND, options.getRecurseSubmodulesDefault()) ;
     }
 
     @Test
-    public void testSubmodulesPrefix() {
+    public void testSubModulesPrefix() {
         File path = new File("/tmp");
         options.setSubmodulePrefix(path);
         assertEquals(path, options.getSubmodulePrefix()) ;

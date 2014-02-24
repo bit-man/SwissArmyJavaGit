@@ -7,6 +7,9 @@ import java.util.List;
 
 /**
  * git-fetch options management
+ *
+ * Some options for output control have been disabled because JavaGit output
+ * parsing relies heavily on them (e.g. QUIET and VERBOSE)
  */
 public class GitFetchOptions extends OptionsBase {
 
@@ -139,22 +142,6 @@ public class GitFetchOptions extends OptionsBase {
         return (File) getOption(Option.UPLOAD_PACK);
     }
 
-    public void setQuiet() {
-        setOption(Option.QUIET, Boolean.TRUE);
-    }
-
-    public boolean getQuiet() {
-        return (Boolean) getOption(Option.QUIET);
-    }
-
-    public void setVerbose() {
-        setOption(Option.VERBOSE, Boolean.TRUE);
-    }
-
-    public boolean getVerbose() {
-        return (Boolean) getOption(Option.VERBOSE);
-    }
-
     public void setProgress() {
         setOption(Option.PROGRESS, Boolean.TRUE);
     }
@@ -218,7 +205,7 @@ public class GitFetchOptions extends OptionsBase {
     private enum Option implements ICommandOption {
         ALL("--all", Option.HAS_EQUALS, Boolean.FALSE),
         APPEND("--append",  Option.HAS_EQUALS, Boolean.FALSE),
-        DEPTH("--depth", Option.HAS_EQUALS, new Integer(0)),
+        DEPTH("--depth", Option.HAS_EQUALS, 0),
         UNSHALLOW("--unshallow", Option.HAS_EQUALS, Boolean.FALSE),
         DRY_RUN("--dry-run", Option.HAS_EQUALS, Boolean.FALSE),
         FORCE("--force", Option.HAS_EQUALS, Boolean.FALSE),
@@ -233,8 +220,6 @@ public class GitFetchOptions extends OptionsBase {
         RECURSE_SUB_DEFAULT("--recurse-submodules-default", Option.HAS_EQUALS, RecurseSubmodulesDefault.YES),
         UPDATE_HEAD_OK("--update-head-ok", Option.HAS_EQUALS, Boolean.FALSE),
         UPLOAD_PACK("--upload-pack",! Option.HAS_EQUALS, new File("")),
-        QUIET("--quiet", Option.HAS_EQUALS, Boolean.FALSE),
-        VERBOSE("--verbose", Option.HAS_EQUALS, Boolean.FALSE),
         PROGRESS("--progress", Option.HAS_EQUALS, Boolean.FALSE);
         public static final String NO_OPTION_SET = "";
 

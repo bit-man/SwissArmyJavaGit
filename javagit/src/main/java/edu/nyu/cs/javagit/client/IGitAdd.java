@@ -27,7 +27,7 @@ import edu.nyu.cs.javagit.api.commands.GitAddResponse;
 /**
  * An interface to represent the git-add command.
  */
-public interface IGitAdd {
+public interface    IGitAdd {
 
   /**
    * Adds list of files to the index.

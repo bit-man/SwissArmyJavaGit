@@ -1,4 +1,4 @@
-package edu.nyu.cs.javagit.utilities;
+package edu.nyu.cs.javagit.test.utilities;
 
 /**
  * Description : Properties to adapt test to different environments

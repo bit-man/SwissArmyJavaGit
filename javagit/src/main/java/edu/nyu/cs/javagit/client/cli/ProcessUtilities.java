@@ -137,7 +137,9 @@ public class ProcessUtilities {
         p.destroy();
         return i;
       } catch (InterruptedException e) {
-        // TODO: deal with this interrupted exception in a better manner. -- jhl388 06.14.2008
+        // BUG: if continuing with planned work it could harm the whole GIT command chain
+        //      being executed. Work on a method to notify the API caller and let him/her
+        //      decide on continuing or stopping the work being carried out
         continue;
       }
     }

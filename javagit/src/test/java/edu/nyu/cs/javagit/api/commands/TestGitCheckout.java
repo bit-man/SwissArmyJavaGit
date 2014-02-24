@@ -20,8 +20,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.client.cli.CliGitCheckout;
-import edu.nyu.cs.javagit.utilities.FileUtilities;
-import org.junit.After;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -31,6 +31,7 @@ import edu.nyu.cs.javagit.api.commands.GitCloneResponse;
 import edu.nyu.cs.javagit.client.GitCloneResponseImpl;
 import edu.nyu.cs.javagit.client.IGitClone;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+import edu.nyu.cs.javagit.utilities.StringUtilities;
 
 /**
  * Command-line implementation of the <code>IGitClone</code> interface.
@@ -162,20 +163,12 @@ public class CliGitClone implements IGitClone {
 
         cmd.add(JavaGitConfiguration.getGitCommand());
         cmd.add("clone");
-        cmd.add(getRepoURL(repository));
+        cmd.add(StringUtilities.convertToGitURL(repository));
 
         if ( directory != null)
             cmd.add(directory.getAbsolutePath());
 
         return cmd;
-    }
-
-    private String getRepoURL(URL repository) throws URISyntaxException {
-        final String ret = repository.toURI().toString();
-        if (ret.startsWith("file:"))
-            return ret.substring(5);
-        else
-            return ret;
     }
 
     /**

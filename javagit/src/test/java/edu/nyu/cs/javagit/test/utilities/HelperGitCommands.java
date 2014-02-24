@@ -14,7 +14,7 @@
  *   http://www.javagit.com
  * ====================================================================
  */
-package edu.nyu.cs.javagit.utilities;
+package edu.nyu.cs.javagit.test.utilities;
 
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;

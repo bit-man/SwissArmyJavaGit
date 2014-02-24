@@ -19,24 +19,22 @@ import java.util.*;
  * Command-line implementation of the <code>IGitFetch</code> interface
  */
 public class CliGitFetch implements IGitFetch {
-    @Override
     public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options) throws JavaGitException, IOException {
-        List<String> commandLine = buildCommand(options, repoPath.getPath(), null, (String) null);
+        List<String> commandLine = buildCommand(options, repoPath, null, (String) null);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
-    private List<String> buildCommand(GitFetchOptions options, String repoPath, Ref ref, Set<String> groups) {
+    private List<String> buildCommand(GitFetchOptions options, URL repoPath, Ref ref, Set<String> groups) {
         // Avoids issues on stderr redirection to stdout
         // (http://stackoverflow.com/questions/4062862/git-stderr-output-cant-pipe)
-        if ( ! options.getProgress())
-            options.setProgress();
+        options.setProgress();
 
         final List<String> cmd = options.getOptionArgs();
         cmd.add(0, JavaGitConfiguration.getGitCommand());
         cmd.add(1, "fetch");
-        cmd.add( cmd.size(), repoPath );
+        cmd.add( cmd.size(), StringUtilities.convertToGitURL(repoPath) );
 
         if (ref != null)
             cmd.add( cmd.size(), ref.toString());
@@ -47,23 +45,21 @@ public class CliGitFetch implements IGitFetch {
         return cmd;
     }
 
-    @Override
     public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options, URL repository, Ref ref) throws JavaGitException, IOException {
-        List<String> commandLine = buildCommand(options, repoPath.getPath(), ref, (String) null);
+        List<String> commandLine = buildCommand(options, repoPath, ref, (String) null);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
-    @Override
     public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options, String group) throws JavaGitException, IOException {
-        List<String> commandLine = buildCommand(options, repoPath.toString(), null, group);
+        List<String> commandLine = buildCommand(options, repoPath, null, group);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
-    private List<String> buildCommand(GitFetchOptions options, String repoPath, Ref ref, String group) {
+    private List<String> buildCommand(GitFetchOptions options, URL repoPath, Ref ref, String group) {
         Set<String> groups = new HashSet<String>();
 
         if ( group != null )
@@ -71,14 +67,13 @@ public class CliGitFetch implements IGitFetch {
         return buildCommand(options, repoPath, ref, groups);
     }
 
-    @Override
     public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
             throws JavaGitException, IOException {
 
         if ( ! options.isMultiple() )
             throw new JavaGitException(414001, ExceptionMessageMap.getMessage("414001"));
 
-        List<String> commandLine = buildCommand(options, repoPath.toString(), null, group);
+        List<String> commandLine = buildCommand(options, repoPath.toURI().toURL(), null, group);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
@@ -96,7 +91,6 @@ public class CliGitFetch implements IGitFetch {
             parsingFrom = false;
         }
 
-        @Override
         public void parseLine(String line) {
 
             /***
@@ -111,18 +105,15 @@ public class CliGitFetch implements IGitFetch {
              *     [new branch]      t2         -> origin/t2
              */
             if (line.startsWith("remote:")) {
-                // ToDo (bit-man) parse "remote: Compressing objects: 100% (2/2), done."
-                //                and   "remote: Total 2 (delta 0), reused 0 (delta 0)"
+                // ToDo (bit-man) parse  "remote: Total 2 (delta 0), reused 0 (delta 0)"
                 if (StringUtilities.obtainElement(1, line, ' ').equals("Counting")) {
                     final String numObjects = StringUtilities.obtainElement(3, line, ' ');
                     cmdResponse.setObjectsTransfered(Integer.parseInt(numObjects.replace(",", "")));
                 }
-
             } else  if (line.startsWith("From ")) {
                 parsingFrom = true;
                 final char blank = ' ';
-                final String url = line.substring(StringUtilities.indexOfNChar(line, blank, 1)).trim();
-                currentSource = url;
+                currentSource = line.substring(StringUtilities.indexOfNChar(line, blank, 1)).trim();
                 cmdResponse.addSource(currentSource);
             } else if (parsingFrom) {
                 if (line.startsWith(" "))
@@ -133,19 +124,10 @@ public class CliGitFetch implements IGitFetch {
             }
         }
 
-        private String protocolizeUrl(String url) {
-            if ( url.startsWith("/"))
-                return "file:" + url;
-            else
-                return url;
-        }
-
-        @Override
         public void processExitCode(int code) {
 
         }
 
-        @Override
         public CommandResponse getResponse() throws JavaGitException {
             return cmdResponse;
         }

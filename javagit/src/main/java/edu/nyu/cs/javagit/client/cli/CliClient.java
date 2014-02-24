@@ -83,7 +83,6 @@ public class CliClient implements IClient {
     return new CliGitClone();
   }
 
-  @Override
   public IGitFetch getGitFetchInstance() {
     return new CliGitFetch();
   }
