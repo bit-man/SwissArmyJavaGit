@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.api.url.JavaGitUrl;
 import edu.nyu.cs.javagit.client.ClientManager;
 import edu.nyu.cs.javagit.client.IClient;
 import edu.nyu.cs.javagit.client.IGitFetch;
@@ -16,7 +17,7 @@ import java.util.Set;
  * <code>GitFetch</code> provides an API for git-fetch operation in a git repository.
  */
 public final class GitFetch {
-    public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options)
+    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options)
             throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(options, "options");
 
@@ -26,7 +27,7 @@ public final class GitFetch {
     }
 
 
-    public GitFetchResponse fetch(URL repoPath, GitFetchOptions options, URL repository, Ref ref, File clonedRepository)
+    public GitFetchResponse fetch(JavaGitUrl repoPath, GitFetchOptions options, URL repository, Ref ref, File clonedRepository)
             throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(options, "options");
         CheckUtilities.checkNullArgument(repository, "repository");
@@ -38,7 +39,7 @@ public final class GitFetch {
     }
 
 
-    public GitFetchResponse fetch(File clonedRepository, URL repoPath, GitFetchOptions options, String group)
+    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, String group)
             throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(options, "options");
         CheckUtilities.checkNullArgument(group, "group");

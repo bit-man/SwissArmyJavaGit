@@ -76,9 +76,4 @@ public final class StringUtilities {
         final String[] split = line.split( String.valueOf(c) );
         return split[n];
     }
-
-
-    public static String convertToGitURL(URL repoPath) {
-        return (repoPath.getProtocol().equals("file")) ? repoPath.getPath() : repoPath.toString();
-    }
 }

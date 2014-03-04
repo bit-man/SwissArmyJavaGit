@@ -48,30 +48,4 @@ public class TestStringUtilities  {
 
     }
 
-    @Test
-    public void testFileURL() throws MalformedURLException {
-        String  resp = StringUtilities.convertToGitURL(new URL("file:/uno/dos"));
-        assertEquals("/uno/dos", resp);
-    }
-
-    @Test
-    public void testFtpURL() throws MalformedURLException {
-        String  resp = StringUtilities.convertToGitURL(new URL("ftp://host.xz/path/to/repo.git/"));
-        assertEquals("ftp://host.xz/path/to/repo.git/", resp);
-
-        resp = StringUtilities.convertToGitURL(new URL("ftp://host.xz:99/path/to/repo.git/"));
-        assertEquals("ftp://host.xz:99/path/to/repo.git/", resp);
-
-    }
-
-
-    @Test(expected = MalformedURLException.class)
-    public void testFtpsURL() throws MalformedURLException {
-        String resp = StringUtilities.convertToGitURL(new URL("ftps://host.xz/path/to/repo.git/"));
-        assertEquals("ftps://host.xz/path/to/repo.git/", resp);
-
-        resp = StringUtilities.convertToGitURL(new URL("ftps://host.xz:99/path/to/repo.git/"));
-        assertEquals("ftps://host.xz:99/path/to/repo.git/", resp);
-
-    }
 }

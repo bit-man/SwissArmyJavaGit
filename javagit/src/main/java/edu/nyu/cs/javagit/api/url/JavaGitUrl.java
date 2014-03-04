@@ -3,6 +3,8 @@ package edu.nyu.cs.javagit.api.url;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
+import java.net.URL;
+
 /**
  * Description : URLs for Git
  * Date: 2/23/14
@@ -17,7 +19,15 @@ public abstract class JavaGitUrl {
     private final String user;
 
 
-    protected JavaGitUrl(GitProtocol protocol, String user, String host, Integer port, String file) throws JavaGitException {
+    /**
+     *
+     * @param protocol URL protocol
+     * @param user URL user (null if not specified)
+     * @param host host to connect  (or null if not specified)
+     * @param port port to connect  (null or -1 if not specified)
+     * @param file  file portion (null if not specified)
+     */
+    protected JavaGitUrl(GitProtocol protocol, String user, String host, Integer port, String file) {
         this.protocol = protocol;
         this.host = host;
         this.port = port;
@@ -41,13 +51,15 @@ public abstract class JavaGitUrl {
             builder.append(host);
         }
 
-        if (port != null) {
+        if (port != null && ! port.equals(-1)) {
             builder.append(":");
             builder.append(port);
         }
 
         if (file != null) {
-            builder.append("/");
+            if ( ! file.startsWith("/")) {
+                builder.append("/");
+            }
             builder.append(file);
         }
 

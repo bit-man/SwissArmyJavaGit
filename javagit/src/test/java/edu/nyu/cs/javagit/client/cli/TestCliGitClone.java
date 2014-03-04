@@ -4,6 +4,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitClone;
 import edu.nyu.cs.javagit.api.commands.GitInit;
+import edu.nyu.cs.javagit.api.url.FileUrl;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class TestCliGitClone
     extends TestBase {
 
+    private static final boolean USE_URL = true;
     private File repoPath;
 
     @Before
@@ -35,8 +37,8 @@ public class TestCliGitClone
 
 
     @Test
-    public void testCloneEmptyRepository() throws IOException, JavaGitException, URISyntaxException {
-        final File cloneFolder = doClone(repoPath);
+    public void testCloneEmptyRepositoryUseUrl() throws IOException, JavaGitException, URISyntaxException {
+        final File cloneFolder = doClone(repoPath, USE_URL);
 
         assertTrue(cloneFolder.exists());
         assertTrue(cloneFolder.isDirectory());
@@ -46,7 +48,19 @@ public class TestCliGitClone
         assertTrue(dotGit.isDirectory());
     }
 
-    private File doClone(File repository) throws IOException, JavaGitException, URISyntaxException {
+    @Test
+    public void testCloneEmptyRepositoryUseJavaGitUrl() throws IOException, JavaGitException, URISyntaxException {
+        final File cloneFolder = doClone(repoPath, !USE_URL);
+
+        assertTrue(cloneFolder.exists());
+        assertTrue(cloneFolder.isDirectory());
+
+        final File dotGit = new File(cloneFolder, ".git");
+        assertTrue(dotGit.exists());
+        assertTrue(dotGit.isDirectory());
+    }
+
+    private File doClone(File repository, boolean useUrl) throws IOException, JavaGitException, URISyntaxException {
         final File cloneFolder = FileUtilities.getNonExistingTempFolder();
         getDeletor().add(cloneFolder);
 
@@ -54,15 +68,29 @@ public class TestCliGitClone
 
         final GitClone gitClone = new GitClone();
         assertNotNull(gitClone);
-        gitClone.clone(tmpFolder, repository.toURI().toURL(), cloneFolder);
-
+        if (useUrl) {
+            gitClone.clone(tmpFolder, repository.toURI().toURL(), cloneFolder);
+        } else {
+            gitClone.clone(tmpFolder, new FileUrl(repository), cloneFolder);
+        }
         return cloneFolder;
     }
 
     @Test
-    public void testFailedClone() throws IOException, URISyntaxException, JavaGitException {
+    public void testFailedCloneUseUrl() throws IOException, URISyntaxException, JavaGitException {
         try {
-            doClone(FileUtilities.getNonExistingTempFolder());
+            doClone(FileUtilities.getNonExistingTempFolder(), USE_URL);
+        } catch (JavaGitException e) {
+            if (e.getCode() != 408000)
+                throw e;
+        }
+
+    }
+
+    @Test
+    public void testFailedCloneUseJavaGitUrl() throws IOException, URISyntaxException, JavaGitException {
+        try {
+            doClone(FileUtilities.getNonExistingTempFolder(), !USE_URL);
         } catch (JavaGitException e) {
             if (e.getCode() != 408000)
                 throw e;

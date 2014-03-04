@@ -3,18 +3,18 @@ package edu.nyu.cs.javagit.api.url;
 import edu.nyu.cs.javagit.api.JavaGitException;
 
 /**
- * Description : GIT URL
+ * Description : JavaGit Secure HTTP URL
  * Date: 2/23/14
  * Time: 7:32 PM
  */
 public class HttpsUrl
         extends JavaGitUrl {
 
-    public HttpsUrl(String host, int port, String file) throws JavaGitException {
+    public HttpsUrl(String host, int port, String file) {
         super(GitProtocol.HTTPS, null, host, port, file);
     }
 
-    public HttpsUrl(String host, String file) throws JavaGitException {
+    public HttpsUrl(String host, String file)  {
         super(GitProtocol.HTTPS, null, host, 443, file);
     }
 

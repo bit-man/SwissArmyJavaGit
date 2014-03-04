@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.api.commands;
 
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.url.FileUrl;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,16 +39,16 @@ public class TestGitFetch
         final File cloneFolder = FileUtilities.getNonExistingTempFolder();
         getDeletor().add(cloneFolder);
 
-        new GitClone().clone(tmpFolder, repoPath.toURI().toURL(), cloneFolder );
+        new GitClone().clone(tmpFolder, new FileUrl(repoPath), cloneFolder );
 
         addFileToRepository("uno");
 
-        GitFetchResponse fetchResponse = new GitFetch().fetch(cloneFolder, repoPath.toURI().toURL(), new GitFetchOptions());
+        GitFetchResponse fetchResponse = new GitFetch().fetch(cloneFolder, new FileUrl(repoPath), new GitFetchOptions());
         assertEquals(3, fetchResponse.getObjectsTransfered());
-        assertTrue(fetchResponse.getSourceNews().containsKey(repoPath.getAbsolutePath()));
+        assertTrue(fetchResponse.getSourceNews().containsKey(new FileUrl(repoPath).toString()));
 
         // No new objects
-        fetchResponse = new GitFetch().fetch(cloneFolder, repoPath.toURI().toURL(), new GitFetchOptions());
+        fetchResponse = new GitFetch().fetch(cloneFolder, new FileUrl(repoPath), new GitFetchOptions());
         assertEquals(0, fetchResponse.getObjectsTransfered());
     }
 
