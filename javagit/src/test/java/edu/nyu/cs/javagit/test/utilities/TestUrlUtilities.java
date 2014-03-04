@@ -21,7 +21,7 @@ public class TestUrlUtilities {
     @Test
     public void testFTP() throws MalformedURLException, JavaGitException {
         FtpUrl url = (FtpUrl) UrlUtilities.url2JavaGitUrl(new URL("ftp", "host", "file"));
-        assertEquals("ftp://host:21/file", url.toString());
+        assertEquals("ftp://host/file", url.toString());
     }
 
     @Test(expected = MalformedURLException.class)
@@ -39,13 +39,13 @@ public class TestUrlUtilities {
     @Test
     public void testHttps() throws MalformedURLException, JavaGitException {
         HttpsUrl url = (HttpsUrl) UrlUtilities.url2JavaGitUrl(new URL("https", "host", "myFile"));
-        assertEquals("https://host:443/myFile", url.toString());
+        assertEquals("https://host/myFile", url.toString());
     }
 
     @Test
     public void testHttp() throws MalformedURLException, JavaGitException {
         HttpUrl url = (HttpUrl) UrlUtilities.url2JavaGitUrl(new URL("http", "host", "myFile"));
-        assertEquals("http://host:80/myFile", url.toString());
+        assertEquals("http://host/myFile", url.toString());
     }
 
     @Test(expected = MalformedURLException.class)

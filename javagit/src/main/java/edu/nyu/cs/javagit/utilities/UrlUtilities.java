@@ -15,7 +15,7 @@ public class UrlUtilities {
     public static JavaGitUrl url2JavaGitUrl(URL url) throws JavaGitException {
 
         // Protocol Validation
-        JavaGitUrl.GitProtocol protocol = null;
+        JavaGitUrl.GitProtocol protocol;
         try {
             protocol = JavaGitUrl.GitProtocol.valueOf(url.getProtocol().toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -27,42 +27,29 @@ public class UrlUtilities {
                 return new FileUrl(url.getFile());
 
             case FTPS:
-                return url.getPort() == -1 ?
-                        new FtpsUrl(url.getHost(), url.getFile()) :
-                        new FtpsUrl(url.getHost(), url.getPort(), url.getFile());
+                return new FtpsUrl(url.getHost(), url.getPort(), url.getFile());
 
             case FTP:
-                return url.getPort() == -1 ?
-                        new FtpUrl(url.getHost(), url.getFile()) :
-                        new FtpUrl(url.getHost(), url.getPort(), url.getFile());
+                return new FtpUrl(url.getHost(), url.getPort(), url.getFile());
 
             case GIT:
-                return url.getPort() == -1 ?
-                        new GitUrl(url.getHost(), url.getFile()) :
-                        new GitUrl(url.getHost(), url.getPort(), url.getFile());
+                return new GitUrl(url.getHost(), url.getPort(), url.getFile());
 
             case HTTPS:
-                return url.getPort() == -1 ?
-                        new HttpsUrl(url.getHost(), url.getFile()) :
-                        new HttpsUrl(url.getHost(), url.getPort(), url.getFile());
+                return new HttpsUrl(url.getHost(), url.getPort(), url.getFile());
 
             case HTTP:
-                return url.getPort() == -1 ?
-                        new HttpUrl(url.getHost(), url.getFile()) :
-                        new HttpUrl(url.getHost(), url.getPort(), url.getFile());
+                return  new HttpUrl(url.getHost(), url.getPort(), url.getFile());
 
             case RSYNC:
                 return new RsyncUrl(url.getHost(), url.getFile());
 
             case SSH:
-                return url.getPort() == -1 ?
-                        new SshUrl(url.getHost(), url.getFile()) :
-                        new SshUrl(url.getHost(), url.getUserInfo(), url.getPort(), url.getFile());
+                return new SshUrl(url.getHost(), url.getUserInfo(), url.getPort(), url.getFile());
 
-            default:
-                return null;
         }
 
+        throw new JavaGitException(8, ExceptionMessageMap.getMessage("000008") + " (" + url.getProtocol() + ")");
     }
 
 }
