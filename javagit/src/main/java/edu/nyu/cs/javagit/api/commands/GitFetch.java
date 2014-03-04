@@ -10,7 +10,6 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
 
 /**
@@ -27,15 +26,14 @@ public final class GitFetch {
     }
 
 
-    public GitFetchResponse fetch(JavaGitUrl repoPath, GitFetchOptions options, URL repository, Ref ref, File clonedRepository)
+    public GitFetchResponse fetch(JavaGitUrl repoPath, GitFetchOptions options, Ref ref, File clonedRepository)
             throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(options, "options");
-        CheckUtilities.checkNullArgument(repository, "repository");
         CheckUtilities.checkNullArgument(ref, "ref");
 
         IClient client = ClientManager.getInstance().getPreferredClient();
         IGitFetch gitFetch = client.getGitFetchInstance();
-        return gitFetch.fetch(clonedRepository, repoPath, options, repository, ref);
+        return gitFetch.fetch(clonedRepository, repoPath, options, ref);
     }
 
 
@@ -49,10 +47,8 @@ public final class GitFetch {
         return gitFetch.fetch(clonedRepository, repoPath, options, group);
     }
 
-    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
+    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<JavaGitUrl> repository, Set<String> group)
             throws JavaGitException, IOException {
-
-        // ToDo (bit-man) check if options contains --multiple
 
         CheckUtilities.checkNullArgument(options, "options");
         CheckUtilities.checkNullArgument(repository, "repository");

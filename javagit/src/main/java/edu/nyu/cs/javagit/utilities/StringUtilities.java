@@ -1,7 +1,5 @@
 package edu.nyu.cs.javagit.utilities;
 
-import java.net.URL;
-
 /**
  * Description : String utilities
  * Date: 3/31/13

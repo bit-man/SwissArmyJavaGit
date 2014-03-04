@@ -3,9 +3,6 @@ package edu.nyu.cs.javagit.test.utilities;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import static junit.framework.Assert.assertEquals;
 
 /**

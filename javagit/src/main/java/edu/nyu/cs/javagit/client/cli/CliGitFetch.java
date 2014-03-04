@@ -14,7 +14,6 @@ import edu.nyu.cs.javagit.utilities.StringUtilities;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -28,7 +27,7 @@ public class CliGitFetch implements IGitFetch {
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);
     }
 
-    private List<String> buildCommand(GitFetchOptions options, JavaGitUrl repoPath, Ref ref, Set<String> groups) {
+    private List<String> buildCommand(GitFetchOptions options, JavaGitUrl repoPath, Ref ref, Set<String> groups, Set<JavaGitUrl> repos) {
         // Avoids issues on stderr redirection to stdout
         // (http://stackoverflow.com/questions/4062862/git-stderr-output-cant-pipe)
         options.setProgress();
@@ -38,17 +37,26 @@ public class CliGitFetch implements IGitFetch {
         cmd.add(1, "fetch");
         cmd.add( cmd.size(), repoPath.toString() );
 
-        if (ref != null)
+        if (ref != null) {
             cmd.add( cmd.size(), ref.toString());
+        }
 
-        for( String g : groups )
-            cmd.add( cmd.size(), g);
+        if (groups != null) {
+            for (String g : groups) {
+                cmd.add(cmd.size(), g);
+            }
+        }
+
+        if (repos != null) {
+            for (JavaGitUrl url : repos) {
+                cmd.add(cmd.size(), url.toString());
+            }
+        }
 
         return cmd;
     }
 
-    // BUG what URL repository stands for ?
-    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, URL repository, Ref ref) throws JavaGitException, IOException {
+    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, Ref ref) throws JavaGitException, IOException {
         List<String> commandLine = buildCommand(options, repoPath, ref, (String) null);
         GitFetchParser parser = new GitFetchParser();
 
@@ -67,17 +75,16 @@ public class CliGitFetch implements IGitFetch {
 
         if ( group != null )
             groups.add(group);
-        return buildCommand(options, repoPath, ref, groups);
+        return buildCommand(options, repoPath, ref, groups, null);
     }
 
-    // BUG what Set<URL> repository stands for ?
-    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
+    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<JavaGitUrl> repository, Set<String> group)
             throws JavaGitException, IOException {
 
         if ( ! options.isMultiple() )
             throw new JavaGitException(414001, ExceptionMessageMap.getMessage("414001"));
 
-        List<String> commandLine = buildCommand(options, new FileUrl(repoPath), null, group);
+        List<String> commandLine = buildCommand(options, new FileUrl(repoPath), null, group, repository);
         GitFetchParser parser = new GitFetchParser();
 
         return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, commandLine, parser);

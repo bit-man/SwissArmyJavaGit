@@ -8,7 +8,6 @@ import edu.nyu.cs.javagit.api.url.JavaGitUrl;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
 
 /**
@@ -18,12 +17,12 @@ public interface IGitFetch {
     public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options)
             throws JavaGitException, IOException;
 
-    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, URL repository, Ref ref)
+    public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, Ref ref)
             throws JavaGitException, IOException;
 
     public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, String group)
             throws JavaGitException, IOException;
 
-    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<URL> repository, Set<String> group)
+    public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<JavaGitUrl> repository, Set<String> group)
             throws JavaGitException, IOException;
 }

@@ -1,6 +1,5 @@
 package edu.nyu.cs.javagit.api.commands;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

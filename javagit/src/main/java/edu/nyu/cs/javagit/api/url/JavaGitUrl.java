@@ -1,10 +1,5 @@
 package edu.nyu.cs.javagit.api.url;
 
-import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
-
-import java.net.URL;
-
 /**
  * Description : URLs for Git
  * Date: 2/23/14
