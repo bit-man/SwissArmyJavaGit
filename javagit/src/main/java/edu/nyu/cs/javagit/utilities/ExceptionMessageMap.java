@@ -151,7 +151,8 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("406000", "406000: Error calling git-checkout");
     MESSAGE_MAP.put("406001", "406001: Error not a treeIsh RefType");
 
-    MESSAGE_MAP.put("438000", "438000: Error calling git-status");
+      MESSAGE_MAP.put("438000", "438000: Error calling git-status");
+      MESSAGE_MAP.put("438001", "438001: Error parsing git-status response");
 
     MESSAGE_MAP.put("442001", "442001: No git, or wrong, major version number.");
     MESSAGE_MAP.put("442002", "442002: No git, or wrong, minor version number.");

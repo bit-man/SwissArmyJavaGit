@@ -97,23 +97,18 @@ public class ProcessUtilities {
    *              An <code>IOException</code> is thrown if there is trouble reading input from the
    *              sub-process.
    */
-  public static void getProcessOutput(Process p, IParser parser) throws IOException {
+  public static void getProcessOutput(Process p, IParser parser) throws JavaGitException {
     BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
     while (true) {
       try {
-        String str = br.readLine();
-        if (null == str) {
-          break;
-        }
-        parser.parseLine(str);
+        String str;
+         while( (str = br.readLine()) != null ) {
+              parser.parseLine(str);
+          }
       } catch (IOException e) {
-        /*
-         * TODO: add logging of any information already read from the InputStream. -- jhl388
-         * 06.14.2008
-         */
-        IOException toThrow = new IOException(ExceptionMessageMap.getMessage("020101"));
-        toThrow.initCause(e);
-        throw toThrow;
+          throw new JavaGitException(020101, ExceptionMessageMap.getMessage("020101"), e);
+      } catch (PorcelainParseWrongFormatException e) {
+          throw new JavaGitException(438001, ExceptionMessageMap.getMessage("438001"), e);
       }
     }
   }

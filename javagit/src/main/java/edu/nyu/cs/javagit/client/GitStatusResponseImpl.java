@@ -138,11 +138,11 @@ public class GitStatusResponseImpl extends GitStatusResponse {
   public void addToRenamedFilesToCommit(File file) {
     renamedFilesToCommit.add(file);
     fileToStatus.put(file, Status.RENAMED_TO_COMMIT);
-  }  
+  }
 
   /**
    * Adds a file to list of files that have been added locally but not yet added to the index.
-   * 
+   *
    * @param file
    *          <code>File</code> to be added to the list.
    */
@@ -150,4 +150,17 @@ public class GitStatusResponseImpl extends GitStatusResponse {
     untrackedFiles.add(file);
     fileToStatus.put(file, Status.UNTRACKED);
   }
+
+
+    /**
+     * Adds a file to list of files that have been added ignored .
+     *
+     * @param file
+     *          <code>File</code> to be added to the list.
+     */
+    public void addToIgnoredFiles(File file) {
+        ignoredFiles.add(file);
+        fileToStatus.put(file, Status.IGNORED);
+    }
+
 }

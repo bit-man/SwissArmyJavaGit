@@ -55,7 +55,9 @@ public abstract class GitFileSystemObject {
     // renamed, waiting to commit
     RENAMED_TO_COMMIT,
     // in repository
-    IN_REPOSITORY
+    IN_REPOSITORY,
+      // ignored
+      IGNORED
   }
 
   /**

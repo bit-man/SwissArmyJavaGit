@@ -70,6 +70,12 @@ public abstract class GitStatusResponse implements CommandResponse {
    * List of files that have been renamed
    */
   protected final List<File> renamedFiles;
+
+  /**
+    *  List of files that have been ignored
+    */
+  protected final List<File> ignoredFiles;
+
   /**
    * Name of the branch to which HEAD is pointing to.
    */
@@ -113,6 +119,7 @@ public abstract class GitStatusResponse implements CommandResponse {
     renamedFilesToCommit = new ArrayList<File>();
     untrackedFiles = new ArrayList<File>();
     renamedFiles = new ArrayList<File>();
+    ignoredFiles = new ArrayList<File>();
     errors = new ArrayList<ErrorDetails>();
   }
 
@@ -183,20 +190,35 @@ public abstract class GitStatusResponse implements CommandResponse {
     return modifiedFilesNotUpdated.get(index);
   }
 
-  /**
-   * Returns the name of the file at the specified index that has been created locally but has not
-   * yet been added to the repository by &lt;git-add&gt;.
-   * 
-   * @param index
-   *          Index in the list must be positive and less than the number of new files to commit
-   * @return the name of the file
-   */
-  public File getFileFromUntrackedFiles(int index) {
-    CheckUtilities.checkIntIndexInListRange(untrackedFiles, index);
-    return untrackedFiles.get(index);
-  }
+    /**
+     * Returns the name of the file at the specified index that has been created locally but has not
+     * yet been added to the repository by &lt;git-add&gt;.
+     *
+     * @param index Index in the list must be positive and less than the number of new files to commit
+     * @return the name of the file
+     */
+    public File getFileFromUntrackedFiles(int index) {
+        return getFile(index, untrackedFiles);
+    }
 
-  /**
+
+    /**
+     * Returns the name of the file at the specified index that has been ignored
+     *
+     * @param index
+     *          Index in the list must be positive and less than the number of new files to commit
+     * @return the name of the file
+     */
+    public File getFileFromIgnoredFiles(int index) {
+        return getFile(index, ignoredFiles);
+    }
+
+    private static File getFile(int index, List<File> fileList) {
+        CheckUtilities.checkIntIndexInListRange(fileList, index);
+        return fileList.get(index);
+    }
+
+    /**
    * Returns the file at the specified index in the list of renamed files.
    * 
    * @param index
@@ -272,17 +294,30 @@ public abstract class GitStatusResponse implements CommandResponse {
     return (new IterableIterator<File>(fileIterator));
   }
 
-  /**
-   * Creates a copy of untrackedFiles list and returns the <code>Iterable</code> on this new list.
-   * 
-   * @return Iterable Untracked files list.
-   */
-  public Iterable<File> getUntrackedFiles() {
-    Iterator<File> fileIterator = new ArrayList<File>(untrackedFiles).iterator();
-    return (new IterableIterator<File>(fileIterator));
-  }
+    /**
+     * Creates a copy of untracked files list and returns the <code>Iterable</code> on this new list.
+     *
+     * @return Iterable Untracked files list.
+     */
+    public Iterable<File> getUntrackedFiles() {
+        return getIterator(untrackedFiles);
+    }
 
-  /**
+    /**
+     * Creates a copy of ignored files list and returns the <code>Iterable</code> on this new list.
+     *
+     * @return Iterable Untracked files list.
+     */
+    public Iterable<File> getIgnoredFiles() {
+        return getIterator(ignoredFiles);
+    }
+
+    private static Iterable<File> getIterator(List<File> fileList) {
+        Iterator<File> fileIterator = new ArrayList<File>(fileList).iterator();
+        return (new IterableIterator<File>(fileIterator));
+    }
+
+    /**
    * Returns the size of newFilesToCommit list.
    * 
    * @return size of list.
@@ -336,14 +371,23 @@ public abstract class GitStatusResponse implements CommandResponse {
     return renamedFilesToCommit.size();
   }
 
-  /**
-   * Returns the size of untrackedFiles list.
-   * 
-   * @return size of the list.
-   */
-  public int getUntrackedFilesSize() {
-    return untrackedFiles.size();
-  }
+    /**
+     * Returns the size of untrackedFiles list.
+     *
+     * @return size of the list.
+     */
+    public int getUntrackedFilesSize() {
+        return untrackedFiles.size();
+    }
+
+    /**
+     * Returns the size of ignored file list.
+     *
+     * @return size of the list.
+     */
+    public int getIgnoredFilesSize() {
+        return ignoredFiles.size();
+    }
 
   /**
    * Returns the name of the current branch in git-repository.

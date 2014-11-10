@@ -18,14 +18,10 @@ package edu.nyu.cs.javagit.client.cli;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
@@ -170,7 +166,8 @@ public class CliGitStatus implements IGitStatus {
     List<String> command = new ArrayList<String>();
 
     command.add(JavaGitConfiguration.getGitCommand());
-    command.add("status");
+      command.add("status");
+      command.add("--porcelain");
 
     if (options != null) {
       setOptions(command, options);
@@ -227,12 +224,22 @@ public class CliGitStatus implements IGitStatus {
 
   public static class GitStatusParser implements IParser {
 
-    private enum State {
-      FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
-    }
+      private static Map<Tuple<PorcelainField, PorcelainField>, XYSolver> solver = new HashMap<Tuple<PorcelainField, PorcelainField>, XYSolver>();
+
+      static {
+
+          // FIXME PorcelainParseResult must be used to fill GitStatusResponse
+          solver.put(Tuple.create(PorcelainField.UNTRACKED, PorcelainField.UNTRACKED),
+                                    new UntrackedXYSolver());
+          solver.put(Tuple.create(PorcelainField.IGNORED, PorcelainField.IGNORED),
+                                    new IgnoredXYSolver());
+      }
+
+      private enum State {
+          FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
+      }
 
     private State outputState;
-    private int lineNum;
     private GitStatusResponseImpl response;
     private File inputFile = null;
     
@@ -241,110 +248,23 @@ public class CliGitStatus implements IGitStatus {
 
     public GitStatusParser(String workingDirectory) {
       this.workingDirectory = workingDirectory;
-      lineNum = 0;
       response = new GitStatusResponseImpl(workingDirectory);
     }
 
     public GitStatusParser(String workingDirectory, File in) {
       this.workingDirectory = workingDirectory;
       inputFile = in;
-      lineNum = 0;
       response = new GitStatusResponseImpl(workingDirectory);
     }
 
-    public void parseLine(String line) {
-      //System.out.println(line);
-      if (line == null || line.length() == 0) {
-        return;
-      }
-      ++lineNum;
-      if ( isError(line) ) {
-        return;
-      }
-      if (lineNum == 1) {
-        parseLineOne(line);
-      } else {
-        parseOtherLines(line);
-      }
-    }
+      public void parseLine(String line) throws PorcelainParseWrongFormatException {
+          if (line == null || line.length() == 0) {
+              return;
+          }
 
-    /*
-     * Seems like a valid ( non-error ) line 1 always start
-     * with a '#' and contains the branch name.
-     */
-    private void parseLineOne(String line) {
-      if (!line.startsWith("#")) {
-        return;
+          PorcelainParseResult p = new PorcelainParser(line).parse();
+          solver.get(p.getFields()).solve(response, p);
       }
-      String branch = getBranch(line);
-      if (branch != null) {
-        String branchName = getBranch(line);
-        response.setBranch(Ref.createBranchRef(branchName));
-      }
-    }
-
-    private void parseOtherLines(String line) {
-      if (!(line.charAt(0) == '#')) {
-        response.setStatusOutputComment(line);
-        return;
-      }
-      if (line.contains("Changes to be committed") || line.contains("Changes not staged for commit") ) {
-        outputState = State.FILES_TO_COMMIT;
-        return;
-      } else if (line.contains("Changed but not updated")) {
-        outputState = State.NOT_UPDATED;
-        return;
-      } else {
-        if (line.contains("Untracked files")) {
-          outputState = State.UNTRACKED_FILES;
-          return;
-        }
-      }
-      if (ignoreOutput(line)) {
-        return;
-      }
-      if (Patterns.DELETED.matches(line)) {
-        String deletedFile = getFilename(line);
-        if ((inputFile != null) && (!deletedFile.matches(inputFile.getName())))
-          return;
-        addDeletedFile(deletedFile);
-        return;
-      }
-      if (Patterns.MODIFIED.matches(line)) {
-        String modifiedFile = getFilename(line);
-        if ((inputFile != null) && (!modifiedFile.matches(inputFile.getName())))
-          return;
-        addModifiedFile(modifiedFile);
-        return;
-      }
-      if (Patterns.NEW_FILE.matches(line)) {
-        String newFile = getFilename(line);
-        if ((inputFile != null) && (!newFile.matches(inputFile.getName())))
-          return;
-        addNewFile(newFile);
-        return;
-      }
-      if (outputState == State.UNTRACKED_FILES) {
-        String untrackedFile = getFilename(line);
-        if ((inputFile != null) && (!untrackedFile.matches(inputFile.getName())))
-          return;
-        addUntrackedFile(untrackedFile);
-      }
-      if ( Patterns.RENAMED.matches(line)) {
-    	String renamedFile = getFilename(line);
-    	if ((inputFile != null) && (!renamedFile.matches(inputFile.getName())))
-          return;
-    	addRenamedFileToCommit(renamedFile);
-      }
-    }
-
-    private boolean isError(String line) {
-      if (line.startsWith("fatal") || line.startsWith("Error") || line.startsWith("error")) {
-        response.setError(lineNum, line);
-        return true;
-      }
-      return false;
-    }
 
     private void addNewFile(String filename) {
       response.addToNewFilesToCommit(new File(workingDirectory + filename));
@@ -453,5 +373,146 @@ public class CliGitStatus implements IGitStatus {
       }
       return response;
     }
+
+      public static class UntrackedXYSolver
+              implements XYSolver {
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result) {
+              response.addToUntrackedFiles(result.getIndexPath());
+          }
+
+      }
+
+      public static class IgnoredXYSolver
+              implements XYSolver {
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result) {
+              response.addToIgnoredFiles(result.getIndexPath());
+          }
+
+      }
+
+      public static class PorcelainParser {
+          private final String line;
+
+          public PorcelainParser(String line) {
+              this.line = line;
+          }
+
+          public PorcelainParseResult parse() throws PorcelainParseWrongFormatException {
+              if (line == null ) {
+                  throw new PorcelainParseWrongFormatException("NULL line");
+              }
+
+              String[] split = line.split(" ", 4);
+
+              if (split.length < 2 ) {
+                  throw new PorcelainParseWrongFormatException("Less than 2 fields");
+              }
+              return (split.length == 2) ?
+                      new PorcelainParseResult(parseStatusCode(split[0]),
+                              new File(split[1])) :
+                      new PorcelainParseResult(parseStatusCode(split[0]),
+                              new File(split[1]), new File(split[3]));
+          }
+
+          private Tuple<PorcelainField,PorcelainField> parseStatusCode(String s) {
+                return Tuple.create(PorcelainField.char2field(s.charAt(0)),
+                        PorcelainField.char2field(s.charAt(1)));
+          }
+      }
+
+      public static enum PorcelainField {
+          MODIFIED('M'),
+          UNMODIFIED(' '),
+          ADDED('A'),
+          DELETED('D'),
+          RENAMED('R'),
+          COPIED('C'),
+          UPDATED_BUT_UNMERGED('U'),
+          UNTRACKED('?'),
+          IGNORED('!');
+          private final char c;
+
+          PorcelainField(char c) {
+              this.c = c;
+          }
+
+          public static PorcelainField char2field(char c) {
+              for( PorcelainField p : values()) {
+                  if (p.c == c ) {
+                      return p;
+                  }
+              }
+              return null;
+          }
+      }
+
+      public static class PorcelainParseResult {
+          private final Tuple<PorcelainField, PorcelainField> fields;
+
+          private final File headPath;
+          private final File indexPath;
+          public PorcelainParseResult(Tuple<PorcelainField, PorcelainField> fields, File headPath) {
+            this(fields, headPath,null);
+          }
+
+          public PorcelainParseResult(Tuple<PorcelainField, PorcelainField> fields, File headPath, File indexPath) {
+              this.fields = fields;
+              this.headPath = headPath;
+              this.indexPath = indexPath;
+          }
+
+          public Tuple<PorcelainField, PorcelainField> getFields() {
+              return fields;
+          }
+
+          public File getHeadPath() {
+              return headPath;
+          }
+
+          public File getIndexPath() {
+              return indexPath;
+          }
+      }
+
+      public static class Tuple<S,T> {
+          private S a;
+
+          private T b;
+
+          private Tuple(){};
+
+          private Tuple(S a, T b) {
+              this.a = a;
+              this.b = b;
+          }
+
+          public static <S,T> Tuple<S,T> create(S a, T b) {
+              return new Tuple<S, T>();
+          }
+
+          public S getA() {
+              return a;
+          }
+
+          public T getB() {
+              return b;
+          }
+
+          public boolean equals(Object that) {
+              if ( ! (that instanceof Tuple) ) {
+                  return super.equals(that);
+              }
+
+              Tuple<S,T> o = (Tuple<S,T> ) that;
+
+              if ( o == this) {
+                  return true;
+              }
+
+              return a.equals(o.a) && b.equals(o.b);
+          }
+      }
   }
 }

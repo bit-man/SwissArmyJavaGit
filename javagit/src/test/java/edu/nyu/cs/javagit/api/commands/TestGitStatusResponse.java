@@ -21,6 +21,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
+import edu.nyu.cs.javagit.client.cli.PorcelainParseWrongFormatException;
 import edu.nyu.cs.javagit.test.utilities.JavaHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class TestGitStatusResponse extends TestBase {
      * &lt;git-status&gt;
      */
     @Test
-    public void testInvalidSwitchOptionThrowsException() {
+    public void testInvalidSwitchOptionThrowsException() throws PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         GitStatusResponse response = null;
         try {
@@ -72,7 +73,7 @@ public class TestGitStatusResponse extends TestBase {
      * &lt;git-status&gt; command.
      */
     @Test
-    public void testInvalidFile() {
+    public void testInvalidFile() throws PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         GitStatusResponse response = null;
         parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
@@ -169,7 +170,7 @@ public class TestGitStatusResponse extends TestBase {
      * Test for verifying the correct branch name in comment in <code>GitStatusResposne</code>
      */
     @Test
-    public void testNothingToCommit() throws JavaGitException {
+    public void testNothingToCommit() throws JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         parser.parseLine("# On branch master");
         parser.parseLine("nothing to commit (working directory clean)");
@@ -192,7 +193,7 @@ public class TestGitStatusResponse extends TestBase {
      * <code>GitStatusResponse</code> object when <code>GitStatus</code> is run.
      */
     @Test
-    public void testUntrackedFilesAndDircotories() throws JavaGitException {
+    public void testUntrackedFilesAndDircotories() throws JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
         parser.parseLine("# On branch master");
@@ -226,7 +227,7 @@ public class TestGitStatusResponse extends TestBase {
      * &lt;git-commit&gt; is run.
      */
     @Test
-    public void testNewlyAddedFiles() throws JavaGitException {
+    public void testNewlyAddedFiles() throws JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         parser.parseLine("# On branch master");
         parser.parseLine("# Changes to be committed:");
@@ -267,7 +268,7 @@ public class TestGitStatusResponse extends TestBase {
      * modifiedFilesNotUpdated are correct and match.
      */
     @Test
-    public void testModifiedAndDeletedFiles() throws JavaGitException {
+    public void testModifiedAndDeletedFiles() throws JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
         parser.parseLine("# On branch master");
@@ -310,7 +311,7 @@ public class TestGitStatusResponse extends TestBase {
      * @throws JavaGitException
      */
     @Test
-    public void testRenamedFilesToCommitFromCommandOutput() throws IOException, JavaGitException {
+    public void testRenamedFilesToCommitFromCommandOutput() throws IOException, JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         parser.parseLine("# On branch master");
         parser.parseLine("# Changes to be committed:");
@@ -333,7 +334,7 @@ public class TestGitStatusResponse extends TestBase {
      * <code>GitStatusParser</code>
      */
     @Test
-    public void testModifiedFilesFromCommandOutput() throws IOException, JavaGitException {
+    public void testModifiedFilesFromCommandOutput() throws IOException, JavaGitException, PorcelainParseWrongFormatException {
 
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
@@ -366,7 +367,7 @@ public class TestGitStatusResponse extends TestBase {
     }
 
     @Test
-    public void testChangesNotStaged4Commit() throws JavaGitException {
+    public void testChangesNotStaged4Commit() throws JavaGitException, PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
 
         parser.parseLine("# On branch master ");
