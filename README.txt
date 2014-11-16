@@ -69,7 +69,7 @@ III.  USING JAVAGIT IN YOUR PROJECT
 
          On Windows this is probably:
 
-           C:\Documents and Settings\<YourUser>\.m2\repository\javagit\javagit
+           C:\Documents and Settings\<YourUser>\.m2\repository\io\github\bit-man\javagit
 
       d. If you are using Maven 2 as your project build tool, add JavaGit as a
          dependency:
