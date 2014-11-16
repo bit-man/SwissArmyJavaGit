@@ -98,19 +98,17 @@ public class ProcessUtilities {
    *              sub-process.
    */
   public static void getProcessOutput(Process p, IParser parser) throws JavaGitException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-    while (true) {
+      BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
       try {
-        String str;
-         while( (str = br.readLine()) != null ) {
+          String str;
+          while ((str = br.readLine()) != null) {
               parser.parseLine(str);
           }
       } catch (IOException e) {
           throw new JavaGitException(020101, ExceptionMessageMap.getMessage("020101"), e);
-      } catch (PorcelainParseWrongFormatException e) {
-          throw new JavaGitException(438001, ExceptionMessageMap.getMessage("438001"), e);
       }
-    }
+
   }
 
   /**

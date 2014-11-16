@@ -94,7 +94,9 @@ public class ExceptionMessageMap {
 
   private static Map<String, String> MESSAGE_MAP;
 
-  static {
+    public static final String ErrorParsingGitStatusResponse = "438001";
+
+    static {
     MESSAGE_MAP = new HashMap<String, String>();
 
     MESSAGE_MAP.put("000001", "000001: A String argument was not specified but is required.");
@@ -152,7 +154,7 @@ public class ExceptionMessageMap {
     MESSAGE_MAP.put("406001", "406001: Error not a treeIsh RefType");
 
       MESSAGE_MAP.put("438000", "438000: Error calling git-status");
-      MESSAGE_MAP.put("438001", "438001: Error parsing git-status response");
+      MESSAGE_MAP.put(ErrorParsingGitStatusResponse, "438001: Error parsing git-status response");
 
     MESSAGE_MAP.put("442001", "442001: No git, or wrong, major version number.");
     MESSAGE_MAP.put("442002", "442002: No git, or wrong, minor version number.");

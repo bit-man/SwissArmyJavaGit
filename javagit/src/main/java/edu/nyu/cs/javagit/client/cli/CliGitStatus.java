@@ -28,6 +28,7 @@ import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
 import edu.nyu.cs.javagit.client.IGitStatus;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+import edu.nyu.cs.javagit.utilities.StringUtilities;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
@@ -230,9 +231,44 @@ public class CliGitStatus implements IGitStatus {
 
           // FIXME PorcelainParseResult must be used to fill GitStatusResponse
           solver.put(Tuple.create(PorcelainField.UNTRACKED, PorcelainField.UNTRACKED),
-                                    new UntrackedXYSolver());
+                                    UntrackedXYSolver.getInstance());
           solver.put(Tuple.create(PorcelainField.IGNORED, PorcelainField.IGNORED),
-                                    new IgnoredXYSolver());
+                  IgnoredXYSolver.getInstance());
+
+          solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.MODIFIED),
+                  ModifiedNotUpdatedXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.DELETED),
+                  DeletedNotUpdatedXYSolver.getInstance());
+
+          solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.MODIFIED),
+                  ModifiedToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.DELETED),
+                  ModifiedToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.UNMODIFIED),
+                  ModifiedToCommitXYSolver.getInstance());
+
+
+          solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.MODIFIED),
+                  NewFilesToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.DELETED),
+                  NewFilesToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.UNMODIFIED),
+                  NewFilesToCommitXYSolver.getInstance());
+
+
+          solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.MODIFIED),
+                  DeletedToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.UNMODIFIED),
+                  DeletedToCommitXYSolver.getInstance());
+
+
+          solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.MODIFIED),
+                  RenamedFilesToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.DELETED),
+                  RenamedFilesToCommitXYSolver.getInstance());
+          solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.UNMODIFIED),
+                  RenamedFilesToCommitXYSolver.getInstance());
+
       }
 
       private enum State {
@@ -244,74 +280,36 @@ public class CliGitStatus implements IGitStatus {
     private File inputFile = null;
     
     // The working directory for the command that was run.
-    private String workingDirectory;
+    private File workingDirectory;
 
     public GitStatusParser(String workingDirectory) {
-      this.workingDirectory = workingDirectory;
+      this.workingDirectory = new File(workingDirectory);
       response = new GitStatusResponseImpl(workingDirectory);
     }
 
     public GitStatusParser(String workingDirectory, File in) {
-      this.workingDirectory = workingDirectory;
+      this.workingDirectory = new File(workingDirectory);
       inputFile = in;
       response = new GitStatusResponseImpl(workingDirectory);
     }
 
-      public void parseLine(String line) throws PorcelainParseWrongFormatException {
+      public void parseLine(String line) throws JavaGitException {
           if (line == null || line.length() == 0) {
               return;
           }
 
-          PorcelainParseResult p = new PorcelainParser(line).parse();
-          solver.get(p.getFields()).solve(response, p);
+          PorcelainParseResult p = null;
+          try {
+              p = new PorcelainParser(line).parse();
+              if ( inputFile == null ||  inputFile.getPath().equals(p.getHeadPath().getPath())  ) {
+                  solver.get(p.getFields()).solve(response, p, workingDirectory);
+              }
+          }  catch (PorcelainParseWrongFormatException e) {
+              throw new JavaGitException(438001,
+                      ExceptionMessageMap.getMessage(ExceptionMessageMap.ErrorParsingGitStatusResponse),
+                      e);
+          }
       }
-
-    private void addNewFile(String filename) {
-      response.addToNewFilesToCommit(new File(workingDirectory + filename));
-    }
-
-    private void addDeletedFile(String filename) {
-      File file = new File(workingDirectory + filename);
-      switch (outputState) {
-      case FILES_TO_COMMIT:
-        response.addToDeletedFilesToCommit(file);
-        break;
-
-      case NOT_UPDATED:
-        response.addToDeletedFilesNotUpdated(file);
-        break;
-      }
-    }
-
-    private void addModifiedFile(String filename) {
-      File file = new File(workingDirectory + filename);
-      switch (outputState) {
-      case FILES_TO_COMMIT:
-        response.addToModifiedFilesToCommit(file);
-        break;
-
-      case NOT_UPDATED:
-        response.addToModifiedFilesNotUpdated(file);
-        break;
-      }
-    }
-
-    private void addRenamedFileToCommit(String renamedFile) {
-      response.addToRenamedFilesToCommit(new File(workingDirectory + renamedFile));	
-    }
-    
-    private void addUntrackedFile(String filename) {
-      response.addToUntrackedFiles(new File(workingDirectory + filename));
-    }
-
-    private String getBranch(String line) {
-      StringTokenizer st = new StringTokenizer(line);
-      String last = null;
-      while (st.hasMoreTokens()) {
-        last = st.nextToken();
-      }
-      return last;
-    }
 
     //
 
@@ -347,22 +345,6 @@ public class CliGitStatus implements IGitStatus {
           return filename;
     }
 
-    private boolean ignoreOutput(String line) {
-      if (line.contains("(use \"git reset")) {
-        return true;
-      }
-      if (line.contains("(use \"git add ")) {
-        return true;
-      }
-      if (line.contains("(use \"git add/rm")) {
-        return true;
-      }
-      if (Patterns.EMPTY_HASH_LINE.matches(line)) {
-        return true;
-      }
-      return false;
-    }
-
     public void processExitCode(int code) {
     }
     
@@ -375,19 +357,140 @@ public class CliGitStatus implements IGitStatus {
     }
 
       public static class UntrackedXYSolver
-              implements XYSolver {
+              extends XYSolver {
 
-          public void solve(GitStatusResponseImpl response, PorcelainParseResult result) {
-              response.addToUntrackedFiles(result.getIndexPath());
+          private  static XYSolver singleInstance = new UntrackedXYSolver();
+
+          private UntrackedXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToUntrackedFiles(new File( workingDirectory, result.getHeadPath().getPath()));
           }
 
       }
 
       public static class IgnoredXYSolver
-              implements XYSolver {
+              extends XYSolver {
 
-          public void solve(GitStatusResponseImpl response, PorcelainParseResult result) {
-              response.addToIgnoredFiles(result.getIndexPath());
+          private static XYSolver singleInstance = new UntrackedXYSolver();
+
+          private IgnoredXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToIgnoredFiles(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class DeletedNotUpdatedXYSolver
+              extends XYSolver {
+
+
+          private static XYSolver singleInstance = new DeletedNotUpdatedXYSolver();
+
+
+          private DeletedNotUpdatedXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToDeletedFilesNotUpdated(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class DeletedToCommitXYSolver
+              extends XYSolver {
+
+          private static XYSolver singleInstance = new DeletedToCommitXYSolver();
+
+          private DeletedToCommitXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToDeletedFilesToCommit(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class ModifiedNotUpdatedXYSolver
+              extends XYSolver {
+
+          private static XYSolver singleInstance = new ModifiedNotUpdatedXYSolver();
+
+          private ModifiedNotUpdatedXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToModifiedFilesNotUpdated(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class ModifiedToCommitXYSolver
+              extends XYSolver {
+
+          private static XYSolver singleInstance = new ModifiedToCommitXYSolver();
+
+          private ModifiedToCommitXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToModifiedFilesToCommit(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class NewFilesToCommitXYSolver
+              extends XYSolver {
+
+          private static XYSolver singleInstance = new NewFilesToCommitXYSolver();
+
+          private NewFilesToCommitXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToNewFilesToCommit(new File( workingDirectory, result.getHeadPath().getPath()));
+          }
+
+      }
+
+      public static class RenamedFilesToCommitXYSolver
+              extends XYSolver {
+
+          private static XYSolver singleInstance = new RenamedFilesToCommitXYSolver();
+
+          private RenamedFilesToCommitXYSolver() {}
+
+          public static XYSolver getInstance() {
+              return singleInstance;
+          }
+
+          public void solve(GitStatusResponseImpl response, PorcelainParseResult result, File workingDirectory) {
+              response.addToRenamedFilesToCommit(new File( workingDirectory, result.getHeadPath().getPath()));
           }
 
       }
@@ -400,20 +503,37 @@ public class CliGitStatus implements IGitStatus {
           }
 
           public PorcelainParseResult parse() throws PorcelainParseWrongFormatException {
-              if (line == null ) {
+              if (StringUtilities.isEmptyString(line)) {
                   throw new PorcelainParseWrongFormatException("NULL line");
               }
 
-              String[] split = line.split(" ", 4);
+              /**
+               *    In the short-format, the status of each path is shown as
+               *
+               *    XY PATH1 -> PATH2
+               *
+               *    where PATH1 is the path in the HEAD, and the " -> PATH2" part is shown only when PATH1 corresponds to a different path in the
+               *    index/worktree (i.e. the file is renamed). The XY is a two-letter status code.
+               *
+               */
+              final String fields = line.substring(0,2);
+              String linePaths = line.substring(2).trim();
 
-              if (split.length < 2 ) {
-                  throw new PorcelainParseWrongFormatException("Less than 2 fields");
+              if ( StringUtilities.isEmptyString(linePaths) ) {
+                  throw new PorcelainParseWrongFormatException("No file path parsing line '" + line +"'");
               }
-              return (split.length == 2) ?
-                      new PorcelainParseResult(parseStatusCode(split[0]),
-                              new File(split[1])) :
-                      new PorcelainParseResult(parseStatusCode(split[0]),
-                              new File(split[1]), new File(split[3]));
+
+              final String[] path = linePaths.split(" ", 3);
+
+              if ( path.length < 1 || StringUtilities.isEmptyString(path[0]) ) {
+                  throw new PorcelainParseWrongFormatException("No file path parsing line '" + line +"'" );
+              }
+
+              return (path.length == 1) ?
+                      new PorcelainParseResult(parseStatusCode(fields),
+                              new File(path[0])) :
+                      new PorcelainParseResult(parseStatusCode(fields),
+                              new File(path[0]), new File(path[2]));
           }
 
           private Tuple<PorcelainField,PorcelainField> parseStatusCode(String s) {
@@ -489,7 +609,7 @@ public class CliGitStatus implements IGitStatus {
           }
 
           public static <S,T> Tuple<S,T> create(S a, T b) {
-              return new Tuple<S, T>();
+              return new Tuple<S, T>(a,b);
           }
 
           public S getA() {
@@ -512,6 +632,11 @@ public class CliGitStatus implements IGitStatus {
               }
 
               return a.equals(o.a) && b.equals(o.b);
+          }
+
+          public int hashCode() {
+              return (int) Long.parseLong(String.valueOf(a.hashCode()) +
+                                      String.valueOf(b.hashCode()));
           }
       }
   }

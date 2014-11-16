@@ -74,4 +74,13 @@ public final class StringUtilities {
         final String[] split = line.split( String.valueOf(c) );
         return split[n];
     }
+
+    /**
+     * Checks for string emptiness
+     * @param str
+     * @return
+     */
+    public static boolean isEmptyString(String str) {
+        return (str == null || str.length() == 0 );
+    }
 }

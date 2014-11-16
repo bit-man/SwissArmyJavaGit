@@ -22,6 +22,7 @@ import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -106,7 +107,7 @@ public class TestGitStatus extends TestBase {
      * @throws IOException
      */
 
-    @Test
+    @Ignore("Should branch be obtained from git status ?")
     public void testBranch() throws JavaGitException, IOException {
         List<File> paths = null;
         GitStatusResponse response = gitStatus.status(repositoryDirectory, options, paths);
@@ -161,7 +162,7 @@ public class TestGitStatus extends TestBase {
                 .getFileFromNewFilesToCommit(1).getName());
         assertEquals("Error. Filename does not match", repositoryDirectory.getPath() +
                 File.separator + "testDirectory" + File.separator + "foobar03",
-                status.getFileFromNewFilesToCommit(2).toString());
+                status.getFileFromNewFilesToCommit(2).getAbsolutePath());
     }
 
     /**
@@ -192,11 +193,7 @@ public class TestGitStatus extends TestBase {
         checkModifiedFiles(status);
         if (new File(repositoryDirectory.getPath() + File.separator + file2.getPath()).delete()) {
             status = gitStatus.status(repositoryDirectory, options, statusPath);
-            if (JavaGitConfiguration.getGitVersionObject().compareTo(new GitVersion("1.7.0")) == GitVersion.LATER) {
-                assertEquals("No of deleted files not equal", 1, status.getDeletedFilesToCommitSize());
-            } else {
                 assertEquals("No of deleted files not equal", 1, status.getDeletedFilesNotUpdatedSize());
-            }
 
             checkModifiedFiles(status);
             //    assertEquals("No of modified but not updated files not equal", 2, modifiedNotUpdatedFiles);
@@ -206,10 +203,7 @@ public class TestGitStatus extends TestBase {
     }
 
     private void checkModifiedFiles(GitStatusResponse status) throws JavaGitException {
-        int modifiedNotUpdatedFiles;
-        modifiedNotUpdatedFiles = (JavaGitConfiguration.getGitVersionObject().compareTo(new GitVersion("1.7.0")) == GitVersion.LATER) ?
-                status.getModifiedFilesToCommitSize() :
-                status.getModifiedFilesNotUpdatedSize();
+        int modifiedNotUpdatedFiles = status.getModifiedFilesNotUpdatedSize();
 
         assertEquals("No of modified but not updated files not equal", 2, modifiedNotUpdatedFiles);
 

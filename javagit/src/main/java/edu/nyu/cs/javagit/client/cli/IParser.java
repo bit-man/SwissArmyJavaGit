@@ -33,7 +33,7 @@ public interface IParser {
    * @param line
    *          The line to parse.
    */
-  public void parseLine(String line) throws PorcelainParseWrongFormatException;
+  public void parseLine(String line) throws JavaGitException;
 
   /**
    * Takes the process exit code so it can provide the most information possible to the user about

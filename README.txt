@@ -19,6 +19,13 @@ I.    WELCOME
 
       This is a fork from original JavaGit located at http://javagit.sourceforge.net/
 
+      Starting from 1.0 more robust and stable releases are being built mainly because
+      of some important decisions made regarding parsing and others.
+      This will affect in a good way the whole product but some minor incompatibilities
+      are expected related to v0.2
+
+      Still in ALPHA stage. Stay tuned and enjoy the ride !!
+
 II.   BUILDING JAVAGIT
 
       JavaGit is built using Maven 2.  The steps to get started with building 

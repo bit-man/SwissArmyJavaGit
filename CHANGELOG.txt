@@ -1,5 +1,9 @@
                              JavaGit Change Log
 
+Version 1.ALPHA.0
+
+  - Started using porcelain for git status
+
 Version 0.2.0
 
   - GitInit, GitClone, GitVersion added
