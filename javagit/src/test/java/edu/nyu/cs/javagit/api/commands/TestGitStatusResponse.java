@@ -76,8 +76,8 @@ public class TestGitStatusResponse extends TestBase {
     public void testInvalidFile() throws PorcelainParseWrongFormatException {
         GitStatusParser parser = new GitStatusParser(repositoryDirectory);
         GitStatusResponse response = null;
-        parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
         try {
+            parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
             response = parser.getResponse();
             fail("Failed to throw JavaGitException for an invalid filename");
         } catch (JavaGitException e) {
