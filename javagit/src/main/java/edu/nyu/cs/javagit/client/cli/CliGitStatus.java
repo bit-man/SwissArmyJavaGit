@@ -16,10 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
@@ -29,6 +25,10 @@ import edu.nyu.cs.javagit.client.IGitStatus;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
@@ -634,9 +634,11 @@ public class CliGitStatus implements IGitStatus {
               return a.equals(o.a) && b.equals(o.b);
           }
 
+          @Override
           public int hashCode() {
-              return (int) Long.parseLong(String.valueOf(a.hashCode()) +
-                                      String.valueOf(b.hashCode()));
+              int result = a != null ? a.hashCode() : 0;
+              result = 31 * result + (b != null ? b.hashCode() : 0);
+              return result;
           }
       }
   }
