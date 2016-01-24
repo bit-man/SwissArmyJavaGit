@@ -8,4 +8,4 @@ before_install:
   - sudo apt-get install -qq maven
 script:
   - cd javagit
-  - mvn build
+  - mvn install
