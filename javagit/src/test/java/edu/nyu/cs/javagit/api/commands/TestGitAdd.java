@@ -20,6 +20,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -118,6 +119,7 @@ public class TestGitAdd extends TestBase {
 
 
     @Test
+    @Ignore
     public void testAddingOneFileToRepositoryBlanksInPath() throws IOException, JavaGitException {
         File file1 = FileUtilities.createFile(repoDirectory, "file A.txt", "This is file fileA.txt");
         gitAdd.add(repoDirectory, file1);
