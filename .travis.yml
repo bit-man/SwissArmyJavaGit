@@ -3,3 +3,9 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
+before_install:
+  - git config --global user.email "you@example.com"
+  - git config --global user.name "Your Name"
+script:
+  - cd javagit
+  - mvn install
