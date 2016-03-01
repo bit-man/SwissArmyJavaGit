@@ -10,7 +10,7 @@
     <groupId>io.github.bit-man</groupId>
     <artifactId>javagit</artifactId>
     <packaging>jar</packaging>
-    <version>1.ALPHA.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Swiss Army Java Git</name>
     <description>Swiss Army JavaGit is a Java API that provides access to git repositories</description>
     <url>http://bit-man.github.io/SwissArmyJavaGit/</url>
@@ -52,10 +52,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <!-- best lock down version of the plugin too -->
                     <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
+                        <source>1.7</source>
+                        <target>1.7</target>
                     </configuration>
                 </plugin>
                 <plugin>

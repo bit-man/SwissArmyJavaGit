@@ -1,6 +1,6 @@
                              JavaGit Change Log
 
-Version 1.ALPHA.0
+Version 1.0.0-SNAPSHOT
 
   - Started using porcelain for git status
 
