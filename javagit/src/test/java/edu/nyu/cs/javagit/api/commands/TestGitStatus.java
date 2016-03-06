@@ -20,6 +20,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.GitRepositoryBuilder;
+import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestGitStatus extends TestBase {
 
@@ -206,6 +208,27 @@ public class TestGitStatus extends TestBase {
         } else {
             fail("Failed to delete file \"foobar02\"");
         }
+    }
+
+    @Test
+    public void testIgnoredFile()
+            throws IOException, JavaGitException
+    {
+        FileUtilities.createFile(repositoryDirectory, ".gitignore", FOOBAR_01_NAME);
+        assertThat(gitStatus.status(repositoryDirectory).getIgnoredFiles())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+    private Extractor<File, String> getFileNameExtractor()
+    {
+        return new Extractor<File, String>()
+            {
+                @Override
+                public String extract(File input)
+                {
+                    return input.getName();
+                }
+            };
     }
 
     private void checkModifiedFiles(GitStatusResponse status) throws JavaGitException {

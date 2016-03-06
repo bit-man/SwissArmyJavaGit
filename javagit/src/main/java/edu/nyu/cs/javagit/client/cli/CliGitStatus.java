@@ -169,6 +169,7 @@ public class CliGitStatus implements IGitStatus {
     command.add(JavaGitConfiguration.getGitCommand());
       command.add("status");
       command.add("--porcelain");
+      command.add("--ignored");
 
     if (options != null) {
       setOptions(command, options);
@@ -377,7 +378,7 @@ public class CliGitStatus implements IGitStatus {
       public static class IgnoredXYSolver
               extends XYSolver {
 
-          private static XYSolver singleInstance = new UntrackedXYSolver();
+          private static XYSolver singleInstance = new IgnoredXYSolver();
 
           private IgnoredXYSolver() {}
 
@@ -542,7 +543,7 @@ public class CliGitStatus implements IGitStatus {
           }
       }
 
-      public static enum PorcelainField {
+      public enum PorcelainField {
           MODIFIED('M'),
           UNMODIFIED(' '),
           ADDED('A'),
@@ -637,7 +638,7 @@ public class CliGitStatus implements IGitStatus {
           @Override
           public int hashCode() {
               int result = a != null ? a.hashCode() : 0;
-              result = 31 * result + (b != null ? b.hashCode() : 0);
+              result = 37 * result + (b != null ? b.hashCode() : 0);
               return result;
           }
       }
