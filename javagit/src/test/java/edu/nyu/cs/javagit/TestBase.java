@@ -2,7 +2,7 @@ package edu.nyu.cs.javagit;
 
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.test.utilities.Deletor;
+import edu.nyu.cs.javagit.test.utilities.RealDeletor;
 import edu.nyu.cs.javagit.test.utilities.TestProperty;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @Ignore
 public class TestBase {
 
-    private Deletor d = null;
+    private RealDeletor d = null;
 
     @Before
     public void setUp() throws IOException, JavaGitException {
@@ -35,9 +35,9 @@ public class TestBase {
         }
     }
 
-    protected Deletor getDeletor() {
+    protected RealDeletor getDeletor() {
         if ( d == null)
-            d = new Deletor();
+            d = new RealDeletor();
 
         return d;
     }

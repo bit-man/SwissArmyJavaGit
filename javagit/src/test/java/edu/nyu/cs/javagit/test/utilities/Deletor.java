@@ -3,24 +3,12 @@ package edu.nyu.cs.javagit.test.utilities;
 import edu.nyu.cs.javagit.api.JavaGitException;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
-/**
- * File deletion utility
- */
-public class Deletor {
+public interface Deletor
+{
 
-    private Set<File> toDelete = new HashSet<File>();
+    void add (File f);
 
-    public void add (File f) {
-        toDelete.add(f);
-    }
+    void delete() throws JavaGitException;
 
-    public void delete() throws JavaGitException {
-        for (File f : toDelete)
-            if (f.exists())
-                FileUtilities.removeDirectoryRecursivelyAndForcefully(f);
-
-    }
 }
