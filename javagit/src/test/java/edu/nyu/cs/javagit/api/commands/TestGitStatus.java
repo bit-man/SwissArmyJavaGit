@@ -207,7 +207,7 @@ public class TestGitStatus
             //    assertEquals("No of modified but not updated files not equal", 2, modifiedNotUpdatedFiles);
         } else
         {
-            fail("Failed to delete file \"foobar02\"");
+            fail("Failed to delete file " + FOOBAR02.getName());
         }
     }
 
@@ -215,8 +215,6 @@ public class TestGitStatus
     // ~~--------------------------------------------- New tests (porcelain usage related)
 //    X          Y     Meaning
 //    -------------------------------------------------
-//    M        [ MD]   updated in index
-//    D         [ M]   deleted from index
 //    R        [ MD]   renamed in index
 //    C        [ MD]   copied in index
 //    [MARC]           index and work tree matches
@@ -231,6 +229,71 @@ public class TestGitStatus
 //    A           A    unmerged, both added
 //    U           U    unmerged, both modified
 
+    @Test
+    public void testDeletedFromIndex()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        foobar01.delete();
+        gitAdd.add(repository, foobar01);
+        assertThat(gitStatus.status(repository).getDeletedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
+
+    @Test
+    public void testUpdatedInIndexAndDeletedAtWorktree()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        FileUtilities.modifyFileContents(foobar01, "more data");
+        gitAdd.add(repository, foobar01);
+        foobar01.delete();
+        assertThat(gitStatus.status(repository).getModifiedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
+
+    @Test
+    public void testUpdatedInIndexAndWorktree()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        FileUtilities.modifyFileContents(foobar01, "more data");
+        gitAdd.add(repository, foobar01);
+        FileUtilities.modifyFileContents(foobar01, "even more data");
+        assertThat(gitStatus.status(repository).getModifiedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
+
+    @Test
+    public void testUpdatedInIndexButNotInWorktree()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        FileUtilities.modifyFileContents(foobar01, "more data");
+        gitAdd.add(repository, foobar01);
+        assertThat(gitStatus.status(repository).getModifiedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
 
     @Test
     public void testModifiedNotUpdated()
