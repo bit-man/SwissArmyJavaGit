@@ -46,10 +46,10 @@ public class TestGitStatus extends TestBase {
     private GitStatus gitStatus;
     private GitStatusOptions options;
 
-    File file1;
-    File file2;
-    File testDir;
-    File file3;
+    private File file1;
+    private File file2;
+    private File testDir;
+    private File file3;
 
     @Before
     public void setUp() throws JavaGitException, IOException {
@@ -123,27 +123,6 @@ public class TestGitStatus extends TestBase {
         assertEquals("Branch does not match", "master", branch);
     }
 
-    /**
-     * Test for new files that are created but not yet added by git-add or git-rm commands. These
-     * files are under Untracked files section of the output.
-     *
-     * @throws IOException
-     * @throws JavaGitException
-     */
-
-    @Test
-    public void testUntrackedNewFiles() throws IOException, JavaGitException {
-        List<File> paths = null;
-        GitStatusResponse response = gitStatus.status(repositoryDirectory, options, paths);
-        int noOfUntrackedFiles = response.getUntrackedFilesSize();
-        assertEquals("Error.No of untracked files does not Match.", 3, noOfUntrackedFiles);
-        assertEquals("Error. Filename does not match.", FOOBAR_01_NAME,
-                response.getFileFromUntrackedFiles(0).getName());
-        assertEquals("Error. Filename does not match.", FOOBAR_02_NAME,
-                response.getFileFromUntrackedFiles(1).getName());
-        assertEquals("Error. Filename does not match.", TEST_DIRECTORY_NAME,
-                response.getFileFromUntrackedFiles(2).getName());
-    }
 
     /**
      * Test for files that will be committed next time &lt;git-commit&gt; is executed.
@@ -209,6 +188,68 @@ public class TestGitStatus extends TestBase {
             fail("Failed to delete file \"foobar02\"");
         }
     }
+
+    @Test
+    public void testAddedToIndexUnmodified()
+            throws IOException, JavaGitException
+    {
+
+        File repository = new GitRepositoryBuilder(getDeletor())
+                .addFile(FOOBAR_01_NAME, "Test File1").build();
+        File foobar01 = new File(repository, FOOBAR_01_NAME);
+        gitAdd.add(repository, foobar01);
+        assertThat(gitStatus.status(repository).getNewFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+    @Test
+    public void testAddedToIndexModified()
+            throws IOException, JavaGitException
+    {
+
+        File repository = new GitRepositoryBuilder(getDeletor())
+                .addFile(FOOBAR_01_NAME, "Test File1").build();
+        File foobar01 = new File(repository, FOOBAR_01_NAME);
+        gitAdd.add(repository, foobar01);
+        FileUtilities.modifyFileContents(foobar01, "More text pleeeeease");
+        assertThat(gitStatus.status(repository).getNewFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+    @Test
+    public void testAddedToIndexDeleted()
+            throws IOException, JavaGitException
+    {
+
+        File repository = new GitRepositoryBuilder(getDeletor())
+                .addFile(FOOBAR_01_NAME, "Test File1").build();
+        File foobar01 = new File(repository, FOOBAR_01_NAME);
+        gitAdd.add(repository, foobar01);
+        foobar01.delete();
+        assertThat(gitStatus.status(repository).getNewFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+    /**
+     * Test for new files that are created but not yet added by git-add or git-rm commands. These
+     * files are under Untracked files section of the output.
+     *
+     * @throws IOException
+     * @throws JavaGitException
+     */
+    @Test
+    public void testUntrackedNewFiles() throws IOException, JavaGitException {
+        List<File> paths = null;
+        GitStatusResponse response = gitStatus.status(repositoryDirectory, options, paths);
+        assertEquals("Error.No of untracked files does not Match.", 3, response.getUntrackedFilesSize());
+        assertEquals("Error. Filename does not match.", FOOBAR_01_NAME,
+                response.getFileFromUntrackedFiles(0).getName());
+        assertEquals("Error. Filename does not match.", FOOBAR_02_NAME,
+                response.getFileFromUntrackedFiles(1).getName());
+        assertEquals("Error. Filename does not match.", TEST_DIRECTORY_NAME,
+                response.getFileFromUntrackedFiles(2).getName());
+    }
+
 
     @Test
     public void testIgnoredFile()
