@@ -2,6 +2,7 @@
 
 Version 1.0.0-SNAPSHOT
 
+  - Java 7 required
   - Started using porcelain for git status
 
 Version 0.2.0
