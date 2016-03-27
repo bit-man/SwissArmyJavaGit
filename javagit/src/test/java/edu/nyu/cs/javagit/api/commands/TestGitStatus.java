@@ -20,6 +20,7 @@ import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import edu.nyu.cs.javagit.test.utilities.GitRepositoryBuilder;
+import edu.nyu.cs.javagit.test.utilities.TestFile;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,10 +39,11 @@ public class TestGitStatus
         extends TestBase
 {
 
-    private static final String TEST_DIRECTORY_NAME = "testDirectory";
-    private static final String FOOBAR_01_NAME = "foobar01";
-    private static final String FOOBAR_02_NAME = "foobar02";
-    private static final String FOOBAR_03_NAME = "foobar03";
+    private static final TestFile TEST_DIRECTORY = new TestFile("testDirectory");
+    private static final TestFile FOOBAR01 = new TestFile("foobar01");
+    private static final TestFile FOOBAR02 = new TestFile("foobar02");
+    private static final TestFile FOOBAR03 = new TestFile("foobar03");
+
     private File repositoryDirectory;
     private GitCommit gitCommit;
     private GitAdd gitAdd;
@@ -50,7 +52,6 @@ public class TestGitStatus
 
     private File file1;
     private File file2;
-    private File testDir;
     private File file3;
     private GitRepositoryBuilder repositoryBuilder;
 
@@ -61,16 +62,14 @@ public class TestGitStatus
         super.setUp();
 
         repositoryDirectory = new GitRepositoryBuilder(getDeletor())
-                .addFile(FOOBAR_01_NAME, "Test File1")
-                .addFile(FOOBAR_02_NAME, "Test File2")
-                .addFolder(TEST_DIRECTORY_NAME)
-                .addFile(FOOBAR_03_NAME, "Sample contents of foobar03 under testDir\n")
+                .addFile(FOOBAR01.getName(), "Test File1")
+                .addFile(FOOBAR02.getName(), "Test File2")
+                .addFolder(TEST_DIRECTORY.getName())
+                .addFile(FOOBAR03.getName(), "Sample contents of foobar03 under testDir\n")
                 .build();
-        file1 = new File(repositoryDirectory, FOOBAR_01_NAME);
-
-        file2 = new File(repositoryDirectory, FOOBAR_02_NAME);
-        testDir = new File(repositoryDirectory, TEST_DIRECTORY_NAME);
-        file3 = new File(new File(repositoryDirectory, TEST_DIRECTORY_NAME), FOOBAR_03_NAME);
+        file1 = FOOBAR01.getFile(repositoryDirectory);
+        file2 = FOOBAR02.getFile(repositoryDirectory);
+        file3 = FOOBAR03.getFile(TEST_DIRECTORY.getFile(repositoryDirectory));
 
         gitCommit = new GitCommit();
         gitAdd = new GitAdd();
@@ -114,7 +113,7 @@ public class TestGitStatus
         try
         {
             // Create couple of file
-            FileUtilities.createFile(tempRepoDirectory, FOOBAR_01_NAME, "Sample Contents");
+            FileUtilities.createFile(tempRepoDirectory, FOOBAR01.getName(), "Sample Contents");
             List<File> paths = null;
             gitStatus.status(repositoryDirectory, options, paths);
             fail("Failed to throw JavaGitException");
@@ -155,7 +154,7 @@ public class TestGitStatus
         List<File> filesToAdd = new ArrayList<>();
         filesToAdd.add(file1);
         filesToAdd.add(file2);
-        filesToAdd.add(new File(TEST_DIRECTORY_NAME));
+        filesToAdd.add(TEST_DIRECTORY.getFile());
         filesToAdd.add(file3);
         GitAddOptions addOptions = new GitAddOptions();
         gitAdd.add(repositoryDirectory, addOptions, filesToAdd);
@@ -163,12 +162,11 @@ public class TestGitStatus
         GitStatusResponse status = gitStatus.status(repositoryDirectory, options, statusPath);
         int noOfNewFilesToCommit = status.getNewFilesToCommitSize();
         assertEquals("Error. No of New Files to commit does not match", 3, noOfNewFilesToCommit);
-        assertEquals("Error. Filename does not match", FOOBAR_01_NAME, status
+        assertEquals("Error. Filename does not match", FOOBAR01.getName(), status
                 .getFileFromNewFilesToCommit(0).getName());
-        assertEquals("Error. Filename does not match", FOOBAR_02_NAME, status
+        assertEquals("Error. Filename does not match", FOOBAR02.getName(), status
                 .getFileFromNewFilesToCommit(1).getName());
-        assertEquals("Error. Filename does not match", repositoryDirectory.getPath() +
-                        File.separator + TEST_DIRECTORY_NAME + File.separator + FOOBAR_03_NAME,
+        assertEquals("Error. Filename does not match", file3.getAbsolutePath(),
                 status.getFileFromNewFilesToCommit(2).getAbsolutePath());
     }
 
@@ -186,7 +184,7 @@ public class TestGitStatus
         List<File> filesToAdd = new ArrayList<>();
         filesToAdd.add(file1);
         filesToAdd.add(file2);
-        filesToAdd.add(new File(TEST_DIRECTORY_NAME));
+        filesToAdd.add(TEST_DIRECTORY.getFile());
         filesToAdd.add(file3);
         GitAddOptions addOptions = new GitAddOptions();
         // Add the files for committing
@@ -240,13 +238,13 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        File foobar01 = new File(repository, FOOBAR_01_NAME);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
         FileUtilities.modifyFileContents(foobar01, "more data");
         assertThat(gitStatus.status(repository).getModifiedFilesNotUpdated())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
     @Test
@@ -255,13 +253,13 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        File foobar01 = new File(repository, FOOBAR_01_NAME);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
         foobar01.delete();
         assertThat(gitStatus.status(repository).getDeletedFilesNotUpdated())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
 
@@ -271,11 +269,10 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        File foobar01 = new File(repository, FOOBAR_01_NAME);
-        gitAdd.add(repository, foobar01);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        gitAdd.add(repository, FOOBAR01.getFile(repository));
         assertThat(gitStatus.status(repository).getNewFilesToCommit())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
     @Test
@@ -284,12 +281,12 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        File foobar01 = new File(repository, FOOBAR_01_NAME);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         FileUtilities.modifyFileContents(foobar01, "More text pleeeeease");
         assertThat(gitStatus.status(repository).getNewFilesToCommit())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
     @Test
@@ -298,12 +295,12 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        File foobar01 = new File(repository, FOOBAR_01_NAME);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         foobar01.delete();
         assertThat(gitStatus.status(repository).getNewFilesToCommit())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
     /**
@@ -319,11 +316,11 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
+                .addFile(FOOBAR01.getName(), "Test File1").build();
         List<File> paths = null;
         GitStatusResponse response = gitStatus.status(repository, options, paths);
         assertEquals("Error.No of untracked files does not Match.", 1, response.getUntrackedFilesSize());
-        assertEquals("Error. Filename does not match.", FOOBAR_01_NAME,
+        assertEquals("Error. Filename does not match.", FOOBAR01.getName(),
                 response.getFileFromUntrackedFiles(0).getName());
     }
 
@@ -334,10 +331,10 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        FileUtilities.createFile(repository, ".gitignore", FOOBAR_01_NAME);
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        FileUtilities.createFile(repository, ".gitignore", FOOBAR01.getName());
         assertThat(gitStatus.status(repository).getIgnoredFiles())
-                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
 
     /**
@@ -351,8 +348,8 @@ public class TestGitStatus
     {
 
         File repository = repositoryBuilder
-                .addFile(FOOBAR_01_NAME, "Test File1").build();
-        GitStatusResponse response = gitStatus.getSingleFileStatus(repository, new File( FOOBAR_01_NAME));
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        GitStatusResponse response = gitStatus.getSingleFileStatus(repository, FOOBAR01.getFile());
         assertEquals("File should be untracked.", 1, response.getUntrackedFilesSize());
     }
 
