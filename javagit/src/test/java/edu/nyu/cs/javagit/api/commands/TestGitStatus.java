@@ -213,6 +213,58 @@ public class TestGitStatus
         }
     }
 
+
+    // ~~--------------------------------------------- New tests (porcelain usage related)
+//    X          Y     Meaning
+//    -------------------------------------------------
+//    M        [ MD]   updated in index
+//    D         [ M]   deleted from index
+//    R        [ MD]   renamed in index
+//    C        [ MD]   copied in index
+//    [MARC]           index and work tree matches
+//    [ MARC]     M    work tree changed since index
+//    [ MARC]     D    deleted in work tree
+//    -------------------------------------------------
+//    D           D    unmerged, both deleted
+//    A           U    unmerged, added by us
+//    U           D    unmerged, deleted by them
+//    U           A    unmerged, added by them
+//    D           U    unmerged, deleted by us
+//    A           A    unmerged, both added
+//    U           U    unmerged, both modified
+
+
+    @Test
+    public void testModifiedNotUpdated()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR_01_NAME, "Test File1").build();
+        File foobar01 = new File(repository, FOOBAR_01_NAME);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        FileUtilities.modifyFileContents(foobar01, "more data");
+        assertThat(gitStatus.status(repository).getModifiedFilesNotUpdated())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+    @Test
+    public void testDeletedFilesNotUpdated()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR_01_NAME, "Test File1").build();
+        File foobar01 = new File(repository, FOOBAR_01_NAME);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        foobar01.delete();
+        assertThat(gitStatus.status(repository).getDeletedFilesNotUpdated())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR_01_NAME);
+    }
+
+
     @Test
     public void testAddedToIndexUnmodified()
             throws IOException, JavaGitException
