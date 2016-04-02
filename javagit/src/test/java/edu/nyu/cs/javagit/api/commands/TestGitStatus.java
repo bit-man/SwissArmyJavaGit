@@ -215,7 +215,6 @@ public class TestGitStatus
     // ~~--------------------------------------------- New tests (porcelain usage related)
 //    X          Y     Meaning
 //    -------------------------------------------------
-//    R        [ MD]   renamed in index
 //    C        [ MD]   copied in index
 //    [MARC]           index and work tree matches
 //    [ MARC]     M    work tree changed since index
@@ -228,6 +227,59 @@ public class TestGitStatus
 //    D           U    unmerged, deleted by us
 //    A           A    unmerged, both added
 //    U           U    unmerged, both modified
+
+    @Test
+    public void testRenameInIndexDeletedAtWorktree()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        foobar01.renameTo(FOOBAR02.getFile(repository));
+        gitAdd.add(repository, FOOBAR01.getFile());
+        gitAdd.add(repository, FOOBAR02.getFile());
+        FOOBAR02.getFile(repository).delete();
+        assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
+
+    @Test
+    public void testRenameInIndexModifiedAtWorktree()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        foobar01.renameTo(FOOBAR02.getFile(repository));
+        gitAdd.add(repository, FOOBAR01.getFile());
+        gitAdd.add(repository, FOOBAR02.getFile());
+        FileUtilities.modifyFileContents(FOOBAR02.getFile(repository), "some extra data");
+        assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
+
+    @Test
+    public void testRenameInIndex()
+            throws IOException, JavaGitException
+    {
+
+        File repository = repositoryBuilder
+                .addFile(FOOBAR01.getName(), "Test File1").build();
+        File foobar01 = FOOBAR01.getFile(repository);
+        gitAdd.add(repository, foobar01);
+        gitCommit.commit(repository, "Commit 101");
+        foobar01.renameTo(FOOBAR02.getFile(repository));
+        gitAdd.add(repository, FOOBAR01.getFile());
+        gitAdd.add(repository, FOOBAR02.getFile());
+        assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
+                .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
+    }
 
     @Test
     public void testDeletedFromIndex()
