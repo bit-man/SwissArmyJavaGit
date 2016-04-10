@@ -89,62 +89,6 @@ public class TestGitStatusResponse extends TestBase {
         }
     }
 
-    @Test
-    public void testModifiedFilePattern() {
-        String line = "#  modified:   patttrn06";
-        assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
-        line = "# xyz modified: pattern06";
-        assertFalse(CliGitStatus.Patterns.MODIFIED.matches(line));
-        // Files with spaces may exist in Windows system
-        line = "# modified: xyz pattern06";
-        assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
-        line = "# modified:   dir1/dir2/dir3/foobar07";
-        assertTrue(CliGitStatus.Patterns.MODIFIED.matches(line));
-    }
-
-    @Test
-    public void testNewFilePattern() {
-        String line = "#  new file:   foobar03";
-        assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
-        line = "#       new file:                  foobar03";
-        line = "# xyz new file: pattern06";
-        assertFalse(CliGitStatus.Patterns.NEW_FILE.matches(line));
-        // Files with spaces may exist in Windows systems
-        line = "# new file: xyz pattern06";
-        assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
-        line = "#  new file:   dir1/dir2/dir3/foobar07";
-        assertTrue(CliGitStatus.Patterns.NEW_FILE.matches(line));
-    }
-
-    /**
-     * Test for parsing lines that point to deleted files.
-     */
-    @Test
-    public void testDeletedFilePattern() {
-        String line = "# deleted:    foobar03";
-        assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
-        line = "#       deleted:                  foobar03";
-        assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
-        line = "# xyz deleted: pattern06";
-        assertFalse(CliGitStatus.Patterns.DELETED.matches(line));
-        line = "# deleted: xyz pattern06";
-        assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
-        line = "#  deleted:   dir1/dir2/dir3/foobar07";
-        assertTrue(CliGitStatus.Patterns.DELETED.matches(line));
-    }
-
-    /**
-     * Test for verifying pattern for lines that only contains a hash(#) in them.
-     */
-    public void testEmptyHashLinePattern() {
-        String line = "#";
-        assertTrue(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
-        line = "#      ";
-        assertTrue(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
-        line = "# test";
-        assertFalse(CliGitStatus.Patterns.EMPTY_HASH_LINE.matches(line));
-    }
-
     /**
      * Test for confirming that lines filenames are parsed correctly and correct filenames are
      * extracted from the line.

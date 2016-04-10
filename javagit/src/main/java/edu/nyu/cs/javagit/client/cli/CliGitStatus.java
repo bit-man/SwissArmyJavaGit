@@ -32,34 +32,10 @@ import java.util.*;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
- * 
- * TODO - Need to parse -v option in a better way. Currently <code>GitStatusResponse</code>
- * does not save any output related to -v options such as lines containing diffs, or +++ etc.
  */
 public class CliGitStatus implements IGitStatus {
 
-  /**
-   * Patterns for matching lines for deleted files, modified files, new files and empty lines.
-   */
-  public static enum Patterns {
-    DELETED("^#\\s+deleted:\\s+.*"), 
-    MODIFIED("^#\\s+modified:\\s+.*"), 
-    NEW_FILE("^#\\s+new file:\\s+.*"), 
-    EMPTY_HASH_LINE("^#\\s*$"),
-    RENAMED("^#\\s+renamed:\\s+.*");
-
-    String pattern;
-
-    Patterns(String pattern) {
-      this.pattern = pattern;
-    }
-
-    public boolean matches(String line) {
-      return line.matches(this.pattern);
-    }
-  }
-
-  private File inputFile = null;
+    private File inputFile = null;
 
   /**
    * Implementation of <code>IGitStatus</code> method for getting the status of a list of files
