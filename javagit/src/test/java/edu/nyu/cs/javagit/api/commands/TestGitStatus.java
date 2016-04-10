@@ -54,6 +54,8 @@ public class TestGitStatus
     private File file2;
     private File file3;
     private GitRepositoryBuilder repositoryBuilder;
+    private GitMv gitMove;
+    private GitRm gitRm;
 
     @Before
     public void setUp()
@@ -74,6 +76,8 @@ public class TestGitStatus
         gitCommit = new GitCommit();
         gitAdd = new GitAdd();
         gitStatus = new GitStatus();
+        this.gitMove = new GitMv();
+        this.gitRm = new GitRm();
         options = new GitStatusOptions();
 
         repositoryBuilder = new GitRepositoryBuilder(getDeletor());
@@ -238,8 +242,7 @@ public class TestGitStatus
         File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
-        foobar01.renameTo(FOOBAR02.getFile(repository));
-        gitAdd.add(repository, FOOBAR01.getFile());
+        gitMove.mv(repository, FOOBAR01.getFile(), FOOBAR02.getFile());
         gitAdd.add(repository, FOOBAR02.getFile());
         FOOBAR02.getFile(repository).delete();
         assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
@@ -256,8 +259,7 @@ public class TestGitStatus
         File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
-        foobar01.renameTo(FOOBAR02.getFile(repository));
-        gitAdd.add(repository, FOOBAR01.getFile());
+        gitMove.mv(repository, FOOBAR01.getFile(), FOOBAR02.getFile());
         gitAdd.add(repository, FOOBAR02.getFile());
         FileUtilities.modifyFileContents(FOOBAR02.getFile(repository), "some extra data");
         assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
@@ -274,8 +276,7 @@ public class TestGitStatus
         File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
-        foobar01.renameTo(FOOBAR02.getFile(repository));
-        gitAdd.add(repository, FOOBAR01.getFile());
+        gitMove.mv(repository, FOOBAR01.getFile(), FOOBAR02.getFile());
         gitAdd.add(repository, FOOBAR02.getFile());
         assertThat(gitStatus.status(repository).getRenamedFilesToCommit())
                 .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
@@ -291,8 +292,7 @@ public class TestGitStatus
         File foobar01 = FOOBAR01.getFile(repository);
         gitAdd.add(repository, foobar01);
         gitCommit.commit(repository, "Commit 101");
-        foobar01.delete();
-        gitAdd.add(repository, foobar01);
+        gitRm.rm(repository, FOOBAR01.getFile());
         assertThat(gitStatus.status(repository).getDeletedFilesToCommit())
                 .extracting(getFileNameExtractor()).containsOnly(FOOBAR01.getName());
     }
