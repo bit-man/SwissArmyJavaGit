@@ -2,6 +2,10 @@
 
 Version 1.0.0-SNAPSHOT
 
+  This version is oriented to fill the gap for v0 first release (near May 2008) and current usage and state of the art
+  better support from git CLI (porcelain used whenever it exists), newer Java versions supported, moving older ones
+  to v0 branch, new API for easier usage, and more to come ...
+
   - Java 7 required
   - Started using porcelain for git status
 
