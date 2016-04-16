@@ -6,6 +6,8 @@ jdk:
 before_install:
   - git config --global user.email "you@example.com"
   - git config --global user.name "Your Name"
+  ## which GIT version made it to fail ?
+  - git --version
 script:
   - cd javagit
   - mvn install
