@@ -20,325 +20,129 @@ package edu.nyu.cs.javagit.api.commands;
 import edu.nyu.cs.javagit.TestBase;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.cli.CliGitStatus;
-import edu.nyu.cs.javagit.client.cli.CliGitStatus.GitStatusParser;
-import edu.nyu.cs.javagit.client.cli.PorcelainParseWrongFormatException;
-import edu.nyu.cs.javagit.test.utilities.JavaHelper;
+import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class TestGitStatusResponse extends TestBase {
+//Short Format
+//        In the short-format, the status of each path is shown as
+//
+//        XY PATH1 -> PATH2
+//
+//        where PATH1 is the path in the HEAD, and the " -> PATH2" part is shown only when PATH1 corresponds to a
+// different path in the index/worktree (i.e. the file is renamed). The XY is a two-letter status code.
+//
+//        The fields (including the ->) are separated from each other by a single space. If a filename contains
+// whitespace or other nonprintable characters, that field will be quoted in the manner of a C string literal:
+// surrounded by
+//        ASCII double quote (34) characters, and with interior special characters backslash-escaped.
+//
+//        For paths with merge conflicts, X and Y show the modification states of each side of the merge. For paths
+// that do not have merge conflicts, X shows the status of the index, and Y shows the status of the work tree. For
+//        untracked paths, XY are ??. Other status codes can be interpreted as follows:
+//
+//        ·   ' ' = unmodified
+//
+//        ·   M = modified
+//
+//        ·   A = added
+//
+//        ·   D = deleted
+//
+//        ·   R = renamed
+//
+//        ·   C = copied
+//
+//        ·   U = updated but unmerged
+//
+//        Ignored files are not listed, unless --ignored option is in effect, in which case XY are !!.
+//
+//        X          Y     Meaning
+//        -------------------------------------------------
+//        [MD]   not updated
+//        M        [ MD]   updated in index
+//        A        [ MD]   added to index
+//        D         [ M]   deleted from index
+//        R        [ MD]   renamed in index
+//        C        [ MD]   copied in index
+//        [MARC]           index and work tree matches
+//        [ MARC]     M    work tree changed since index
+//        [ MARC]     D    deleted in work tree
+//        -------------------------------------------------
+//        D           D    unmerged, both deleted
+//        A           U    unmerged, added by us
+//        U           D    unmerged, deleted by them
+//        U           A    unmerged, added by them
+//        D           U    unmerged, deleted by us
+//        A           A    unmerged, both added
+//        U           U    unmerged, both modified
+//        -------------------------------------------------
+//        ?           ?    untracked
+//        !           !    ignored
+//        -------------------------------------------------
+//
+//        If -b is used the short-format status is preceded by a line
+//
+//        ## branchname tracking info
 
-    GitStatusParser parser;
-    CliGitStatus gitStatus;
-    private String repositoryDirectory;
+public class TestGitStatusResponse
+        extends TestBase
+{
+    private CliGitStatus.GitStatusParser gitStatusParser;
+    private String repo;
 
     @Before
-    public void setUp() throws IOException, JavaGitException {
+    public void setup()
+            throws IOException, JavaGitException
+    {
+        repo = FileUtilities.createTempDirectory(this.getClass().getSimpleName()).getAbsolutePath();
+        this.gitStatusParser = new CliGitStatus.GitStatusParser(repo);
+
+        getDeletor().add(new File(repo));
         super.setUp();
-        repositoryDirectory = new String("GitStatusResponseTestRepository" + File.separator);
-        parser = new GitStatusParser(repositoryDirectory);
-        gitStatus = new CliGitStatus();
-    }
-
-    /**
-     * Test for JavaGitException is thrown when an invalid switch is passed to
-     * &lt;git-status&gt;
-     */
-    @Test
-    @Ignore
-    public void testInvalidSwitchOptionThrowsException() throws PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-        GitStatusResponse response = null;
-        try {
-            parser.parseLine("error: unknown switch `w'");
-            parser.parseLine("usage: git-status [options] [--] <filepattern>...");
-
-            response = parser.getResponse();
-            fail("Failed to throw JavaGitException for an invalid switch");
-        } catch (JavaGitException e) {
-            assertEquals("JavaGitException code", 438000, e.getCode());
-            assertEquals("response object", null, response);
-        }
-    }
-
-    /**
-     * Test for JavaGitException is thrown if an invalid file name is passed to
-     * &lt;git-status&gt; command.
-     */
-    @Test
-    @Ignore
-    public void testInvalidFile() throws PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-        GitStatusResponse response = null;
-        try {
-            parser.parseLine("error: pathspec 'foobar' did not match any file(s) known to git.");
-            response = parser.getResponse();
-            fail("Failed to throw JavaGitException for an invalid filename");
-        } catch (JavaGitException e) {
-            assertEquals("JavaGitException code", 438000, e.getCode());
-            assertEquals("response object", null, response);
-        }
-    }
-
-    /**
-     * Test for confirming that lines filenames are parsed correctly and correct filenames are
-     * extracted from the line.
-     */
-    @Test
-    public void testGetFilename() {
-        String line = "# deleted:    foobar03";
-        assertEquals("foobar03", parser.getFilename(line));
-        line = "#  new file:   foobar04";
-        assertEquals("foobar04", parser.getFilename(line));
-        line = "#  new file:   testDir1/foobar04";
-        assertEquals("testDir1/foobar04", parser.getFilename(line));
-    }
-
-
-    @Test
-    public void testGetFilenameWithBlanks() {
-        String line = "# deleted:    foobar 03";
-        assertEquals("foobar 03", parser.getFilename(line));
-        line = "#  new file:   foobar 04";
-        assertEquals("foobar 04", parser.getFilename(line));
-        line = "#  new file:   testDir1/foobar 04";
-        assertEquals("testDir1/foobar 04", parser.getFilename(line));
-    }
-    /**
-     * Test for verifying the correct branch name in comment in <code>GitStatusResposne</code>
-     */
-    @Test
-    @Ignore
-    public void testNothingToCommit() throws JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-        parser.parseLine("# On branch master");
-        parser.parseLine("nothing to commit (working directory clean)");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals("Branch name does not match", "master", response.getBranch().getName());
-        assertEquals("Status message does not match", "nothing to commit (working directory clean)",
-                response.getMessage());
-        assertEquals("No. of untracked files", 0, response.getUntrackedFilesSize());
-        assertEquals("No. of new filesToCommit", 0, response.getNewFilesToCommitSize());
-        assertEquals("No. of deletedFilesToCommit", 0, response.getDeletedFilesToCommitSize());
-        assertEquals("No. of modifiedFilesToCommit", 0, response.getModifiedFilesToCommitSize());
-        assertEquals("No. of deletedFilesNotUpdated", 0, response.getDeletedFilesNotUpdatedSize());
-        assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
-        assertEquals("No. of errors", 0, response.getErrorCount());
-    }
-
-    /**
-     * Test for verifying that correct no. of untracked files are created in the
-     * <code>GitStatusResponse</code> object when <code>GitStatus</code> is run.
-     */
-    @Test
-    @Ignore
-    public void testUntrackedFilesAndDircotories() throws JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-
-        parser.parseLine("# On branch master");
-        parser.parseLine("# Untracked files:");
-        parser.parseLine("#   (use \"git add <file>...\" to include in what will be committed)\"");
-        parser.parseLine("#");
-        parser.parseLine("# dir/");
-        parser.parseLine("# fileA");
-        parser.parseLine("# fileB");
-        parser.parseLine("# fileC");
-        parser.parseLine("nothing added to commit but untracked files present (use \"git add\" to track)");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals("No. of untracked files", 4, response.getUntrackedFilesSize());
-        assertEquals("No. of new filesToCommit", 0, response.getNewFilesToCommitSize());
-        assertEquals("No. of deletedFilesToCommit", 0, response.getDeletedFilesToCommitSize());
-        assertEquals("No. of modifiedFilesToCommit", 0, response.getModifiedFilesToCommitSize());
-        assertEquals("No. of deletedFilesNotUpdated", 0, response.getDeletedFilesNotUpdatedSize());
-        assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
-        assertEquals("No. of errors", 0, response.getErrorCount());
-
-        Iterator<File> iter = response.getUntrackedFiles().iterator();
-        assertEquals("FileName", repositoryDirectory + "dir", iter.next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileA", iter.next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileB", iter.next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileC", iter.next().getPath());
-    }
-
-    /**
-     * Test verifies the names and no. of untracked files & new files that will be committed next time
-     * &lt;git-commit&gt; is run.
-     */
-    @Test
-    @Ignore
-    public void testNewlyAddedFiles() throws JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-        parser.parseLine("# On branch master");
-        parser.parseLine("# Changes to be committed:");
-        parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
-        parser.parseLine("#");
-        parser.parseLine("# new file:   dir/fileD");
-        parser.parseLine("# new file:   fileA");
-        parser.parseLine("#");
-        parser.parseLine("# Untracked files:");
-        parser.parseLine("#   (use \"git add <file>...\" to include in what will be committed)");
-        parser.parseLine("#");
-        parser.parseLine("# fileB");
-        parser.parseLine("# fileC");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals("Branch Name", "master", response.getBranch().getName());
-        assertEquals("No. of untracked files", 2, response.getUntrackedFilesSize());
-        assertEquals("No. of new filesToCommit", 2, response.getNewFilesToCommitSize());
-        assertEquals("No. of deletedFilesToCommit", 0, response.getDeletedFilesToCommitSize());
-        assertEquals("No. of modifiedFilesToCommit", 0, response.getModifiedFilesToCommitSize());
-        assertEquals("No. of deletedFilesNotUpdated", 0, response.getDeletedFilesNotUpdatedSize());
-        assertEquals("No. of modifiedFilesNotUpdated", 0, response.getModifiedFilesNotUpdatedSize());
-        assertEquals("No. of errors", 0, response.getErrorCount());
-
-        Iterator<File> iter = response.getNewFilesToCommit().iterator();
-        assertEquals("File Name", repositoryDirectory + "dir" + File.separator + "fileD",
-                iter.next().getPath());
-        assertEquals("File Name", repositoryDirectory + "fileA", iter.next().getPath());
-
-        iter = response.getUntrackedFiles().iterator();
-        assertEquals("File Name", repositoryDirectory + "fileB", iter.next().getPath());
-        assertEquals("File Name", repositoryDirectory + "fileC", iter.next().getPath());
-    }
-
-    /**
-     * Test simulates parsing an output generated by &lt;git-status&gt; command and verifies that no.
-     * of files parsed for newFilesToCommit, deletedFilesToCommit, deletedFilesNotUpdated and
-     * modifiedFilesNotUpdated are correct and match.
-     */
-    @Test
-    @Ignore
-    public void testModifiedAndDeletedFiles() throws JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-
-        parser.parseLine("# On branch master");
-        parser.parseLine("# Changes to be committed:");
-        parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
-        parser.parseLine("#");
-        parser.parseLine("# new file:   dir/fileD");
-        parser.parseLine("# deleted:    fileC");
-        parser.parseLine("#");
-        parser.parseLine("# Changed but not updated:");
-        parser.parseLine("#   (use \"git add <file>...\" to update what will be committed)");
-        parser.parseLine("#");
-        parser.parseLine("# modified:   fileA");
-        parser.parseLine("# deleted:    fileB");
-        parser.parseLine("#");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals("No. of untracked files", 0, response.getUntrackedFilesSize());
-        assertEquals("No. of new filesToCommit", 1, response.getNewFilesToCommitSize());
-        assertEquals("No. of deletedFilesToCommit", 1, response.getDeletedFilesToCommitSize());
-        assertEquals("No. of modifiedFilesToCommit", 0, response.getModifiedFilesToCommitSize());
-        assertEquals("No. of deletedFilesNotUpdated", 1, response.getDeletedFilesNotUpdatedSize());
-        assertEquals("No. of modifiedFilesNotUpdated", 1, response.getModifiedFilesNotUpdatedSize());
-        assertEquals("No. of errors", 0, response.getErrorCount());
-
-        assertEquals("FileName", repositoryDirectory + "dir" + File.separator + "fileD",
-                response.getNewFilesToCommit().iterator().next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileC",
-                response.getDeletedFilesToCommit().iterator().next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileA",
-                response.getModifiedFilesNotUpdated().iterator().next().getPath());
-        assertEquals("FileName", repositoryDirectory + "fileB",
-                response.getDeletedFilesNotUpdated().iterator().next().getPath());
-    }
-
-    /**
-     * Test for verifying renamed files that will be committed next time git commit command is run.
-     *
-     * @throws IOException
-     * @throws JavaGitException
-     */
-    @Test
-    @Ignore
-    public void testRenamedFilesToCommitFromCommandOutput() throws IOException, JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-        parser.parseLine("# On branch master");
-        parser.parseLine("# Changes to be committed:");
-        parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage)");
-        parser.parseLine("#");
-        parser.parseLine("#       renamed:    file2 -> file1");
-        parser.parseLine("#       renamed:    file5 -> file6");
-        parser.parseLine("#");
-        GitStatusResponse response = parser.getResponse();
-        Iterable<File> renamedFiles = response.getRenamedFilesToCommit();
-        assertEquals("Renamed File name does not match", repositoryDirectory + "file1",
-                renamedFiles.iterator().next().getPath());
-        assertEquals("Renamed File name does not match", repositoryDirectory + "file6",
-                renamedFiles.iterator().next().getPath());
-        assertEquals("No. of renamed files", 2, response.getRenamedFilesToCommitSize());
-    }
-
-    /**
-     * Test for verifying that modified staged and un-staged files are parsed properly by
-     * <code>GitStatusParser</code>
-     */
-    @Test
-    @Ignore
-    public void testModifiedFilesFromCommandOutput() throws IOException, JavaGitException, PorcelainParseWrongFormatException {
-
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-
-        parser.parseLine("# On branch master");
-        parser.parseLine("# Changes to be committed:");
-        parser.parseLine("#   (use \"git reset HEAD <file>...\" to unstage");
-        parser.parseLine("#");
-        parser.parseLine("#       modified:   src/Modified.java");
-        parser.parseLine("#       deleted:    src/Removed.java");
-        parser.parseLine("#       deleted:    src/RemovedNotStaged.java");
-        parser.parseLine("#");
-        parser.parseLine("# Changed but not updated:");
-        parser.parseLine("#   (use \"git add <file>...\" to update what will be committed)");
-        parser.parseLine("#");
-        parser.parseLine("#       modified:   src/ModifiedNotStaged.java");
-        parser.parseLine("#");
-        parser.parseLine("# Untracked files:");
-        parser.parseLine("#   (use \"git add <file>...\" to include in what will be committed)");
-        parser.parseLine("#");
-        parser.parseLine("#       .classpath");
-        parser.parseLine("#       .project");
-        parser.parseLine("#       bin/");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals(1, response.getModifiedFilesNotUpdatedSize());
-        assertEquals("ModifiedNotStaged.java", response.getModifiedFilesNotUpdated().iterator().next()
-                .getName());
-        assertEquals(1, response.getModifiedFilesToCommitSize());
-        assertEquals("Modified.java", response.getModifiedFilesToCommit().iterator().next().getName());
     }
 
     @Test
-    @Ignore
-    public void testChangesNotStaged4Commit() throws JavaGitException, PorcelainParseWrongFormatException {
-        GitStatusParser parser = new GitStatusParser(repositoryDirectory);
-
-        parser.parseLine("# On branch master ");
-        parser.parseLine("# Changes not staged for commit:");
-        parser.parseLine("#   (use \"git add <file>...\" to update what will be committed)");
-        parser.parseLine("#   (use \"git checkout -- <file>...\" to discard changes in working directory)");
-        parser.parseLine("#");
-        parser.parseLine("#	modified:   file1");
-        parser.parseLine("#	modified:   file2");
-        parser.parseLine("#	modified:   file3");
-
-        GitStatusResponse response = parser.getResponse();
-        assertEquals("Wrong number of untracked files", 3, response.getModifiedFilesToCommitSize());
-
-        List<File> files = JavaHelper.copyIterator(response.getModifiedFilesToCommit());
-        assertTrue("file1 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file1")));
-        assertTrue("file2 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file2")));
-        assertTrue("file3 is not in the modified files to commit", files.contains(new File("GitStatusResponseTestRepository/file3")));
+    public void testIgnoredFiles()
+            throws JavaGitException
+    {
+        gitStatusParser.parseLine("!! ignoredFile");
+        GitStatusResponse response = gitStatusParser.getResponse();
+        assertThat(response.getIgnoredFiles()).containsOnly(new File(repo, "ignoredFile"));
+        assertEquals(response.getIgnoredFilesSize(),1);
+        assertEquals(response.getUntrackedFilesSize(),0);
+        assertEquals(response.getDeletedFilesNotUpdatedSize(),0);
+        assertEquals(response.getDeletedFilesToCommitSize(),0);
+        assertEquals(response.getModifiedFilesNotUpdatedSize(),0);
+        assertEquals(response.getModifiedFilesToCommitSize(),0);
+        assertEquals(response.getNewFilesToCommitSize(),0);
+        assertEquals(response.getRenamedFilesToCommitSize(),0);
+        assertEquals(response.getErrorCount(),0);
     }
+
+    @Test
+    public void testUntrackedFiles()
+            throws JavaGitException
+    {
+        gitStatusParser.parseLine("?? untrackedFile");
+        GitStatusResponse response = gitStatusParser.getResponse();
+        assertThat(response.getUntrackedFiles()).containsOnly(new File(repo, "untrackedFile"));
+        assertEquals(response.getIgnoredFilesSize(),0);
+        assertEquals(response.getUntrackedFilesSize(),1);
+        assertEquals(response.getDeletedFilesNotUpdatedSize(),0);
+        assertEquals(response.getDeletedFilesToCommitSize(),0);
+        assertEquals(response.getModifiedFilesNotUpdatedSize(),0);
+        assertEquals(response.getModifiedFilesToCommitSize(),0);
+        assertEquals(response.getNewFilesToCommitSize(),0);
+        assertEquals(response.getRenamedFilesToCommitSize(),0);
+        assertEquals(response.getErrorCount(),0);
+    }
+
 }
