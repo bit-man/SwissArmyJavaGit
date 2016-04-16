@@ -33,7 +33,7 @@ import static junit.framework.Assert.*;
 
 public class TestGitCheckout extends TestBase {
 
-    public static final String TEST_BRANCH = "testBranch";
+    private static final String TEST_BRANCH = "testBranch";
     private File repositoryDirectory;
     private String repositoryPath;
     private GitCommit gitCommit;
@@ -43,6 +43,7 @@ public class TestGitCheckout extends TestBase {
     private File file2;
 
     @Before
+    @SuppressWarnings("all")
     public void setUp() throws IOException, JavaGitException {
         super.setUp();
         repositoryDirectory = FileUtilities.createTempDirectory("GitCheckoutTestRepository");
@@ -101,13 +102,13 @@ public class TestGitCheckout extends TestBase {
             }
             if (tmpFile.delete()) { // locally delete the file
                 // check out the file from the repository after deletion
-                GitCheckoutResponse response = gitCheckout.checkout(repositoryDirectory, filePaths);
+                gitCheckout.checkout(repositoryDirectory, filePaths);
                 File checkedOutFile = new File(repositoryPath + File.separator + "foobar01");
                 assertTrue(checkedOutFile.exists());
                 FileUtilities.modifyFileContents(file2, "Test for append to a file");
                 GitCheckoutOptions options = new GitCheckoutOptions();
                 Ref branch = Ref.createBranchRef("master");
-                response = gitCheckout.checkout(repositoryDirectory, options, branch);
+                GitCheckoutResponse response = gitCheckout.checkout(repositoryDirectory, options, branch);
                 assertEquals("Modified File exists", 1, response.getNumberOfModifiedFiles());
             } else {
                 fail("File delete failed");
@@ -119,12 +120,14 @@ public class TestGitCheckout extends TestBase {
 
     }
 
+    @Test
     public void testGitCheckoutParserSwitchToBranchQuotes() throws JavaGitException {
         CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
         gitCheckoutParser.parseLine("Switched to branch \"branch1\"");
         assertEquals("\"branch1\"", gitCheckoutParser.getResponse().getBranch().getName());
     }
 
+    @Test
     public void testGitCheckoutParserSwitchToBranchSingleQuotes() throws JavaGitException {
         CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
         gitCheckoutParser.parseLine("Switched to branch 'branch1'");
@@ -132,24 +135,20 @@ public class TestGitCheckout extends TestBase {
     }
 
 
+    @Test
     public void testGitCheckoutParserSwitchToNewBranchQuotes() throws JavaGitException {
         CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
         gitCheckoutParser.parseLine("Switched to a new branch \"branch1\"");
         assertEquals("\"branch1\"", gitCheckoutParser.getResponse().getNewBranch().getName());
     }
 
+    @Test
     public void testGitCheckoutParserSwitchToNewBranchSingleQuotes() throws JavaGitException {
         CliGitCheckout.GitCheckoutParser gitCheckoutParser = new CliGitCheckout.GitCheckoutParser();
         gitCheckoutParser.parseLine("Switched to a new branch 'branch1'");
         assertEquals("'branch1'", gitCheckoutParser.getResponse().getNewBranch().getName());
     }
 
-    /**
-     * Assert method for finding out if a file exists under a given directory.
-     *
-     * @param repositoryDirectory
-     * @param file
-     */
     private void assertFileExistsInDirectory(File repositoryDirectory, File file) throws IOException {
         //assertEquals(repositoryDirectory.getAbsolutePath(), file.getParent());
         assertTrue((new File(repositoryDirectory.getAbsoluteFile() + File.separator + file.getPath()).exists()));
@@ -166,6 +165,7 @@ public class TestGitCheckout extends TestBase {
      * @throws IOException
      */
     @Test
+    @SuppressWarnings("all")
     public void testCheckingOutFileFromAnotherBranch() throws JavaGitException, IOException {
         // Create a testBranch01 from master
         GitCheckoutOptions options = new GitCheckoutOptions();
