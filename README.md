@@ -1,5 +1,5 @@
-  JavaGit
-  =======
+JavaGit
+=======
 
 ![Build status according to Travis](https://travis-ci.org/bit-man/SwissArmyJavaGit.svg)
 
