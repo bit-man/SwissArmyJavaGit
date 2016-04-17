@@ -74,4 +74,5 @@ checkFolders
 __installfolder="${__installFolderBase}/git-${__gitVersion}"
 mkdir -p  ${__installfolder} && \
 	cd ${__gitRepoHome} && \
+	git reset --hard $__gitVersion && \
 	make prefix=${__installfolder} install
