@@ -87,6 +87,11 @@ public class CliClient implements IClient {
     return new CliGitFetch();
   }
 
+  @Override
+  public IGitPull getGitPullInstance()
+  {
+    return new CliGitPull();
+  }
 
 
 }

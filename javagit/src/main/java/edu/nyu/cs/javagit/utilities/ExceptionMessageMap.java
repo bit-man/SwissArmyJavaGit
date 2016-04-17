@@ -65,6 +65,7 @@ import java.util.Map;
  * <li>438-439 -- git-status specific JavaGit exceptions</li>
  * <li>440-441 -- git-tag specific JavaGit exceptions</li>
  * <li>442-443 -- git-version specific JavaGit exceptions</li>
+ * <li>444-445 -- git-pull specific JavaGit exceptions</li>
  * </ul>
  * </li>
  * </ul>
@@ -97,7 +98,7 @@ public class ExceptionMessageMap {
     public static final String ErrorParsingGitStatusResponse = "438001";
 
     static {
-    MESSAGE_MAP = new HashMap<String, String>();
+    MESSAGE_MAP = new HashMap<>();
 
     MESSAGE_MAP.put("000001", "000001: A String argument was not specified but is required.");
     MESSAGE_MAP.put("000002", "000002: A List<String> argument was not specified but is required.");

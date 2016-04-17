@@ -16,27 +16,23 @@
  */
 package edu.nyu.cs.javagit.api;
 
+import edu.nyu.cs.javagit.api.commands.*;
+import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.io.File;
-import java.io.IOException;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
-
-import edu.nyu.cs.javagit.api.commands.GitBranch;
-import edu.nyu.cs.javagit.api.commands.GitBranchOptions;
-import edu.nyu.cs.javagit.api.commands.GitBranchResponse;
-import edu.nyu.cs.javagit.api.commands.GitLog;
-import edu.nyu.cs.javagit.api.commands.GitLogOptions;
-import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
 
 /**
  * The <code>DotGit</code> represents the .git directory.
  */
 public final class DotGit {
   // This guy's a per-repository singleton, so we need a static place to store our instances.
-  private static final Map<String, DotGit> INSTANCES = new HashMap<String, DotGit>();
+  private static final Map<String, DotGit> INSTANCES = new HashMap<>();
 
   // The directory that contains the .git in question.
   private final File path;
@@ -69,7 +65,7 @@ public final class DotGit {
    *          true if exits, false otherwise;
    */
   public static synchronized boolean existsInstance(File path) {
-    String canonicalPath = "";
+    String canonicalPath;
 
     try {
       canonicalPath = path.getCanonicalPath();
@@ -97,7 +93,7 @@ public final class DotGit {
      * We want to make sure we're dealing with the canonical path here, since there are multiple
      * ways to refer to the same dir with different strings.
      */
-    String canonicalPath = "";
+    String canonicalPath;
 
     try {
       canonicalPath = path.getCanonicalPath();
@@ -185,7 +181,6 @@ public final class DotGit {
     throws IOException, JavaGitException {
     GitBranch gitBranch = new GitBranch();
     gitBranch.deleteBranch(path, forceDelete, false, branch);
-    branch = null;
   }
   
   /**
@@ -287,14 +282,16 @@ public final class DotGit {
   public void merge(List<DotGit> gitList, MergeOptions m) {
   }
 
-  /**
-   * Fetch from git repository and merge with the current one
-   * 
-   * @param gitFrom
-   *          The git repository being fetched from
-   */
-  public void pull(DotGit gitFrom) {
-  }
+    /**
+     * Fetch from git repository and merge with the current one
+     *
+     * @param gitFrom The git repository being fetched from
+     */
+    public void pull(DotGit gitFrom)
+            throws JavaGitException
+    {
+        new GitPull().pull(gitFrom.getPath());
+    }
 
   /**
    * Updates the remote git repository with the content of the current one

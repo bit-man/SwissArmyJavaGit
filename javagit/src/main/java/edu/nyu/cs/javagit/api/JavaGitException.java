@@ -16,14 +16,21 @@
  */
 package edu.nyu.cs.javagit.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Base exception for git specific exceptions.
  */
 public class JavaGitException extends Exception {
 
   // as per the Java spec, this is a required field for <code>Serializable</code>
-	private static final long serialVersionUID = 1402053559415331074L;
-	// The code for an exception instance.
+  private static final long serialVersionUID = 1402053559415331074L;
+
+    // command output (if any)
+  private Collection<String> output = new ArrayList<>();
+
+  // The code for an exception instance.
   private int code;
 
   /**
@@ -54,6 +61,20 @@ public class JavaGitException extends Exception {
     this.code = code;
   }
 
+    /**
+     * Create an exception with a code, a message and a causal <code>Throwable</code>.
+     *
+     * @param code    The code for this exception.
+     * @param message The message for this exception.
+     * @param output  GIT command output.
+     */
+    public JavaGitException(int code, String message, Collection<String> output)
+    {
+        super(message);
+        this.code = code;
+        this.output = output;
+    }
+
   /**
    * Get the code this exception is thrown with.
    * 
@@ -63,4 +84,9 @@ public class JavaGitException extends Exception {
     return code;
   }
 
+
+    public Collection<String> getOutput()
+    {
+        return output;
+    }
 }
