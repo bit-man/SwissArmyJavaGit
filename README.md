@@ -1,5 +1,5 @@
-  JavaGit
-  =======
+JavaGit
+=======
 
 ![Build status according to Travis](https://travis-ci.org/bit-man/SwissArmyJavaGit.svg)
 
@@ -31,7 +31,7 @@ the source is:
   1. Download Maven 2 from http://maven.apache.org and set it up.
   2. Navigate on the command line to the project's JavaGit directory and type:
 
-    $ mvn package
+           $ mvn package
 
 The jar file for the project will be deposited in the target directory.
 
