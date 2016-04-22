@@ -16,6 +16,12 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -26,12 +32,6 @@ import edu.nyu.cs.javagit.client.GitCheckoutResponseImpl;
 import edu.nyu.cs.javagit.client.IGitCheckout;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * Command-line implementation of the <code>IGitCheckout</code> interface.
@@ -247,7 +247,7 @@ public class CliGitCheckout implements IGitCheckout {
         public GitCheckoutParser() {
             lineNum = 0;
             response = new GitCheckoutResponseImpl();
-            errors = new ArrayList<ErrorDetails>();
+            errors = new ArrayList<>();
         }
 
         public void parseLine(String line) {
@@ -340,8 +340,8 @@ public class CliGitCheckout implements IGitCheckout {
 
         private String getError() {
             StringBuilder buffer = new StringBuilder();
-            for (int i = 0; i < errors.size(); i++) {
-                buffer.append(errors.get(i) + " ");
+            for (ErrorDetails errDetail : errors) {
+                buffer.append(errDetail).append(" ");
             }
             return buffer.toString();
         }
@@ -355,9 +355,13 @@ public class CliGitCheckout implements IGitCheckout {
             final int lineNumber;
             final String error;
 
-            public ErrorDetails(int lineNumber, String error) {
+            ErrorDetails(int lineNumber, String error) {
                 this.lineNumber = lineNumber;
                 this.error = error;
+            }
+
+            public String toString() {
+                return "Error #line: " + lineNumber + ", message: " +  error;
             }
         }
     }
