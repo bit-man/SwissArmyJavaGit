@@ -1,15 +1,15 @@
 package edu.nyu.cs.javagit.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.client.cli.IParser;
 import edu.nyu.cs.javagit.client.cli.ProcessUtilities;
-import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class encapsulates our global API options that client code may want to get or set.
@@ -74,7 +74,7 @@ public final class JavaGitConfiguration {
       gitPrefix = getGitCommandPrefix();
     }
 
-    String gitCommand = gitPrefix + "git";
+    String gitCommand = gitPrefix + getGitBinaryPath();
     if (!(gitPrefix.equals(""))) {
       // If we've got a full path to the git binary here, ensure it actually exists.
       if (!(new File(gitCommand).exists())) {
@@ -102,6 +102,11 @@ public final class JavaGitConfiguration {
 
   }
 
+  private static String getGitBinaryPath()
+  {
+    return System.getProperty("os.name").contains("indows") ? "git.exe" : "git";
+  }
+
   /**
    * Return the complete string necessary to invoke git on the command line. Could be an absolute
    * path to git, or if the path was never set explicitly, just "git".
@@ -110,7 +115,7 @@ public final class JavaGitConfiguration {
    *         itself.
    */
   public static String getGitCommand() {
-    return getGitCommandPrefix() + "git";
+    return getGitCommandPrefix() + getGitBinaryPath();
   }
 
   /**
