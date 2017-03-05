@@ -16,6 +16,11 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -26,11 +31,6 @@ import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitCommit</code> interface.
@@ -99,7 +99,7 @@ public class CliGitCommit implements IGitCommit {
         List<String> commandLine = buildCommand(options, message, paths);
         GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
 
-        return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository, commandLine, parser);
+        return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository, parser, new ProcessBuilder(commandLine));
     }
 
     /**

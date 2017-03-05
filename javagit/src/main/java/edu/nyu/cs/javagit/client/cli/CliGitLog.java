@@ -45,8 +45,7 @@ public class CliGitLog implements IGitLog{
 		CheckUtilities.checkFileValidity(repositoryPath);
 		GitLogParser parser = new GitLogParser();
 		List<String> command = buildCommand(repositoryPath, options);
-		GitLogResponse response =  (GitLogResponse) ProcessUtilities.runCommand(repositoryPath,
-				command, parser);
+		GitLogResponse response = (GitLogResponse) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
 		if (response.containsError()) {
 			int line = response.getError(0).getLineNumber();
 			String error = response.getError(0).error();
@@ -60,8 +59,7 @@ public class CliGitLog implements IGitLog{
 		CheckUtilities.checkFileValidity(repositoryPath);
 		GitLogParser parser = new GitLogParser();
 		List<String> command = buildCommand(repositoryPath, null);
-		GitLogResponse response =  (GitLogResponse) ProcessUtilities.runCommand(repositoryPath,
-				command, parser);
+		GitLogResponse response = (GitLogResponse) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
 		if (response.containsError()) {
 			int line = response.getError(0).getLineNumber();
 			String error = response.getError(0).error();

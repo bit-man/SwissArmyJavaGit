@@ -22,7 +22,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.JavaGitProperty;
@@ -149,31 +153,28 @@ public class ProcessUtilities {
    *
    * @param workingDirectory
    *          The working directory in with which to start the process.
-   * @param commandLine
-   *          The command line to run.
    * @param parser
    *          The parser to use to parse the command line's response.
+   * @param pb
    * @return The command response from the <code>IParser</code>.
    * @throws IOException
    *           Thrown if there are problems with the subprocess.
    * @throws JavaGitException
    */
-  public static CommandResponse runCommand(File workingDirectory, List<String> commandLine,
-      IParser parser) throws IOException, JavaGitException {
-    ProcessBuilder pb = new ProcessBuilder(commandLine);
+  public static CommandResponse runCommand(File workingDirectory, IParser parser, ProcessBuilder pb) throws IOException, JavaGitException {
 
-    if (workingDirectory != null) {
-      pb.directory(workingDirectory);
-    }
+      if (workingDirectory != null) {
+          pb.directory(workingDirectory);
+      }
 
-    pb.redirectErrorStream(true);
-    LOGGER.info(asString(commandLine));
+      pb.redirectErrorStream(true);
+      LOGGER.info(asString(pb.command()));
 
-    Process p = startProcess(pb);
-    getProcessOutput(p, parser);
-    waitForAndDestroyProcess(p, parser);
+      Process p = startProcess(pb);
+      getProcessOutput(p, parser);
+      waitForAndDestroyProcess(p, parser);
 
-    return parser.getResponse();
+      return parser.getResponse();
   }
 
     private static String asString(List<String> commandLine) {

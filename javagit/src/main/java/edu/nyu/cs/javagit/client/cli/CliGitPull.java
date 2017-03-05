@@ -1,16 +1,16 @@
 package edu.nyu.cs.javagit.client.cli;
 
-import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.commands.CommandResponse;
-import edu.nyu.cs.javagit.api.commands.GitPullResponse;
-import edu.nyu.cs.javagit.client.IGitPull;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import edu.nyu.cs.javagit.api.commands.GitPullResponse;
+import edu.nyu.cs.javagit.client.IGitPull;
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 public class CliGitPull
         implements IGitPull
@@ -24,8 +24,7 @@ public class CliGitPull
             CheckUtilities.checkFileValidity(repoDirectory);
             GitPullParser parser = new GitPullParser();
             List<String> command = buildCommand(repoDirectory);
-            GitPullResponse response = (GitPullResponse) ProcessUtilities.runCommand(repoDirectory,
-                    command, parser);
+            GitPullResponse response = (GitPullResponse) ProcessUtilities.runCommand(repoDirectory, parser, new ProcessBuilder(command));
             if (response.containsError())
             {
                 throw new JavaGitException(444001, "Git pull error", response.getOutput());

@@ -98,7 +98,7 @@ public class CliGitRm implements IGitRm {
     List<String> cmdline = buildCommandLine(options, path, paths);
 
     GitRmParser parser = new GitRmParser();
-    return (GitRmResponse) ProcessUtilities.runCommand(repository, cmdline, parser);
+    return (GitRmResponse) ProcessUtilities.runCommand(repository, parser, new ProcessBuilder(cmdline));
   }
 
   /**

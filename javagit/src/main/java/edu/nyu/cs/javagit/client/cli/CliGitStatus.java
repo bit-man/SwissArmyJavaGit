@@ -16,6 +16,13 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
@@ -25,10 +32,6 @@ import edu.nyu.cs.javagit.client.IGitStatus;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
@@ -56,8 +59,7 @@ public class CliGitStatus
         {
             parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
         }
-        return  (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath,
-                command, parser);
+        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
     }
 
     /**
@@ -130,7 +132,7 @@ public class CliGitStatus
         GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator,
                 file);
 
-        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, command, parser);
+        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
     }
 
     /**

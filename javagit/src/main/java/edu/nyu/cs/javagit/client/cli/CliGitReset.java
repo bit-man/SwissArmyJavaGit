@@ -25,8 +25,8 @@ import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions;
-import edu.nyu.cs.javagit.api.commands.GitResetResponse;
 import edu.nyu.cs.javagit.api.commands.GitResetOptions.ResetType;
+import edu.nyu.cs.javagit.api.commands.GitResetResponse;
 import edu.nyu.cs.javagit.client.GitResetResponseImpl;
 import edu.nyu.cs.javagit.client.IGitReset;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
@@ -73,7 +73,7 @@ public class CliGitReset implements IGitReset {
     List<String> commandLine = buildCommand(options, paths);
     GitResetParser parser = new GitResetParser(repository.getPath());
 
-    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository, commandLine, parser);
+    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository, parser, new ProcessBuilder(commandLine));
   }
 
   protected List<String> buildCommand(GitResetOptions options, List<File> paths) {

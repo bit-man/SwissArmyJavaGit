@@ -1,15 +1,15 @@
 package edu.nyu.cs.javagit.api;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.client.cli.IParser;
 import edu.nyu.cs.javagit.client.cli.ProcessUtilities;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class encapsulates our global API options that client code may want to get or set.
@@ -89,10 +89,9 @@ public final class JavaGitConfiguration {
     // Now run the actual git version command.
     try {
       // We're passing in a working directory of null, which is "don't care" to runCommand
-      gitVersion = (GitVersion) ProcessUtilities.runCommand(null, commandLine,
-          new GitVersionParser());
-    } catch (Exception e) {
-      throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
+		gitVersion = (GitVersion) ProcessUtilities.runCommand(null, new GitVersionParser(), new ProcessBuilder(commandLine));
+	} catch (Exception e) {
+		throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
     }
 
     String version = gitVersion.toString();

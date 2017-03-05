@@ -27,9 +27,7 @@ import edu.nyu.cs.javagit.api.commands.GitMvOptions;
 import edu.nyu.cs.javagit.api.commands.GitMvResponse;
 import edu.nyu.cs.javagit.client.GitMvResponseImpl;
 import edu.nyu.cs.javagit.client.IGitMv;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
-import edu.nyu.cs.javagit.utilities.StringUtilities;
 
 /**
  * Command-line implementation of the <code>IGitMv</code> interface.
@@ -106,7 +104,7 @@ public class CliGitMv implements IGitMv {
     List<String> commandLine = buildCommand(options, source, destination);
     GitMvParser parser = new GitMvParser();
 
-    return (GitMvResponseImpl) ProcessUtilities.runCommand(repoPath, commandLine, parser);
+    return (GitMvResponseImpl) ProcessUtilities.runCommand(repoPath, parser, new ProcessBuilder(commandLine));
   }
 
   /**

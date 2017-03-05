@@ -168,7 +168,7 @@ public class CliGitClone implements IGitClone {
         List<String> commandLine = buildCommand(options, repository, directory);
         GitCloneParser parser = new GitCloneParser();
 
-        return (GitCloneResponseImpl) ProcessUtilities.runCommand(workingDirectoryPath, commandLine, parser);
+        return (GitCloneResponseImpl) ProcessUtilities.runCommand(workingDirectoryPath, parser, new ProcessBuilder(commandLine));
     }
 
     /**
