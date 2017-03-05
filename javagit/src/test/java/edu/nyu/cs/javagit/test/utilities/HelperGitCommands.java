@@ -24,6 +24,7 @@ import java.util.List;
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import edu.nyu.cs.javagit.client.cli.GitProcessBuilder;
 import edu.nyu.cs.javagit.client.cli.IParser;
 import edu.nyu.cs.javagit.client.cli.ProcessUtilities;
 
@@ -56,7 +57,7 @@ public class HelperGitCommands {
 
             public void parseLine(String line) {
             }
-        }, new ProcessBuilder(cmdLine));
+        }, new GitProcessBuilder(cmdLine));
     }
 
 }

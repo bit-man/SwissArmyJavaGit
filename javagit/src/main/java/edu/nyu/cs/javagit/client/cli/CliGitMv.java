@@ -104,7 +104,7 @@ public class CliGitMv implements IGitMv {
     List<String> commandLine = buildCommand(options, source, destination);
     GitMvParser parser = new GitMvParser();
 
-    return (GitMvResponseImpl) ProcessUtilities.runCommand(repoPath, parser, new ProcessBuilder(commandLine));
+    return (GitMvResponseImpl) ProcessUtilities.runCommand(repoPath, parser, new GitProcessBuilder(commandLine));
   }
 
   /**

@@ -46,7 +46,7 @@ public class CliGitAdd implements IGitAdd {
         CheckUtilities.checkFileValidity(repositoryPath);
         GitAddParser parser = new GitAddParser();
         List<String> command = buildCommand(repositoryPath, options, paths);
-        GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
+        GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
 
         if (options != null) {
             addDryRun(options, response);

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -82,7 +81,7 @@ public class ProcessUtilities {
    *              An <code>IOException</code> is thrown if there is trouble starting the
    *              sub-process.
    */
-  public static Process startProcess(ProcessBuilder pb) throws IOException {
+  public static Process startProcess(IGitProcessBuilder pb) throws IOException {
     try {
       return pb.start();
     } catch (IOException e) {
@@ -161,14 +160,14 @@ public class ProcessUtilities {
    *           Thrown if there are problems with the subprocess.
    * @throws JavaGitException
    */
-  public static CommandResponse runCommand(File workingDirectory, IParser parser, ProcessBuilder pb) throws IOException, JavaGitException {
+  public static CommandResponse runCommand(File workingDirectory, IParser parser, IGitProcessBuilder pb) throws IOException, JavaGitException {
 
       if (workingDirectory != null) {
           pb.directory(workingDirectory);
       }
 
       pb.redirectErrorStream(true);
-      LOGGER.info(asString(pb.command()));
+      LOGGER.info(pb.getCommandString());
 
       Process p = startProcess(pb);
       getProcessOutput(p, parser);
@@ -176,14 +175,6 @@ public class ProcessUtilities {
 
       return parser.getResponse();
   }
-
-    private static String asString(List<String> commandLine) {
-        String s = "";
-        for (String cmd : commandLine)
-            s += ( s.equals("") ?  "" : " ") + cmd;
-
-        return s;
-    }
 
     private static class JustThisFormatter extends Formatter {
         @Override

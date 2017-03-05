@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import edu.nyu.cs.javagit.client.cli.GitProcessBuilder;
 import edu.nyu.cs.javagit.client.cli.IParser;
 import edu.nyu.cs.javagit.client.cli.ProcessUtilities;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
@@ -89,9 +90,9 @@ public final class JavaGitConfiguration {
     // Now run the actual git version command.
     try {
       // We're passing in a working directory of null, which is "don't care" to runCommand
-		gitVersion = (GitVersion) ProcessUtilities.runCommand(null, new GitVersionParser(), new ProcessBuilder(commandLine));
-	} catch (Exception e) {
-		throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
+      gitVersion = (GitVersion) ProcessUtilities.runCommand(null, new GitVersionParser(), new GitProcessBuilder(commandLine));
+    } catch (Exception e) {
+      throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
     }
 
     String version = gitVersion.toString();

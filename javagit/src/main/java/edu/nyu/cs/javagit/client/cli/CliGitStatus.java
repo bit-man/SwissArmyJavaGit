@@ -59,7 +59,7 @@ public class CliGitStatus
         {
             parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
         }
-        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
+        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
     }
 
     /**
@@ -132,7 +132,7 @@ public class CliGitStatus
         GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator,
                 file);
 
-        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new ProcessBuilder(command));
+        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
     }
 
     /**

@@ -20,7 +20,7 @@ public class CliGitInit implements IGitInit {
 		CheckUtilities.checkFileValidity(repoDirectory);
 		GitInitParser parser = new GitInitParser();
 		List<String> command = buildCommand(repoDirectory, options);
-		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new ProcessBuilder(command));
+		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new GitProcessBuilder(command));
 		if (response.containsError()) {
 			throw new JavaGitException(418001, "Git Init error");
 		}
@@ -32,7 +32,7 @@ public class CliGitInit implements IGitInit {
 		CheckUtilities.checkFileValidity(repoDirectory);
 		GitInitParser parser = new GitInitParser();
 		List<String> command = buildCommand(repoDirectory, null);
-		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new ProcessBuilder(command));
+		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new GitProcessBuilder(command));
 		if (response.containsError()) {
 			throw new JavaGitException(418001, "Git Init error");
 		}

@@ -24,7 +24,7 @@ public class CliGitPull
             CheckUtilities.checkFileValidity(repoDirectory);
             GitPullParser parser = new GitPullParser();
             List<String> command = buildCommand(repoDirectory);
-            GitPullResponse response = (GitPullResponse) ProcessUtilities.runCommand(repoDirectory, parser, new ProcessBuilder(command));
+            GitPullResponse response = (GitPullResponse) ProcessUtilities.runCommand(repoDirectory, parser, new GitProcessBuilder(command));
             if (response.containsError())
             {
                 throw new JavaGitException(444001, "Git pull error", response.getOutput());
