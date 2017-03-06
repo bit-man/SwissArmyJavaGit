@@ -105,38 +105,30 @@ public class CliGitBranch implements IGitBranch {
 
   /**
    * Process the git-branch command, to show/delete/create/rename branches.
-   * 
-   * @param repoPath
-   *          A <code>File</code> instance for the path to the repository. If null is passed, a
-   *          <code>NullPointerException</code> will be thrown.
-   * @param options
-   *          The options to include on the command line.
-   * @param arg1
-   *          When renaming a branch to a different name, this is the old branch. When creating a
-   *          branch this the branch name.
-   * @param arg2
-   *          When renaming a branch to a new branch name, this is the new branch name. When
-   *          creating a branch, this is the head to start from.
-   * @param branchList
-   *          List of branches need to be deleted.
+   *
+   * @param repoPath   A <code>File</code> instance for the path to the repository. If null is passed, a
+   *                   <code>NullPointerException</code> will be thrown.
+   * @param options    The options to include on the command line.
+   * @param arg1       When renaming a branch to a different name, this is the old branch. When creating a
+   *                   branch this the branch name.
+   * @param arg2       When renaming a branch to a new branch name, this is the new branch name. When
+   *                   creating a branch, this is the head to start from.
+   * @param branchList List of branches need to be deleted.
    * @return The result of the git branch.
-   * @throws IOException
-   *           There are many reasons for which an <code>IOException</code> may be thrown.
-   *           Examples include:
-   *           <ul>
-   *           <li>a directory doesn't exist</li>
-   *           <li>a command is not found on the PATH</li>
-   *           </ul>
-   * @throws JavaGitException
-   *           Thrown when there is an error executing git-branch.
+   * @throws IOException      There are many reasons for which an <code>IOException</code> may be thrown.
+   *                          Examples include:
+   *                          <ul>
+   *                          <li>a directory doesn't exist</li>
+   *                          <li>a command is not found on the PATH</li>
+   *                          </ul>
+   * @throws JavaGitException Thrown when there is an error executing git-branch.
    */
-  public GitBranchResponseImpl branchProcess(File repoPath, GitBranchOptions options, Ref arg1,
-      Ref arg2, List<Ref> branchList) throws IOException, JavaGitException {
+  public GitBranchResponseImpl branchProcess(File repoPath, GitBranchOptions options, Ref arg1, Ref arg2, List<Ref> branchList)
+          throws IOException, JavaGitException {
     CheckUtilities.checkNullArgument(repoPath, "repository path");
     List<String> commandLine = buildCommand(options, arg1, arg2, branchList);
     GitBranchParser parser = new GitBranchParser();
-
-    return (GitBranchResponseImpl) ProcessUtilities.runCommand(repoPath, parser, new GitProcessBuilder(commandLine));
+    return new CommandRunner<GitBranchResponseImpl>(repoPath, parser, new GitProcessBuilder(commandLine)).run();
   }
 
   /**

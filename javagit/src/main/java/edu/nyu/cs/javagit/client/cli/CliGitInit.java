@@ -15,24 +15,22 @@ import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 public class CliGitInit implements IGitInit {
 
-	public GitInitResponse init(File repoDirectory, GitInitOptions options)
-	throws JavaGitException, IOException  {
+	public GitInitResponse init(File repoDirectory, GitInitOptions options) throws JavaGitException, IOException {
 		CheckUtilities.checkFileValidity(repoDirectory);
 		GitInitParser parser = new GitInitParser();
 		List<String> command = buildCommand(repoDirectory, options);
-		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new GitProcessBuilder(command));
+		GitInitResponse response = new CommandRunner<GitInitResponse>(repoDirectory, parser, new GitProcessBuilder(command)).run();
 		if (response.containsError()) {
 			throw new JavaGitException(418001, "Git Init error");
 		}
 		return response;
 	}
 
-	public GitInitResponse init(File repoDirectory) 
-	throws JavaGitException, IOException  {
+	public GitInitResponse init(File repoDirectory) throws JavaGitException, IOException {
 		CheckUtilities.checkFileValidity(repoDirectory);
 		GitInitParser parser = new GitInitParser();
 		List<String> command = buildCommand(repoDirectory, null);
-		GitInitResponse response = (GitInitResponse) ProcessUtilities.runCommand(repoDirectory, parser, new GitProcessBuilder(command));
+		GitInitResponse response = new CommandRunner<GitInitResponse>(repoDirectory, parser, new GitProcessBuilder(command)).run();
 		if (response.containsError()) {
 			throw new JavaGitException(418001, "Git Init error");
 		}

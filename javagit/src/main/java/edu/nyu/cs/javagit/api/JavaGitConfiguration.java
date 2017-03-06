@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import edu.nyu.cs.javagit.client.cli.CommandRunner;
 import edu.nyu.cs.javagit.client.cli.GitProcessBuilder;
 import edu.nyu.cs.javagit.client.cli.IParser;
-import edu.nyu.cs.javagit.client.cli.ProcessUtilities;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 
@@ -52,13 +52,10 @@ public final class JavaGitConfiguration {
    * call this function to figure out the version. In this case, the <code>File</code> path
    * argument will be null.
    *
-   *
-   * @param path
-   *          <code>File</code> object representing the directory containing the git binaries. If
-   *          null, the previously-set path is used (if any). It must contain either an absolute
-   *          path, or a valid path relative to the current working directory.
-   * @throws JavaGitException
-   *           Thrown if git is not found at the provided path.
+   * @param path <code>File</code> object representing the directory containing the git binaries. If
+   *             null, the previously-set path is used (if any). It must contain either an absolute
+   *             path, or a valid path relative to the current working directory.
+   * @throws JavaGitException Thrown if git is not found at the provided path.
    */
   private static void determineGitVersion(File path) throws JavaGitException {
 
@@ -89,9 +86,8 @@ public final class JavaGitConfiguration {
 
     // Now run the actual git version command.
     try {
-      // We're passing in a working directory of null, which is "don't care" to runCommand
-      gitVersion = (GitVersion) ProcessUtilities.runCommand(null, new GitVersionParser(), new GitProcessBuilder(commandLine));
-    } catch (Exception e) {
+		gitVersion = new CommandRunner<GitVersion>(new GitVersionParser(), new GitProcessBuilder(commandLine)).run();
+	} catch (Exception e) {
       throw new JavaGitException(100001, ExceptionMessageMap.getMessage("100001"));
     }
 
@@ -139,17 +135,35 @@ public final class JavaGitConfiguration {
     return gitPath;
   }
 
-  /**
-   * Returns the version number of the underlying git binaries. If this method is called and we
-   * don't know the version yet, it tries to figure it out. (The version gets set if
-   * {@link #setGitPath(File) setGitPath} was previously called.)
-   * 
-   * @return The git version <code>String</code>.
-   */
-  public static String getGitVersion() throws JavaGitException {
-      return getGitVersionObject().toString();
-  }
+	/**
+	 * Convenience method for setting the path with a <code>String</code> instead of a
+	 * <code>File</code>.
+	 * <p>
+	 * TODO (rs2705): Enforce the requirement below that the path be absolute. Is there a simple way
+	 * to do this in an OS-independent fashion?
+	 *
+	 * @param path Absolute path to git binaries installed on the system. The path must be absolute since
+	 *             it needs to persist for the life of the client code, even if the working directory
+	 *             changes. Throws a NullPointerException if path is null, or an IllegalArgumentException
+	 *             if it's the empty string.
+	 * @throws IOException      Thrown if the provided path does not exist.
+	 * @throws JavaGitException Thrown if we cannot find git at the path provided.
+	 */
+	public static void setGitPath(String path) throws IOException, JavaGitException {
+		CheckUtilities.checkStringArgument(path, "path");
+		setGitPath(new File(path));
+	}
 
+	/**
+	 * Returns the version number of the underlying git binaries. If this method is called and we
+	 * don't know the version yet, it tries to figure it out. (The version gets set if
+	 * {@link #setGitPath(File) setGitPath} was previously called.)
+	 *
+	 * @return The git version <code>String</code>.
+	 */
+	public static String getGitVersion() throws JavaGitException {
+		return getGitVersionObject().toString();
+	}
 
     public static GitVersion getGitVersionObject() throws JavaGitException {
         // If the version hasn't been found yet, let's do some lazy initialization here.
@@ -165,15 +179,15 @@ public final class JavaGitConfiguration {
    * to be no deliberately-defined git version format. So, here we do a minimal sanity check for two
    * things: 1. The first character in the version is a number. 2. There's at least one period in
    * the version string.
-   * 
+   *
    * @param version
    * @return true if the version passed as argument is valid
    */
   private static boolean isValidVersionString(String version) {
     /*
-     * Git version strings can vary, so let's do a minimal sanity check for two things: 1. The first
+	 * Git version strings can vary, so let's do a minimal sanity check for two things: 1. The first
      * character in the version is a number. 2. There's at least one period in the version string.
-     * 
+     *
      * TODO (rs2705): Make this more sophisticated by parsing out a major/minor version number, and
      * ensuring it's >= some minimally-required version.
      */
@@ -197,7 +211,7 @@ public final class JavaGitConfiguration {
    * never called, we assume that git is in a directory in the PATH environment variable for this
    * process. Passing null as the path argument will unset an explicitly-set path and revert to
    * looking for git in the PATH.
-   * 
+   *
    * @param path
    *          <code>File</code> object representing the directory containing the git binaries. It
    *          must contain either an absolute path, or a valid path relative to the current working
@@ -228,28 +242,6 @@ public final class JavaGitConfiguration {
 
     // Make sure we're hanging onto an absolute path.
     gitPath = (path != null) ? path.getAbsoluteFile() : null;
-  }
-
-  /**
-   * Convenience method for setting the path with a <code>String</code> instead of a
-   * <code>File</code>.
-   * 
-   * TODO (rs2705): Enforce the requirement below that the path be absolute. Is there a simple way
-   * to do this in an OS-independent fashion?
-   * 
-   * @param path
-   *          Absolute path to git binaries installed on the system. The path must be absolute since
-   *          it needs to persist for the life of the client code, even if the working directory
-   *          changes. Throws a NullPointerException if path is null, or an IllegalArgumentException
-   *          if it's the empty string.
-   * @throws IOException
-   *           Thrown if the provided path does not exist.
-   * @throws JavaGitException
-   *           Thrown if we cannot find git at the path provided.
-   */
-  public static void setGitPath(String path) throws IOException, JavaGitException {
-    CheckUtilities.checkStringArgument(path, "path");
-    setGitPath(new File(path));
   }
 
   /*

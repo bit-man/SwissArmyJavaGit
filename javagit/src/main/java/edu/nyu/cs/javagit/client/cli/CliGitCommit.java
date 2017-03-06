@@ -91,15 +91,14 @@ public class CliGitCommit implements IGitCommit {
      *                          </ul>
      * @throws JavaGitException Thrown when there is an error making the commit.
      */
-    protected GitCommitResponseImpl commitProcessor(File repository, GitCommitOptions options,
-                                                    String message, List<File> paths) throws IOException, JavaGitException {
+    protected GitCommitResponseImpl commitProcessor(File repository, GitCommitOptions options, String message, List<File> paths)
+            throws IOException, JavaGitException {
         CheckUtilities.checkNullArgument(repository, "repository");
         CheckUtilities.checkStringArgument(message, "message");
 
         List<String> commandLine = buildCommand(options, message, paths);
         GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
-
-        return (GitCommitResponseImpl) ProcessUtilities.runCommand(repository, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitCommitResponseImpl>(repository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     /**

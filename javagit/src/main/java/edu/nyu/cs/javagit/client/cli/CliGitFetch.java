@@ -25,8 +25,7 @@ public class CliGitFetch implements IGitFetch {
     public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options) throws JavaGitException, IOException {
         List<String> commandLine = buildCommand(options, repoPath, null, (String) null);
         GitFetchParser parser = new GitFetchParser();
-
-        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitFetchResponse>(clonedRepository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     private List<String> buildCommand(GitFetchOptions options, JavaGitUrl repoPath, Ref ref, Set<String> groups, Set<JavaGitUrl> repos) {
@@ -61,15 +60,14 @@ public class CliGitFetch implements IGitFetch {
     public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, Ref ref) throws JavaGitException, IOException {
         List<String> commandLine = buildCommand(options, repoPath, ref, (String) null);
         GitFetchParser parser = new GitFetchParser();
-
-        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitFetchResponse>(clonedRepository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     public GitFetchResponse fetch(File clonedRepository, JavaGitUrl repoPath, GitFetchOptions options, String group) throws JavaGitException, IOException {
         List<String> commandLine = buildCommand(options, repoPath, null, group);
         GitFetchParser parser = new GitFetchParser();
 
-        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitFetchResponse>(clonedRepository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     private List<String> buildCommand(GitFetchOptions options, JavaGitUrl repoPath, Ref ref, String group) {
@@ -83,13 +81,13 @@ public class CliGitFetch implements IGitFetch {
     public GitFetchResponse fetch(File clonedRepository, File repoPath, GitFetchOptions options, Set<JavaGitUrl> repository, Set<String> group)
             throws JavaGitException, IOException {
 
-        if ( ! options.isMultiple() )
+        if (!options.isMultiple())
             throw new JavaGitException(414001, ExceptionMessageMap.getMessage("414001"));
 
         List<String> commandLine = buildCommand(options, new FileUrl(repoPath), null, group, repository);
         GitFetchParser parser = new GitFetchParser();
 
-        return (GitFetchResponse) ProcessUtilities.runCommand(clonedRepository, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitFetchResponse>(clonedRepository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     private class GitFetchParser

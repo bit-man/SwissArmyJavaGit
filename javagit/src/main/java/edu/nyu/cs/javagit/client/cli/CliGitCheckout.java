@@ -38,35 +38,16 @@ import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
  */
 public class CliGitCheckout implements IGitCheckout {
 
-    /**
-     * String pattern for matching files with modified, deleted, added words in the output.
-     */
-    private enum Pattern {
-        MODIFIED("^M\\s+\\w+"), DELETED("^D\\s+\\w+"), ADDED("^A\\s+\\w+");
-
-        String pattern;
-
-        private Pattern(String pattern) {
-            this.pattern = pattern;
-        }
-
-        public boolean matches(String line) {
-            return line.matches(pattern);
-        }
-    }
-
-    /**
-     * Git checkout with options and base branch information provided to &lt;git-checkout&gt; command.
-     */
-    public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref ref)
-            throws JavaGitException, IOException {
-        CheckUtilities.checkFileValidity(repositoryPath);
-        checkRefAgainstRefType(ref, RefType.HEAD);
-        List<String> command = buildCommand(options, ref);
-        GitCheckoutParser parser = new GitCheckoutParser();
-        GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
-        return response;
-    }
+	/**
+	 * Git checkout with options and base branch information provided to &lt;git-checkout&gt; command.
+	 */
+	public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref ref) throws JavaGitException, IOException {
+		CheckUtilities.checkFileValidity(repositoryPath);
+		checkRefAgainstRefType(ref, RefType.HEAD);
+		List<String> command = buildCommand(options, ref);
+		GitCheckoutParser parser = new GitCheckoutParser();
+		return new CommandRunner<GitCheckoutResponse>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+	}
 
     /**
      * Git checkout without any options and branch information provided. Just a basic checkout
@@ -83,60 +64,55 @@ public class CliGitCheckout implements IGitCheckout {
     public GitCheckoutResponse checkout(File repositoryPath, Ref branch) throws JavaGitException,
             IOException {
         return checkout(repositoryPath, null, branch);
-    }
+	}
 
-    /**
-     * Checks out a list of files from repository, no checkout options provided.
-     */
-    public GitCheckoutResponse checkout(File repositoryPath, List<File> paths)
-            throws JavaGitException, IOException {
-        CheckUtilities.checkFileValidity(repositoryPath);
-        CheckUtilities.checkNullListArgument(paths, "list of file paths");
-        GitCheckoutParser parser = new GitCheckoutParser();
-        List<String> command = buildCommand(null, null, paths);
-        GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
-        return response;
-    }
+	/**
+	 * Checks out a list of files from repository, no checkout options provided.
+	 */
+	public GitCheckoutResponse checkout(File repositoryPath, List<File> paths) throws JavaGitException, IOException {
+		CheckUtilities.checkFileValidity(repositoryPath);
+		CheckUtilities.checkNullListArgument(paths, "list of file paths");
+		GitCheckoutParser parser = new GitCheckoutParser();
+		List<String> command = buildCommand(null, null, paths);
 
-    /**
-     * Checks out a list of file from repository, with &lt;tree-ish&gt; options provided.
-     */
-    public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref ref,
-                                        List<File> paths) throws JavaGitException, IOException {
-        CheckUtilities.checkFileValidity(repositoryPath);
-        if (ref != null && ref.getRefType() == RefType.HEAD) {
-            throw new IllegalArgumentException("Invalid ref type passed as argument to checkout");
-        }
-        GitCheckoutParser parser = new GitCheckoutParser();
-        List<String> command = buildCommand(options, ref, paths);
-        return (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
-    }
+		return new CommandRunner<GitCheckoutResponse>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+	}
 
-    /**
-     * Checks out a file from repository from a particular branch
-     */
-    public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref branch,
-                                        File path) throws JavaGitException, IOException {
-        CheckUtilities.checkFileValidity(repositoryPath);
-        GitCheckoutParser parser = new GitCheckoutParser();
-        List<File> paths = new ArrayList<File>();
-        paths.add(path);
-        List<String> command = buildCommand(options, branch, paths);
-        GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
-        return response;
-    }
+	/**
+	 * Checks out a list of file from repository, with &lt;tree-ish&gt; options provided.
+	 */
+	public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref ref, List<File> paths)
+			throws JavaGitException, IOException {
+		CheckUtilities.checkFileValidity(repositoryPath);
+		if (ref != null && ref.getRefType() == RefType.HEAD) {
+			throw new IllegalArgumentException("Invalid ref type passed as argument to checkout");
+		}
+		GitCheckoutParser parser = new GitCheckoutParser();
+		List<String> command = buildCommand(options, ref, paths);
+		return new CommandRunner<GitCheckoutResponse>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+	}
+
+	/**
+	 * Checks out a file from repository from a particular branch
+	 */
+	public GitCheckoutResponse checkout(File repositoryPath, GitCheckoutOptions options, Ref branch, File path) throws JavaGitException, IOException {
+		CheckUtilities.checkFileValidity(repositoryPath);
+		GitCheckoutParser parser = new GitCheckoutParser();
+		List<File> paths = new ArrayList<File>();
+		paths.add(path);
+		List<String> command = buildCommand(options, branch, paths);
+		return new CommandRunner<GitCheckoutResponse>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+	}
 
     /**
      * Checks out a list of files from a given branch
-     */
-    public GitCheckoutResponse checkout(File repositoryPath, Ref branch, List<File> paths)
-            throws JavaGitException, IOException {
-        CheckUtilities.checkFileValidity(repositoryPath);
+	 */
+	public GitCheckoutResponse checkout(File repositoryPath, Ref branch, List<File> paths) throws JavaGitException, IOException {
+		CheckUtilities.checkFileValidity(repositoryPath);
         GitCheckoutParser parser = new GitCheckoutParser();
         List<String> command = buildCommand(null, branch, paths);
-        GitCheckoutResponse response = (GitCheckoutResponse) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
-        return response;
-    }
+		return new CommandRunner<GitCheckoutResponse>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+	}
 
     /**
      * This is just a test method for verifying that a given ref is not of refType provided as one of the parameters.
@@ -224,8 +200,25 @@ public class CliGitCheckout implements IGitCheckout {
         }
         if (options.optM()) {
             command.add("-m");
-        }
-    }
+		}
+	}
+
+	/**
+	 * String pattern for matching files with modified, deleted, added words in the output.
+	 */
+	private enum Pattern {
+		MODIFIED("^M\\s+\\w+"), DELETED("^D\\s+\\w+"), ADDED("^A\\s+\\w+");
+
+		String pattern;
+
+		private Pattern(String pattern) {
+			this.pattern = pattern;
+		}
+
+		public boolean matches(String line) {
+			return line.matches(pattern);
+		}
+	}
 
     /**
      * Parser class to parse the output generated by &lt;git-checkout&gt; and return a

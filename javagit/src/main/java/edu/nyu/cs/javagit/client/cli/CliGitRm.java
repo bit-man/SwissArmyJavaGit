@@ -70,35 +70,28 @@ public class CliGitRm implements IGitRm {
 
   /**
    * Processes an incoming <code>GitRm</code> request.
-   * 
-   * @param repository
-   *          The path to the repository.
-   * @param options
-   *          The options to use in constructing the command line.
-   * @param path
-   *          A single file/directory to delete. This should be null if there is a list of paths to
-   *          delete.
-   * @param paths
-   *          A list of files/paths to delete. This should be null if there is a single path to
-   *          delete.
+   *
+   * @param repository The path to the repository.
+   * @param options    The options to use in constructing the command line.
+   * @param path       A single file/directory to delete. This should be null if there is a list of paths to
+   *                   delete.
+   * @param paths      A list of files/paths to delete. This should be null if there is a single path to
+   *                   delete.
    * @return The response from running the command.
-   * @exception IOException
-   *              There are many reasons for which an <code>IOException</code> may be thrown.
-   *              Examples include:
-   *              <ul>
-   *              <li>a directory doesn't exist</li>
-   *              <li>access to a file is denied</li>
-   *              <li>a command is not found on the PATH</li>
-   *              </ul>
-   * @exception JavaGitException
-   *              Thrown when there is an error making the commit.
+   * @throws IOException      There are many reasons for which an <code>IOException</code> may be thrown.
+   *                          Examples include:
+   *                          <ul>
+   *                          <li>a directory doesn't exist</li>
+   *                          <li>access to a file is denied</li>
+   *                          <li>a command is not found on the PATH</li>
+   *                          </ul>
+   * @throws JavaGitException Thrown when there is an error making the commit.
    */
-  private GitRmResponse processRm(File repository, GitRmOptions options, File path, List<File> paths)
-      throws IOException, JavaGitException {
+  private GitRmResponse processRm(File repository, GitRmOptions options, File path, List<File> paths) throws IOException, JavaGitException {
     List<String> cmdline = buildCommandLine(options, path, paths);
 
     GitRmParser parser = new GitRmParser();
-    return (GitRmResponse) ProcessUtilities.runCommand(repository, parser, new GitProcessBuilder(cmdline));
+    return new CommandRunner<GitRmResponse>(repository, parser, new GitProcessBuilder(cmdline)).run();
   }
 
   /**

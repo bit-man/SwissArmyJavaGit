@@ -163,12 +163,12 @@ public class CliGitClone implements IGitClone {
         return cloneProcess(workingDirectoryPath, options, repository, directory);
     }
 
-    private GitCloneResponseImpl cloneProcess(File workingDirectoryPath, GitCloneOptions options,
-                                             JavaGitUrl repository, File directory) throws IOException, JavaGitException, URISyntaxException {
+    private GitCloneResponseImpl cloneProcess(File workingDirectoryPath, GitCloneOptions options, JavaGitUrl repository, File directory)
+            throws IOException, JavaGitException, URISyntaxException {
         List<String> commandLine = buildCommand(options, repository, directory);
         GitCloneParser parser = new GitCloneParser();
 
-        return (GitCloneResponseImpl) ProcessUtilities.runCommand(workingDirectoryPath, parser, new GitProcessBuilder(commandLine));
+        return new CommandRunner<GitCloneResponseImpl>(workingDirectoryPath, parser, new GitProcessBuilder(commandLine)).run();
     }
 
     /**

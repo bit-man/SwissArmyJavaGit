@@ -62,49 +62,41 @@ public class CliGitMv implements IGitMv {
 
   /**
    * Exec of git-mv command
-   * 
-   * @param repoPath
-   *          A <code>File</code> instance for the path to the repository root (the parent
-   *          directory of the .git directory) or a sub-directory in the working tree of the
-   *          repository to move/rename against. This argument must represent the absolute path to 
-   *          the desired directory as returned by the <code>File.getPath()</code> method. If null 
-   *          is passed, a <code>NullPointerException</code> will be thrown.
-   * @param options
-   *          The options to git-mv command.
-   * @param source
-   *          The <code>List</code> of source file/folder/symlink which are to be moved to a 
-   *          different location. The paths specified in this list must all be relative to the 
-   *          path specified in the <code>repository</code> parameter as returned by 
-   *          <code>File.getPath()</code>. A non-zero length argument is required for this 
-   *          parameter, otherwise a <code>NullPointerException</code> or 
-   *          <code>IllegalArgumentException</code> will be thrown.
-   * @param destination
-   *          The destination file/folder/symlink which the source is renamed or moved to. It 
-   *          should be relative to the path specified in the <code>repository</code> 
-   *          parameter as returned by <code>File.getPath()</code>. A non-zero length argument is 
-   *          required for this parameter, otherwise a <code>NullPointerException</code> or 
-   *          <code>IllegalArgumentException</code> will be thrown.
-   * @return The results from the git-mv. 
-   *           It is expected that GitMv does not notify when a move was successful. This follows 
-   *           the response that git-mv itself gives. If the move/rename fails for any reason, 
-   *           proper exception messages are generated and thrown.
-   * @exception IOException
-   *              There are many reasons for which an <code>IOException</code> may be thrown.
-   *              Examples include:
-   *              <ul>
-   *              <li>access to a file is denied</li>
-   *              <li>a command is not found on the PATH</li>
-   *              </ul>
-   * @exception JavaGitException
-   *              Thrown when there is an error executing git-mv.
+   *
+   * @param repoPath    A <code>File</code> instance for the path to the repository root (the parent
+   *                    directory of the .git directory) or a sub-directory in the working tree of the
+   *                    repository to move/rename against. This argument must represent the absolute path to
+   *                    the desired directory as returned by the <code>File.getPath()</code> method. If null
+   *                    is passed, a <code>NullPointerException</code> will be thrown.
+   * @param options     The options to git-mv command.
+   * @param source      The <code>List</code> of source file/folder/symlink which are to be moved to a
+   *                    different location. The paths specified in this list must all be relative to the
+   *                    path specified in the <code>repository</code> parameter as returned by
+   *                    <code>File.getPath()</code>. A non-zero length argument is required for this
+   *                    parameter, otherwise a <code>NullPointerException</code> or
+   *                    <code>IllegalArgumentException</code> will be thrown.
+   * @param destination The destination file/folder/symlink which the source is renamed or moved to. It
+   *                    should be relative to the path specified in the <code>repository</code>
+   *                    parameter as returned by <code>File.getPath()</code>. A non-zero length argument is
+   *                    required for this parameter, otherwise a <code>NullPointerException</code> or
+   *                    <code>IllegalArgumentException</code> will be thrown.
+   * @return The results from the git-mv.
+   * It is expected that GitMv does not notify when a move was successful. This follows
+   * the response that git-mv itself gives. If the move/rename fails for any reason,
+   * proper exception messages are generated and thrown.
+   * @throws IOException      There are many reasons for which an <code>IOException</code> may be thrown.
+   *                          Examples include:
+   *                          <ul>
+   *                          <li>access to a file is denied</li>
+   *                          <li>a command is not found on the PATH</li>
+   *                          </ul>
+   * @throws JavaGitException Thrown when there is an error executing git-mv.
    */
-  public GitMvResponseImpl mvProcess(File repoPath, GitMvOptions options, List<File> source,
-      File destination) throws IOException, JavaGitException {
+  public GitMvResponseImpl mvProcess(File repoPath, GitMvOptions options, List<File> source, File destination) throws IOException, JavaGitException {
 
     List<String> commandLine = buildCommand(options, source, destination);
     GitMvParser parser = new GitMvParser();
-
-    return (GitMvResponseImpl) ProcessUtilities.runCommand(repoPath, parser, new GitProcessBuilder(commandLine));
+    return new CommandRunner<GitMvResponseImpl>(repoPath, parser, new GitProcessBuilder(commandLine)).run();
   }
 
   /**
@@ -144,6 +136,20 @@ public class CliGitMv implements IGitMv {
   }
 
   /**
+   * @return the dryRun
+   */
+  public boolean isDryRun() {
+    return dryRun;
+  }
+
+  /**
+   * @param dryRun the dryRun to set
+   */
+  public void setDryRun(boolean dryRun) {
+    this.dryRun = dryRun;
+  }
+
+  /**
    * Implementation of the <code>IParser</code> interface in GitMvParser class.
    */
   public class GitMvParser implements IParser {
@@ -153,16 +159,16 @@ public class CliGitMv implements IGitMv {
 
     // While handling the error cases this buffer will have the error messages.
     private StringBuffer errorMessage = null;
-    
+
     // Track the number of lines parsed.
     private int numLinesParsed = 0;
 
     /**
      * Parses the line from the git-mv response text.
-     * 
+     *
      * @param line
      *          The line of text to process.
-     * 
+     *
      */
     public void parseLine(String line) {
       ++numLinesParsed;
@@ -186,69 +192,52 @@ public class CliGitMv implements IGitMv {
 
     /**
      * Parses the line for successful execution.
-     * 
+     *
      * @param line
      *          The line of text to process.
      */
     public void parseLineForSuccess(String line) {
-        if (line.contains("Warning:")) {
-            response.addComment(line);
-        }
-        if (line.contains("Adding") || line.contains("Changed")) {
-            response.setDestination(new File(line.substring(11)));
-        }
-        if (line.contains("Deleting")) {
-            response.setSource(new File(line.substring(11)));
-        }
-        // Renaming fileOne to fileThree
-        if (line.startsWith("Renaming")) {
-            String[] split = line.split(" ");
-            response.setSource(new File(split[1]));
-            response.setDestination(new File(split[3]));
-        }
+      if (line.contains("Warning:")) {
+        response.addComment(line);
+      }
+      if (line.contains("Adding") || line.contains("Changed")) {
+        response.setDestination(new File(line.substring(11)));
+      }
+      if (line.contains("Deleting")) {
+        response.setSource(new File(line.substring(11)));
+      }
+      // Renaming fileOne to fileThree
+      if (line.startsWith("Renaming")) {
+        String[] split = line.split(" ");
+        response.setSource(new File(split[1]));
+        response.setDestination(new File(split[3]));
+      }
     }
 
     public void processExitCode(int code) {
     }
-    
+
     /**
      * Gets a <code>GitMvResponse</code> object containing the information from the git-mv
-     * response text parsed by this IParser instance. It is expected that GitMv does not notify 
-     * when a move was successful. This follows the response that git-mv itself gives. If the 
+     * response text parsed by this IParser instance. It is expected that GitMv does not notify
+     * when a move was successful. This follows the response that git-mv itself gives. If the
      * move/rename fails for any reason, proper exception messages are generated and thrown.
-     * 
+     *
      * @return The <code>GitMvResponse</code> object containing the git-mv's response
-     *         information. It is expected that GitMv does not notify when a move was successful. 
-     *         This follows the response that git-mv itself gives. If the move/rename fails for 
+     *         information. It is expected that GitMv does not notify when a move was successful.
+     *         This follows the response that git-mv itself gives. If the move/rename fails for
      *         any reason, proper exception messages are generated and thrown.
      * @throws <code>JavaGitException</code> if there is an error executing git-mv.
      */
     public GitMvResponse getResponse() throws JavaGitException {
       if (null != errorMessage) {
         if (isDryRun()) {
-          throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001")
-              + "  The git-mv dry-run error message:  { " + errorMessage.toString() + " }");
+          throw new JavaGitException(424001, ExceptionMessageMap.getMessage("424001") + "  The git-mv dry-run error message:  { " + errorMessage.toString() + " }");
         } else {
-          throw new JavaGitException(424000, ExceptionMessageMap.getMessage("424000")
-              + "  The git-mv error message:  { " + errorMessage.toString() + " }");
+          throw new JavaGitException(424000, ExceptionMessageMap.getMessage("424000") + "  The git-mv error message:  { " + errorMessage.toString() + " }");
         }
       }
       return response;
     }
-  }
-
-  /**
-   * @return the dryRun
-   */
-  public boolean isDryRun() {
-    return dryRun;
-  }
-
-  /**
-   * @param dryRun
-   *          the dryRun to set
-   */
-  public void setDryRun(boolean dryRun) {
-    this.dryRun = dryRun;
   }
 }

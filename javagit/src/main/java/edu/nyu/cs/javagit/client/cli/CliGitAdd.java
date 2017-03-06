@@ -41,12 +41,11 @@ public class CliGitAdd implements IGitAdd {
     /**
      * Implementations of &lt;git-add&gt; with options and list of files provided.
      */
-    public GitAddResponse add(File repositoryPath, GitAddOptions options, List<File> paths)
-            throws JavaGitException, IOException {
+    public GitAddResponse add(File repositoryPath, GitAddOptions options, List<File> paths) throws JavaGitException, IOException {
         CheckUtilities.checkFileValidity(repositoryPath);
         GitAddParser parser = new GitAddParser();
         List<String> command = buildCommand(repositoryPath, options, paths);
-        GitAddResponseImpl response = (GitAddResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
+        GitAddResponseImpl response = new CommandRunner<GitAddResponseImpl>(repositoryPath, parser, new GitProcessBuilder(command)).run();
 
         if (options != null) {
             addDryRun(options, response);

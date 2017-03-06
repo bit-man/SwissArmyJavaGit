@@ -45,21 +45,18 @@ public class CliGitStatus
     /**
      * Implementation of <code>IGitStatus</code> method for getting the status of a list of files
      */
-    public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths)
-            throws JavaGitException, IOException
-    {
+    public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths) throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
         CheckUtilities.checkFileValidity(repositoryPath);
         List<String> command = buildCommandLine(options, paths);
         GitStatusParser parser;
-        if (inputFile != null)
-        {
+        if (inputFile != null) {
             parser = new GitStatusParser(repositoryPath.getPath() + File.separator, inputFile);
-        } else
-        {
+        } else {
             parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
         }
-        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
+
+        return new CommandRunner<GitStatusResponseImpl>(repositoryPath, parser, new GitProcessBuilder(command)).run();
     }
 
     /**
@@ -123,16 +120,12 @@ public class CliGitStatus
      * @throws JavaGitException Exception thrown if the repositoryPath is null
      * @throws IOException      Exception is thrown if any of the IO operations fail.
      */
-    public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file)
-            throws JavaGitException, IOException
-    {
+    public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file) throws JavaGitException, IOException {
         CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
         CheckUtilities.checkFileValidity(repositoryPath);
         List<String> command = buildCommandLine(options, null);
-        GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator,
-                file);
-
-        return (GitStatusResponseImpl) ProcessUtilities.runCommand(repositoryPath, parser, new GitProcessBuilder(command));
+        GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator, file);
+        return new CommandRunner<GitStatusResponseImpl>(repositoryPath, parser, new GitProcessBuilder(command)).run();
     }
 
     /**
@@ -330,15 +323,9 @@ public class CliGitStatus
                     UnmergedBothModifiedXYSolver.getInstance());
         }
 
-        private enum State
-        {
-            FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
-        }
-
         private State outputState;
         private GitStatusResponseImpl response;
         private File inputFile;
-
         // The working directory for the command that was run.
         private File workingDirectory;
 
@@ -390,6 +377,29 @@ public class CliGitStatus
                         " - git status error message: { " + response.getError() + " }");
             }
             return response;
+        }
+
+        private enum State {
+            FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
+        }
+
+        public enum PorcelainField {
+            MODIFIED('M'), UNMODIFIED(' '), ADDED('A'), DELETED('D'), RENAMED('R'), COPIED('C'), UPDATED_BUT_UNMERGED('U'), UNTRACKED('?'), IGNORED(
+                    '!');
+            private final char c;
+
+            PorcelainField(char c) {
+                this.c = c;
+            }
+
+            public static PorcelainField char2field(char c) {
+                for (PorcelainField p : values()) {
+                    if (p.c == c) {
+                        return p;
+                    }
+                }
+                return null;
+            }
         }
 
         private static class UntrackedXYSolver
@@ -571,7 +581,6 @@ public class CliGitStatus
 
         }
 
-
         private static class UnmergedBothModifiedXYSolver
                 extends XYSolver
         {
@@ -648,37 +657,6 @@ public class CliGitStatus
             {
                 return Tuple.create(PorcelainField.char2field(s.charAt(0)),
                         PorcelainField.char2field(s.charAt(1)));
-            }
-        }
-
-        public enum PorcelainField
-        {
-            MODIFIED('M'),
-            UNMODIFIED(' '),
-            ADDED('A'),
-            DELETED('D'),
-            RENAMED('R'),
-            COPIED('C'),
-            UPDATED_BUT_UNMERGED('U'),
-            UNTRACKED('?'),
-            IGNORED('!');
-            private final char c;
-
-            PorcelainField(char c)
-            {
-                this.c = c;
-            }
-
-            public static PorcelainField char2field(char c)
-            {
-                for (PorcelainField p : values())
-                {
-                    if (p.c == c)
-                    {
-                        return p;
-                    }
-                }
-                return null;
             }
         }
 

@@ -66,14 +66,13 @@ public class CliGitReset implements IGitReset {
     return resetProcessor(repository, new GitResetOptions(ResetType.SOFT, commitName), null);
   }
 
-  protected GitResetResponseImpl resetProcessor(File repository, GitResetOptions options,
-      List<File> paths) throws IOException, JavaGitException {
+  protected GitResetResponseImpl resetProcessor(File repository, GitResetOptions options, List<File> paths) throws IOException, JavaGitException {
     CheckUtilities.checkNullArgument(repository, "repository");
 
     List<String> commandLine = buildCommand(options, paths);
     GitResetParser parser = new GitResetParser(repository.getPath());
 
-    return (GitResetResponseImpl) ProcessUtilities.runCommand(repository, parser, new GitProcessBuilder(commandLine));
+    return new CommandRunner<GitResetResponseImpl>(repository, parser, new GitProcessBuilder(commandLine)).run();
   }
 
   protected List<String> buildCommand(GitResetOptions options, List<File> paths) {
