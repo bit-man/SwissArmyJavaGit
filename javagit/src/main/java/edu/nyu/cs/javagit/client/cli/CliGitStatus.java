@@ -16,22 +16,21 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitStatusOptions;
 import edu.nyu.cs.javagit.api.commands.GitStatusResponse;
 import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
 import edu.nyu.cs.javagit.client.IGitStatus;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Command-line implementation of the <code>IGitStatus</code> interface.
@@ -40,23 +39,32 @@ public class CliGitStatus
         implements IGitStatus
 {
 
-    private File inputFile = null;
+    private final IGitProcessBuilder processBuilder;
+    private Validator validator;
+    private ICommandRunner<GitStatusResponseImpl> commandRunner;
+
+    public CliGitStatus(IGitProcessBuilder processBuilder, Validator validator,
+                        ICommandRunner<GitStatusResponseImpl> commandRuner)
+    {
+        this.processBuilder = processBuilder;
+        this.validator = validator;
+        this.commandRunner = commandRuner;
+    }
 
     /**
      * Implementation of <code>IGitStatus</code> method for getting the status of a list of files
      */
     public GitStatusResponse status(File repositoryPath, GitStatusOptions options, List<File> paths) throws JavaGitException, IOException {
-        CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
-        CheckUtilities.checkFileValidity(repositoryPath);
-        List<String> command = buildCommandLine(options, paths);
-        GitStatusParser parser;
-        if (inputFile != null) {
-            parser = new GitStatusParser(repositoryPath.getPath() + File.separator, inputFile);
-        } else {
-            parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
-        }
+        validator.checkNullArgument(repositoryPath, "RepositoryPath");
+        validator.checkFileValidity(repositoryPath);
+        processBuilder.setCommandLine(buildCommandLine(options, paths));
 
-        return new CommandRunner<GitStatusResponseImpl>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+        GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
+
+        commandRunner.setWorkingDirectory(repositoryPath);
+        commandRunner.setParser(parser);
+        commandRunner.setProcessBuilder(processBuilder);
+        return commandRunner.run();
     }
 
     /**
@@ -121,11 +129,14 @@ public class CliGitStatus
      * @throws IOException      Exception is thrown if any of the IO operations fail.
      */
     public GitStatusResponse getSingleFileStatus(File repositoryPath, GitStatusOptions options, File file) throws JavaGitException, IOException {
-        CheckUtilities.checkNullArgument(repositoryPath, "RepositoryPath");
-        CheckUtilities.checkFileValidity(repositoryPath);
-        List<String> command = buildCommandLine(options, null);
+        validator.checkNullArgument(repositoryPath, "RepositoryPath");
+        validator.checkFileValidity(repositoryPath);
+        processBuilder.setCommandLine(buildCommandLine(options, null));
         GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator, file);
-        return new CommandRunner<GitStatusResponseImpl>(repositoryPath, parser, new GitProcessBuilder(command)).run();
+        commandRunner.setWorkingDirectory(repositoryPath);
+        commandRunner.setParser(parser);
+        commandRunner.setProcessBuilder(processBuilder);
+        return commandRunner.run();
     }
 
     /**

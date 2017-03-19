@@ -14,4 +14,6 @@ public interface IGitProcessBuilder {
 	String getCommandString();
 
 	Process start() throws IOException;
+
+	void setCommandLine(List<String> commandLine);
 }

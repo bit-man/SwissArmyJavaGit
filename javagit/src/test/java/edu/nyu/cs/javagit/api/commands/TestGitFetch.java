@@ -36,7 +36,7 @@ public class TestGitFetch
     @Test
     public void testFetch() throws IOException, JavaGitException, URISyntaxException {
 
-        final File cloneFolder = FileUtilities.getNonExistingTempFolder();
+        final File cloneFolder = FileUtilities.createNonExistingTempFolder();
         getDeletor().add(cloneFolder);
 
         new GitClone().clone(tmpFolder, new FileUrl(repoPath), cloneFolder );

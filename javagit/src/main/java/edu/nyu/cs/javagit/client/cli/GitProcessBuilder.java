@@ -5,10 +5,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class GitProcessBuilder implements IGitProcessBuilder {
-	private final ProcessBuilder pb;
+	private ProcessBuilder pb;
 
 	public GitProcessBuilder(List<String> commandLine) {
-		this.pb = new ProcessBuilder(commandLine);
+		setCommandLine(commandLine);
+	}
+
+	public GitProcessBuilder()
+	{
 	}
 
 	@Override
@@ -34,6 +38,12 @@ public class GitProcessBuilder implements IGitProcessBuilder {
 	@Override
 	public Process start() throws IOException {
 		return pb.start();
+	}
+
+	@Override
+	public void setCommandLine(List<String> commandLine)
+	{
+		this.pb = new ProcessBuilder(commandLine);
 	}
 
 	private String asString(List<String> commandLine) {

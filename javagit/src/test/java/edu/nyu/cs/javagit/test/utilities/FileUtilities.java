@@ -115,14 +115,22 @@ public class FileUtilities {
     }
 
 
-    public static File getNonExistingTempFolder() {
+    public static File createTempFolder()
+            throws IOException
+    {
+        File tempFile = File.createTempFile("javagit", "test");
+        tempFile.deleteOnExit();
+        return tempFile;
+    }
+
+    public static File createNonExistingTempFolder()
+    {
         return getNonExistingFolder(new File( System.getProperty("java.io.tmpdir")) );
     }
 
     public static File getNonExistingFolder(File basefolder) {
-        File ret = null;
+        File ret;
         do {
-
           ret = new File(basefolder, "javagit" + Long.toString(System.nanoTime()));
         } while( ret.exists());
 

@@ -1,21 +1,19 @@
 package edu.nyu.cs.javagit.client.cli;
 
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.JavaGitProperty;
+import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
-import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.JavaGitProperty;
-import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
-
-public class CommandRunner<T> {
+public class CommandRunner<T>
+		implements ICommandRunner<T>
+{
 
 	private static final Logger logger = Logger.getLogger("javagit.commands");
 
@@ -27,13 +25,18 @@ public class CommandRunner<T> {
 
 	}
 
-	private final IParser parser;
-	private final IGitProcessBuilder pb;
+	private IParser parser;
+	private IGitProcessBuilder pb;
+	private File workingDirectory;
+
+	public CommandRunner()
+	{
+	}
 
 	public CommandRunner(File workingDirectory, IParser parser, IGitProcessBuilder pb) {
 		this.parser = parser;
 		this.pb = pb;
-		initPB(workingDirectory);
+		this.workingDirectory = workingDirectory;
 	}
 
 	public CommandRunner(IParser parser, IGitProcessBuilder pb) {
@@ -71,13 +74,31 @@ public class CommandRunner<T> {
 
 	public T run() throws IOException, JavaGitException {
 
+		initPB(workingDirectory);
 		logger.info(pb.getCommandString());
-
 		Process p = startProcess(pb);
 		getProcessOutput(p, parser);
 		waitForAndDestroyProcess(p, parser);
 
 		return (T) parser.getResponse();
+	}
+
+	@Override
+	public void setWorkingDirectory(File workingDirectory)
+	{
+		this.workingDirectory = workingDirectory;
+	}
+
+	@Override
+	public void setParser(IParser parser)
+	{
+		this.parser = parser;
+	}
+
+	@Override
+	public void setProcessBuilder(IGitProcessBuilder processBuilder)
+	{
+		this.pb = processBuilder;
 	}
 
 	private Process startProcess(IGitProcessBuilder pb) throws IOException {

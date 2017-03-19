@@ -61,7 +61,7 @@ public class TestCliGitClone
     }
 
     private File doClone(File repository, boolean useUrl) throws IOException, JavaGitException, URISyntaxException {
-        final File cloneFolder = FileUtilities.getNonExistingTempFolder();
+        final File cloneFolder = FileUtilities.createNonExistingTempFolder();
         getDeletor().add(cloneFolder);
 
         final File tmpFolder = new File(System.getProperty("java.io.tmpdir"));
@@ -79,7 +79,7 @@ public class TestCliGitClone
     @Test
     public void testFailedCloneUseUrl() throws IOException, URISyntaxException, JavaGitException {
         try {
-            doClone(FileUtilities.getNonExistingTempFolder(), USE_URL);
+            doClone(FileUtilities.createNonExistingTempFolder(), USE_URL);
         } catch (JavaGitException e) {
             if (e.getCode() != 408000)
                 throw e;
@@ -90,7 +90,7 @@ public class TestCliGitClone
     @Test
     public void testFailedCloneUseJavaGitUrl() throws IOException, URISyntaxException, JavaGitException {
         try {
-            doClone(FileUtilities.getNonExistingTempFolder(), !USE_URL);
+            doClone(FileUtilities.createNonExistingTempFolder(), !USE_URL);
         } catch (JavaGitException e) {
             if (e.getCode() != 408000)
                 throw e;

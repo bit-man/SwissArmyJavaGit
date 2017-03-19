@@ -1,21 +1,18 @@
 package edu.nyu.cs.javagit.client.cli;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import edu.nyu.cs.javagit.api.JavaGitException;
+import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import edu.nyu.cs.javagit.api.JavaGitException;
-import edu.nyu.cs.javagit.api.commands.CommandResponse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 public class TestCommandRunner {
 
@@ -34,13 +31,6 @@ public class TestCommandRunner {
 	}
 
 	@Test
-	public void passingWorkDirSetsProcessDirectory() throws IOException {
-		givenProcessBuilder();
-		whenCommandRunnerIsCreated();
-		Mockito.verify(pb, times(1)).directory(any(File.class));
-	}
-
-	@Test
 	public void runningProcessStartsIt() throws IOException, JavaGitException {
 		givenProcessBuilder();
 		givenEmptyInputStream();
@@ -48,7 +38,7 @@ public class TestCommandRunner {
 		when(pb.start()).thenReturn(process);
 		givenParser();
 
-		whenCommandrunnerIsExecuted();
+		whenCommandRunnerIsExecuted();
 
 		Mockito.verify(pb, times(1)).start();
 	}
@@ -61,7 +51,7 @@ public class TestCommandRunner {
 		when(pb.start()).thenReturn(process);
 		givenParser();
 
-		whenCommandrunnerIsExecuted();
+		whenCommandRunnerIsExecuted();
 
 		Mockito.verify(parser, times(0)).parseLine(anyString());
 	}
@@ -74,12 +64,14 @@ public class TestCommandRunner {
 		givenProcessBuilder();
 		givenFullParser();
 
-		whenCommandrunnerIsExecuted();
+		whenCommandRunnerIsExecuted();
 
 		assertThat(exitCode).isEqualTo(25);
 	}
 
-	private void whenCommandrunnerIsExecuted() throws IOException, JavaGitException {
+	private void whenCommandRunnerIsExecuted()
+            throws IOException, JavaGitException
+	{
 		whenCommandRunnerIsCreated();
 		runner.run();
 	}
