@@ -16,11 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitRmOptions;
@@ -28,6 +23,11 @@ import edu.nyu.cs.javagit.api.commands.GitRmResponse;
 import edu.nyu.cs.javagit.client.GitRmResponseImpl;
 import edu.nyu.cs.javagit.client.IGitRm;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitRm</code> interface.
@@ -179,6 +179,12 @@ public class CliGitRm implements IGitRm {
             + errorMsg.toString() + " }");
       }
       return response;
+    }
+
+    @Override
+    public void setWorkingDir(String workingDir)
+    {
+      throw new UnsupportedOperationException();
     }
   }
 

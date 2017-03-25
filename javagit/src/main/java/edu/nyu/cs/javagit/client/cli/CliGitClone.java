@@ -16,13 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
@@ -33,6 +26,13 @@ import edu.nyu.cs.javagit.client.GitCloneResponseImpl;
 import edu.nyu.cs.javagit.client.IGitClone;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.UrlUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitClone</code> interface.
@@ -209,6 +209,12 @@ public class CliGitClone implements IGitClone {
                         " - git clone error message: { " + response.getError() + " }");
             }
             return response;
+        }
+
+        @Override
+        public void setWorkingDir(String workingDir)
+        {
+            throw new UnsupportedOperationException();
         }
 
         public void parseLine(String line) {

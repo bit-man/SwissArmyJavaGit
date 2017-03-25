@@ -51,4 +51,6 @@ public interface IParser {
    */
   CommandResponse getResponse() throws JavaGitException;
 
+  void setWorkingDir(String workingDir);
+
 }

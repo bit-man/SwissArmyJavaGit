@@ -16,10 +16,11 @@
  */
 package edu.nyu.cs.javagit.client;
 
-import java.io.File;
-
 import edu.nyu.cs.javagit.api.Ref;
 import edu.nyu.cs.javagit.api.commands.GitCommitResponse;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.io.File;
 
 /**
  * Implementation of a <code>GitCommitResponse</code>. This class adds functionality to set
@@ -194,4 +195,10 @@ public class GitCommitResponseImpl extends GitCommitResponse {
     }
   }
 
+
+  @Override
+  public String toString()
+  {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }

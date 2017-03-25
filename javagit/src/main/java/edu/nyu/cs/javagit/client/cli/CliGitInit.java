@@ -1,10 +1,5 @@
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
@@ -12,6 +7,11 @@ import edu.nyu.cs.javagit.api.commands.GitInitOptions;
 import edu.nyu.cs.javagit.api.commands.GitInitResponse;
 import edu.nyu.cs.javagit.client.IGitInit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CliGitInit implements IGitInit {
 
@@ -81,6 +81,12 @@ public class CliGitInit implements IGitInit {
 		 */
 		public CommandResponse getResponse() throws JavaGitException {
 			return this.response;
+		}
+
+		@Override
+		public void setWorkingDir(String workingDir)
+		{
+			throw new UnsupportedOperationException();
 		}
 
 

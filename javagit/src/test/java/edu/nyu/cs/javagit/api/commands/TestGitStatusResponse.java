@@ -103,7 +103,8 @@ public class TestGitStatusResponse
             throws IOException, JavaGitException
     {
         repo = FileUtilities.createTempDirectory(this.getClass().getSimpleName()).getAbsolutePath();
-        this.gitStatusParser = new CliGitStatus.GitStatusParser(repo);
+        this.gitStatusParser = new CliGitStatus.GitStatusParser();
+        gitStatusParser.setWorkingDir(repo);
 
         getDeletor().add(new File(repo));
         super.setUp();

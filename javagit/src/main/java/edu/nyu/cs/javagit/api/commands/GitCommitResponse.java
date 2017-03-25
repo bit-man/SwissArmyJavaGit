@@ -16,14 +16,14 @@
  */
 package edu.nyu.cs.javagit.api.commands;
 
+import edu.nyu.cs.javagit.api.Ref;
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import edu.nyu.cs.javagit.api.Ref;
-import edu.nyu.cs.javagit.api.commands.CommandResponse;
-import edu.nyu.cs.javagit.utilities.CheckUtilities;
 
 /**
  * A response data object for the git-commit command.
@@ -286,6 +286,12 @@ abstract public class GitCommitResponse implements CommandResponse {
 
     public int hashCode() {
       return pathTofile.hashCode() + mode.hashCode();
+    }
+
+    @Override
+    public String toString()
+    {
+      return ToStringBuilder.reflectionToString(this);
     }
   }
 

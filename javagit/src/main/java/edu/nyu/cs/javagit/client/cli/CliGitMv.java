@@ -16,11 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitMvOptions;
@@ -28,6 +23,11 @@ import edu.nyu.cs.javagit.api.commands.GitMvResponse;
 import edu.nyu.cs.javagit.client.GitMvResponseImpl;
 import edu.nyu.cs.javagit.client.IGitMv;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitMv</code> interface.
@@ -238,6 +238,12 @@ public class CliGitMv implements IGitMv {
         }
       }
       return response;
+    }
+
+    @Override
+    public void setWorkingDir(String workingDir)
+    {
+      throw new UnsupportedOperationException();
     }
   }
 }

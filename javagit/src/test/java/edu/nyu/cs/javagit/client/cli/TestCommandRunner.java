@@ -105,6 +105,12 @@ public class TestCommandRunner {
 			public CommandResponse getResponse() throws JavaGitException {
 				return null;
 			}
+
+			@Override
+			public void setWorkingDir(String workingDir)
+			{
+				throw new UnsupportedOperationException();
+			}
 		};
 	}
 

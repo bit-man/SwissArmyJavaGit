@@ -16,13 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
@@ -31,6 +24,13 @@ import edu.nyu.cs.javagit.api.commands.GitLogResponse;
 import edu.nyu.cs.javagit.api.commands.GitLogResponse.Commit;
 import edu.nyu.cs.javagit.client.IGitLog;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 /**
  * Command-line implementation of the <code>IGitLog</code> interface.
@@ -267,8 +267,14 @@ public class CliGitLog implements IGitLog{
 			return this.response;
 		}
 
+		@Override
+		public void setWorkingDir(String workingDir)
+		{
+			throw new UnsupportedOperationException();
+		}
 
-    /**
+
+		/**
 		 *  Parses a line at a time from the commandline execution output of git log
 		 */    		
 		public void parseLine(String line) {

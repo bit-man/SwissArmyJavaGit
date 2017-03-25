@@ -16,11 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -31,6 +26,11 @@ import edu.nyu.cs.javagit.client.GitResetResponseImpl;
 import edu.nyu.cs.javagit.client.IGitReset;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitReset</code> interface.
@@ -70,7 +70,8 @@ public class CliGitReset implements IGitReset {
     CheckUtilities.checkNullArgument(repository, "repository");
 
     List<String> commandLine = buildCommand(options, paths);
-    GitResetParser parser = new GitResetParser(repository.getPath());
+    GitResetParser parser = new GitResetParser();
+    parser.setWorkingDir(repository.getPath());
 
     return new CommandRunner<GitResetResponseImpl>(repository, parser, new GitProcessBuilder(commandLine)).run();
   }
@@ -129,14 +130,9 @@ public class CliGitReset implements IGitReset {
     // The response object for a reset.
     private GitResetResponseImpl response;
 
-    /**
-     * Constructor for <code>GitResetParser</code>
-     * 
-     * @param workingDirectoryPath
-     *          The working directory path set for the command line.
-     */
-    public GitResetParser(String workingDirectoryPath) {
-      this.workingDirectoryPath = workingDirectoryPath;
+    GitResetParser()
+    {
+
     }
 
     public void parseLine(String line) {
@@ -190,6 +186,12 @@ public class CliGitReset implements IGitReset {
             + "  The git-reset error message:  { " + errorMsg.toString() + " }");
       }
       return response;
+    }
+
+    @Override
+    public void setWorkingDir(String workingDir)
+    {
+      this.workingDirectoryPath = workingDir;
     }
 
     /**

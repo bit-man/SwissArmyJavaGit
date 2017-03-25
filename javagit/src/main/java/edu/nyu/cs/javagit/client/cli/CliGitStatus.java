@@ -59,7 +59,8 @@ public class CliGitStatus
         validator.checkFileValidity(repositoryPath);
         processBuilder.setCommandLine(buildCommandLine(options, paths));
 
-        GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator);
+        GitStatusParser parser = new GitStatusParser();
+        parser.setWorkingDir(repositoryPath.getPath() + File.separator);
 
         commandRunner.setWorkingDirectory(repositoryPath);
         commandRunner.setParser(parser);
@@ -132,7 +133,8 @@ public class CliGitStatus
         validator.checkNullArgument(repositoryPath, "RepositoryPath");
         validator.checkFileValidity(repositoryPath);
         processBuilder.setCommandLine(buildCommandLine(options, null));
-        GitStatusParser parser = new GitStatusParser(repositoryPath.getPath() + File.separator, file);
+        GitStatusParser parser = new GitStatusParser(file);
+        parser.setWorkingDir(repositoryPath.getPath() + File.separator);
         commandRunner.setWorkingDirectory(repositoryPath);
         commandRunner.setParser(parser);
         commandRunner.setProcessBuilder(processBuilder);
@@ -231,124 +233,19 @@ public class CliGitStatus
 
         private static Map<Tuple<PorcelainField, PorcelainField>, XYSolver> solver = new
                 HashMap<>();
-
-        static
-        {
-//            Short Format
-//            In the short-format, the status of each path is shown as
-//
-//            XY PATH1 -> PATH2
-//
-//            where PATH1 is the path in the HEAD, and the " -> PATH2" part is shown only when PATH1 corresponds to a different path in the index/worktree (i.e. the file is renamed). The XY is a two-letter status code.
-//
-//            The fields (including the ->) are separated from each other by a single space. If a filename contains whitespace or other nonprintable characters, that field will be quoted in the manner of a C string literal: surrounded by
-//            ASCII double quote (34) characters, and with interior special characters backslash-escaped.
-//
-//                For paths with merge conflicts, X and Y show the modification states of each side of the merge. For paths that do not have merge conflicts, X shows the status of the index, and Y shows the status of the work tree. For
-//            untracked paths, XY are ??. Other status codes can be interpreted as follows:
-//
-//            ·   ' ' = unmodified
-//
-//            ·   M = modified
-//
-//            ·   A = added
-//
-//            ·   D = deleted
-//
-//            ·   R = renamed
-//
-//            ·   C = copied
-//
-//            ·   U = updated but unmerged
-//
-//            Ignored files are not listed, unless --ignored option is in effect, in which case XY are !!.
-//
-//            X          Y     Meaning
-//                    -------------------------------------------------
-//            [MD]   not updated
-//            M        [ MD]   updated in index
-//            A        [ MD]   added to index
-//            D         [ M]   deleted from index
-//            R        [ MD]   renamed in index
-//            C        [ MD]   copied in index
-//                    [MARC]           index and work tree matches
-//                    [ MARC]     M    work tree changed since index
-//            [ MARC]     D    deleted in work tree
-//                    -------------------------------------------------
-//                    D           D    unmerged, both deleted
-//            A           U    unmerged, added by us
-//            U           D    unmerged, deleted by them
-//            U           A    unmerged, added by them
-//            D           U    unmerged, deleted by us
-//            A           A    unmerged, both added
-//            U           U    unmerged, both modified
-//                    -------------------------------------------------
-//                    ?           ?    untracked
-//            !           !    ignored
-//                    -------------------------------------------------
-//
-//                    If -b is used the short-format status is preceded by a line
-//
-//            ## branchname tracking info
-
-            solver.put(Tuple.create(PorcelainField.UNTRACKED, PorcelainField.UNTRACKED),
-                    UntrackedXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.IGNORED, PorcelainField.IGNORED),
-                    IgnoredXYSolver.getInstance());
-
-            solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.MODIFIED),
-                    ModifiedNotUpdatedXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.DELETED),
-                    DeletedNotUpdatedXYSolver.getInstance());
-
-            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.MODIFIED),
-                    ModifiedToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.DELETED),
-                    ModifiedToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.UNMODIFIED),
-                    ModifiedToCommitXYSolver.getInstance());
-
-
-            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.MODIFIED),
-                    NewFilesToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.DELETED),
-                    NewFilesToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.UNMODIFIED),
-                    NewFilesToCommitXYSolver.getInstance());
-
-
-            solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.MODIFIED),
-                    DeletedToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.UNMODIFIED),
-                    DeletedToCommitXYSolver.getInstance());
-
-
-            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.MODIFIED),
-                    RenamedFilesToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.DELETED),
-                    RenamedFilesToCommitXYSolver.getInstance());
-            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.UNMODIFIED),
-                    RenamedFilesToCommitXYSolver.getInstance());
-
-            solver.put(Tuple.create(PorcelainField.UPDATED_BUT_UNMERGED, PorcelainField.UPDATED_BUT_UNMERGED),
-                    UnmergedBothModifiedXYSolver.getInstance());
-        }
-
         private State outputState;
         private GitStatusResponseImpl response;
         private File inputFile;
         // The working directory for the command that was run.
         private File workingDirectory;
 
-        public GitStatusParser(String workingDirectory)
+        public GitStatusParser()
         {
-            this(workingDirectory, null);
+            this(null);
         }
 
-        public GitStatusParser(String workingDirectory, File in)
+        GitStatusParser(File in)
         {
-            this.workingDirectory = new File(workingDirectory);
-            response = new GitStatusResponseImpl(workingDirectory);
             inputFile = in;
         }
 
@@ -390,27 +287,11 @@ public class CliGitStatus
             return response;
         }
 
-        private enum State {
-            FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
-        }
-
-        public enum PorcelainField {
-            MODIFIED('M'), UNMODIFIED(' '), ADDED('A'), DELETED('D'), RENAMED('R'), COPIED('C'), UPDATED_BUT_UNMERGED('U'), UNTRACKED('?'), IGNORED(
-                    '!');
-            private final char c;
-
-            PorcelainField(char c) {
-                this.c = c;
-            }
-
-            public static PorcelainField char2field(char c) {
-                for (PorcelainField p : values()) {
-                    if (p.c == c) {
-                        return p;
-                    }
-                }
-                return null;
-            }
+        @Override
+        public void setWorkingDir(String workingDir)
+        {
+            this.workingDirectory = new File(workingDir);
+            response = new GitStatusResponseImpl(workingDir);
         }
 
         private static class UntrackedXYSolver
@@ -756,6 +637,142 @@ public class CliGitStatus
                 int result = a != null ? a.hashCode() : 0;
                 result = 37 * result + (b != null ? b.hashCode() : 0);
                 return result;
+            }
+        }
+
+        static
+        {
+//            Short Format
+//            In the short-format, the status of each path is shown as
+//
+//            XY PATH1 -> PATH2
+//
+//            where PATH1 is the path in the HEAD, and the " -> PATH2" part is shown only when PATH1 corresponds to a
+// different path in the index/worktree (i.e. the file is renamed). The XY is a two-letter status code.
+//
+//            The fields (including the ->) are separated from each other by a single space. If a filename contains
+// whitespace or other nonprintable characters, that field will be quoted in the manner of a C string literal:
+// surrounded by
+//            ASCII double quote (34) characters, and with interior special characters backslash-escaped.
+//
+//                For paths with merge conflicts, X and Y show the modification states of each side of the merge. For
+// paths that do not have merge conflicts, X shows the status of the index, and Y shows the status of the work tree. For
+//            untracked paths, XY are ??. Other status codes can be interpreted as follows:
+//
+//            ·   ' ' = unmodified
+//
+//            ·   M = modified
+//
+//            ·   A = added
+//
+//            ·   D = deleted
+//
+//            ·   R = renamed
+//
+//            ·   C = copied
+//
+//            ·   U = updated but unmerged
+//
+//            Ignored files are not listed, unless --ignored option is in effect, in which case XY are !!.
+//
+//            X          Y     Meaning
+//                    -------------------------------------------------
+//            [MD]   not updated
+//            M        [ MD]   updated in index
+//            A        [ MD]   added to index
+//            D         [ M]   deleted from index
+//            R        [ MD]   renamed in index
+//            C        [ MD]   copied in index
+//                    [MARC]           index and work tree matches
+//                    [ MARC]     M    work tree changed since index
+//            [ MARC]     D    deleted in work tree
+//                    -------------------------------------------------
+//                    D           D    unmerged, both deleted
+//            A           U    unmerged, added by us
+//            U           D    unmerged, deleted by them
+//            U           A    unmerged, added by them
+//            D           U    unmerged, deleted by us
+//            A           A    unmerged, both added
+//            U           U    unmerged, both modified
+//                    -------------------------------------------------
+//                    ?           ?    untracked
+//            !           !    ignored
+//                    -------------------------------------------------
+//
+//                    If -b is used the short-format status is preceded by a line
+//
+//            ## branchname tracking info
+
+            solver.put(Tuple.create(PorcelainField.UNTRACKED, PorcelainField.UNTRACKED),
+                    UntrackedXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.IGNORED, PorcelainField.IGNORED),
+                    IgnoredXYSolver.getInstance());
+
+            solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.MODIFIED),
+                    ModifiedNotUpdatedXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.UNMODIFIED, PorcelainField.DELETED),
+                    DeletedNotUpdatedXYSolver.getInstance());
+
+            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.MODIFIED),
+                    ModifiedToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.DELETED),
+                    ModifiedToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.MODIFIED, PorcelainField.UNMODIFIED),
+                    ModifiedToCommitXYSolver.getInstance());
+
+
+            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.MODIFIED),
+                    NewFilesToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.DELETED),
+                    NewFilesToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.ADDED, PorcelainField.UNMODIFIED),
+                    NewFilesToCommitXYSolver.getInstance());
+
+
+            solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.MODIFIED),
+                    DeletedToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.DELETED, PorcelainField.UNMODIFIED),
+                    DeletedToCommitXYSolver.getInstance());
+
+
+            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.MODIFIED),
+                    RenamedFilesToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.DELETED),
+                    RenamedFilesToCommitXYSolver.getInstance());
+            solver.put(Tuple.create(PorcelainField.RENAMED, PorcelainField.UNMODIFIED),
+                    RenamedFilesToCommitXYSolver.getInstance());
+
+            solver.put(Tuple.create(PorcelainField.UPDATED_BUT_UNMERGED, PorcelainField.UPDATED_BUT_UNMERGED),
+                    UnmergedBothModifiedXYSolver.getInstance());
+        }
+
+        private enum State
+        {
+            FILES_TO_COMMIT, NOT_UPDATED, UNTRACKED_FILES
+        }
+
+        public enum PorcelainField
+        {
+            MODIFIED('M'), UNMODIFIED(' '), ADDED('A'), DELETED('D'), RENAMED('R'), COPIED('C'), UPDATED_BUT_UNMERGED
+                ('U'), UNTRACKED('?'), IGNORED(
+                '!');
+            private final char c;
+
+            PorcelainField(char c)
+            {
+                this.c = c;
+            }
+
+            public static PorcelainField char2field(char c)
+            {
+                for (PorcelainField p : values())
+                {
+                    if (p.c == c)
+                    {
+                        return p;
+                    }
+                }
+                return null;
             }
         }
     }

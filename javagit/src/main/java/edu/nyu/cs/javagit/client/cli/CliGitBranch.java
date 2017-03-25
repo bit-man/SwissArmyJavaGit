@@ -16,12 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -33,6 +27,12 @@ import edu.nyu.cs.javagit.client.GitBranchResponseImpl;
 import edu.nyu.cs.javagit.client.IGitBranch;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Command-line implementation of the <code>IGitBranch</code> interface.
@@ -354,6 +354,12 @@ public class CliGitBranch implements IGitBranch {
             + "  The git-branch error message:  { " + errorMessage.toString() + " }");
       }
       return response;
+    }
+
+    @Override
+    public void setWorkingDir(String workingDir)
+    {
+      throw new UnsupportedOperationException();
     }
   }
 }

@@ -37,7 +37,8 @@ public class TestCliGitCommit extends TestBase {
         CliGitCommit gitcommit = new CliGitCommit();
 
         // Test a simple commit with updates only, no copy, remove, add or delete
-        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("");
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser();
+        parser.setWorkingDir("");
         parser.parseLine("Created commit c18c00f: a change to test committing");
         assertEquals(1, parser.getNumLinesParsed());
         parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
@@ -52,7 +53,8 @@ public class TestCliGitCommit extends TestBase {
 
         // ToDo : move to a new test
         // Test an initial commit.
-        parser = gitcommit.new GitCommitParser("");
+        parser = gitcommit.new GitCommitParser();
+        parser.setWorkingDir("");
         parser.parseLine("Created initial commit 21efdb4: initial commit");
         assertEquals(1, parser.getNumLinesParsed());
         parser.parseLine(" 133 files changed, 23679 insertions(+), 0 deletions(-)");
@@ -82,7 +84,8 @@ public class TestCliGitCommit extends TestBase {
 
         // ToDo : move to a new test
         // Test a commit response with added, removed, copied and renamed files.
-        parser = gitcommit.new GitCommitParser("");
+        parser = gitcommit.new GitCommitParser();
+        parser.setWorkingDir("");
         parser.parseLine("Created commit ab238dd: renaming and copying files for commit tests.");
         assertEquals(1, parser.getNumLinesParsed());
         parser.parseLine(" 5 files changed, 1 insertions(+), 1 deletions(-)");
@@ -123,7 +126,8 @@ public class TestCliGitCommit extends TestBase {
         CliGitCommit gitcommit = new CliGitCommit();
 
         // Test commit with first line using branch name in it
-        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", BRANCH_NAME);
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser(BRANCH_NAME);
+        parser.setWorkingDir("");
         parser.parseLine("[" + BRANCH_NAME + " " + HASH + "] " + SHORT_COMMENT);
         assertEquals(1, parser.getNumLinesParsed());
         assertEquals(SHORT_COMMENT, parser.getResponse().getCommitShortComment());
@@ -149,7 +153,8 @@ public class TestCliGitCommit extends TestBase {
         final String SHORT_COMMENT = "JIRA-1234 - Checkpoint: fixed more bugs";
 
         // Test commit with first line using branch name in it
-        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", BRANCH_NAME);
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser(BRANCH_NAME);
+        parser.setWorkingDir("");
         parser.parseLine("[" + BRANCH_NAME + " (root-commit) " + HASH + "] " + SHORT_COMMENT);
         assertEquals(1, parser.getNumLinesParsed());
         assertEquals(SHORT_COMMENT, parser.getResponse().getCommitShortComment());
@@ -157,10 +162,10 @@ public class TestCliGitCommit extends TestBase {
     }
 
     private void assertResponsesEqual(CliGitCommit.GitCommitParser parser,
-                                      GitCommitResponseImpl response) {
+                                      GitCommitResponseImpl expected)
+    {
         try {
-            assertTrue("Expected GitCommitResponse not equal to actual GitCommitResponse.", response
-                    .equals(parser.getResponse()));
+            assertEquals(expected, parser.getResponse());
         } catch (JavaGitException e) {
             assertTrue("Getting a GitCommitResponse from a CliGitCommit.GitCommitParser instance threw "
                     + "an exception when it should not have.", false);
@@ -172,7 +177,8 @@ public class TestCliGitCommit extends TestBase {
         CliGitCommit gitcommit = new CliGitCommit();
 
         // Test a spelling mistake
-        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("", "branch name doesn't care");
+        CliGitCommit.GitCommitParser parser = gitcommit.new GitCommitParser("branch name doesn't care");
+        parser.setWorkingDir("");
         parser.parseLine("Created commi c18c00f: a change to test committing");
         assertEquals(1, parser.getNumLinesParsed());
         parser.parseLine(" 1 files changed, 6 insertions(+), 1 deletions(-)");
@@ -184,7 +190,8 @@ public class TestCliGitCommit extends TestBase {
                         + "line2=[ 1 files changed, 6 insertions(+), 1 deletions(-)] }", 410000);
 
         // Test a spelling mistake
-        parser = gitcommit.new GitCommitParser("", "branch name doesn't care");
+        parser = gitcommit.new GitCommitParser("branch name doesn't care");
+        parser.setWorkingDir("");
         parser.parseLine("Error Committing:  some random error");
         assertEquals(1, parser.getNumLinesParsed());
 

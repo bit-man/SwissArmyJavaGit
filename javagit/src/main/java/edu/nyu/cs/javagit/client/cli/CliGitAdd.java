@@ -16,12 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.commands.GitAddOptions;
@@ -30,6 +24,12 @@ import edu.nyu.cs.javagit.client.GitAddResponseImpl;
 import edu.nyu.cs.javagit.client.IGitAdd;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Command-line implementation of the <code>IGitAdd</code> interface.
@@ -268,6 +268,12 @@ public class CliGitAdd implements IGitAdd {
                         " - git add error message: { " + getError() + " }");
             }
             return response;
+        }
+
+        @Override
+        public void setWorkingDir(String workingDir)
+        {
+            throw new UnsupportedOperationException();
         }
 
         /**

@@ -1,16 +1,16 @@
 package edu.nyu.cs.javagit.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.commands.CommandResponse;
 import edu.nyu.cs.javagit.client.cli.CommandRunner;
 import edu.nyu.cs.javagit.client.cli.GitProcessBuilder;
 import edu.nyu.cs.javagit.client.cli.IParser;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class encapsulates our global API options that client code may want to get or set.
@@ -154,6 +154,47 @@ public final class JavaGitConfiguration {
 		setGitPath(new File(path));
 	}
 
+    /**
+     * Called when client code wants to explicitly tell us where to find git on their filesystem. If
+     * never called, we assume that git is in a directory in the PATH environment variable for this
+     * process. Passing null as the path argument will unset an explicitly-set path and revert to
+     * looking for git in the PATH.
+     *
+     * @param path <code>File</code> object representing the directory containing the git binaries. It
+     *             must contain either an absolute path, or a valid path relative to the current working
+     *             directory.
+     * @throws IOException      Thrown if the provided path does not exist.
+     * @throws JavaGitException Thrown if git does not exist at the provided path, or the provided path is not a
+     *                          directory.
+     */
+    public static void setGitPath(File path)
+            throws IOException, JavaGitException
+    {
+        if (path != null)
+        {
+            CheckUtilities.checkFileValidity(path);
+
+            if (!(path.isDirectory()))
+            {
+                throw new JavaGitException(020002, ExceptionMessageMap.getMessage("020002") + " { path=["
+                        + path.getPath() + "] }");
+            }
+        }
+
+        try
+        {
+            determineGitVersion(path);
+        } catch (Exception e)
+        {
+            // The path that was passed in doesn't work. Catch any errors and throw this one instead.
+            throw new JavaGitException(100002, ExceptionMessageMap.getMessage("100002") + " { path=["
+                    + path.getPath() + "] }", e);
+        }
+
+        // Make sure we're hanging onto an absolute path.
+        gitPath = (path != null) ? path.getAbsoluteFile() : null;
+    }
+
 	/**
 	 * Returns the version number of the underlying git binaries. If this method is called and we
 	 * don't know the version yet, it tries to figure it out. (The version gets set if
@@ -206,44 +247,6 @@ public final class JavaGitConfiguration {
     return true;
   }
 
-  /**
-   * Called when client code wants to explicitly tell us where to find git on their filesystem. If
-   * never called, we assume that git is in a directory in the PATH environment variable for this
-   * process. Passing null as the path argument will unset an explicitly-set path and revert to
-   * looking for git in the PATH.
-   *
-   * @param path
-   *          <code>File</code> object representing the directory containing the git binaries. It
-   *          must contain either an absolute path, or a valid path relative to the current working
-   *          directory.
-   * @throws IOException
-   *           Thrown if the provided path does not exist.
-   * @throws JavaGitException
-   *           Thrown if git does not exist at the provided path, or the provided path is not a
-   *           directory.
-   */
-  public static void setGitPath(File path) throws IOException, JavaGitException {
-    if (path != null) {
-      CheckUtilities.checkFileValidity(path);
-
-      if (!(path.isDirectory())) {
-        throw new JavaGitException(020002, ExceptionMessageMap.getMessage("020002") + " { path=["
-            + path.getPath() + "] }");
-      }
-    }
-
-    try {
-       determineGitVersion(path);
-    } catch (Exception e) {
-      // The path that was passed in doesn't work. Catch any errors and throw this one instead.
-      throw new JavaGitException(100002, ExceptionMessageMap.getMessage("100002") + " { path=["
-          + path.getPath() + "] }", e);
-    }
-
-    // Make sure we're hanging onto an absolute path.
-    gitPath = (path != null) ? path.getAbsoluteFile() : null;
-  }
-
   /*
    * <code>GitVersionParser</code> parses the output of the <code>git --version</code> command.
    * It is also used to determine if the git binaries are accessible via the command line.
@@ -273,7 +276,13 @@ public final class JavaGitConfiguration {
       return new GitVersion(version);
     }
 
-    /**
+      @Override
+      public void setWorkingDir(String workingDir)
+      {
+          throw new UnsupportedOperationException();
+      }
+
+      /**
      * Parses the output of <code>git --version</code>. Expects to see: "git version XYZ".
      * 
      * @param line

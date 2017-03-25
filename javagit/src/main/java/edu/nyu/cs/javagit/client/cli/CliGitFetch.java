@@ -1,11 +1,5 @@
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -17,6 +11,12 @@ import edu.nyu.cs.javagit.api.url.JavaGitUrl;
 import edu.nyu.cs.javagit.client.IGitFetch;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Command-line implementation of the <code>IGitFetch</code> interface
@@ -141,6 +141,12 @@ public class CliGitFetch implements IGitFetch {
 
         public CommandResponse getResponse() throws JavaGitException {
             return cmdResponse;
+        }
+
+        @Override
+        public void setWorkingDir(String workingDir)
+        {
+            throw new UnsupportedOperationException();
         }
     }
 }

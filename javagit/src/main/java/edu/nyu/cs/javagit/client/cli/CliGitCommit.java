@@ -16,11 +16,6 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.nyu.cs.javagit.api.JavaGitConfiguration;
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.api.Ref;
@@ -31,6 +26,11 @@ import edu.nyu.cs.javagit.client.IGitCommit;
 import edu.nyu.cs.javagit.utilities.CheckUtilities;
 import edu.nyu.cs.javagit.utilities.ExceptionMessageMap;
 import edu.nyu.cs.javagit.utilities.StringUtilities;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Command-line implementation of the <code>IGitCommit</code> interface.
@@ -97,7 +97,8 @@ public class CliGitCommit implements IGitCommit {
         CheckUtilities.checkStringArgument(message, "message");
 
         List<String> commandLine = buildCommand(options, message, paths);
-        GitCommitParser parser = new GitCommitParser(repository.getAbsolutePath());
+        GitCommitParser parser = new GitCommitParser();
+        parser.setWorkingDir(repository.getAbsolutePath());
         return new CommandRunner<GitCommitResponseImpl>(repository, parser, new GitProcessBuilder(commandLine)).run();
     }
 
@@ -154,7 +155,7 @@ public class CliGitCommit implements IGitCommit {
 
     public class GitCommitParser implements IParser {
 
-        public static final String ERROR_OBTAINING_BRACH_NAME = "Error obtaining brach name : ";
+        static final String ERROR_OBTAINING_BRANCH_NAME = "Error obtaining branch name : ";
         // Holding onto the error message to make part of an exception
         private StringBuffer errorMsg = null;
 
@@ -170,12 +171,13 @@ public class CliGitCommit implements IGitCommit {
         // Branch name
         private String branchName;
 
-        public GitCommitParser(String repositoryPath) {
-            this(repositoryPath, null);
+        GitCommitParser()
+        {
+            this(null);
         }
 
-        public GitCommitParser(String repositoryPath, String branchName) {
-            this.repositoryPath = repositoryPath;
+        public GitCommitParser(String branchName)
+        {
             this.branchName = branchName;
         }
 
@@ -244,10 +246,10 @@ public class CliGitCommit implements IGitCommit {
                 try {
                     branchName = gitBranch.branch(new File(repositoryPath)).getCurrentBranch().getName();
                 } catch (IOException e) {
-                    append2ErrorMsg(ERROR_OBTAINING_BRACH_NAME + e.getMessage());
+                    append2ErrorMsg(ERROR_OBTAINING_BRANCH_NAME + e.getMessage());
                     return true;
                 } catch (JavaGitException e) {
-                    append2ErrorMsg(ERROR_OBTAINING_BRACH_NAME + e.getMessage());
+                    append2ErrorMsg(ERROR_OBTAINING_BRANCH_NAME + e.getMessage());
                     return true;
                 }
             }
@@ -431,6 +433,12 @@ public class CliGitCommit implements IGitCommit {
                         + "  The git-commit error message:  { " + errorMsg.toString() + " }");
             }
             return response;
+        }
+
+        @Override
+        public void setWorkingDir(String workingDir)
+        {
+            this.repositoryPath = workingDir;
         }
 
         /**
