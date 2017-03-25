@@ -1,12 +1,20 @@
 package edu.nyu.cs.javagit.client.cli;
 
+import edu.nyu.cs.javagit.utilities.CheckUtilities;
+
 import java.io.File;
 import java.io.IOException;
 
-public interface Validator
+public class Validator
 {
-    void checkNullArgument(File file, String message);
+    public void checkNullArgument(File file, String message)
+    {
+        CheckUtilities.checkNullArgument(file, message);
+    }
 
-    void checkFileValidity(File file)
-            throws IOException;
+    public void checkFileValidity(File file)
+            throws IOException
+    {
+        CheckUtilities.checkFileValidity(file);
+    }
 }

@@ -95,7 +95,7 @@ public class CliGitStatusTest
     {
         this.processBuilder = new ProcessBuilderMock();
         commandRuner = new CommandRunnerMock<>();
-        client = new CliGitStatus(processBuilder, new ValidatorImpl(), commandRuner);
+        client = new CliGitStatus(processBuilder, new Validator(), commandRuner);
     }
 
 }

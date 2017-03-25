@@ -64,7 +64,7 @@ public class CliClient implements IClient {
   }
 
   public IGitStatus getGitStatusInstance() {
-    return new CliGitStatus(new GitProcessBuilder(), new ValidatorImpl(), new CommandRunner<GitStatusResponseImpl>());
+    return new CliGitStatus(new GitProcessBuilder(), new Validator(), new CommandRunner<GitStatusResponseImpl>());
   }
 
   public IGitBranch getGitBranchInstance() {
