@@ -17,6 +17,7 @@
 package edu.nyu.cs.javagit.client.cli;
 
 import edu.nyu.cs.javagit.client.*;
+import edu.nyu.cs.javagit.client.parser.GitStatusParser;
 
 /**
  * Command-line implementation of the <code>IClient</code> interface.
@@ -64,7 +65,8 @@ public class CliClient implements IClient {
   }
 
   public IGitStatus getGitStatusInstance() {
-    return new CliGitStatus(new GitProcessBuilder(), new Validator(), new CommandRunner<GitStatusResponseImpl>());
+    return new CliGitStatus(new GitProcessBuilder(), new Validator(), new CommandRunner<GitStatusResponseImpl>(), new
+            GitStatusParser());
   }
 
   public IGitBranch getGitBranchInstance() {

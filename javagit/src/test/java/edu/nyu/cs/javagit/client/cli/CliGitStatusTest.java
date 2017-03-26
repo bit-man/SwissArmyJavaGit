@@ -2,6 +2,7 @@ package edu.nyu.cs.javagit.client.cli;
 
 import edu.nyu.cs.javagit.api.JavaGitException;
 import edu.nyu.cs.javagit.client.GitStatusResponseImpl;
+import edu.nyu.cs.javagit.client.parser.GitStatusParser;
 import edu.nyu.cs.javagit.test.utilities.FileUtilities;
 import org.junit.Rule;
 import org.junit.Test;
@@ -95,7 +96,7 @@ public class CliGitStatusTest
     {
         this.processBuilder = new ProcessBuilderMock();
         commandRuner = new CommandRunnerMock<>();
-        client = new CliGitStatus(processBuilder, new Validator(), commandRuner);
+        client = new CliGitStatus(processBuilder, new Validator(), commandRuner, new GitStatusParser());
     }
 
 }
