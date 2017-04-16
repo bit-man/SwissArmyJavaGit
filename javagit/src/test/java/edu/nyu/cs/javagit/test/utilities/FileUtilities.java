@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Some simple file utility methods for helping with testing java git functionality.
@@ -104,8 +105,9 @@ public class FileUtilities {
      * @throws FileNotFoundException Exception thrown if the file does not exist.
      * @throws IOException           thrown if the IO operation fails.
      */
-    public static void modifyFileContents(File file, String appendText) throws FileNotFoundException,
-            IOException {
+    public static void modifyFileContents(File file, String appendText)
+            throws IOException
+    {
         if (!file.exists()) {
             throw new FileNotFoundException("File does not exist");
         }
@@ -118,9 +120,9 @@ public class FileUtilities {
     public static File createTempFolder()
             throws IOException
     {
-        File tempFile = File.createTempFile("javagit", "test");
-        tempFile.deleteOnExit();
-        return tempFile;
+        File tempFolder = Files.createTempDirectory("javagit").toFile();
+        tempFolder.deleteOnExit();
+        return tempFolder;
     }
 
     public static File createNonExistingTempFolder()
@@ -128,7 +130,8 @@ public class FileUtilities {
         return getNonExistingFolder(new File( System.getProperty("java.io.tmpdir")) );
     }
 
-    public static File getNonExistingFolder(File basefolder) {
+    static File getNonExistingFolder(File basefolder)
+    {
         File ret;
         do {
           ret = new File(basefolder, "javagit" + Long.toString(System.nanoTime()));

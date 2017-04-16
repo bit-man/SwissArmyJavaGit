@@ -16,7 +16,9 @@
  */
 package edu.nyu.cs.javagit.client.cli;
 
+import edu.nyu.cs.javagit.api.commands.GitCommandResponse;
 import edu.nyu.cs.javagit.client.*;
+import edu.nyu.cs.javagit.client.parser.GitCommandParser;
 import edu.nyu.cs.javagit.client.parser.GitStatusParser;
 
 /**
@@ -94,6 +96,14 @@ public class CliClient implements IClient {
   {
     return new CliGitPull();
   }
+
+    @Override
+    public IGitCommand getGitCommandInstance(String command)
+    {
+        return new CliGitCommand(command, new GitProcessBuilder(), new Validator(), new
+                CommandRunner<GitCommandResponse>(), new
+                GitCommandParser());
+    }
 
 
 }

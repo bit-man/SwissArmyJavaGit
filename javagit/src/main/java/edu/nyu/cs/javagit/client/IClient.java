@@ -140,4 +140,12 @@ public interface IClient {
    * @return An instance of <code>IGitPull</code>
    */
   IGitPull getGitPullInstance();
+
+  /**
+   * Returns instance for generic git command
+   *
+   * @param command
+   * @return
+   */
+  IGitCommand getGitCommandInstance(String command);
 }

@@ -208,37 +208,5 @@ public final class GitStatus {
     GitStatusResponse response = gitStatus.status(repositoryPath);
 
     return response.getFileStatus(path);
-    /*
-     * TODO: quote from Michael Schidlowsky: "this block of if statements is a little smelly... I'd
-     * prefer to see something like return response.asStatus()...
-     */
-    /*
-    if (response.getUntrackedFilesSize() > 0) {
-      return Status.UNTRACKED;
-    }
-
-    if (response.getNewFilesToCommitSize() > 0) {
-      return Status.NEW_TO_COMMIT;
-    }
-
-    if (response.getDeletedFilesNotUpdatedSize() > 0) {
-      return Status.DELETED;
-    }
-
-    if (response.getDeletedFilesToCommitSize() > 0) {
-      return Status.DELETED_TO_COMMIT;
-    }
-
-    if (response.getModifiedFilesNotUpdatedSize() > 0) {
-      return Status.MODIFIED;
-    }
-
-    if (response.getModifiedFilesToCommitSize() > 0) {
-      return Status.MODIFIED_TO_COMMIT;
-    }
-
-    // default
-    return Status.IN_REPOSITORY;
-    */
   }
 }

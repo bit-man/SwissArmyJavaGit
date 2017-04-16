@@ -16,19 +16,9 @@ public class CommandRunner<T>
 {
 
 	private static final Logger logger = Logger.getLogger("javagit.commands");
-
-	static {
-
-		logger.setUseParentHandlers(false);   // Don't output to console
-		if (!JavaGitProperty.LOG_COMMANDS_DISABLE.getPropValueBoolean())
-			initLogger();
-
-	}
-
 	private IParser parser;
 	private IGitProcessBuilder pb;
 	private File workingDirectory;
-
 	public CommandRunner()
 	{
 	}
@@ -77,7 +67,7 @@ public class CommandRunner<T>
 		initPB(workingDirectory);
 		logger.info(pb.getCommandString());
 		Process p = startProcess(pb);
-		getProcessOutput(p, parser);
+		processOutput(p, parser);
 		waitForAndDestroyProcess(p, parser);
 
 		return (T) parser.getResponse();
@@ -111,7 +101,9 @@ public class CommandRunner<T>
 		}
 	}
 
-	private void getProcessOutput(Process p, IParser parser) throws JavaGitException {
+	private void processOutput(Process p, IParser parser)
+			throws JavaGitException
+	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
 		try {
@@ -120,7 +112,7 @@ public class CommandRunner<T>
 				parser.parseLine(str);
 			}
 		} catch (IOException e) {
-			throw new JavaGitException(020101, ExceptionMessageMap.getMessage("020101"), e);
+			throw new JavaGitException(20101, ExceptionMessageMap.getMessage("020101"), e);
 		}
 
 	}
@@ -140,7 +132,6 @@ public class CommandRunner<T>
 				// BUG: if continuing with planned work it could harm the whole GIT command chain
 				//      being executed. Work on a method to notify the API caller and let him/her
 				//      decide on continuing or stopping the work being carried out
-				continue;
 			}
 		}
 	}
@@ -150,6 +141,15 @@ public class CommandRunner<T>
 		public String format(LogRecord record) {
 			return record.getMessage() + "\n";
 		}
+	}
+
+	static
+	{
+
+		logger.setUseParentHandlers(false);   // Don't output to console
+		if (!JavaGitProperty.LOG_COMMANDS_DISABLE.getPropValueBoolean())
+			initLogger();
+
 	}
 
 }
