@@ -1,3 +1,5 @@
+## Project moved to https://gitlab.com/bit-man/SwissArmyJavaGit
+
 JavaGit
 =======
 
